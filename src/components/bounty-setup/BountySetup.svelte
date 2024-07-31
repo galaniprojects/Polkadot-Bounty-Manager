@@ -4,6 +4,7 @@
 </script>
 
 <script lang="ts">
+	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
 	let activeTab = TABS[2];
 
@@ -14,17 +15,17 @@
 </script>
 
 <div class="flex justify-center items-center md:py-20 lg:py-40 bg-cyan-50">
-	<div class="container">
-		<h2 class="my-5 font-bold"> 
-			Bounty Setup
-		</h2>
+	<div class="container max-w-screen-xl">
+		<h2 class="my-5 font-bold text-2xl">Bounty Setup</h2>
 		<div class="grid grid-cols-3 h-14 gap-3">
 			<BountySetupTab {activeTab} tabName={TABS[0]} bountySetupTabClicked={onTabClick} />
 			<BountySetupTab {activeTab} tabName={TABS[1]} bountySetupTabClicked={onTabClick} />
 			<BountySetupTab {activeTab} tabName={TABS[2]} bountySetupTabClicked={onTabClick} />
 		</div>
-		<div class="grid h-100 w-100 bg-white border-2 border-gray-300 ">
-			<h1>placeholder</h1>
+		<div class="grid bg-white border-2 border-gray-300 p-4">
+			<div class="rounded-md bg-gray-100 overflow-clip">
+				<BountyCreation />
+			</div>
 		</div>
 	</div>
 </div>
