@@ -16,7 +16,20 @@
   font-style: normal;
 }
 
-body{
-  font-family: "Overpass"
+body {
+  font-family: 'Overpass';
 }
 
+.button-active {
+  @apply bg-accent px-10 pt-1 rounded-md text-white;
+}
+
+.button-active:disabled {
+  @apply px-10 pt-1 rounded-md text-white;
+  background-color: rgba(230,0,122,0.5)
+}
+
+.button-cancel {
+  @apply  px-10 pt-1 rounded-md text-white;
+  background-color: theme('colors.darkgray') 
+}
