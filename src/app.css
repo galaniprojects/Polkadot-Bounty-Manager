@@ -20,16 +20,20 @@ body {
   font-family: 'Overpass';
 }
 
+.basic-button {
+  @apply px-10 pt-1 rounded-md text-white
+}
+
 .button-active {
-  @apply bg-accent px-10 pt-1 rounded-md text-white;
+  @apply basic-button bg-accent;
 }
 
 .button-active:disabled {
-  @apply px-10 pt-1 rounded-md text-white;
-  background-color: rgba(230,0,122,0.5)
+  @apply basic-button ;
+  background-color: rgba(230, 0, 122, 0.5)
 }
 
 .button-cancel {
-  @apply  px-10 pt-1 rounded-md text-white;
-  background-color: theme('colors.darkgray') 
+  @apply basic-button;
+  background-color: theme('colors.darkgray')
 }

@@ -9,7 +9,7 @@
 				<input class="pt-1 pl-2 w-64 rounded-s bg-white mr-2" placeholder="0.000.0000" />
 				<p class="mt-1">DOT</p>
 			</div>
-			<div class="border border-white mt-5 mb-1 w-96"></div>
+			<hr class="border border-white mt-5 mb-1 w-96">
 
 			<p class="text-sm">Bounty description</p>
 			<textarea
@@ -17,7 +17,7 @@
 				placeholder="Your Bounty description goes here"
 			></textarea>
 
-			<div class="border border-white mt-5 mb-2 w-96"></div>
+			<hr class="border border-white mt-5 mb-2 w-96">
 			<p class="text-sm mb-2">Submit with account</p>
 
 			<select class="w-64" name="accounts" id="accounts">
