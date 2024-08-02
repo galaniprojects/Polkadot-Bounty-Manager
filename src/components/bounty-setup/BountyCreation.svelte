@@ -24,6 +24,18 @@
 				<option value="alice">Alice</option>
 				<option value="bob">Bob</option>
 			</select>
+
+			<div class="deposit mt-5 mb-10 h-24">
+				<section class="mb-3">
+					<p class="label text-xs">Bounty Bond</p>
+					<p class="value"> <span>1,067.0000</span> DOT</p>
+				</section>
+				<section>
+					<p class="label text-xs">Transaction fee</p>
+					<p class="value"> <span>0,000.0800</span> DOT</p>
+				</section>
+			</div>
+
 		</div>
 		<div class="flex flex-row">
 			<button class="button-cancel mr-5 ">CANCEL</button>
@@ -38,6 +50,7 @@
 	}
 
 	.content {
+		background-color:rgba(155,133,177,0.2);
 		min-height: 500px;
 	}
 </style>
