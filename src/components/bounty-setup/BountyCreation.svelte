@@ -32,21 +32,6 @@
 				<button class="button-cancel mr-5">LIST</button>
 				<button onclick={() => submit()} class="button-active">PROCEED</button>
 			</div>
-			<hr class="border border-white mt-5 mb-1 w-96">
-
-			<p class="text-sm">Bounty description</p>
-			<textarea
-				class="pt-1 pl-2 w-96 h-32 rounded-md bg-white mr-2 mt-2"
-				placeholder="Your Bounty description goes here"
-			></textarea>
-
-			<hr class="border border-white mt-5 mb-2 w-96">
-			<p class="text-sm mb-2">Submit with account</p>
-
-			<select class="w-64" name="accounts" id="accounts">
-				<option value="alice">Alice</option>
-				<option value="bob">Bob</option>
-			</select>
 		</div>
 	{:else}
 		<div class="grid content-between content">
