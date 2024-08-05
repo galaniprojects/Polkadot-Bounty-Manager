@@ -25,7 +25,7 @@
 				<option value="bob">Bob</option>
 			</select>
 
-			<div class="deposit mt-5 mb-10 h-24">
+			<div class="mt-5 mb-10 h-24">
 				<section class="mb-3">
 					<p class="label text-xs">Bounty Bond</p>
 					<p class="value"> <span>1,067.0000</span> DOT</p>
@@ -46,11 +46,11 @@
 
 <style>
 	.top-bar {
-		background-color: rgba(73, 33, 113, 0.8);
+		background-color: theme('colors.secondary');
 	}
 
 	.content {
-		background-color:rgba(155,133,177,0.2);
+		background-color:theme('colors.background');
 		min-height: 500px;
 	}
 </style>

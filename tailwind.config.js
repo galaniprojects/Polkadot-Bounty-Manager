@@ -9,7 +9,10 @@ export default {
       black: colors.black,
       white: colors.white,
       gray: colors.gray,
-      darkgray: '#8a7c9780'
+      darkgray: '#8a7c9780',
+      primary: '#28123E',
+      secondary: 'rgba(73,33,113,0.8)',
+      background: 'rgba(155,133,177,0.2)' 
     }
   },
   plugins: []
