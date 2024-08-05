@@ -1,6 +1,9 @@
 <div>
 	<div class="top-bar">
-		<input class=" pt-1 pl-2 rounded-sm bg-gray-100 my-3 ml-8 w-96" placeholder="Give your Bounty a title" />
+		<input
+			class=" pt-1 pl-2 rounded-sm bg-gray-100 my-3 ml-8 w-96"
+			placeholder="Give your Bounty a title"
+		/>
 	</div>
 	<div class="grid content-between py-4 pl-8 content">
 		<div>
@@ -28,17 +31,16 @@
 			<div class="mt-5 mb-10 h-24">
 				<section class="mb-3">
 					<p class="label text-xs">Bounty Bond</p>
-					<p class="value"> <span>1,067.0000</span> DOT</p>
+					<p class="value"><span>1,067.0000</span> DOT</p>
 				</section>
 				<section>
 					<p class="label text-xs">Transaction fee</p>
-					<p class="value"> <span>0,000.0800</span> DOT</p>
+					<p class="value"><span>0,000.0800</span> DOT</p>
 				</section>
 			</div>
-
 		</div>
 		<div class="flex flex-row">
-			<button class="button-cancel mr-5 ">CANCEL</button>
+			<button class="button-cancel mr-5">CANCEL</button>
 			<button disabled class="button-active">SUBMIT</button>
 		</div>
 	</div>
@@ -50,7 +52,7 @@
 	}
 
 	.content {
-		background-color:theme('colors.background');
+		background-color: theme('colors.background');
 		min-height: 500px;
 	}
 </style>
