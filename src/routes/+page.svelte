@@ -1,5 +1,6 @@
 <script>
 	import '../app.css';
+	import '../components/bounty-setup/style.css';
 	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
 </script>
 

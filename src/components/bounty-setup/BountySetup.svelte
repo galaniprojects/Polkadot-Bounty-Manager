@@ -1,12 +1,13 @@
 <script context="module">
-	export const TABS = ['Bounty Creation', 'Referendum', 'Curator Proposal'];
+	export const TABS = ['Bounty Creation', 'Approval', 'Curator Proposal'];
 	export type BountyTab = (typeof TABS)[number];
 </script>
 
 <script lang="ts">
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
-	let activeTab = TABS[2];
+	import ApprovalReferendum from './ApprovalReferendum.svelte';
+	let activeTab = TABS[0];
 
 	function onTabClick(tab: BountyTab) {
 		activeTab = tab;
@@ -37,11 +38,20 @@
 				bountySetupTabClicked={onTabClick}
 			/>
 		</div>
-		<div class="grid bg-white border-2 border-gray-300 p-4">
-			<div class="rounded-t-md bg-gray-100 overflow-clip">
-				<BountyCreation />
+
+		{#if activeTab == TABS[0]}
+			<div class="grid bg-white border-2 border-gray-300 p-4">
+				<div class="rounded-t-md bg-gray-100 overflow-clip">
+					<BountyCreation />
+				</div>
 			</div>
-		</div>
+		{:else}
+			<div class="grid bg-white border-2 border-gray-300 p-4">
+				<div class="rounded-t-md bg-gray-100 overflow-clip">
+					<ApprovalReferendum />
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
 
