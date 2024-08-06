@@ -8,7 +8,7 @@
 		bountySetupTabClicked: (tabName: string) => undefined;
 		activeTab: string;
 		tabName: string;
-		tabNumber: number
+		tabNumber: number;
 	} = $props();
 </script>
 
