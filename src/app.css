@@ -3,38 +3,38 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Overpass';
-  src: url('/fonts/Overpass-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Overpass';
+	src: url('/fonts/Overpass-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
 }
 
 @font-face {
-  font-family: 'Overpass';
-  src: url('/fonts/Overpass-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
+	font-family: 'Overpass';
+	src: url('/fonts/Overpass-Bold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
 }
 
 body {
-  font-family: 'Overpass';
-  color: theme('colors.primary');
+	font-family: 'Overpass';
+	color: theme('colors.primary');
 }
 
 .basic-button {
-  @apply px-10 pt-1 rounded-md text-white
+	@apply px-10 pt-1 rounded-md text-white;
 }
 
 .button-active {
-  @apply basic-button bg-accent;
+	@apply basic-button bg-accent;
 }
 
 .button-active:disabled {
-  @apply basic-button ;
-  background-color: rgba(230, 0, 122, 0.5)
+	@apply basic-button;
+	background-color: rgba(230, 0, 122, 0.5);
 }
 
 .button-cancel {
-  @apply basic-button;
-  background-color: theme('colors.darkgray')
+	@apply basic-button;
+	background-color: theme('colors.darkgray');
 }

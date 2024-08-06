@@ -1,12 +1,12 @@
 <script>
-  import "../app.css";
-	import BountySetup from "../components/bounty-setup/BountySetup.svelte";
+	import '../app.css';
+	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
 </script>
 
-<BountySetup/>
+<BountySetup />
 
 <style lang="postcss">
-  :global(html) {
-    background-color: theme(colors.gray.100);
-  }
+	:global(html) {
+		background-color: theme(colors.gray.100);
+	}
 </style>
