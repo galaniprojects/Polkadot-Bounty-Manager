@@ -56,6 +56,16 @@
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 				</select>
+				<div class="mt-5 mb-10 h-24">
+					<section class="mb-3">
+						<p class="label text-xs">Bounty Bond</p>
+						<p class="value"><span>1,067.0000</span> DOT</p>
+					</section>
+					<section>
+						<p class="label text-xs">Transaction fee</p>
+						<p class="value"><span>0,000.0800</span> DOT</p>
+					</section>
+				</div>
 			</div>
 			<div class="flex">
 				<button class="button-cancel mr-5">CANCEL</button>
@@ -67,12 +77,13 @@
 
 <style>
 	.top-bar {
-		background-color: rgba(73, 33, 113, 0.8);
+		background-color: theme('colors.secondary');
 		@apply pl-8 py-3;
 	}
 
 	.content {
 		@apply py-4 pl-8;
+		background-color: theme('colors.background');
 		min-height: 500px;
 	}
 </style>
