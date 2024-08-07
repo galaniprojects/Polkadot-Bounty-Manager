@@ -1,6 +1,6 @@
 .top-bar {
-    background-color: theme('colors.secondary');
     @apply px-9 py-6;
+    background-color: theme('colors.secondary');
 }
 
 .content {

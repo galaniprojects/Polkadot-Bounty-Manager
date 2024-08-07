@@ -5,7 +5,7 @@
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p id="title" class="text-2xl leading-7">{`${bountyId} ${bountyTitle}`}</p>
+		<p class="text-2xl leading-7">{`${bountyId} ${bountyTitle}`}</p>
 		<p class="text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
 			Tap here
@@ -49,6 +49,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-</style>
