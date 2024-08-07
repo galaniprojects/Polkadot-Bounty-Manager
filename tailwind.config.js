@@ -6,13 +6,14 @@ export default {
 	theme: {
 		colors: {
 			accent: '#FF41A6',
+			border: '#7F639B',
 			black: colors.black,
 			white: colors.white,
 			gray: colors.gray,
 			darkgray: '#8a7c9780',
 			primary: '#28123E',
-			secondary: 'rgba(73,33,113,0.8)',
-			background: 'rgba(155,133,177,0.2)'
+			secondary: '#431B5E',
+			background: '#E5E3EE'
 		}
 	},
 	plugins: []

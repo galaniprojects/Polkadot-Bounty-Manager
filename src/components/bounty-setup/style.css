@@ -1,0 +1,14 @@
+.top-bar {
+    @apply px-9 py-6;
+    background-color: theme('colors.secondary');
+}
+
+.content {
+    @apply py-4 pl-8;
+    background-color: theme('colors.background');
+    min-height: 500px;
+}
+
+.border {
+    border-color: theme('colors.border');
+}
