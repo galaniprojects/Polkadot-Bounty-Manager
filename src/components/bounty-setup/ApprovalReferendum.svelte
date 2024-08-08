@@ -25,15 +25,15 @@
 				has been created successfully!
 				<br /><br />
 				Please update the description on
-				<span class="link underline underline-offset-2">Polkassembly</span>. The decision deposit
-				needs to be placed within 7 days, for the referendum to be valid. (This deposit can be
-				placed from another account).
+				<a href="/bs" class="link underline underline-offset-2">Polkassembly</a>. The decision
+				deposit needs to be placed within 7 days, for the referendum to be valid. (This deposit can
+				be placed from another account).
 				<br /> <br />
 				You can now return to the home screen or proceed to the Curator Approval Referendum creation.
 				It is strongly recommended to create the Curator Approval Referendum, after the Bounty has been
 				funded and the Curator list has been informally accepted by the community in discussions on the
 				platforms. Please read the information about the Curator Approval process on our
-				<span class="link underline underline-offset-2">Guide</span>.
+				<a href="/guide" class="link underline underline-offset-2">Guide</a>.
 			</p>
 			<div class="mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
@@ -79,9 +79,3 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-	.link {
-		color: theme('colors.accent');
-	}
-</style>

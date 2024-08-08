@@ -17,3 +17,7 @@
     max-width: 50%;
     word-wrap: break-word;
 }
+
+.link {
+    color: theme('colors.accent');
+}
