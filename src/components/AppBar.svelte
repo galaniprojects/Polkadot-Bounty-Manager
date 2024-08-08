@@ -6,10 +6,10 @@
 
 	let loginDialogOpened = false;
 	let availableExtensions: Array<string> = [];
-	let selectedExtension = '';
+	let selectedExtension: string | undefined;
 
-	async function getAccounts() {
-		const extension = await connectInjectedExtension(selectedExtension);
+	async function logIn() {
+		const extension = await connectInjectedExtension(selectedExtension!);
 		let accounts = extension.getAccounts();
 		const addresses = accounts.map((account) => account.address);
 
@@ -17,11 +17,14 @@
 			loggedAddresses.set(addresses);
 			activeAddress.set(addresses[0]);
 			isLoggedIn.set(true);
+		} else {
+			//TODO: handle no addresses.
 		}
+
 		loginDialogOpened = false;
 	}
 
-	async function logIn() {
+	async function showLoginDialog() {
 		loginDialogOpened = true;
 	}
 
@@ -29,13 +32,15 @@
 		availableExtensions = getInjectedExtensions() || [];
 		if (availableExtensions.length > 0) {
 			selectedExtension = availableExtensions[0];
+		} else {
+			//TODO: handle no extensions.
 		}
 	});
 </script>
 
 <div class="flex justify-end h-20 bg-primary">
 	{#if !$isLoggedIn}
-		<button class=" text-white basic-button" on:click={() => logIn()}> signin</button>
+		<button class=" text-white basic-button" on:click={() => showLoginDialog()}> signin</button>
 	{:else}
 		<select class="w-52 h-10 rounded-md" bind:value={$activeAddress}>
 			{#each $loggedAddresses as address}
@@ -60,9 +65,7 @@
 			</select>
 		</div>
 		<div class="flex items-end justify-center">
-			<button class="button-active text-white bg-accent" on:click={() => getAccounts()}>
-				login
-			</button>
+			<button class="button-active text-white bg-accent" on:click={() => logIn()}> login </button>
 		</div>
 	</div>
 </BountyDialog>

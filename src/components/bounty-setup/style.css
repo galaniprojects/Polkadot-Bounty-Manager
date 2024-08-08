@@ -1,0 +1,23 @@
+.top-bar {
+    @apply px-9 py-6;
+    background-color: theme('colors.secondary');
+}
+
+.content {
+    @apply py-4 pl-8;
+    background-color: theme('colors.backgroundContent');
+    min-height: 500px;
+}
+
+.border {
+    border-color: theme('colors.border');
+}
+
+.half-width {
+    max-width: 50%;
+    word-wrap: break-word;
+}
+
+.link {
+    color: theme('colors.accent');
+}
