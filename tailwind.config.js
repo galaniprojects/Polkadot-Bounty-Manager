@@ -6,14 +6,15 @@ export default {
 	theme: {
 		colors: {
 			accent: '#FF41A6',
+			backgroundContent: '#E5E3EE',
+			backgroundContentWrapper: '#BFACBF',
 			border: '#7F639B',
 			black: colors.black,
 			white: colors.white,
 			gray: colors.gray,
-			darkgray: '#8a7c9780',
+			darkgray: '#94889F',
 			primary: '#28123E',
-			secondary: '#431B5E',
-			background: '#E5E3EE'
+			secondary: '#431B5E'
 		}
 	},
 	plugins: []

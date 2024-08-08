@@ -38,21 +38,21 @@
 			<div>
 				<p class="text-sm">Bounty value</p>
 				<div class="flex mt-2">
-					<input class="pt-1 pl-2 w-64 rounded-s bg-white mr-2" placeholder="0.000.0000" />
+					<input class="border pt-1 pl-2 w-64 rounded-s bg-white mr-2" placeholder="0.000.0000" />
 					<p class="mt-1">DOT</p>
 				</div>
-				<hr class="border border-white mt-5 mb-1 w-96">
-				
+				<hr class="border-white mt-5 mb-1 w-96" />
+
 				<p class="text-sm">Bounty description</p>
 				<textarea
-					class="pt-1 pl-2 md:w-96 h-32 rounded-md bg-white mt-2e mr-2 mt-2"
+					class="border pt-1 pl-2 md:w-96 h-32 rounded-md bg-white mt-2e mr-2 mt-2"
 					placeholder="Your Bounty description goes here"
 				></textarea>
 
-				<hr class="border border-white mt-5 mb-2 w-96">
+				<hr class=" border-white mt-5 mb-2 w-96" />
 				<p class="text-sm mb-2">Submit with account</p>
 
-				<select class="w-64" name="accounts" id="accounts">
+				<select class="border w-64" name="accounts" id="accounts">
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 				</select>
