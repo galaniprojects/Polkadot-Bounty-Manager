@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+	import AppBar from '../components/AppBar.svelte';
 	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
 </script>
 
-<BountySetup />
+
+<AppBar/>
+<BountySetup/>
 
 <style lang="postcss">
 	:global(html) {
