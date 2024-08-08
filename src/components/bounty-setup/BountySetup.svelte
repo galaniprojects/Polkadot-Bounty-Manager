@@ -7,7 +7,7 @@
 	import ApprovalReferendum from './ApprovalReferendum.svelte';
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
-	
+
 	let activeTab = TABS[0];
 
 	function onTabClick(tab: BountyTab) {
@@ -41,24 +41,27 @@
 		</div>
 
 		{#if activeTab === TABS[0]}
-			<div class="grid bg-white border-2 border-gray-300 p-4">
+			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
 				<div class="rounded-t-md bg-gray-100 overflow-clip">
 					<BountyCreation />
 				</div>
 			</div>
 		{:else}
-			<div class="grid bg-white border-2 border-gray-300 p-4">
+			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
 				<div class="rounded-t-md bg-gray-100 overflow-clip">
 					<ApprovalReferendum />
 				</div>
 			</div>
 		{/if}
-		
 	</div>
 </div>
 
 <style>
 	.setup-container {
 		min-height: 800px;
+	}
+
+	.main-content {
+		background-color: theme('colors.backgroundContentWrapper');
 	}
 </style>

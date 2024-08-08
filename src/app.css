@@ -38,3 +38,8 @@ body {
 	@apply basic-button;
 	background-color: theme('colors.darkgray');
 }
+
+.button-cancel:disabled {
+	@apply basic-button;
+	background-color: rgba(138, 124, 151, 0.5);
+}
