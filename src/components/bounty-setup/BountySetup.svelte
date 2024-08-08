@@ -7,6 +7,7 @@
 	import ApprovalReferendum from './ApprovalReferendum.svelte';
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
+	import CuratorProposal from './CuratorProposal.svelte';
 
 	let activeTab = TABS[0];
 
@@ -46,10 +47,16 @@
 					<BountyCreation />
 				</div>
 			</div>
-		{:else}
+		{:else if activeTab === TABS[1]}
 			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
 				<div class="rounded-t-md bg-gray-100 overflow-clip">
 					<ApprovalReferendum />
+				</div>
+			</div>
+		{:else}
+			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
+				<div class="rounded-t-md bg-gray-100 overflow-clip">
+					<CuratorProposal />
 				</div>
 			</div>
 		{/if}
