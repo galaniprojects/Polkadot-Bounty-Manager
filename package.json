@@ -36,5 +36,9 @@
 		"vite": "^5.0.3",
 		"vitest": "^2.0.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@polkadot-api/descriptors": "file:.papi/descriptors",
+		"polkadot-api": "^0.12.1"
+	}
 }
