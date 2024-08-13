@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export const TABS = ['Bounty Creation', 'Approval', 'Curator Proposal'];
+	export const TABS = ['Creation', 'Approval', 'Curator Proposal'];
 	export type BountyTab = (typeof TABS)[number];
 </script>
 
@@ -17,58 +17,57 @@
 	}
 </script>
 
-<div class="flex justify-center items-center md:py-20 lg:py-40">
-	<div class="container setup-container max-w-screen-lg">
-		<h2 class="my-5 font-bold text-2xl">Bounty Setup</h2>
-		<div class="grid grid-cols-3 h-14 gap-3">
-			<BountySetupTab
-				{activeTab}
-				tabName={TABS[0]}
-				tabNumber={1}
-				bountySetupTabClicked={onTabClick}
-			/>
-			<BountySetupTab
-				{activeTab}
-				tabName={TABS[1]}
-				tabNumber={2}
-				bountySetupTabClicked={onTabClick}
-			/>
-			<BountySetupTab
-				{activeTab}
-				tabName={TABS[2]}
-				tabNumber={3}
-				bountySetupTabClicked={onTabClick}
-			/>
-		</div>
+<div class="main flex justify-center items-center md:py-20 lg:py-40">
+	<div class="container setup-container max-w-screen-lg rounded-md">
+		<h2 class="my-5 font-bold text-2xl text-white">Bounty Setup</h2>
+		<div class="frame border-accent rounded-md">
+			<div class="flex relative h-20 px-8 bg-primary rounded-md">
+				<div class="pt-6 w-1/6">
+					<BountySetupTab {activeTab} tabName={TABS[0]} bountySetupTabClicked={onTabClick} />
+				</div>
 
-		{#if activeTab === TABS[0]}
-			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
-				<div class="rounded-t-md bg-gray-100 overflow-clip">
-					<BountyCreation />
+				<div class="pt-6 w-1/6">
+					<BountySetupTab {activeTab} tabName={TABS[1]} bountySetupTabClicked={onTabClick} />
+				</div>
+				<div class="pt-6 w-1/4">
+					<BountySetupTab {activeTab} tabName={TABS[2]} bountySetupTabClicked={onTabClick} />
 				</div>
 			</div>
-		{:else if activeTab === TABS[1]}
-			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
-				<div class="rounded-t-md bg-gray-100 overflow-clip">
-					<ApprovalReferendum />
+
+			{#if activeTab === TABS[0]}
+				<div class="main-content grid p-4">
+					<div class="rounded-t-md overflow-clip">
+						<BountyCreation />
+					</div>
 				</div>
-			</div>
-		{:else}
-			<div class="main-content grid bg-white border-2 border-gray-300 p-4">
-				<div class="rounded-t-md bg-gray-100 overflow-clip">
-					<CuratorProposal />
+			{:else if activeTab === TABS[1]}
+				<div class="main-content grid p-4">
+					<div class="rounded-t-md overflow-clip">
+						<ApprovalReferendum />
+					</div>
 				</div>
-			</div>
-		{/if}
+			{:else}
+				<div class="main-content grid p-4">
+					<div class="rounded-t-md overflow-clip">
+						<CuratorProposal />
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>
 
 <style>
-	.setup-container {
-		min-height: 800px;
+	.main {
+		@apply border border-y-accent border-x-0;
+		background: linear-gradient(180deg, #311033 0%, #6c003d 100%);
+	}
+	.main-content {
+		@apply rounded-b-md;
+		background-color: theme('colors.backgroundContentWrapper');
 	}
 
-	.main-content {
-		background-color: theme('colors.backgroundContentWrapper');
+	.frame {
+		border-width: 1px;
 	}
 </style>

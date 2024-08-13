@@ -5,7 +5,7 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		colors: {
-			accent: '#FF41A6',
+			accent: '#E6007A',
 			backgroundContent: '#E5E3EE',
 			backgroundContentWrapper: '#BFACBF',
 			border: '#7F639B',
