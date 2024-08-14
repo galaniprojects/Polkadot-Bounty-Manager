@@ -22,14 +22,13 @@
 		<h2 class="my-5 font-bold text-2xl text-white">Bounty Setup</h2>
 		<div class="frame border-accent rounded-md">
 			<div class="flex relative h-20 px-8 bg-primary rounded-md">
-				<div class="pt-6 w-1/6">
+				<div class="w-1/6">
 					<BountySetupTab {activeTab} tabName={TABS[0]} bountySetupTabClicked={onTabClick} />
 				</div>
-
-				<div class="pt-6 w-1/6">
+				<div class="w-1/6">
 					<BountySetupTab {activeTab} tabName={TABS[1]} bountySetupTabClicked={onTabClick} />
 				</div>
-				<div class="pt-6 w-1/4">
+				<div class="w-1/4">
 					<BountySetupTab {activeTab} tabName={TABS[2]} bountySetupTabClicked={onTabClick} />
 				</div>
 			</div>

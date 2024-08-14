@@ -14,8 +14,9 @@ export default {
 			gray: colors.gray,
 			darkgray: '#94889F',
 			primary: '#28123E',
-			secondary: '#431B5E'
-		},
+			secondary: '#431B5E',
+			transparent: colors.transparent
+		}
 	},
 	plugins: []
 };
