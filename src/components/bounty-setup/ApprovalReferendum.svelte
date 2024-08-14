@@ -1,7 +1,9 @@
 <script>
 	let success = false;
-	let bountyId = '#88';
-	let bountyTitle = 'Community Event Activity Bounty';
+	let bounty = {
+		id: '#88',
+		title: 'Community Event Activity Bounty'
+	};
 
 	function submit() {
 		success = !success;
@@ -10,18 +12,18 @@
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p class="text-2xl leading-7">{`${bountyId} ${bountyTitle}`}</p>
-		<p class="text-sm mt-1.5">
+		<p class="title text-2xl leading-7">{`${bounty.id} ${bounty.title}`}</p>
+		<p class="text text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
-			Tap here
+			<a href="#info">Tap here</a>
 		</p>
 	</div>
 
 	{#if success}
 		<div class="content">
-			<p class="half-width">
+			<p class="description">
 				The Referendum for the approval of Bounty <br />
-				{`${bountyId} ${bountyTitle}`} <br />
+				{`${bounty.id} ${bounty.title}`} <br />
 				has been created successfully!
 				<br /><br />
 				Please update the description on
@@ -35,9 +37,9 @@
 				platforms. Please read the information about the Curator Approval process on our
 				<a href="/guide" class="link underline underline-offset-2">Guide</a>.
 			</p>
-			<div class="mt-5 flex">
+			<div class="buttons mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
-				<button on:click={() => submit()} class="button-active">PROCEED</button>
+				<button on:click={submit} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
@@ -45,7 +47,7 @@
 			<div>
 				<div>
 					<p class="text-xs mb-1">Treasury track</p>
-					<select class="border w-72 rounded-md h-7 px-1 pt-1" name="spenders" id="spenders">
+					<select class="border w-1/4 rounded-md h-7 px-1 pt-1" name="spenders" id="spenders">
 						<option value="small">Small Spender</option>
 						<option value="medium">Medium Spender</option>
 						<option value="big">Big Spender</option>
@@ -56,7 +58,7 @@
 				<hr class="border-white mt-5 mb-3 w-96" />
 
 				<p class="text-xs mb-1">Submit with account</p>
-				<select class="border w-72 rounded-md h-7 px-1 pt-1" name="accounts" id="accounts">
+				<select class="border w-1/4 rounded-md h-7 px-1 pt-1" name="accounts" id="accounts">
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 				</select>
@@ -72,9 +74,9 @@
 					</section>
 				</div>
 			</div>
-			<div class="flex">
+			<div class="buttons flex">
 				<button class="button-cancel mr-5">CANCEL</button>
-				<button on:click={() => submit()} class="button-active">SUBMIT</button>
+				<button on:click={submit} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{/if}

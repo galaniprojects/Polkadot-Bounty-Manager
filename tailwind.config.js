@@ -15,7 +15,7 @@ export default {
 			darkgray: '#94889F',
 			primary: '#28123E',
 			secondary: '#431B5E'
-		}
+		},
 	},
 	plugins: []
 };

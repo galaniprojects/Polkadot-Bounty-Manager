@@ -1,7 +1,9 @@
 <script>
 	let step = 1;
-	let bountyId = '#88';
-	let bountyTitle = 'Community Event Activity Bounty';
+	let bounty = {
+		id: '#88',
+		title: 'Community Event Activity Bounty'
+	};
 
 	function submit() {
 		step = (step % 3) + 1;
@@ -10,8 +12,8 @@
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p class="text-2xl leading-7">{`${bountyId} ${bountyTitle}`}</p>
-		<p class="text-sm mt-1.5">
+		<p class="title text-2xl leading-7">{`${bounty.id} ${bounty.title}`}</p>
+		<p class="text text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
 			Tap here
 		</p>
@@ -19,7 +21,7 @@
 
 	{#if step === 1}
 		<div class="content">
-			<p class="w-1/2">
+			<p class="description">
 				As standard practice, this action is performed after the Bounty has been funded.
 				<br /><br />
 				However if you want to proceed and already have a list of curators to propose, it is possible
@@ -36,7 +38,7 @@
 		<div class="content">
 			<div>
 				<div>
-					<p class="mb-2 w-1/2">
+					<p class="description mb-2">
 						It is highly recommended to use a pure proxy multisig address for the curators!
 					</p>
 					<p class="text-xs my-1">Curator Address</p>
@@ -69,9 +71,9 @@
 		</div>
 	{:else}
 		<div class="content">
-			<p class="half-width">
+			<p class="description">
 				A Curator Proposal Referendum for <br />
-				{`${bountyId} ${bountyTitle}`} <br />
+				{`${bounty.id} ${bounty.title}`} <br />
 				created successfully!
 				<br /><br />
 				Check the Referendum on
@@ -81,7 +83,7 @@
 				<br /> <br />
 				You can go back to the list of all bounties.
 			</p>
-			<div class="mt-5 flex">
+			<div class="buttons mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
 				<button on:click={() => submit()} class="button-active">PROCEED</button>
 			</div>
