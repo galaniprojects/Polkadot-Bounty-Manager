@@ -1,13 +1,42 @@
 <script>
+	import { ApiPromise, WsProvider } from '@polkadot/api';
+	import {
+		web3Accounts,
+		web3FromAddress
+	} from '@polkadot/extension-dapp';
+
 	let success = false;
 	let bounty = {
 		id: '#88',
 		title: 'Community Event Activity Bounty'
 	};
 
-	function submit() {
+	async function submit() {
 		success = !success;
+
+		const accounts = await web3Accounts();
+		const wsProvider = new WsProvider('ws://localhost:8000');
+		const injector = await web3FromAddress(accounts[0].address);
+
+		const api = await ApiPromise.create({ provider: wsProvider });
+
+		console.log('making preimage');
+		let preimageTx = api.tx.bounties.approveBounty(60);
+
+		let refernda = api.tx.referenda.submit(
+			{
+				Origins: 'BigSpender'
+			},
+			{ Inline: preimageTx.method.toHex() },
+			{ After: 1 }
+		);
+		let encoded = refernda.method.toHex();
+		console.log(encoded);
+
+		const ref = await refernda.signAndSend(accounts[0].address, { signer: injector.signer });
+		console.log(ref);
 	}
+
 </script>
 
 <div>

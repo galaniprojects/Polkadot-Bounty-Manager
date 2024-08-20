@@ -1,4 +1,9 @@
 <script>
+	import { ApiPromise, WsProvider } from '@polkadot/api';
+	import {
+		web3Accounts,
+		web3FromAddress
+	} from '@polkadot/extension-dapp';
 	let success = false;
 
 	let bounty = {
@@ -6,8 +11,17 @@
 		title: 'Community Event Activity Bounty'
 	};
 
-	function submit() {
-		success = !success;
+
+
+	async function submit() {
+		const accounts = await web3Accounts();
+		const wsProvider = new WsProvider('ws://localhost:8000');
+		const injector = await web3FromAddress(accounts[0].address);
+
+		const api = await ApiPromise.create({ provider: wsProvider });
+		let tx = await api.tx.bounties
+			.proposeBounty(20000000000000, 'hello bounty')
+			.signAndSend(accounts[0].address, { signer: injector.signer });
 	}
 </script>
 

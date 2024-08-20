@@ -1,16 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { isLoggedIn, loggedAddresses, activeAddress } from '../stores';
-	import { connectInjectedExtension, getInjectedExtensions } from 'polkadot-api/pjs-signer';
+	// import { connectInjectedExtension, getInjectedExtensions } from 'polkadot-api/pjs-signer';
 	import BountyDialog from './BountyDialog.svelte';
+	import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 
 	let loginDialogOpened = false;
 	let availableExtensions: Array<string> = [];
 	let selectedExtension: string | undefined;
 
 	async function logIn() {
-		const extension = await connectInjectedExtension(selectedExtension!);
-		let accounts = extension.getAccounts();
+		console.log("loginnn")
+		const extensions = await web3Enable('my cool dapp');
+		console.log(extensions.length);
+		// const extension = await connectInjectedExtension(selectedExtension!);
+		// let accounts = extension.getAccounts();
+		// const addresses = accounts.map((account) => account.address);
+
+		const accounts = await web3Accounts();
 		const addresses = accounts.map((account) => account.address);
 
 		if (accounts.length > 0) {
@@ -28,8 +35,12 @@
 		loginDialogOpened = true;
 	}
 
-	onMount(() => {
-		availableExtensions = getInjectedExtensions() || [];
+	onMount(async () => {
+		const extensions = await web3Enable('my cool dapp');
+		availableExtensions =
+			extensions.map((extension) => {
+				return extension.name;
+			}) || [];
 		if (availableExtensions.length > 0) {
 			selectedExtension = availableExtensions[0];
 		} else {
