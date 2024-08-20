@@ -10,12 +10,13 @@ export default {
 			backgroundContentWrapper: '#BFACBF',
 			border: '#7F639B',
 			black: colors.black,
-			white: colors.white,
-			gray: colors.gray,
 			darkgray: '#94889F',
+			gray: colors.gray,
+			notifications: '#FFAA35',
 			primary: '#28123E',
 			secondary: '#431B5E',
-			transparent: colors.transparent
+			transparent: colors.transparent,
+			white: colors.white
 		}
 	},
 	plugins: []
