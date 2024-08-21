@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let opened = true;
 	export let title = '';
+	export let dismissable = true;
 </script>
 
 {#if opened}
@@ -15,6 +16,7 @@
 				<p class="m-6 text-xl">
 					{title}
 				</p>
+				{#if dismissable}
 				<button class="m-4" on:click={() => (opened = false)}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -27,8 +29,11 @@
 						/></svg
 					>
 				</button>
+	{/if}
 			</div>
-			<slot></slot>
+			<div class="h-[120px]">
+				<slot></slot>
+			</div>
 		</div>
 	</div>
 {/if}

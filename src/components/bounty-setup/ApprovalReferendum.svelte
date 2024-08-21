@@ -1,47 +1,87 @@
-<script>
-	import { ApiPromise, WsProvider } from '@polkadot/api';
-	import {
-		web3Accounts,
-		web3FromAddress
-	} from '@polkadot/extension-dapp';
+<script lang="ts" context="module">
+	export let treasuryTracks = [
+		{ origin: 'SmallSpender', display: 'Small Spender' },
+		{ origin: 'MediumSpender', display: 'Medium Spender' },
+		{ origin: 'BigSpender', display: 'Big Spender' }
+	];
+</script>
 
+<script lang="ts">
+	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { web3FromAddress } from '@polkadot/extension-dapp';
+	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
+	import type { BountyInfo } from './BountySetup.svelte';
+	import { firstValueFrom, filter } from 'rxjs';
+	import { activeAccount } from '../../stores';
+	import { createEventDispatcher } from 'svelte';
+
+	let loadingState = LoadingState.Loading;
+	let showLoadingScreen = false;
+	export let bountyInfo: BountyInfo;
 	let success = false;
-	let bounty = {
-		id: '#88',
-		title: 'Community Event Activity Bounty'
-	};
+	let selectedTreasuryTrack = treasuryTracks[0].origin;
 
-	async function submit() {
-		success = !success;
-
-		const accounts = await web3Accounts();
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const injector = await web3FromAddress(accounts[0].address);
-
-		const api = await ApiPromise.create({ provider: wsProvider });
-
-		console.log('making preimage');
-		let preimageTx = api.tx.bounties.approveBounty(60);
-
-		let refernda = api.tx.referenda.submit(
-			{
-				Origins: 'BigSpender'
-			},
-			{ Inline: preimageTx.method.toHex() },
-			{ After: 1 }
-		);
-		let encoded = refernda.method.toHex();
-		console.log(encoded);
-
-		const ref = await refernda.signAndSend(accounts[0].address, { signer: injector.signer });
-		console.log(ref);
+	const dispatch = createEventDispatcher();
+	function changeTab() {
+		dispatch('changeTab', {
+			tab: 'Curator Proposal'
+		});
 	}
 
+	async function submit() {
+		if (success) {
+			changeTab();
+			return;
+		}
+		showLoadingScreen = true;
+		loadingState = LoadingState.Loading;
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const injector = await web3FromAddress($activeAccount.address);
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let tx = api.tx.bounties.approveBounty(bountyInfo.id);
+			let observable = api.tx.referenda
+				.submit(
+					{
+						Origins: selectedTreasuryTrack
+					},
+					{ Inline: tx.method.toHex() },
+					{ After: 1 }
+				)
+				.signAndSend($activeAccount.address, { signer: injector.signer });
+
+			let submittableResult = await firstValueFrom(
+				observable.pipe(
+					filter((event) => {
+						return event.isFinalized || event.isError;
+					})
+				)
+			);
+
+			if (submittableResult.dispatchError || submittableResult.isError) {
+				loadingState = LoadingState.Error;
+				console.log('error catched');
+				console.log(submittableResult.toHuman());
+				return;
+				//todo error happened.
+			}
+
+			loadingState = LoadingState.Success;
+			success = true;
+		} catch (e) {
+			console.error(e);
+			loadingState = LoadingState.Error;
+		}
+	}
 </script>
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p class="title text-2xl leading-7">{`${bounty.id} ${bounty.title}`}</p>
+		<p class="title text-2xl leading-7">
+			{#if bountyInfo.id && bountyInfo.description}
+				{`#${bountyInfo.id} ${bountyInfo.description}`}
+			{/if}
+		</p>
 		<p class="text text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
 			<a href="#info">Tap here</a>
@@ -52,7 +92,7 @@
 		<div class="content">
 			<p class="description">
 				The Referendum for the approval of Bounty <br />
-				{`${bounty.id} ${bounty.title}`} <br />
+				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
 				has been created successfully!
 				<br /><br />
 				Please update the description on
@@ -68,7 +108,7 @@
 			</p>
 			<div class="buttons mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
-				<button on:click={submit} class="button-active">PROCEED</button>
+				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
@@ -76,10 +116,15 @@
 			<div>
 				<div>
 					<p class="text-xs mb-1">Treasury track</p>
-					<select class="border w-1/4 rounded-md h-7 px-1 pt-1" name="spenders" id="spenders">
-						<option value="small">Small Spender</option>
-						<option value="medium">Medium Spender</option>
-						<option value="big">Big Spender</option>
+					<select
+						class="border w-1/4 rounded-md h-7 px-1 pt-1"
+						bind:value={selectedTreasuryTrack}
+						name="spenders"
+						id="spenders"
+					>
+						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
+						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
+						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
 					</select>
 					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
 				</div>
@@ -105,8 +150,9 @@
 			</div>
 			<div class="buttons flex">
 				<button class="button-cancel mr-5">CANCEL</button>
-				<button on:click={submit} class="button-active">SUBMIT</button>
+				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{/if}
 </div>
+<LoadingScreen bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>

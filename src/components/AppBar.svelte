@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { isLoggedIn, loggedAddresses, activeAddress } from '../stores';
-	// import { connectInjectedExtension, getInjectedExtensions } from 'polkadot-api/pjs-signer';
+	import { isLoggedIn, loggedAccounts, activeAccount } from '../stores';
 	import BountyDialog from './BountyDialog.svelte';
 	import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 
@@ -10,19 +9,15 @@
 	let selectedExtension: string | undefined;
 
 	async function logIn() {
-		console.log("loginnn")
-		const extensions = await web3Enable('my cool dapp');
-		console.log(extensions.length);
-		// const extension = await connectInjectedExtension(selectedExtension!);
-		// let accounts = extension.getAccounts();
-		// const addresses = accounts.map((account) => account.address);
 
-		const accounts = await web3Accounts();
-		const addresses = accounts.map((account) => account.address);
+		const accounts = await web3Accounts({
+			extensions: [selectedExtension!],
+			ss58Format: 0
+		});
 
 		if (accounts.length > 0) {
-			loggedAddresses.set(addresses);
-			activeAddress.set(addresses[0]);
+			loggedAccounts.set(accounts);
+			activeAccount.set(accounts[0]);
 			isLoggedIn.set(true);
 		} else {
 			//TODO: handle no addresses.
@@ -53,15 +48,16 @@
 	{#if !$isLoggedIn}
 		<button class=" text-white basic-button" on:click={() => showLoginDialog()}> signin</button>
 	{:else}
-		<select class="w-52 h-10 rounded-md" bind:value={$activeAddress}>
-			{#each $loggedAddresses as address}
-				<option value={address}>
-					{address}
+		<select class="w-52 h-10 rounded-md" bind:value={$activeAccount}>
+			{#each $loggedAccounts as account}
+				<option value={account}>
+					({account.meta.name || ""}) {account.address.toWellFormed().substring(0, 15) + "..."}
 				</option>
 			{/each}
 		</select>
 	{/if}
 </div>
+
 
 <BountyDialog title="Login" bind:opened={loginDialogOpened}>
 	<div class="h-auto flex flex-col justify-between">

@@ -1,27 +1,85 @@
-<script>
-	import { ApiPromise, WsProvider } from '@polkadot/api';
-	import {
-		web3Accounts,
-		web3FromAddress
-	} from '@polkadot/extension-dapp';
+<script lang="ts">
+	import { ApiRx, WsProvider } from '@polkadot/api';
+	import {  web3FromAddress } from '@polkadot/extension-dapp';
+	import { firstValueFrom, filter } from 'rxjs';
+	import LoadingScreen from '../LoadingScreen.svelte';
+	import { LoadingState } from '../LoadingScreen.svelte';
+	import { createEventDispatcher } from 'svelte';
+	import type { BountyInfo } from './BountySetup.svelte';
+	import { activeAccount } from '../../stores';
+
+	const dispatch = createEventDispatcher();
+	function changeTab() {
+		dispatch('changeTab', {
+			tab: 'Approval'
+		});
+	}
+
+	export let bountyInfo: BountyInfo;
+
 	let success = false;
-
-	let bounty = {
-		id: '#88',
-		title: 'Community Event Activity Bounty'
-	};
-
-
+	let loadingState = LoadingState.Loading;
+	let showLoadingScreen = false;
+	let bountyValue: string | undefined = undefined;
+	let bountyTitle = '';
 
 	async function submit() {
-		const accounts = await web3Accounts();
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const injector = await web3FromAddress(accounts[0].address);
+		loadingState = LoadingState.Loading;
+		showLoadingScreen = true;
+		try {
+			if(!$activeAccount){
+				throw new Error("please connect wallet first")
+				//TODO
+			}
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const injector = await web3FromAddress($activeAccount.address);
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
-		const api = await ApiPromise.create({ provider: wsProvider });
-		let tx = await api.tx.bounties
-			.proposeBounty(20000000000000, 'hello bounty')
-			.signAndSend(accounts[0].address, { signer: injector.signer });
+			if (bountyTitle.length === 0) {
+				//todo
+				throw new Error('bounty title is empty');
+			}
+			if (!bountyValue) {
+				//todo
+				throw new Error('bounty value invalid');
+			} else {
+				let v = BigInt(bountyValue) * 10000000000n;
+				let description = bountyTitle;
+				let observable = api.tx.bounties
+					.proposeBounty(v, description)
+					.signAndSend($activeAccount.address, { signer: injector.signer });
+
+				let submittableResult = await firstValueFrom(
+					observable.pipe(
+						filter((event) => {
+							return event.isFinalized || event.isError;
+						})
+					)
+				);
+
+				if (submittableResult.dispatchError || submittableResult.isError) {
+					loadingState = LoadingState.Error;
+					console.log('error catched');
+					console.log(submittableResult.toHuman());
+					return;
+					//todo error happened.
+				}
+
+				let bountyEvent = submittableResult.findRecord('bounties', 'BountyProposed');
+				let bountyIndex = bountyEvent?.event.data[0].toJSON();
+				bountyInfo = {
+					id: bountyIndex as number,
+					description: bountyTitle
+				};
+				console.log(bountyInfo);
+				console.log(bountyIndex);
+				loadingState = LoadingState.Success;
+				success = true;
+			}
+		} catch (e) {
+			console.log('error', e);
+			loadingState = LoadingState.Error;
+		}
 	}
 </script>
 
@@ -29,6 +87,7 @@
 	<div class="top-bar flex justify-between">
 		{#if !success}
 			<input
+				bind:value={bountyTitle}
 				class="rounded-md bg-gray-100 w-1/2 pl-3 pt-1"
 				placeholder="Give your Bounty a title"
 			/>
@@ -37,14 +96,14 @@
 				<a href="#moreinfo">Tap here</a>
 			</p>
 		{:else}
-			<p class="text-white">{`${bounty.id} ${bounty.title}`}</p>
+			<p class="text-white">{`#${bountyInfo.id} ${bountyInfo.description}`}</p>
 		{/if}
 	</div>
 
 	{#if success}
 		<div class="content">
 			<p>
-				{`${bounty.id} ${bounty.title}`}
+				{`#${bountyInfo.id} ${bountyInfo.description}`}
 				created successfully!
 				<br /><br />
 				You can either proceed to 2 Referendum <br />
@@ -54,7 +113,7 @@
 
 			<div class="mt-5 flex">
 				<button class="button-cancel mr-5">LIST</button>
-				<button on:click={submit} class="button-active">PROCEED</button>
+				<button on:click={changeTab} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
@@ -62,7 +121,11 @@
 			<div>
 				<p class="text-xs">Bounty value</p>
 				<div class="flex mt-2">
-					<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" placeholder="0.000.0000" />
+					<input
+						bind:value={bountyValue}
+						class="border pt-1 pl-2 w-1/4 rounded-md bg-white"
+						placeholder="1000"
+					/>
 				</div>
 				<hr class="border-white mt-5 mb-1 w-1/2" />
 
@@ -97,3 +160,4 @@
 		</div>
 	{/if}
 </div>
+<LoadingScreen bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>
