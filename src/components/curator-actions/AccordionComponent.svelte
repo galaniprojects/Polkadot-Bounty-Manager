@@ -12,38 +12,48 @@
 	}
 </script>
 
-<div class="accordion bg-secondary border-accent rounded-md p-3 my-6">
-	<div
-		class="accordion-header font-bold text-lg lg:hidden text-white flex justify-between items-center p-2 space-x-2"
-	>
-		<span class="bounty-id mb-7">{`${bounty.id}`}</span>
-		<span class="bounty-title ml-3">{`${bounty.title}`}</span>
-		<button
-			class=" material-symbols-outlined border-white border-2 rounded-full p-3 w-8 h-8 text-2xl flex justify-center items-center ml-3"
-			on:click={handleToggleClick}
+<div class="accordion bg-secondary border-accent rounded-md p-3 my-6 border">
+	<!-- Mobile design-->
+	<div class="lg:hidden">
+		<div
+			class="accordion-header font-bold text-lg text-white flex justify-between items-center p-2 space-x-2"
 		>
-			{#if expanded}
-				keyboard_arrow_up
-			{:else}
-				keyboard_arrow_down
-			{/if}
-		</button>
-	</div>
-
-	<div class="actions lg:hidden grid gap-1 lg:justify-between lg:items-center">
-		<div class="flex justify-between">
-			<button class="curator-btn text-accent border-accent px-1 py-2 m-1 w-full">
-				ACCEPT CURATOR
+			<span class="bounty-id mb-7 min-[458px]:mb-0">{`${bounty.id}`}</span>
+			<span class="bounty-title ml-3">{`${bounty.title}`}</span>
+			<button
+				class=" material-symbols-outlined border-white border-2 rounded-full p-3 w-8 h-8 text-2xl flex justify-center items-center ml-3"
+				on:click={handleToggleClick}
+			>
+				{#if expanded}
+					keyboard_arrow_up
+				{:else}
+					keyboard_arrow_down
+				{/if}
 			</button>
-			<button class="info-svg w-9 h-9"><InfoSvg /></button>
 		</div>
 
-		<div class="flex justify-between">
-			<button class="optin-btn text-darkgray border-darkgray px-1 py-2 m-1 w-full"> OPT-IN </button>
-			<button class="info-svg w-9 h-9"><InfoSvg /></button>
+		<div class="actions grid gap-1 lg:justify-between lg:items-center">
+			<div class="flex justify-between">
+				<button
+					class="curator-btn text-accent border-accent border rounded-md font-bold px-1 py-2 m-1 w-full"
+				>
+					ACCEPT CURATOR
+				</button>
+				<button class="info-svg w-9 h-9 m-2"><InfoSvg /></button>
+			</div>
+
+			<div class="flex justify-between">
+				<button
+					class="optin-btn text-darkgray border-darkgray border rounded-md font-bold px-1 py-2 m-1 w-full"
+				>
+					OPT-IN
+				</button>
+				<button class="info-svg w-9 h-9 m-2"><InfoSvg /></button>
+			</div>
 		</div>
 	</div>
 
+	<!-- Desktop design -->
 	<div
 		class="temp lg:w-[960px] xl:w-[1200px] 2xl:w-[1280px] hidden lg:flex justify-between items-center max-h-20 pl-10 pr-6"
 	>
@@ -53,13 +63,15 @@
 		</div>
 
 		<div class="actions flex justify-between items-center">
-			<button class="info-svg w-6 h-6"><InfoSvg /></button>
-			<button class="curator-btn text-accent border-2 border-accent min-w-fit px-3 ml-2 mr-5"
+			<button class="info-svg w-6 h-6 m-2"><InfoSvg /></button>
+			<button
+				class="curator-btn text-accent border-accent border min-w-fit rounded-md font-bold px-3 ml-2 mr-5"
 				>ACCEPT CURATOR
 			</button>
 
-			<button class="info-svg w-6 h-6"><InfoSvg /></button>
-			<button class="optin-btn text-darkgray border-2 border-darkgray min-w-fit px-9 ml-2 mr-6"
+			<button class="info-svg w-6 h-6 m-2"><InfoSvg /></button>
+			<button
+				class="optin-btn text-darkgray border-darkgray border min-w-fit rounded-md font-bold px-9 ml-2 mr-6"
 				>OPT-IN
 			</button>
 			<button
@@ -77,22 +89,6 @@
 </div>
 
 <style>
-	.accordion {
-		@apply border;
-	}
-
-	@media (min-width: 500px) {
-		.bounty-id {
-			@apply mb-0;
-		}
-	}
-
-	.curator-btn,
-	.optin-btn {
-		@apply rounded-md font-bold;
-		border: 1px solid;
-	}
-
 	.material-symbols-outlined {
 		font-family: 'Material Icons Outlined';
 		font-variation-settings:
@@ -100,13 +96,5 @@
 			'wght' 400,
 			'GRAD' 0,
 			'opsz' 24;
-	}
-
-	.info-svg {
-		@apply m-2;
-	}
-
-	.info-svg {
-		border: none;
 	}
 </style>

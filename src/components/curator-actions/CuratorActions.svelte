@@ -1,5 +1,5 @@
 <script>
-	import AccordionComponent from "./AccordionComponent.svelte";
+	import AccordionItem from "./AccordionComponent.svelte";
 	let isDesktop = false;
 
 </script>
@@ -13,8 +13,8 @@
 			>
 		</div>
 
-		<AccordionComponent/>
-		<AccordionComponent/>
+		<AccordionItem/>
+		<AccordionItem/>
 	</div>
 </div>
 
