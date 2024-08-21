@@ -5,17 +5,10 @@
 		id: '#88',
 		title: 'Community Event Activity Bounty'
 	};
+	let expanded = false;
 
-	function handleToggleClick(this: HTMLElement) {
-		const accordion = this.closest('.accordion');
-		if (!accordion) {
-			console.error('Accordion not found!');
-			return;
-		}
-		accordion.classList.toggle('expanded');
-		this.textContent = accordion.classList.contains('expanded')
-			? 'keyboard_arrow_up'
-			: 'keyboard_arrow_down';
+	function handleToggleClick() {
+		expanded = !expanded;
 	}
 </script>
 
@@ -26,10 +19,14 @@
 		<span class="bounty-id mb-7">{`${bounty.id}`}</span>
 		<span class="bounty-title ml-3">{`${bounty.title}`}</span>
 		<button
-			class="accordion-toggle material-symbols-outlined border-white border-2 rounded-full p-3 w-8 h-8 text-2xl flex justify-center items-center ml-3"
+			class=" material-symbols-outlined border-white border-2 rounded-full p-3 w-8 h-8 text-2xl flex justify-center items-center ml-3"
 			on:click={handleToggleClick}
 		>
-			keyboard_arrow_down
+			{#if expanded}
+				keyboard_arrow_up
+			{:else}
+				keyboard_arrow_down
+			{/if}
 		</button>
 	</div>
 
@@ -47,7 +44,9 @@
 		</div>
 	</div>
 
-	<div class="temp lg:w-[960px] xl:w-[1200px] 2xl:w-[1280px] hidden lg:flex justify-between items-center max-h-20 pl-10 pr-6">
+	<div
+		class="temp lg:w-[960px] xl:w-[1200px] 2xl:w-[1280px] hidden lg:flex justify-between items-center max-h-20 pl-10 pr-6"
+	>
 		<div class="accordion-header text-white flex">
 			<span class="bounty-id text-2xl">#89</span>
 			<span class="bounty-title text-2xl ml-3">Community Event Activities Bounty 02</span>
@@ -64,10 +63,14 @@
 				>OPT-IN
 			</button>
 			<button
-				class="accordion-toggle material-symbols-outlined border-white text-white border-2 rounded-full p-2 w-6 h-6 text-xl flex justify-center items-center"
+				class="material-symbols-outlined border-white text-white border-2 rounded-full p-2 w-6 h-6 text-xl flex justify-center items-center"
 				on:click={handleToggleClick}
 			>
-				keyboard_arrow_down
+				{#if expanded}
+					keyboard_arrow_up
+				{:else}
+					keyboard_arrow_down
+				{/if}
 			</button>
 		</div>
 	</div>
@@ -99,7 +102,7 @@
 			'opsz' 24;
 	}
 
-	.info-svg{
+	.info-svg {
 		@apply m-2;
 	}
 
