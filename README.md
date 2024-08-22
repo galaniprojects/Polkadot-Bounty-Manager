@@ -36,3 +36,17 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+## Deployment
+
+Since we are using Amplify for deployment, each environment is linked to a specific branch, as outlined below:
+    
+    | Branch        | Environment |
+    |---------------|-------------|
+    | develop       | dev         |
+    | test          | test        |
+    | staging       | staging     |
+    | main          | prod        |
+
+
+A GitHub Action automatically creates a pull request and merges it into the corresponding branch.
