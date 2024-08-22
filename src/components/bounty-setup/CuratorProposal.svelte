@@ -43,11 +43,14 @@
 					</p>
 					<p class="text-xs my-1">Curator Address</p>
 					<input
-						class="border w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
+						class="border border-borderColor w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
 						placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
 					/>
 					<p class="text-xs my-1">Curator Fee</p>
-					<input class="border pt-1 pl-2 rounded-md bg-white mr-2 w-1/3" placeholder="100.0000" />
+					<input
+						class="border border-borderColor pt-1 pl-2 rounded-md bg-white mr-2 w-1/3"
+						placeholder="100.0000"
+					/>
 					<p class="text-xs mt-1">(total Bounty value: 100.000.0000 DOT)</p>
 				</div>
 
