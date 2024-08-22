@@ -8,7 +8,7 @@ export default {
 			accent: '#E6007A',
 			backgroundContent: '#E5E3EE',
 			backgroundContentWrapper: '#BFACBF',
-			border: '#7F639B',
+			borderColor: '#7F639B',
 			black: colors.black,
 			darkgray: '#94889F',
 			gray: colors.gray,

@@ -6,10 +6,6 @@
     @apply py-4 pl-8 bg-backgroundContent min-h-[500px];
 }
 
-/* .border {
-    @apply border-border;
-} */
-
 .link {
     @apply text-accent;
 }

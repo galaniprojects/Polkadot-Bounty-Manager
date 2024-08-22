@@ -48,20 +48,27 @@
 			<div>
 				<p class="text-xs">Bounty value</p>
 				<div class="flex mt-2">
-					<input class="border border-border pt-1 pl-2 w-1/4 rounded-md bg-white" placeholder="0.000.0000" />
+					<input
+						class="border border-borderColor pt-1 pl-2 w-1/4 rounded-md bg-white"
+						placeholder="0.000.0000"
+					/>
 				</div>
 				<hr class="border-white mt-5 mb-1 w-1/2" />
 
 				<p class="text-xs">Bounty description</p>
 				<textarea
-					class="border border-border pt-1 pl-2 w-1/2 h-28 rounded-md bg-white mt-2e mr-2 mt-2"
+					class="border border-borderColor pt-1 pl-2 w-1/2 h-28 rounded-md bg-white mt-2e mr-2 mt-2"
 					placeholder="Your Bounty description goes here"
 				/>
 
 				<hr class="border-white mt-5 mb-2 w-1/2" />
 				<p class="text-xs mb-2">Submit with account</p>
 
-				<select class="border border-border pt-1 pl-2 w-1/4 rounded-md" name="accounts" id="accounts">
+				<select
+					class="border border-borderColor pt-1 pl-2 w-1/4 rounded-md"
+					name="accounts"
+					id="accounts"
+				>
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 				</select>
