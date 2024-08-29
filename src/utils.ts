@@ -19,20 +19,39 @@ export async function dryRunAndSubmitTransaction(
 	address: string,
 	signer: Signer
 ): Promise<{
-	result: ISubmittableResult;
+	result?: ISubmittableResult;
 	errorMessage?: string;
 }> {
-	// ToDo dry run the transaction first.
+	try {
+		// Dry run the transaction.
+		const signatureObservable = transaction.signAsync(address, { signer });
+		const signedTransaction = await firstValueFrom(signatureObservable);
 
-	// const observableDryRun = transaction.dryRun(address, {
-	//   signer
-	// });
-	// const dryRunSubmittableResult = await firstValueFrom(observableDryRun);
+		const dryRunObservable = api.rpc.system.dryRun(signedTransaction.toHex());
+		const dryRunSubmittableResult = await firstValueFrom(dryRunObservable);
 
-	const observable = transaction.signAndSend(address, {
-		signer: signer
-	});
+		if (dryRunSubmittableResult.isErr) {
+			const err = dryRunSubmittableResult.asErr;
+			return {
+				errorMessage: `DryRun Error: ${err.type} ${err.isInvalid ? err.asInvalid.toHuman() : err.asUnknown.toHuman()}`
+			};
+		} else {
+			if (dryRunSubmittableResult.asOk.isErr) {
+				if (dryRunSubmittableResult.asOk.asErr.isModule) {
+					const { docs, method, section } = api.registry.findMetaError(
+						dryRunSubmittableResult.asOk.asErr.asModule
+					);
+					const errorMsg = `DryRun Err: ${section}.${method}: ${docs}`;
+					return { errorMessage: errorMsg };
+				}
+			}
+		}
+	} catch (e) {
+		return { errorMessage: `DryRun failed, ${e}` };
+	}
 
+	// Submit transaction after dry run passes.
+	const observable = transaction.send();
 	const submittableResult = await firstValueFrom(
 		observable.pipe(
 			filter((event) => {
@@ -59,9 +78,7 @@ export async function dryRunAndSubmitTransaction(
 export function isValidAddress(address: string) {
 	try {
 		const decoded = decodeAddress(address, false, 0);
-		console.log(decoded)
 		const reEncoded = encodeAddress(decoded, 0);
-		console.log(reEncoded)
 
 		return reEncoded === address;
 	} catch (error) {

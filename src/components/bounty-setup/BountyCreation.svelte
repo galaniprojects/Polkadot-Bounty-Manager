@@ -73,7 +73,7 @@
 				return;
 			}
 
-			let bountyEvent = result.findRecord('bounties', 'BountyProposed');
+			let bountyEvent = result!.findRecord('bounties', 'BountyProposed');
 			let bountyIndex = bountyEvent?.event.data[0].toJSON();
 			bountyInfo = {
 				id: bountyIndex as number,
@@ -84,7 +84,7 @@
 			success = true;
 		} catch (e) {
 			console.error(e);
-			showError(`Something went wrong, ${e}`);
+			showError(`${e}`);
 		}
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
