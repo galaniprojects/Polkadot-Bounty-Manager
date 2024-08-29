@@ -1,0 +1,35 @@
+name: Promote staging to prod
+
+on:
+  workflow_dispatch:
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          ref: staging
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh -y
+
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< ${{ secrets.PAT}}
+
+      - name: Merge branches
+        run: |
+          gh repo view --json name --jq .name
+          gh pr create --base main --head staging --title "Merge staging into main" --body "CI merge of staging into main"
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT}}
+
+      - name: Merge the pull request
+        run: |
+          pr_number=$(gh pr list --state open --base main --head staging --json number --jq '.[0].number')
+          gh pr merge $pr_number --squash
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT}}
