@@ -7,18 +7,29 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v6
+      - name: Checkout the repository
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
-          base: main
-          branch: ci
+          ref: staging
 
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        run: gh pr merge --squash --auto "1"
+      - name: Install GitHub CLI
+        run: |
+          sudo apt update
+          sudo apt install gh -y
+
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token <<< ${{ secrets.PAT}}
+
+      - name: Merge branches
+        run: |
+          gh repo view --json name --jq .name
+          gh pr create --base main --head staging --title "Merge staging into main" --body "CI merge of staging into main"
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.PAT}}
+
+      - name: Merge the pull request
+        run: |
+          pr_number=$(gh pr list --state open --base main --head staging --json number --jq '.[0].number')
+          gh pr merge $pr_number --suash
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT}}
