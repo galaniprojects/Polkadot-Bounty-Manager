@@ -32,7 +32,7 @@ jobs:
       - name: Merge the pull request
         run: |
           pr_number=$(gh pr list --state open --base test --head develop --json number --jq '.[0].number')
-          gh pr merge $pr_number --suash
+          gh pr merge $pr_number --squash
         env:
           GITHUB_TOKEN: ${{ secrets.PAT}}
 
