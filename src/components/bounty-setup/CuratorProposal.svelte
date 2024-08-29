@@ -1,19 +1,28 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { web3FromAddress } from '@polkadot/extension-dapp';
-	import { firstValueFrom, filter } from 'rxjs';
+	import { firstValueFrom } from 'rxjs';
 	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
+	import { dryRunAndSubmitTransaction, isInteger, isValidAddress } from '../../utils';
 
 	export let bountyInfo: BountyInfo;
 	let loadingState = LoadingState.Loading;
 	let showLoadingScreen = false;
+	let errorMessage: string | undefined;
 	let curatorFee: string | undefined = undefined;
 	let curatorAddress: string | undefined;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
 	let step = 1;
+	let fee = '-';
+
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
+	}
 
 	function proceed() {
 		if (step == 1) {
@@ -23,52 +32,91 @@
 	async function submit() {
 		showLoadingScreen = true;
 		loadingState = LoadingState.Loading;
+
+		if (!curatorAddress || !isValidAddress(curatorAddress)) {
+			showError('Curator address is invalid');
+			return;
+		}
+
+		if (!curatorFee || !isInteger(curatorFee)) {
+			showError('Invalid value of curator fee');
+			return;
+		}
+
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 			if (!curatorFee) {
-				loadingState = LoadingState.Error;
-				//todo
-				console.log('invalid curator fee');
+				showError('Invalid value of curator fee');
 				return;
 			}
-			let tx = api.tx.bounties.proposeCurator(
-				bountyInfo.id,
-				curatorAddress,
-				BigInt(curatorFee) * BigInt(10000000000)
+
+			const transaction = createProposalTransaction(api);
+			const { errorMessage } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
 			);
-
-			let observable = api.tx.referenda
-				.submit(
-					{
-						Origins: selectedTreasuryTrack
-					},
-					{ Inline: tx.method.toHex() },
-					{ After: 1 }
-				)
-				.signAndSend($activeAccount.address, { signer: injector.signer });
-
-			console.log('observable: ', observable);
-			let submittableResult = await firstValueFrom(
-				observable.pipe(
-					filter((event) => {
-						return event.isFinalized || event.isError;
-					})
-				)
-			);
-
-			if (submittableResult.dispatchError || submittableResult.isError) {
-				loadingState = LoadingState.Error;
-				console.log('error catched');
-				console.log(submittableResult.toHuman());
+			if (errorMessage) {
+				showError(errorMessage);
 				return;
 			}
+
 			loadingState = LoadingState.Success;
 			step = 3;
 		} catch (e) {
-			loadingState = LoadingState.Error;
 			console.error(e);
+			showError(`Something went wrong, ${e}`);
+		}
+	}
+
+	function createProposalTransaction(api: ApiRx) {
+		if (!curatorFee) {
+			throw new Error('curator fee is not set');
+		}
+		let tx = api.tx.bounties.proposeCurator(
+			bountyInfo.id,
+			curatorAddress,
+			BigInt(curatorFee) * BigInt(10000000000)
+		);
+
+		return api.tx.referenda.submit(
+			{
+				Origins: selectedTreasuryTrack
+			},
+			{ Inline: tx.method.toHex() },
+			{ After: 1 }
+		);
+	}
+
+	let inputTimeout = setTimeout(() => {}, 4000);
+	async function calculateFee() {
+		try {
+			if (curatorAddress && curatorFee && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const transaction = createProposalTransaction(api);
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+				fee =
+					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
+					' DOT';
+			} else {
+				fee = '-';
+			}
+		} catch (e) {
+			fee = '-';
+		}
+	}
+
+	function inputChange() {
+		if (curatorAddress && curatorFee && $activeAccount) {
+			fee = 'Calculating...';
+			clearTimeout(inputTimeout);
+			inputTimeout = setTimeout(calculateFee, 2000);
+		} else {
+			fee = '-';
 		}
 	}
 </script>
@@ -115,23 +163,26 @@
 						bind:value={curatorAddress}
 						class="border w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
 						placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+						on:input={inputChange}
 					/>
 					<p class="text-xs my-1">Curator Fee</p>
 					<input
 						bind:value={curatorFee}
 						class="border pt-1 pl-2 rounded-md bg-white mr-2 w-1/3"
 						placeholder="100.0000"
+						on:input={inputChange}
 					/>
 					<p class="text-xs mt-1">(total Bounty value: 100.000.0000 DOT)</p>
 				</div>
 
-				<div class = "mt-4">
+				<div class="mt-4">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
 						class="border w-1/4 rounded-md h-7 px-1 pt-1"
 						bind:value={selectedTreasuryTrack}
 						name="spenders"
 						id="spenders"
+						on:input={inputChange}
 					>
 						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
 						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
@@ -149,7 +200,7 @@
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
@@ -179,4 +230,4 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>
+<LoadingScreen bind:errorMessage={errorMessage} bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>

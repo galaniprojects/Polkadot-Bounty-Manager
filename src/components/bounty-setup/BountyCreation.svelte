@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
-	import {  web3FromAddress } from '@polkadot/extension-dapp';
-	import { firstValueFrom, filter } from 'rxjs';
+	import { web3FromAddress } from '@polkadot/extension-dapp';
+	import { firstValueFrom } from 'rxjs';
 	import LoadingScreen from '../LoadingScreen.svelte';
 	import { LoadingState } from '../LoadingScreen.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
+	import { isInteger, dryRunAndSubmitTransaction, addDecimalsToDot } from '../../utils';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -22,63 +23,99 @@
 	let showLoadingScreen = false;
 	let bountyValue: string | undefined = undefined;
 	let bountyTitle = '';
+	let errorMessage: string | undefined;
+	let fee = '-';
+
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
+	}
 
 	async function submit() {
 		loadingState = LoadingState.Loading;
 		showLoadingScreen = true;
+		errorMessage = undefined;
 		try {
-			if(!$activeAccount){
-				throw new Error("please connect wallet first")
-				//TODO
+			if (!$activeAccount) {
+				showError('wallet is not connected');
+				return;
 			}
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
 			if (bountyTitle.length === 0) {
-				//todo
-				throw new Error('bounty title is empty');
+				showError('bounty title is empty');
+				return;
 			}
 			if (!bountyValue) {
-				//todo
-				throw new Error('bounty value invalid');
+				showError('Bounty value is invalid');
+				return;
+			}
+			if (!isInteger(bountyValue)) {
+				showError('Bounty value is invalid');
+				return;
+			}
+
+			let v = addDecimalsToDot(BigInt(bountyValue));
+			let description = bountyTitle;
+			let transaction = api.tx.bounties.proposeBounty(v, description);
+
+			const { errorMessage, result } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
+			);
+			if (errorMessage) {
+				showError(errorMessage);
+				return;
+			}
+
+			let bountyEvent = result.findRecord('bounties', 'BountyProposed');
+			let bountyIndex = bountyEvent?.event.data[0].toJSON();
+			bountyInfo = {
+				id: bountyIndex as number,
+				description: bountyTitle,
+				value: BigInt(bountyValue)
+			};
+			loadingState = LoadingState.Success;
+			success = true;
+		} catch (e) {
+			console.error(e);
+			showError(`Something went wrong, ${e}`);
+		}
+	}
+	let inputTimeout = setTimeout(() => {}, 4000);
+
+	async function calculateFee() {
+		try {
+			if (bountyValue && bountyTitle && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let v = addDecimalsToDot(BigInt(bountyValue));
+				let transaction = api.tx.bounties.proposeBounty(v, bountyTitle);
+
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+				fee =
+					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
+					' DOT';
 			} else {
-				let v = BigInt(bountyValue) * 10000000000n;
-				let description = bountyTitle;
-				let observable = api.tx.bounties
-					.proposeBounty(v, description)
-					.signAndSend($activeAccount.address, { signer: injector.signer });
-
-				let submittableResult = await firstValueFrom(
-					observable.pipe(
-						filter((event) => {
-							return event.isFinalized || event.isError;
-						})
-					)
-				);
-
-				if (submittableResult.dispatchError || submittableResult.isError) {
-					loadingState = LoadingState.Error;
-					console.log('error catched');
-					console.log(submittableResult.toHuman());
-					return;
-					//todo error happened.
-				}
-
-				let bountyEvent = submittableResult.findRecord('bounties', 'BountyProposed');
-				let bountyIndex = bountyEvent?.event.data[0].toJSON();
-				bountyInfo = {
-					id: bountyIndex as number,
-					description: bountyTitle
-				};
-				console.log(bountyInfo);
-				console.log(bountyIndex);
-				loadingState = LoadingState.Success;
-				success = true;
+				fee = '-';
 			}
 		} catch (e) {
-			console.log('error', e);
-			loadingState = LoadingState.Error;
+			fee = '-';
+		}
+	}
+
+	function inputChange() {
+		if (bountyValue && bountyTitle && $activeAccount) {
+			fee = 'Calculating...';
+			clearTimeout(inputTimeout);
+			inputTimeout = setTimeout(calculateFee, 2000);
+		} else {
+			fee = '-';
 		}
 	}
 </script>
@@ -88,6 +125,7 @@
 		{#if !success}
 			<input
 				bind:value={bountyTitle}
+				on:input={inputChange}
 				class="rounded-md bg-gray-100 w-1/2 pl-3 pt-1"
 				placeholder="Give your Bounty a title"
 			/>
@@ -125,6 +163,7 @@
 						bind:value={bountyValue}
 						class="border pt-1 pl-2 w-1/4 rounded-md bg-white"
 						placeholder="1000"
+						on:input={inputChange}
 					/>
 				</div>
 				<hr class="border-white mt-5 mb-1 w-1/2" />
@@ -136,12 +175,12 @@
 				/>
 
 				<hr class=" border-white mt-5 mb-2 w-1/2" />
-				<p class="text-xs mb-2">Submit with account</p>
-
-				<select class="border pt-1 pl-2 w-1/4 rounded-md" name="accounts" id="accounts">
-					<option value="alice">Alice</option>
-					<option value="bob">Bob</option>
-				</select>
+				<!-- <p class="text-xs mb-2">Submit with account</p> -->
+				<!---->
+				<!-- <select class="border pt-1 pl-2 w-1/4 rounded-md" name="accounts" id="accounts"> -->
+				<!-- 	<option value="alice">Alice</option> -->
+				<!-- 	<option value="bob">Bob</option> -->
+				<!-- </select> -->
 				<div class="mt-5 mb-10 h-24">
 					<section class="mb-3">
 						<p class="label text-xs">Bounty Bond</p>
@@ -149,15 +188,18 @@
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
 			<div class="buttons flex">
 				<button class="button-cancel mr-5">CANCEL</button>
-				<button on:click={submit} class="button-active">SUBMIT</button>
+				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active"
+					>SUBMIT</button
+				>
 			</div>
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>

@@ -10,10 +10,11 @@
 	import BountyDialog from './BountyDialog.svelte';
 	export let state: LoadingState = LoadingState.Loading;
 	export let opened = true;
+	export let errorMessage = '';
 </script>
 
 <BountyDialog
-	bind:opened={opened}
+	bind:opened
 	title="Submitting Transaction"
 	dismissable={!(state === LoadingState.Loading)}
 >
@@ -26,11 +27,18 @@
 			<p>Operation Success</p>
 		{/if}
 		{#if state === LoadingState.Error}
-			<p class="text-accent font-bold">Error:</p>
-			<p>Something went wrong</p>
+			<p>
+				<span class="text-accent font-bold">Error: </span>
+				{#if !errorMessage}
+					Something went wrong
+				{:else}
+					 {errorMessage}
+				{/if}
+			</p>
 		{/if}
-		<div></div>
 	</div>
+
+	<div></div>
 </BountyDialog>
 
 <style>

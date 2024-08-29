@@ -4,6 +4,7 @@
 	export type BountyInfo = {
 		id?: number;
 		description?: string;
+		value?: bigint
 	};
 </script>
 

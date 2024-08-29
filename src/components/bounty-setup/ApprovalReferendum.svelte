@@ -11,21 +11,45 @@
 	import { web3FromAddress } from '@polkadot/extension-dapp';
 	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
-	import { firstValueFrom, filter } from 'rxjs';
+	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { dryRunAndSubmitTransaction } from '../../utils';
+
+	export let bountyInfo: BountyInfo;
 
 	let loadingState = LoadingState.Loading;
 	let showLoadingScreen = false;
-	export let bountyInfo: BountyInfo;
+	let errorMessage: string | undefined;
 	let success = false;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let fee = '-';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
 		dispatch('changeTab', {
 			tab: 'Curator Proposal'
 		});
+	}
+
+	onMount(async () => {
+		if (!bountyInfo.value) {
+			return;
+		}
+		if (bountyInfo.value <= 10000n) {
+			selectedTreasuryTrack = treasuryTracks[0].origin;
+		} else if (bountyInfo.value <= 100000n) {
+			selectedTreasuryTrack = treasuryTracks[1].origin;
+		} else {
+			selectedTreasuryTrack = treasuryTracks[2].origin;
+		}
+		await calculateFee();
+	});
+
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
 	}
 
 	async function submit() {
@@ -39,38 +63,52 @@
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-			let tx = api.tx.bounties.approveBounty(bountyInfo.id);
-			let observable = api.tx.referenda
-				.submit(
-					{
-						Origins: selectedTreasuryTrack
-					},
-					{ Inline: tx.method.toHex() },
-					{ After: 1 }
-				)
-				.signAndSend($activeAccount.address, { signer: injector.signer });
+			const transaction = createApprovalTransaction(api);
 
-			let submittableResult = await firstValueFrom(
-				observable.pipe(
-					filter((event) => {
-						return event.isFinalized || event.isError;
-					})
-				)
+			const { errorMessage } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
 			);
-
-			if (submittableResult.dispatchError || submittableResult.isError) {
-				loadingState = LoadingState.Error;
-				console.log('error catched');
-				console.log(submittableResult.toHuman());
+			if (errorMessage) {
+				showError(errorMessage);
 				return;
-				//todo error happened.
 			}
 
 			loadingState = LoadingState.Success;
 			success = true;
 		} catch (e) {
 			console.error(e);
-			loadingState = LoadingState.Error;
+			showError(`Something went wrong, ${e}`);
+		}
+	}
+
+	function createApprovalTransaction(api: ApiRx) {
+		let tx = api.tx.bounties.approveBounty(bountyInfo.id);
+		return api.tx.referenda.submit(
+			{
+				Origins: selectedTreasuryTrack
+			},
+			{ Inline: tx.method.toHex() },
+			{ After: 1 }
+		);
+	}
+
+	async function calculateFee() {
+		if (bountyInfo.id) {
+			try {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const transaction = createApprovalTransaction(api);
+
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+				fee =
+					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
+					' DOT';
+			} catch (e) {
+				fee = '-';
+			}
 		}
 	}
 </script>
@@ -144,7 +182,7 @@
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
@@ -155,4 +193,5 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>
