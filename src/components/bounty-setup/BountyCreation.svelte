@@ -170,7 +170,7 @@
 
 				<p class="text-xs">Bounty description</p>
 				<textarea
-					class="border pt-1 pl-2 w-1/2 h-28 rounded-md bg-white mt-2e mr-2 mt-2"
+					class="border border-borderColor pt-1 pl-2 w-1/2 h-28 rounded-md bg-white mt-2e mr-2 mt-2"
 					placeholder="Your Bounty description goes here"
 				/>
 

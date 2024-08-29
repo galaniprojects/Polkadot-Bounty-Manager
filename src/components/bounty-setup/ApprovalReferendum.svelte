@@ -170,7 +170,11 @@
 				<hr class="border-white mt-5 mb-3 w-96" />
 
 				<p class="text-xs mb-1">Submit with account</p>
-				<select class="border w-1/4 rounded-md h-7 px-1 pt-1" name="accounts" id="accounts">
+				<select
+					class="border border-borderColor w-1/4 rounded-md h-7 px-1 pt-1"
+					name="accounts"
+					id="accounts"
+				>
 					<option value="alice">Alice</option>
 					<option value="bob">Bob</option>
 				</select>

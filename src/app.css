@@ -16,6 +16,20 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/fonts/MaterialIcons-Regular.ttf');
+}
+
+@font-face {
+	font-family: 'Material Icons Outlined';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/fonts/MaterialIconsOutlined-Regular.otf');
+}
+
 body {
 	font-family: 'Overpass';
 	color: theme('colors.primary');
