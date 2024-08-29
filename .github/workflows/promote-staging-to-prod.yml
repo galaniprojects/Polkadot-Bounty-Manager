@@ -15,7 +15,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           base: main
-          branch: staging
+          branch: ci
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
