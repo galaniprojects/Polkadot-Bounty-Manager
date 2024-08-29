@@ -98,8 +98,10 @@
 				let transaction = api.tx.bounties.proposeBounty(v, bountyTitle);
 
 				let observableFee = transaction.paymentInfo($activeAccount.address);
+				
+				const paymentInfo = await firstValueFrom(observableFee);
 				fee =
-					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
+					(paymentInfo.partialFee.toNumber() / 10000000000).toString() +
 					' DOT';
 			} else {
 				fee = '-';

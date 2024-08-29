@@ -13,6 +13,12 @@ export function addDecimalsToDot(value: bigint) {
 	return value * 10000000000n;
 }
 
+/**
+ * Performs a dry run and submits the transaction if the dry run succeeds.
+ *
+ * @returns an error or a result. If `errorMessage` is `undefined`,
+ * `result` will be defined.
+ */
 export async function dryRunAndSubmitTransaction(
 	api: ApiRx,
 	transaction: SubmittableExtrinsic<'rxjs', ISubmittableResult>,
@@ -41,7 +47,7 @@ export async function dryRunAndSubmitTransaction(
 					const { docs, method, section } = api.registry.findMetaError(
 						dryRunSubmittableResult.asOk.asErr.asModule
 					);
-					const errorMsg = `DryRun Err: ${section}.${method}: ${docs}`;
+					const errorMsg = `DryRun Error: ${section}.${method}: ${docs}`;
 					return { errorMessage: errorMsg };
 				}
 			}
