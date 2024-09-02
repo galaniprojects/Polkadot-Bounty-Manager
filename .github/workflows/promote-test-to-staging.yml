@@ -1,4 +1,4 @@
-name: Promote staging to staging
+name: Promote test to staging
 
 on:
   workflow_dispatch:
