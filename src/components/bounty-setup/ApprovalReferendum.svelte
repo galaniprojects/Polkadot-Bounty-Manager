@@ -14,7 +14,7 @@
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { dryRunAndSubmitTransaction } from '../../utils';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
 
 	export let bountyInfo: BountyInfo;
 
@@ -24,6 +24,7 @@
 	let success = false;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
 	let fee = '-';
+	let deposit = '-';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -44,6 +45,7 @@
 			selectedTreasuryTrack = treasuryTracks[2].origin;
 		}
 		await calculateFee();
+		await calculateDeposit();
 	});
 
 	function showError(message: string) {
@@ -104,11 +106,25 @@
 
 				let observableFee = transaction.paymentInfo($activeAccount.address);
 				fee =
-					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
-					' DOT';
+					convertPlanckToDot(
+						(await firstValueFrom(observableFee)).partialFee.toNumber()
+					).toString() + ' DOT';
 			} catch (e) {
 				fee = '-';
 			}
+		}
+	}
+
+	async function calculateDeposit() {
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const base = Number(
+				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
+			);
+			deposit = convertPlanckToDot(base)+ ' DOT';
+		} catch (e) {
+			deposit = '-';
 		}
 	}
 </script>
@@ -182,7 +198,7 @@
 				<div class="mt-5 h-24 mb-10">
 					<section class="mb-3">
 						<p class="label text-xs">Deposit</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{deposit}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>

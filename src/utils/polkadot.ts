@@ -4,13 +4,12 @@ import type { ISubmittableResult } from '@polkadot/types/types';
 import { firstValueFrom, filter } from 'rxjs';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
-export function isInteger(input: string) {
-	const num = parseInt(input, 10);
-	return Number.isInteger(num) && num.toString() === input;
+export function convertDotToPlanck(value: bigint) {
+	return value * 10000000000n;
 }
 
-export function addDecimalsToDot(value: bigint) {
-	return value * 10000000000n;
+export function convertPlanckToDot(value: number) {
+	return value / 10000000000;
 }
 
 /**

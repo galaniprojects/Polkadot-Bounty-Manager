@@ -6,7 +6,13 @@
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
-	import { dryRunAndSubmitTransaction, isInteger, isValidAddress } from '../../utils';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		isValidAddress
+	} from '../../utils/polkadot';
+	import { isInteger } from '../../utils/common';
+	import { onMount } from 'svelte';
 
 	export let bountyInfo: BountyInfo;
 	let loadingState = LoadingState.Loading;
@@ -17,6 +23,11 @@
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
 	let step = 1;
 	let fee = '-';
+	let deposit = '-';
+
+	onMount(async () => {
+		await calculateDeposit();
+	});
 
 	function showError(message: string) {
 		showLoadingScreen = true;
@@ -91,7 +102,20 @@
 		);
 	}
 
-	let inputTimeout = setTimeout(() => {}, 4000);
+	async function calculateDeposit() {
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const base = Number(
+				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
+			);
+			deposit = convertPlanckToDot(base) + ' DOT';
+		} catch (e) {
+			deposit = '-';
+		}
+	}
+
+	let inputTimeout = setTimeout(() => {}, 2000);
 	async function calculateFee() {
 		try {
 			if (curatorAddress && curatorFee && $activeAccount) {
@@ -100,8 +124,9 @@
 				const transaction = createProposalTransaction(api);
 				let observableFee = transaction.paymentInfo($activeAccount.address);
 				fee =
-					((await firstValueFrom(observableFee)).partialFee.toNumber() / 10000000000).toString() +
-					' DOT';
+					convertPlanckToDot(
+						(await firstValueFrom(observableFee)).partialFee.toNumber()
+					).toString() + ' DOT';
 			} else {
 				fee = '-';
 			}
@@ -196,7 +221,7 @@
 				<div class="mt-5 h-24 mb-10">
 					<section class="mb-3">
 						<p class="label text-xs">Deposit</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{deposit}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
@@ -230,4 +255,5 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:errorMessage={errorMessage} bind:opened={showLoadingScreen} state={loadingState}></LoadingScreen>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>

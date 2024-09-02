@@ -7,7 +7,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
-	import { isInteger, dryRunAndSubmitTransaction, addDecimalsToDot } from '../../utils';
+	import { dryRunAndSubmitTransaction, convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
+	import { isInteger } from '../../utils/common';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -17,14 +18,14 @@
 	}
 
 	export let bountyInfo: BountyInfo;
-
 	let success = false;
 	let loadingState = LoadingState.Loading;
 	let showLoadingScreen = false;
-	let bountyValue: string | undefined = undefined;
+	let bountyValue: string | undefined;
 	let bountyTitle = '';
 	let errorMessage: string | undefined;
 	let fee = '-';
+	let bondValue = '-';
 
 	function showError(message: string) {
 		showLoadingScreen = true;
@@ -58,9 +59,9 @@
 				return;
 			}
 
-			let v = addDecimalsToDot(BigInt(bountyValue));
+			let value = convertDotToPlanck(BigInt(bountyValue));
 			let description = bountyTitle;
-			let transaction = api.tx.bounties.proposeBounty(v, description);
+			let transaction = api.tx.bounties.proposeBounty(value, description);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
@@ -89,20 +90,23 @@
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
 
+	async function calculateBondAndFee() {
+		calculateBond();
+		calculateFee();
+	}
+
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
 				const wsProvider = new WsProvider('ws://localhost:8000');
 				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-				let v = addDecimalsToDot(BigInt(bountyValue));
-				let transaction = api.tx.bounties.proposeBounty(v, bountyTitle);
+				let value = convertDotToPlanck(BigInt(bountyValue));
+				let transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
 
 				let observableFee = transaction.paymentInfo($activeAccount.address);
-				
+
 				const paymentInfo = await firstValueFrom(observableFee);
-				fee =
-					(paymentInfo.partialFee.toNumber() / 10000000000).toString() +
-					' DOT';
+				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
 			} else {
 				fee = '-';
 			}
@@ -111,13 +115,38 @@
 		}
 	}
 
+	async function calculateBond() {
+		try {
+			if (bountyValue && bountyTitle && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let value = convertDotToPlanck(BigInt(bountyValue));
+				const transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
+				const base = Number(
+					(api.consts.bounties.bountyDepositBase.toHuman() as string).replaceAll(',', '')
+				);
+				const perByte = Number(
+					(api.consts.bounties.dataDepositPerByte.toHuman() as string).replaceAll(',', '')
+				);
+				let bytesLen = transaction.args[1].encodedLength;
+				bondValue = String(convertPlanckToDot(base + (bytesLen - 1) * perByte)) + ' DOT';
+			} else {
+				bondValue = '-';
+			}
+		} catch (e) {
+			bondValue = '-';
+		}
+	}
+
 	function inputChange() {
 		if (bountyValue && bountyTitle && $activeAccount) {
 			fee = 'Calculating...';
+			bondValue = 'Calculating...';
 			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(calculateFee, 2000);
+			inputTimeout = setTimeout(calculateBondAndFee, 2000);
 		} else {
 			fee = '-';
+			bondValue = '-';
 		}
 	}
 </script>
@@ -177,16 +206,10 @@
 				/>
 
 				<hr class=" border-white mt-5 mb-2 w-1/2" />
-				<!-- <p class="text-xs mb-2">Submit with account</p> -->
-				<!---->
-				<!-- <select class="border pt-1 pl-2 w-1/4 rounded-md" name="accounts" id="accounts"> -->
-				<!-- 	<option value="alice">Alice</option> -->
-				<!-- 	<option value="bob">Bob</option> -->
-				<!-- </select> -->
 				<div class="mt-5 mb-10 h-24">
 					<section class="mb-3">
 						<p class="label text-xs">Bounty Bond</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{bondValue}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
