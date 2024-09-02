@@ -1,10 +1,10 @@
 <script lang="ts">
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import CuratorItem from './CuratorItem.svelte';
-	import InfoSvg from './InfoIcon.svelte';
-	import LogoPolkassembly from './LogoPolkassembly.svelte';
-	import LogoTreasuryIcon from './LogoTreasuryIcon.svelte';
-	import LogoSubscan from './LogoSubscan.svelte';
+	import InfoSvg from '../svg/InfoIcon.svelte';
+	import LogoPolkassembly from '../svg/LogoPolkassembly.svelte';
+	import LogoTreasuryIcon from '../svg/LogoTreasuryIcon.svelte';
+	import LogoSubscan from '../svg/LogoSubscan.svelte';
 
 	let bounty = {
 		id: '#88',
