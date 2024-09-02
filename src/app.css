@@ -17,17 +17,38 @@
 }
 
 @font-face {
+	font-family: 'Overpass Italic';
+	src: url('/fonts/Overpass-Italic.ttf') format('truetype');
+	font-weight: 400;
+	font-style: italic;
+}
+
+@font-face {
 	font-family: 'Material Icons';
+	src: url('/fonts/MaterialIcons-Regular.ttf');
 	font-style: normal;
 	font-weight: 400;
-	src: url('/fonts/MaterialIcons-Regular.ttf');
 }
 
 @font-face {
 	font-family: 'Material Icons Outlined';
+	src: url('/fonts/MaterialIconsOutlined-Regular.otf');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Secular One';
+	src: url('/fonts/SecularOne-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'PT Mono';
+	src: url('fonts/PTMono-Regular.ttf') format('truetype');
 	font-style: normal;
 	font-weight: 400;
-	src: url('/fonts/MaterialIconsOutlined-Regular.otf');
 }
 
 body {
@@ -56,4 +77,13 @@ body {
 .button-cancel:disabled {
 	@apply basic-button;
 	background-color: rgba(138, 124, 151, 0.5);
+}
+
+.material-symbols-outlined {
+	font-family: 'Material Icons Outlined';
+	font-variation-settings:
+		'FILL' 0,
+		'wght' 400,
+		'GRAD' 0,
+		'opsz' 24;
 }

@@ -10,6 +10,8 @@ export default {
 			backgroundContentWrapper: '#BFACBF',
 			borderColor: '#7F639B',
 			black: colors.black,
+			childBountyHeader: '#9781AF',
+			childBountyStatus: '#695592',
 			darkgray: '#94889F',
 			gray: colors.gray,
 			notifications: '#FFAA35',
