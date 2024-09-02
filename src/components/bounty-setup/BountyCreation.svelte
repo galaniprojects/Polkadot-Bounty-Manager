@@ -1,13 +1,153 @@
-<script>
+<script lang="ts">
+	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { web3FromAddress } from '@polkadot/extension-dapp';
+	import { firstValueFrom } from 'rxjs';
+	import LoadingScreen from '../LoadingScreen.svelte';
+	import { LoadingState } from '../LoadingScreen.svelte';
+	import { createEventDispatcher } from 'svelte';
+	import type { BountyInfo } from './BountySetup.svelte';
+	import { activeAccount } from '../../stores';
+	import { dryRunAndSubmitTransaction, convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
+	import { isInteger } from '../../utils/common';
+
+	const dispatch = createEventDispatcher();
+	function changeTab() {
+		dispatch('changeTab', {
+			tab: 'Approval'
+		});
+	}
+
+	export let bountyInfo: BountyInfo;
 	let success = false;
+	let loadingState = LoadingState.Loading;
+	let showLoadingScreen = false;
+	let bountyValue: string | undefined;
+	let bountyTitle = '';
+	let errorMessage: string | undefined;
+	let fee = '-';
+	let bondValue = '-';
 
-	let bounty = {
-		id: '#88',
-		title: 'Community Event Activity Bounty'
-	};
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
+	}
 
-	function submit() {
-		success = !success;
+	async function submit() {
+		loadingState = LoadingState.Loading;
+		showLoadingScreen = true;
+		errorMessage = undefined;
+		try {
+			if (!$activeAccount) {
+				showError('wallet is not connected');
+				return;
+			}
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const injector = await web3FromAddress($activeAccount.address);
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+
+			if (bountyTitle.length === 0) {
+				showError('bounty title is empty');
+				return;
+			}
+			if (!bountyValue) {
+				showError('Bounty value is invalid');
+				return;
+			}
+			if (!isInteger(bountyValue)) {
+				showError('Bounty value is invalid');
+				return;
+			}
+
+			let value = convertDotToPlanck(BigInt(bountyValue));
+			let description = bountyTitle;
+			let transaction = api.tx.bounties.proposeBounty(value, description);
+
+			const { errorMessage, result } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
+			);
+			if (errorMessage) {
+				showError(errorMessage);
+				return;
+			}
+
+			let bountyEvent = result!.findRecord('bounties', 'BountyProposed');
+			let bountyIndex = bountyEvent?.event.data[0].toJSON();
+			bountyInfo = {
+				id: bountyIndex as number,
+				description: bountyTitle,
+				value: BigInt(bountyValue)
+			};
+			loadingState = LoadingState.Success;
+			success = true;
+		} catch (e) {
+			console.error(e);
+			showError(`${e}`);
+		}
+	}
+	let inputTimeout = setTimeout(() => {}, 4000);
+
+	async function calculateBondAndFee() {
+		calculateBond();
+		calculateFee();
+	}
+
+	async function calculateFee() {
+		try {
+			if (bountyValue && bountyTitle && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let value = convertDotToPlanck(BigInt(bountyValue));
+				let transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
+
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+
+				const paymentInfo = await firstValueFrom(observableFee);
+				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			} else {
+				fee = '-';
+			}
+		} catch (e) {
+			fee = '-';
+		}
+	}
+
+	async function calculateBond() {
+		try {
+			if (bountyValue && bountyTitle && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let value = convertDotToPlanck(BigInt(bountyValue));
+				const transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
+				const base = Number(
+					(api.consts.bounties.bountyDepositBase.toHuman() as string).replaceAll(',', '')
+				);
+				const perByte = Number(
+					(api.consts.bounties.dataDepositPerByte.toHuman() as string).replaceAll(',', '')
+				);
+				let bytesLen = transaction.args[1].encodedLength;
+				bondValue = String(convertPlanckToDot(base + (bytesLen - 1) * perByte)) + ' DOT';
+			} else {
+				bondValue = '-';
+			}
+		} catch (e) {
+			bondValue = '-';
+		}
+	}
+
+	function inputChange() {
+		if (bountyValue && bountyTitle && $activeAccount) {
+			fee = 'Calculating...';
+			bondValue = 'Calculating...';
+			clearTimeout(inputTimeout);
+			inputTimeout = setTimeout(calculateBondAndFee, 2000);
+		} else {
+			fee = '-';
+			bondValue = '-';
+		}
 	}
 </script>
 
@@ -15,6 +155,8 @@
 	<div class="top-bar flex justify-between">
 		{#if !success}
 			<input
+				bind:value={bountyTitle}
+				on:input={inputChange}
 				class="rounded-md bg-gray-100 w-1/2 pl-3 pt-1"
 				placeholder="Give your Bounty a title"
 			/>
@@ -23,14 +165,14 @@
 				<a href="#moreinfo">Tap here</a>
 			</p>
 		{:else}
-			<p class="text-white">{`${bounty.id} ${bounty.title}`}</p>
+			<p class="text-white">{`#${bountyInfo.id} ${bountyInfo.description}`}</p>
 		{/if}
 	</div>
 
 	{#if success}
 		<div class="content">
 			<p>
-				{`${bounty.id} ${bounty.title}`}
+				{`#${bountyInfo.id} ${bountyInfo.description}`}
 				created successfully!
 				<br /><br />
 				You can either proceed to 2 Referendum <br />
@@ -40,7 +182,7 @@
 
 			<div class="mt-5 flex">
 				<button class="button-cancel mr-5">LIST</button>
-				<button on:click={submit} class="button-active">PROCEED</button>
+				<button on:click={changeTab} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
@@ -49,8 +191,10 @@
 				<p class="text-xs">Bounty value</p>
 				<div class="flex mt-2">
 					<input
-						class="border border-borderColor pt-1 pl-2 w-1/4 rounded-md bg-white"
-						placeholder="0.000.0000"
+						bind:value={bountyValue}
+						class="border pt-1 pl-2 w-1/4 rounded-md bg-white"
+						placeholder="1000"
+						on:input={inputChange}
 					/>
 				</div>
 				<hr class="border-white mt-5 mb-1 w-1/2" />
@@ -61,32 +205,26 @@
 					placeholder="Your Bounty description goes here"
 				/>
 
-				<hr class="border-white mt-5 mb-2 w-1/2" />
-				<p class="text-xs mb-2">Submit with account</p>
-
-				<select
-					class="border border-borderColor pt-1 pl-2 w-1/4 rounded-md"
-					name="accounts"
-					id="accounts"
-				>
-					<option value="alice">Alice</option>
-					<option value="bob">Bob</option>
-				</select>
+				<hr class=" border-white mt-5 mb-2 w-1/2" />
 				<div class="mt-5 mb-10 h-24">
 					<section class="mb-3">
 						<p class="label text-xs">Bounty Bond</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{bondValue}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
 			<div class="buttons flex">
 				<button class="button-cancel mr-5">CANCEL</button>
-				<button on:click={submit} class="button-active">SUBMIT</button>
+				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active"
+					>SUBMIT</button
+				>
 			</div>
 		</div>
 	{/if}
 </div>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>
