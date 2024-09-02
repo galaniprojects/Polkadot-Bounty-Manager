@@ -35,4 +35,3 @@ jobs:
           gh pr merge $pr_number --squash
         env:
           GITHUB_TOKEN: ${{ secrets.PAT}}
-

@@ -122,7 +122,7 @@
 			const base = Number(
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
-			deposit = convertPlanckToDot(base)+ ' DOT';
+			deposit = convertPlanckToDot(base) + ' DOT';
 		} catch (e) {
 			deposit = '-';
 		}

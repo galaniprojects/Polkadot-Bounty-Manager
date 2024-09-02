@@ -4,7 +4,7 @@
 	export type BountyInfo = {
 		id?: number;
 		description?: string;
-		value?: bigint
+		value?: bigint;
 	};
 </script>
 
@@ -46,19 +46,19 @@
 			{#if activeTab === TABS[0]}
 				<div class="main-content grid p-4">
 					<div class="rounded-t-md overflow-clip">
-						<BountyCreation bind:bountyInfo={bountyInfo} on:changeTab={changeTabEvent} />
+						<BountyCreation bind:bountyInfo on:changeTab={changeTabEvent} />
 					</div>
 				</div>
 			{:else if activeTab === TABS[1]}
 				<div class="main-content grid p-4">
 					<div class="rounded-t-md overflow-clip">
-						<ApprovalReferendum bind:bountyInfo={bountyInfo} on:changeTab={changeTabEvent}/>
+						<ApprovalReferendum bind:bountyInfo on:changeTab={changeTabEvent} />
 					</div>
 				</div>
 			{:else}
 				<div class="main-content grid p-4">
 					<div class="rounded-t-md overflow-clip">
-						<CuratorProposal bind:bountyInfo={bountyInfo} />
+						<CuratorProposal bind:bountyInfo />
 					</div>
 				</div>
 			{/if}

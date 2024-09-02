@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type {InjectedAccountWithMeta} from '@polkadot/extension-inject/types'
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 export const isLoggedIn = writable(false);
 

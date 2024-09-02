@@ -32,7 +32,7 @@
 				{#if !errorMessage}
 					Something went wrong
 				{:else}
-					 {errorMessage}
+					{errorMessage}
 				{/if}
 			</p>
 		{/if}

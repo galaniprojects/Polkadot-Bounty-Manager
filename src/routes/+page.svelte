@@ -5,10 +5,8 @@
 	import AppBar from '../components/AppBar.svelte';
 </script>
 
-
-<AppBar/>
-<BountySetup/> 
- 
+<AppBar />
+<BountySetup />
 
 <style lang="postcss">
 	:global(html) {

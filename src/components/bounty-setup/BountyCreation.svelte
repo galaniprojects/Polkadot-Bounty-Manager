@@ -7,7 +7,11 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
-	import { dryRunAndSubmitTransaction, convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
+	import {
+		dryRunAndSubmitTransaction,
+		convertDotToPlanck,
+		convertPlanckToDot
+	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 
 	const dispatch = createEventDispatcher();
