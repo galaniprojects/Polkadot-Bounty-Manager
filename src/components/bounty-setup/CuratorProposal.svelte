@@ -1,18 +1,158 @@
-<script>
-	let step = 1;
-	let bounty = {
-		id: '#88',
-		title: 'Community Event Activity Bounty'
-	};
+<script lang="ts">
+	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { web3FromAddress } from '@polkadot/extension-dapp';
+	import { firstValueFrom } from 'rxjs';
+	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
+	import type { BountyInfo } from './BountySetup.svelte';
+	import { activeAccount } from '../../stores';
+	import { treasuryTracks } from './ApprovalReferendum.svelte';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		isValidAddress
+	} from '../../utils/polkadot';
+	import { isInteger } from '../../utils/common';
+	import { onMount } from 'svelte';
 
-	function submit() {
-		step = (step % 3) + 1;
+	export let bountyInfo: BountyInfo;
+	let loadingState = LoadingState.Loading;
+	let showLoadingScreen = false;
+	let errorMessage: string | undefined;
+	let curatorFee: string | undefined = undefined;
+	let curatorAddress: string | undefined;
+	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let step = 1;
+	let fee = '-';
+	let deposit = '-';
+
+	onMount(async () => {
+		await calculateDeposit();
+	});
+
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
+	}
+
+	function proceed() {
+		if (step == 1) {
+			step = 2;
+		}
+	}
+	async function submit() {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Loading;
+
+		if (!curatorAddress || !isValidAddress(curatorAddress)) {
+			showError('Curator address is invalid');
+			return;
+		}
+
+		if (!curatorFee || !isInteger(curatorFee)) {
+			showError('Invalid value of curator fee');
+			return;
+		}
+
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const injector = await web3FromAddress($activeAccount.address);
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			if (!curatorFee) {
+				showError('Invalid value of curator fee');
+				return;
+			}
+
+			const transaction = createProposalTransaction(api);
+			const { errorMessage } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
+			);
+			if (errorMessage) {
+				showError(errorMessage);
+				return;
+			}
+
+			loadingState = LoadingState.Success;
+			step = 3;
+		} catch (e) {
+			console.error(e);
+			showError(`Something went wrong, ${e}`);
+		}
+	}
+
+	function createProposalTransaction(api: ApiRx) {
+		if (!curatorFee) {
+			throw new Error('curator fee is not set');
+		}
+		let tx = api.tx.bounties.proposeCurator(
+			bountyInfo.id,
+			curatorAddress,
+			BigInt(curatorFee) * BigInt(10000000000)
+		);
+
+		return api.tx.referenda.submit(
+			{
+				Origins: selectedTreasuryTrack
+			},
+			{ Inline: tx.method.toHex() },
+			{ After: 1 }
+		);
+	}
+
+	async function calculateDeposit() {
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const base = Number(
+				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
+			);
+			deposit = convertPlanckToDot(base) + ' DOT';
+		} catch (e) {
+			deposit = '-';
+		}
+	}
+
+	let inputTimeout = setTimeout(() => {}, 2000);
+	async function calculateFee() {
+		try {
+			if (curatorAddress && curatorFee && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const transaction = createProposalTransaction(api);
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+				fee =
+					convertPlanckToDot(
+						(await firstValueFrom(observableFee)).partialFee.toNumber()
+					).toString() + ' DOT';
+			} else {
+				fee = '-';
+			}
+		} catch (e) {
+			fee = '-';
+		}
+	}
+
+	function inputChange() {
+		if (curatorAddress && curatorFee && $activeAccount) {
+			fee = 'Calculating...';
+			clearTimeout(inputTimeout);
+			inputTimeout = setTimeout(calculateFee, 2000);
+		} else {
+			fee = '-';
+		}
 	}
 </script>
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p class="title text-2xl leading-7">{`${bounty.id} ${bounty.title}`}</p>
+		<p class="title text-2xl leading-7">
+			{#if bountyInfo.id && bountyInfo.description}
+				{`#${bountyInfo.id} ${bountyInfo.description}`}
+			{/if}
+		</p>
 		<p class="text text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
 			Tap here
@@ -31,7 +171,9 @@
 
 			<div class="mt-5 flex">
 				<button class="button-cancel mr-5">LIST</button>
-				<button on:click={() => submit()} class="button-active">PROCEED</button>
+				<button disabled={!bountyInfo.id} on:click={() => proceed()} class="button-active"
+					>PROCEED</button
+				>
 			</div>
 		</div>
 	{:else if step === 2}
@@ -43,15 +185,35 @@
 					</p>
 					<p class="text-xs my-1">Curator Address</p>
 					<input
+						bind:value={curatorAddress}
 						class="border border-borderColor w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
 						placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+						on:input={inputChange}
 					/>
 					<p class="text-xs my-1">Curator Fee</p>
 					<input
+						bind:value={curatorFee}
+						placeholder="100"
+						on:input={inputChange}
 						class="border border-borderColor pt-1 pl-2 rounded-md bg-white mr-2 w-1/3"
-						placeholder="100.0000"
 					/>
 					<p class="text-xs mt-1">(total Bounty value: 100.000.0000 DOT)</p>
+				</div>
+
+				<div class="mt-4">
+					<p class="text-xs mb-1">Treasury track</p>
+					<select
+						class="border w-1/4 rounded-md h-7 px-1 pt-1"
+						bind:value={selectedTreasuryTrack}
+						name="spenders"
+						id="spenders"
+						on:input={inputChange}
+					>
+						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
+						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
+						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
+					</select>
+					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
 				</div>
 
 				<hr class="border-white w-1/2 mt-5 mb-3" />
@@ -59,11 +221,11 @@
 				<div class="mt-5 h-24 mb-10">
 					<section class="mb-3">
 						<p class="label text-xs">Deposit</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{deposit}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
@@ -76,7 +238,7 @@
 		<div class="content">
 			<p class="description">
 				A Curator Proposal Referendum for <br />
-				{`${bounty.id} ${bounty.title}`} <br />
+				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
 				created successfully!
 				<br /><br />
 				Check the Referendum on
@@ -86,10 +248,12 @@
 				<br /> <br />
 				You can go back to the list of all bounties.
 			</p>
+
 			<div class="buttons mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
-				<button on:click={() => submit()} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{/if}
 </div>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>

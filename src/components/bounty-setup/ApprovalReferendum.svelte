@@ -1,18 +1,141 @@
-<script>
-	let success = false;
-	let bounty = {
-		id: '#88',
-		title: 'Community Event Activity Bounty'
-	};
+<script lang="ts" context="module">
+	export let treasuryTracks = [
+		{ origin: 'SmallSpender', display: 'Small Spender' },
+		{ origin: 'MediumSpender', display: 'Medium Spender' },
+		{ origin: 'BigSpender', display: 'Big Spender' }
+	];
+</script>
 
-	function submit() {
-		success = !success;
+<script lang="ts">
+	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { web3FromAddress } from '@polkadot/extension-dapp';
+	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
+	import type { BountyInfo } from './BountySetup.svelte';
+	import { firstValueFrom } from 'rxjs';
+	import { activeAccount } from '../../stores';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+
+	export let bountyInfo: BountyInfo;
+
+	let loadingState = LoadingState.Loading;
+	let showLoadingScreen = false;
+	let errorMessage: string | undefined;
+	let success = false;
+	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let fee = '-';
+	let deposit = '-';
+
+	const dispatch = createEventDispatcher();
+	function changeTab() {
+		dispatch('changeTab', {
+			tab: 'Curator Proposal'
+		});
+	}
+
+	onMount(async () => {
+		if (!bountyInfo.value) {
+			return;
+		}
+		if (bountyInfo.value <= 10000n) {
+			selectedTreasuryTrack = treasuryTracks[0].origin;
+		} else if (bountyInfo.value <= 100000n) {
+			selectedTreasuryTrack = treasuryTracks[1].origin;
+		} else {
+			selectedTreasuryTrack = treasuryTracks[2].origin;
+		}
+		await calculateFee();
+		await calculateDeposit();
+	});
+
+	function showError(message: string) {
+		showLoadingScreen = true;
+		loadingState = LoadingState.Error;
+		errorMessage = message;
+	}
+
+	async function submit() {
+		if (success) {
+			changeTab();
+			return;
+		}
+		showLoadingScreen = true;
+		loadingState = LoadingState.Loading;
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const injector = await web3FromAddress($activeAccount.address);
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const transaction = createApprovalTransaction(api);
+
+			const { errorMessage } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount.address,
+				injector.signer
+			);
+			if (errorMessage) {
+				showError(errorMessage);
+				return;
+			}
+
+			loadingState = LoadingState.Success;
+			success = true;
+		} catch (e) {
+			console.error(e);
+			showError(`Something went wrong, ${e}`);
+		}
+	}
+
+	function createApprovalTransaction(api: ApiRx) {
+		let tx = api.tx.bounties.approveBounty(bountyInfo.id);
+		return api.tx.referenda.submit(
+			{
+				Origins: selectedTreasuryTrack
+			},
+			{ Inline: tx.method.toHex() },
+			{ After: 1 }
+		);
+	}
+
+	async function calculateFee() {
+		if (bountyInfo.id) {
+			try {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const transaction = createApprovalTransaction(api);
+
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+				fee =
+					convertPlanckToDot(
+						(await firstValueFrom(observableFee)).partialFee.toNumber()
+					).toString() + ' DOT';
+			} catch (e) {
+				fee = '-';
+			}
+		}
+	}
+
+	async function calculateDeposit() {
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const base = Number(
+				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
+			);
+			deposit = convertPlanckToDot(base)+ ' DOT';
+		} catch (e) {
+			deposit = '-';
+		}
 	}
 </script>
 
 <div>
 	<div class="top-bar flex justify-between text-white">
-		<p class="title text-2xl leading-7">{`${bounty.id} ${bounty.title}`}</p>
+		<p class="title text-2xl leading-7">
+			{#if bountyInfo.id && bountyInfo.description}
+				{`#${bountyInfo.id} ${bountyInfo.description}`}
+			{/if}
+		</p>
 		<p class="text text-sm mt-1.5">
 			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
 			<a href="#info">Tap here</a>
@@ -23,7 +146,7 @@
 		<div class="content">
 			<p class="description">
 				The Referendum for the approval of Bounty <br />
-				{`${bounty.id} ${bounty.title}`} <br />
+				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
 				has been created successfully!
 				<br /><br />
 				Please update the description on
@@ -39,7 +162,7 @@
 			</p>
 			<div class="buttons mt-5 flex">
 				<button class="button-cancel mr-5">RETURN HOME</button>
-				<button on:click={submit} class="button-active">PROCEED</button>
+				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
@@ -48,13 +171,14 @@
 				<div>
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
-						class="border border-borderColor w-1/4 rounded-md h-7 px-1 pt-1"
+						class="border w-1/4 rounded-md h-7 px-1 pt-1"
+						bind:value={selectedTreasuryTrack}
 						name="spenders"
 						id="spenders"
 					>
-						<option value="small">Small Spender</option>
-						<option value="medium">Medium Spender</option>
-						<option value="big">Big Spender</option>
+						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
+						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
+						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
 					</select>
 					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
 				</div>
@@ -74,18 +198,20 @@
 				<div class="mt-5 h-24 mb-10">
 					<section class="mb-3">
 						<p class="label text-xs">Deposit</p>
-						<p class="value"><span>1,067.0000</span> DOT</p>
+						<p class="value">{deposit}</p>
 					</section>
 					<section>
 						<p class="label text-xs">Transaction fee</p>
-						<p class="value"><span>0,000.0800</span> DOT</p>
+						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
 			<div class="buttons flex">
 				<button class="button-cancel mr-5">CANCEL</button>
-				<button on:click={submit} class="button-active">SUBMIT</button>
+				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{/if}
 </div>
+<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
+></LoadingScreen>
