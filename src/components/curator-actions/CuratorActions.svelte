@@ -1,6 +1,5 @@
 <script>
 	import AccordionItem from './AccordionItem.svelte';
-	let isDesktop = false;
 </script>
 
 <div class="main flex justify-center items-center">

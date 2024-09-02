@@ -5,9 +5,8 @@
 	import CuratorActions from '../../components/curator-actions/CuratorActions.svelte';
 </script>
 
-
-<AppBar/>
- <CuratorActions/>
+<AppBar />
+<CuratorActions />
 
 <style lang="postcss">
 	:global(html) {

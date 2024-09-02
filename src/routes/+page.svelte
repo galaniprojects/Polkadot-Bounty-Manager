@@ -3,13 +3,10 @@
 	import '../components/bounty-setup/style.css';
 	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
 	import AppBar from '../components/AppBar.svelte';
-	import CuratorActions from '../components/curator-actions/CuratorActions.svelte';
 </script>
 
-
-<AppBar/>
-<BountySetup/> 
- 
+<AppBar />
+<BountySetup />
 
 <style lang="postcss">
 	:global(html) {

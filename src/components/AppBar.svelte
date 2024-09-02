@@ -9,7 +9,6 @@
 	let selectedExtension: string | undefined;
 
 	async function logIn() {
-
 		const accounts = await web3Accounts({
 			extensions: [selectedExtension!],
 			ss58Format: 0
@@ -51,13 +50,12 @@
 		<select class="w-52 h-10 rounded-md" bind:value={$activeAccount}>
 			{#each $loggedAccounts as account}
 				<option value={account}>
-					({account.meta.name || ""}) {account.address.toWellFormed().substring(0, 15) + "..."}
+					({account.meta.name || ''}) {account.address.toWellFormed().substring(0, 15) + '...'}
 				</option>
 			{/each}
 		</select>
 	{/if}
 </div>
-
 
 <BountyDialog title="Login" bind:opened={loginDialogOpened}>
 	<div class="h-auto flex flex-col justify-between">

@@ -18,19 +18,19 @@
 	}
 
 	async function fastForwardDays() {
-		fastForward((days * 24 * 60 * 60) / 6 - 3)
+		fastForward((days * 24 * 60 * 60) / 6 - 3);
 	}
 
 	async function fastForwardHours() {
-		fastForward((hours * 60 * 60) / 6 - 3)
+		fastForward((hours * 60 * 60) / 6 - 3);
 	}
 
 	async function fastForwardMinutes() {
-		fastForward((mins * 60) / 6 - 3)
+		fastForward((mins * 60) / 6 - 3);
 	}
 
 	async function fastForwardBlocks() {
-		fastForward(blocks)
+		fastForward(blocks);
 	}
 </script>
 

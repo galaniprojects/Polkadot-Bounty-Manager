@@ -110,7 +110,7 @@
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
 			deposit = convertPlanckToDot(base) + ' DOT';
-		} catch (e) {
+		} catch {
 			deposit = '-';
 		}
 	}
@@ -130,7 +130,7 @@
 			} else {
 				fee = '-';
 			}
-		} catch (e) {
+		} catch {
 			fee = '-';
 		}
 	}

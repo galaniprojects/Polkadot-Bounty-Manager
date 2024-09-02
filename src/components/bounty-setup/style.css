@@ -1,49 +1,49 @@
 .top-bar {
-    @apply px-9 py-6 bg-secondary;
+	@apply px-9 py-6 bg-secondary;
 }
 
 .content {
-    @apply py-4 pl-8 bg-backgroundContent min-h-[500px];
+	@apply py-4 pl-8 bg-backgroundContent min-h-[500px];
 }
 
 .link {
-    @apply text-accent;
+	@apply text-accent;
 }
 
 @media (min-width: 400px) {
-    .description {
-        @apply w-1/2;
-    }
+	.description {
+		@apply w-1/2;
+	}
 }
 
 @media (max-width: 400px) {
-    .content {
-        @apply w-full p-3 box-border overflow-x-hidden;
-    }
+	.content {
+		@apply w-full p-3 box-border overflow-x-hidden;
+	}
 
-    .content input,
-    .content textarea,
-    .content select,
-    .content hr,
-    .content button,
-    .description,
-    .top-bar input {
-        @apply w-full;
-    }
+	.content input,
+	.content textarea,
+	.content select,
+	.content hr,
+	.content button,
+	.description,
+	.top-bar input {
+		@apply w-full;
+	}
 
-    .top-bar {
-        @apply pt-6 pb-2 px-3 flex flex-col;
-    }
+	.top-bar {
+		@apply pt-6 pb-2 px-3 flex flex-col;
+	}
 
-    .top-bar .text {
-        @apply text-xs;
-    }
+	.top-bar .text {
+		@apply text-xs;
+	}
 
-    .top-bar .title {
-        @apply text-lg;
-    }
+	.top-bar .title {
+		@apply text-lg;
+	}
 
-    .buttons {
-        @apply flex whitespace-nowrap text-sm w-full overflow-hidden box-border justify-center flex-nowrap;
-    }
+	.buttons {
+		@apply flex whitespace-nowrap text-sm w-full overflow-hidden box-border justify-center flex-nowrap;
+	}
 }
