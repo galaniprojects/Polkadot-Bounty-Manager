@@ -114,7 +114,7 @@
 			} else {
 				fee = '-';
 			}
-		} catch (e) {
+		} catch {
 			fee = '-';
 		}
 	}
@@ -137,7 +137,7 @@
 			} else {
 				bondValue = '-';
 			}
-		} catch (e) {
+		} catch {
 			bondValue = '-';
 		}
 	}

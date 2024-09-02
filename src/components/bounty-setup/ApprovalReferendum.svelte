@@ -109,7 +109,7 @@
 					convertPlanckToDot(
 						(await firstValueFrom(observableFee)).partialFee.toNumber()
 					).toString() + ' DOT';
-			} catch (e) {
+			} catch {
 				fee = '-';
 			}
 		}
@@ -123,7 +123,7 @@
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
 			deposit = convertPlanckToDot(base) + ' DOT';
-		} catch (e) {
+		} catch {
 			deposit = '-';
 		}
 	}

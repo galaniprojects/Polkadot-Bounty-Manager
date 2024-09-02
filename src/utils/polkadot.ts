@@ -86,7 +86,7 @@ export function isValidAddress(address: string) {
 		const reEncoded = encodeAddress(decoded, 0);
 
 		return reEncoded === address;
-	} catch (error) {
+	} catch {
 		return false;
 	}
 }

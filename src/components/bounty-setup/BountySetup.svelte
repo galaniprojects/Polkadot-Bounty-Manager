@@ -17,6 +17,7 @@
 	let bountyInfo: BountyInfo = {};
 
 	let activeTab = TABS[0];
+	// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 	function changeTabEvent(event: any) {
 		changeTab(event.detail.tab);
 	}
