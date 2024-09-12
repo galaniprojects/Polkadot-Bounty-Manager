@@ -68,7 +68,7 @@
 			let accountWithMeta: InjectedAccountWithMeta = {
 				address: address,
 				meta: {
-					source: WALLET_CONNECT_SOURCE 
+					source: WALLET_CONNECT_SOURCE
 				}
 			};
 			return accountWithMeta;

@@ -1,5 +1,5 @@
 import { ApiRx } from '@polkadot/api';
-import type {  SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { ISubmittableResult } from '@polkadot/types/types';
 import { firstValueFrom, filter } from 'rxjs';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
@@ -7,10 +7,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
 import { get } from 'svelte/store';
-import {
-	walletConnectProvider,
-	walletConnectSession,
-} from '../stores';
+import { walletConnectProvider, walletConnectSession } from '../stores';
 
 export function convertDotToPlanck(value: bigint) {
 	return value * 10000000000n;

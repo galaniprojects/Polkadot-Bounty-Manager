@@ -62,11 +62,7 @@
 			}
 
 			const transaction = createProposalTransaction(api);
-			const { errorMessage } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount,
-			);
+			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
 			if (errorMessage) {
 				showError(errorMessage);
 				return;

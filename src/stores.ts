@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import UniversalProvider from '@walletconnect/universal-provider';
 import type { SessionTypes } from '@walletconnect/types';
-import {WalletConnectSigner} from "./utils/WcSigner"
+import { WalletConnectSigner } from './utils/WcSigner';
 
 export const isLoggedIn = writable(false);
 
@@ -21,4 +21,4 @@ let session: SessionTypes.Struct | undefined;
 export const walletConnectSession = writable(session);
 
 let signer: WalletConnectSigner | undefined;
-export const walletConnectSigner = writable(signer)
+export const walletConnectSigner = writable(signer);

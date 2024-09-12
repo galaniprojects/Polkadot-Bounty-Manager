@@ -65,11 +65,7 @@
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 			const transaction = createApprovalTransaction(api);
 
-			const { errorMessage } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount,
-			);
+			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
 			if (errorMessage) {
 				showError(errorMessage);
 				return;
