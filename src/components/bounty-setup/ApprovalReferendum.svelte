@@ -8,7 +8,6 @@
 
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
-	import { web3FromAddress } from '@polkadot/extension-dapp';
 	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { firstValueFrom } from 'rxjs';
@@ -63,15 +62,13 @@
 		loadingState = LoadingState.Loading;
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
-			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 			const transaction = createApprovalTransaction(api);
 
 			const { errorMessage } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
-				$activeAccount.address,
-				injector.signer
+				$activeAccount,
 			);
 			if (errorMessage) {
 				showError(errorMessage);
