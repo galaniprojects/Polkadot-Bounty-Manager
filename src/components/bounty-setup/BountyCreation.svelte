@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
-	import { web3FromAddress } from '@polkadot/extension-dapp';
 	import { firstValueFrom } from 'rxjs';
 	import LoadingScreen from '../LoadingScreen.svelte';
 	import { LoadingState } from '../LoadingScreen.svelte';
@@ -13,6 +12,7 @@
 		convertPlanckToDot
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
+	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -47,7 +47,6 @@
 				return;
 			}
 			const wsProvider = new WsProvider('ws://localhost:8000');
-			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
 			if (bountyTitle.length === 0) {
@@ -70,15 +69,29 @@
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
-				$activeAccount.address,
-				injector.signer
+				$activeAccount
 			);
+
 			if (errorMessage) {
 				showError(errorMessage);
 				return;
 			}
 
-			let bountyEvent = result!.findRecord('bounties', 'BountyProposed');
+			// We don't get transaction result using Multix.
+			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+				//todo show another success screen.
+
+				loadingState = LoadingState.Success;
+				success = true;
+				return;
+			}
+
+			if (result == undefined) {
+				showError('Internal error.');
+				return;
+			}
+
+			let bountyEvent = result.findRecord('bounties', 'BountyProposed');
 			let bountyIndex = bountyEvent?.event.data[0].toJSON();
 			bountyInfo = {
 				id: bountyIndex as number,

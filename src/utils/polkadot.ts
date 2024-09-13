@@ -1,8 +1,13 @@
 import { ApiRx } from '@polkadot/api';
-import type { Signer, SubmittableExtrinsic } from '@polkadot/api/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { ISubmittableResult } from '@polkadot/types/types';
 import { firstValueFrom, filter } from 'rxjs';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { web3FromAddress } from '@polkadot/extension-dapp';
+import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
+import { get } from 'svelte/store';
+import { walletConnectProvider, walletConnectSession } from '../stores';
 
 export function convertDotToPlanck(value: bigint) {
 	return value * 10000000000n;
@@ -15,44 +20,60 @@ export function convertPlanckToDot(value: number) {
 /**
  * Performs a dry run and submits the transaction if the dry run succeeds.
  *
- * @returns an error or a result. If `errorMessage` is `undefined`,
- * `result` will be defined.
+ * In case of WalletConnect address, a blind signature request will be sent,
+ * neither a `result` nor an `errorMessage` will be returned.
  */
 export async function dryRunAndSubmitTransaction(
 	api: ApiRx,
 	transaction: SubmittableExtrinsic<'rxjs', ISubmittableResult>,
-	address: string,
-	signer: Signer
+	account: InjectedAccountWithMeta
 ): Promise<{
 	result?: ISubmittableResult;
 	errorMessage?: string;
 }> {
-	try {
-		// Dry run the transaction.
-		const signatureObservable = transaction.signAsync(address, { signer });
+	if (account.meta.source === WALLET_CONNECT_SOURCE) {
+		const signer = new WalletConnectSigner(
+			get(walletConnectProvider).client,
+			get(walletConnectSession)
+		);
+		try {
+			// In case of wallet connect, only send a signature request since the transaction
+			// will be done through Multix.
+			// Throwing an error will be fine since no valid signature will be returned.
+			await firstValueFrom(transaction.signAsync(account.address, { signer }));
+			return {};
+		} catch {
+			return {};
+		}
+	} else {
+		const signer = (await web3FromAddress(account.address)).signer;
+
+		const signatureObservable = transaction.signAsync(account.address, { signer });
 		const signedTransaction = await firstValueFrom(signatureObservable);
 
-		const dryRunObservable = api.rpc.system.dryRun(signedTransaction.toHex());
-		const dryRunSubmittableResult = await firstValueFrom(dryRunObservable);
+		try {
+			const dryRunObservable = api.rpc.system.dryRun(signedTransaction.toHex());
+			const dryRunSubmittableResult = await firstValueFrom(dryRunObservable);
 
-		if (dryRunSubmittableResult.isErr) {
-			const err = dryRunSubmittableResult.asErr;
-			return {
-				errorMessage: `DryRun Error: ${err.type} ${err.isInvalid ? err.asInvalid.toHuman() : err.asUnknown.toHuman()}`
-			};
-		} else {
-			if (dryRunSubmittableResult.asOk.isErr) {
-				if (dryRunSubmittableResult.asOk.asErr.isModule) {
-					const { docs, method, section } = api.registry.findMetaError(
-						dryRunSubmittableResult.asOk.asErr.asModule
-					);
-					const errorMsg = `DryRun Error: ${section}.${method}: ${docs}`;
-					return { errorMessage: errorMsg };
+			if (dryRunSubmittableResult.isErr) {
+				const err = dryRunSubmittableResult.asErr;
+				return {
+					errorMessage: `DryRun Error: ${err.type} ${err.isInvalid ? err.asInvalid.toHuman() : err.asUnknown.toHuman()}`
+				};
+			} else {
+				if (dryRunSubmittableResult.asOk.isErr) {
+					if (dryRunSubmittableResult.asOk.asErr.isModule) {
+						const { docs, method, section } = api.registry.findMetaError(
+							dryRunSubmittableResult.asOk.asErr.asModule
+						);
+						const errorMsg = `DryRun Error: ${section}.${method}: ${docs}`;
+						return { errorMessage: errorMsg };
+					}
 				}
 			}
+		} catch (e) {
+			return { errorMessage: `DryRun failed, ${e}` };
 		}
-	} catch (e) {
-		return { errorMessage: `DryRun failed, ${e}` };
 	}
 
 	// Submit transaction after dry run passes.
