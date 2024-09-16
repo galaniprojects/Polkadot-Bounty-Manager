@@ -5,11 +5,28 @@
 	import LogoPolkassembly from '../svg/LogoPolkassembly.svelte';
 	import LogoTreasuryIcon from '../svg/LogoTreasuryIcon.svelte';
 	import LogoSubscan from '../svg/LogoSubscan.svelte';
+	import type { Bounty } from '../../types/bounty';
+	import { onMount } from 'svelte';
+	import { WsProvider, ApiPromise } from '@polkadot/api';
+	import AcceptCuratorRule from './AcceptCuratorRule.svelte';
 
-	let bounty = {
-		id: '#88',
+	let bountyDetails = {
 		title: 'Community Event Activity Bounty'
 	};
+
+	export let bounty: Bounty;
+	let acceptCuratorRuleDialogOpened = false;
+
+	onMount(async () => {
+		// Query all bounties.
+		const wsProvider = new WsProvider('ws://localhost:8000');
+		const api = await ApiPromise.create({ provider: wsProvider });
+		let bountyDescription = (
+			await api.query.bounties.bountyDescriptions(bounty.id)
+		).toHuman() as string;
+		bountyDetails.title = bountyDescription;
+		bounty.description = bountyDescription;
+	});
 
 	let curators = [
 		{ name: '13iTojfEzgwRKzvEkuAm2xrtm' },
@@ -41,9 +58,11 @@
 <div class="bg-secondary border border-accent rounded-md my-6">
 	<!-- Mobile design-->
 	<div class="lg:hidden">
-		<div class="flex justify-between items-center text-lg text-white font-bold m-3 p-2 space-x-2">
+		<div
+			class="flex overflow-hidden max-w-96 justify-between items-center text-lg text-white font-bold m-3 p-2 space-x-2"
+		>
 			<span class="mb-7 min-[458px]:mb-0">{`${bounty.id}`}</span>
-			<span class="ml-3">{`${bounty.title}`}</span>
+			<p class="ml-3 text-clip">{`${bountyDetails.title}`}</p>
 			<button
 				class="material-symbols-outlined flex justify-center items-center border-white border-2 rounded-full p-3 w-8 h-8 text-2xl ml-3"
 				on:click={handleToggleClick}
@@ -61,6 +80,9 @@
 				<div class="flex justify-between">
 					<button
 						class="border border-accent rounded-md text-accent font-bold px-1 py-2 m-1 w-full"
+						on:click={() => {
+							acceptCuratorRuleDialogOpened = true;
+						}}
 					>
 						ACCEPT CURATOR
 					</button>
@@ -247,6 +269,9 @@
 		</div>
 	</div>
 </div>
+{#if acceptCuratorRuleDialogOpened}
+	<AcceptCuratorRule bind:opened={acceptCuratorRuleDialogOpened} {bounty} />
+{/if}
 
 <style>
 	.proposer-name,
