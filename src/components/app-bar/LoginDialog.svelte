@@ -1,13 +1,13 @@
 <script lang="ts">
 	import WalletItem from './WalletItem.svelte';
-	import BackIcon from './svg/BackIcon.svelte';
-	import CloseIcon from './svg/CloseIcon.svelte';
-	import TempIdenticon from './svg/TempIdenticon.svelte';
+	import BackIcon from '../svg/BackIcon.svelte';
+	import CloseIcon from '../svg/CloseIcon.svelte';
+	import TempIdenticon from '../svg/TempIdenticon.svelte';
 	import AccountItem from './AccountItem.svelte';
-	import LogoPolkadotWallet from './svg/wallet-logo/LogoPolkadotWallet.svelte';
-	import LogoWalletConnect from './svg/wallet-logo/LogoWalletConnect.svelte';
-	import LogoNovaWallet from './svg/wallet-logo/LogoNovaWallet.svelte';
-	import LogoTalisman from './svg/wallet-logo/LogoTalisman.svelte';
+	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
+	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
+	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
+	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 
 	export let opened = true;
 	export let title = '';

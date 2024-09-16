@@ -2,7 +2,7 @@
 	import '../app.css';
 	import '../components/bounty-setup/style.css';
 	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
-	import AppBar from '../components/AppBar.svelte';
+	import AppBar from '../components/app-bar/AppBar.svelte';
 </script>
 
 <AppBar />

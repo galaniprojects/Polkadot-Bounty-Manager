@@ -1,5 +1,5 @@
 <script>
-	import ForwardIcon from './svg/ForwardIcon.svelte';
+	import ForwardIcon from '../svg/ForwardIcon.svelte';
 
 	export let icon;
 	export let name;
