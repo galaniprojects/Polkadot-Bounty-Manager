@@ -3,6 +3,7 @@
 	import { isLoggedIn, loggedAccounts, activeAccount } from '../stores';
 	import BountyDialog from './BountyDialog.svelte';
 	import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+	import LoginDialog from './LoginDialog.svelte';
 
 	let loginDialogOpened = false;
 	let availableExtensions: Array<string> = [];
@@ -57,7 +58,7 @@
 	{/if}
 </div>
 
-<BountyDialog title="Login" bind:opened={loginDialogOpened}>
+<!-- <BountyDialog title="Login" bind:opened={loginDialogOpened}>
 	<div class="h-auto flex flex-col justify-between">
 		<div class="grid gap-2 px-5">
 			<p>Select Wallet</p>
@@ -73,4 +74,22 @@
 			<button class="button-active text-white bg-accent" on:click={() => logIn()}> login </button>
 		</div>
 	</div>
-</BountyDialog>
+</BountyDialog> -->
+
+<LoginDialog title="CHOOSE YOUR WALLET" bind:opened={loginDialogOpened}>
+	<div class="h-auto flex flex-col justify-between">
+		<div class="grid gap-2 px-5">
+			<p>Select Wallet</p>
+			<select class="w-52 h-10 rounded-md" bind:value={selectedExtension}>
+				{#each availableExtensions as extension}
+					<option value={extension}>
+						{extension}
+					</option>
+				{/each}
+			</select>
+		</div>
+		<div class="flex items-end justify-center">
+			<button class="button-active text-white bg-accent" on:click={() => logIn()}> login </button>
+		</div>
+	</div>
+</LoginDialog>
