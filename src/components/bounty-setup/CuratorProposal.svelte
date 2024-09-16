@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
-	import { web3FromAddress } from '@polkadot/extension-dapp';
 	import { firstValueFrom } from 'rxjs';
 	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
@@ -56,7 +55,6 @@
 
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
-			const injector = await web3FromAddress($activeAccount.address);
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 			if (!curatorFee) {
 				showError('Invalid value of curator fee');
@@ -64,12 +62,7 @@
 			}
 
 			const transaction = createProposalTransaction(api);
-			const { errorMessage } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount.address,
-				injector.signer
-			);
+			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
 			if (errorMessage) {
 				showError(errorMessage);
 				return;
