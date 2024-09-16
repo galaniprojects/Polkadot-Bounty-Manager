@@ -1,5 +1,29 @@
-<script>
+<script lang="ts">
+	import { ApiPromise, WsProvider } from '@polkadot/api';
 	import AccordionItem from './AccordionItem.svelte';
+	import { onMount } from 'svelte';
+	import type { Bounty } from '../../types/bounty';
+	import { parseBounty } from '../../utils/common';
+
+	let bounties: Array<Bounty> = [];
+	let s = [1, 2, 3, 4, 5];
+
+	onMount(async () => {
+		// Query all bounties.
+		const wsProvider = new WsProvider('ws://localhost:8000');
+		const api = await ApiPromise.create({ provider: wsProvider });
+		let bountyNumber = Number((await api.query.bounties.bountyCount()).toString());
+		for (let index = 0; index < bountyNumber; index++) {
+			const bounty: Bounty | null = (
+				await api.query.bounties.bounties(index)
+			).toHuman() as unknown as Bounty;
+			if (bounty != null) {
+				bounties.push(parseBounty(bounty, index));
+				bounties = bounties;
+			}
+		}
+		console.log(bounties);
+	});
 </script>
 
 <div class="main flex justify-center items-center">
@@ -11,8 +35,11 @@
 			>
 		</div>
 
-		<AccordionItem />
-		<AccordionItem />
+		{#each bounties as bounty}
+			<div>
+				<AccordionItem bounty={bounty}/>
+			</div>
+		{/each}
 	</div>
 </div>
 
