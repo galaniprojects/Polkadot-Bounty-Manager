@@ -1,44 +1,30 @@
-<script context="module" lang="ts">
-	export enum LoadingState {
-		Loading,
-		Success,
-		Error
-	}
-</script>
-
 <script lang="ts">
+	import type { LoadingDialogState } from '../types/loaing-screen';
 	import BountyDialog from './BountyDialog.svelte';
-	export let state: LoadingState = LoadingState.Loading;
-	export let opened = true;
-	export let errorMessage = '';
+
+	export let dialogState: LoadingDialogState;
 </script>
 
 <BountyDialog
-	bind:opened
-	title="Submitting Transaction"
-	dismissable={!(state === LoadingState.Loading)}
+	bind:opened={dialogState.open}
+	title={dialogState.title}
+	dismissable={!(dialogState.status === 'loading')}
 >
 	<div class="flex h-full justify-center items-center gap-3 px-7">
-		{#if state === LoadingState.Loading}
+		{#if dialogState.status === 'loading'}
 			<p class="mt-1">This might take a moment</p>
 			<span class="loader"></span>
 		{/if}
-		{#if state === LoadingState.Success}
-			<p>Operation Success</p>
+		{#if dialogState.status === 'success'}
+			<p>{dialogState.successMessage}</p>
 		{/if}
-		{#if state === LoadingState.Error}
+		{#if dialogState.status === 'error'}
 			<p>
 				<span class="text-accent font-bold">Error: </span>
-				{#if !errorMessage}
-					Something went wrong
-				{:else}
-					{errorMessage}
-				{/if}
+				{dialogState.errorMessage}
 			</p>
 		{/if}
 	</div>
-
-	<div></div>
 </BountyDialog>
 
 <style>
