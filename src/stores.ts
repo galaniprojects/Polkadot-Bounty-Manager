@@ -3,7 +3,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import UniversalProvider from '@walletconnect/universal-provider';
 import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
-import type { LoadingDialogState } from './types/loaing-screen';
+import type { LoadingDialogState } from './types/loading-screen';
 
 
 // Session.
