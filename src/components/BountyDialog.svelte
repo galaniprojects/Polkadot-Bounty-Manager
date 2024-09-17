@@ -20,7 +20,6 @@
 				</p>
 				{#if dismissable}
 					<button class="m-4" on:click={() => (opened = false)}>
-						>
 						<CloseIcon />
 					</button>
 				{/if}

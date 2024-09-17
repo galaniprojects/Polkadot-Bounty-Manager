@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
-	import LoadingScreen from '../LoadingScreen.svelte';
-	import { LoadingState } from '../LoadingScreen.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
@@ -13,6 +11,11 @@
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	import {
+		showErrorDialog,
+		showLoadingDialog,
+		showSuccessDialog
+	} from '../../utils/loading-screen';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -23,42 +26,31 @@
 
 	export let bountyInfo: BountyInfo;
 	let success = false;
-	let loadingState = LoadingState.Loading;
-	let showLoadingScreen = false;
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
-	let errorMessage: string | undefined;
 	let fee = '-';
 	let bondValue = '-';
 
-	function showError(message: string) {
-		showLoadingScreen = true;
-		loadingState = LoadingState.Error;
-		errorMessage = message;
-	}
-
 	async function submit() {
-		loadingState = LoadingState.Loading;
-		showLoadingScreen = true;
-		errorMessage = undefined;
+		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
-				showError('wallet is not connected');
+				showErrorDialog('wallet is not connected');
 				return;
 			}
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
 			if (bountyTitle.length === 0) {
-				showError('bounty title is empty');
+				showErrorDialog('bounty title is empty');
 				return;
 			}
 			if (!bountyValue) {
-				showError('Bounty value is invalid');
+				showErrorDialog('Bounty value is invalid');
 				return;
 			}
 			if (!isInteger(bountyValue)) {
-				showError('Bounty value is invalid');
+				showErrorDialog('Bounty value is invalid');
 				return;
 			}
 
@@ -73,7 +65,7 @@
 			);
 
 			if (errorMessage) {
-				showError(errorMessage);
+				showErrorDialog(errorMessage);
 				return;
 			}
 
@@ -81,13 +73,12 @@
 			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
 				//todo show another success screen.
 
-				loadingState = LoadingState.Success;
-				success = true;
+				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
 				return;
 			}
 
 			if (result == undefined) {
-				showError('Internal error.');
+				showErrorDialog('Internal error.');
 				return;
 			}
 
@@ -98,11 +89,10 @@
 				description: bountyTitle,
 				value: BigInt(bountyValue)
 			};
-			loadingState = LoadingState.Success;
-			success = true;
+			showSuccessDialog('Submitting Transaction', 'Operation Success');
 		} catch (e) {
 			console.error(e);
-			showError(`${e}`);
+			showErrorDialog(`${e}`);
 		}
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
@@ -243,5 +233,3 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
-></LoadingScreen>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
-	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
@@ -12,11 +11,9 @@
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
+	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
 
 	export let bountyInfo: BountyInfo;
-	let loadingState = LoadingState.Loading;
-	let showLoadingScreen = false;
-	let errorMessage: string | undefined;
 	let curatorFee: string | undefined = undefined;
 	let curatorAddress: string | undefined;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
@@ -28,28 +25,21 @@
 		await calculateDeposit();
 	});
 
-	function showError(message: string) {
-		showLoadingScreen = true;
-		loadingState = LoadingState.Error;
-		errorMessage = message;
-	}
-
 	function proceed() {
 		if (step == 1) {
 			step = 2;
 		}
 	}
 	async function submit() {
-		showLoadingScreen = true;
-		loadingState = LoadingState.Loading;
+		showLoadingDialog("Submitting Transaction")
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
-			showError('Curator address is invalid');
+			showErrorDialog('Curator address is invalid');
 			return;
 		}
 
 		if (!curatorFee || !isInteger(curatorFee)) {
-			showError('Invalid value of curator fee');
+			showErrorDialog('Invalid value of curator fee');
 			return;
 		}
 
@@ -57,22 +47,22 @@
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 			if (!curatorFee) {
-				showError('Invalid value of curator fee');
+				showErrorDialog('Invalid value of curator fee');
 				return;
 			}
 
 			const transaction = createProposalTransaction(api);
 			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
 			if (errorMessage) {
-				showError(errorMessage);
+				showErrorDialog(errorMessage);
 				return;
 			}
 
-			loadingState = LoadingState.Success;
+			showSuccessDialog('Submitting Transaction', 'Operation Success');
 			step = 3;
 		} catch (e) {
 			console.error(e);
-			showError(`Something went wrong, ${e}`);
+			showErrorDialog(`Something went wrong, ${e}`);
 		}
 	}
 
@@ -248,5 +238,3 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
-></LoadingScreen>

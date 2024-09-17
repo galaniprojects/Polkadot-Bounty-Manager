@@ -8,18 +8,15 @@
 
 <script lang="ts">
 	import { ApiRx, WsProvider } from '@polkadot/api';
-	import LoadingScreen, { LoadingState } from '../LoadingScreen.svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
 
 	export let bountyInfo: BountyInfo;
 
-	let loadingState = LoadingState.Loading;
-	let showLoadingScreen = false;
-	let errorMessage: string | undefined;
 	let success = false;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
 	let fee = '-';
@@ -47,19 +44,12 @@
 		await calculateDeposit();
 	});
 
-	function showError(message: string) {
-		showLoadingScreen = true;
-		loadingState = LoadingState.Error;
-		errorMessage = message;
-	}
-
 	async function submit() {
 		if (success) {
 			changeTab();
 			return;
 		}
-		showLoadingScreen = true;
-		loadingState = LoadingState.Loading;
+		showLoadingDialog("Submitting transaction")
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
@@ -67,15 +57,15 @@
 
 			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
 			if (errorMessage) {
-				showError(errorMessage);
+				showErrorDialog(errorMessage);
 				return;
 			}
 
-			loadingState = LoadingState.Success;
+			showSuccessDialog('Submitting Transaction', 'Operation Success');
 			success = true;
 		} catch (e) {
 			console.error(e);
-			showError(`Something went wrong, ${e}`);
+			showErrorDialog(`Something went wrong, ${e}`);
 		}
 	}
 
@@ -206,5 +196,3 @@
 		</div>
 	{/if}
 </div>
-<LoadingScreen bind:errorMessage bind:opened={showLoadingScreen} state={loadingState}
-></LoadingScreen>
