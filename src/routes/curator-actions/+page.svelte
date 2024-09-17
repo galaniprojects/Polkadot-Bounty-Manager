@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../../app.css';
+	import AppBar from '../../components/app-bar/AppBar.svelte';
 	import '../../components/bounty-setup/style.css';
-	import AppBar from '../../components/AppBar.svelte';
 	import CuratorActions from '../../components/curator-actions/CuratorActions.svelte';
 </script>
 
