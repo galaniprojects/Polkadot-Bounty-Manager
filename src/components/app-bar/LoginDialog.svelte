@@ -57,9 +57,10 @@
 	let accounts: InjectedAccountWithMeta[] = [];
 
 	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
-	let selectedWallet: any = null;
+	let selectedWallet: WalletInfo | undefined;
 
 	async function selectWallet(wallet: WalletInfo) {
+		selectedWallet = wallet;
 		if (wallet.action === 'Download') {
 			switch (wallet.name) {
 				case 'Polkadot.js':
@@ -117,7 +118,6 @@
 			loggedAccounts.set(accounts);
 		}
 
-		selectedWallet = wallet;
 		currentPhase = 'accountSelection';
 	}
 
@@ -130,7 +130,7 @@
 
 	function backToWalletSelection() {
 		currentPhase = 'walletSelection';
-		selectedWallet = null;
+		selectedWallet = undefined;
 	}
 </script>
 
