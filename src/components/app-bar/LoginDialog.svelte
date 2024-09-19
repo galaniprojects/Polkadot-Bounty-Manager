@@ -1,3 +1,12 @@
+<script lang="ts" context="module">
+	export type SupportedWallets = 'Polkadot.js' | 'WalletConnect' | 'Nova Wallet' | 'Talisman';
+	export type WalletInfo = {
+		icon: any;
+		name: SupportedWallets;
+		action: 'Download' | 'Connect';
+	};
+</script>
+
 <script lang="ts">
 	import WalletItem from './WalletItem.svelte';
 	import BackIcon from '../svg/BackIcon.svelte';
@@ -8,72 +17,107 @@
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
+	import { onMount } from 'svelte';
+	import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+	import { walletConnect } from './wallet-connect';
+	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+	import { isLoggedIn, loggedAccounts, activeAccount } from '../../stores';
 
-	export let opened = true;
+	const POLKADOT_EXTENSION = 'polkadot-js';
+	//TODO: check name of extension.
+	const NOVA_EXTENSION = 'nova';
+	const TALISMAN_EXTENSION = 'talisman';
+
 	export let title = '';
-	export let dismissable = true;
+	export let open;
 
-	let wallets = [
-		{ icon: LogoPolkadotWallet, name: 'Polkadot.js', action: 'Connect' },
-		{ icon: LogoWalletConnect, name: 'WalletConnect', action: 'Connect' },
-		{ icon: LogoNovaWallet, name: 'Nova Wallet', action: 'Download' },
-		{ icon: LogoTalisman, name: 'Talisman', action: 'Download' }
-	];
+	let wallets: WalletInfo[] = [];
 
-	let accounts = [
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 1',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		},
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 3',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		},
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 4',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		},
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 5',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		},
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 6',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		},
-		{
-			identicon: TempIdenticon,
-			name: 'Polkadot Account 7',
-			address: '12BQrr99NdNz',
-			action: 'Select'
-		}
-	];
+	onMount(async () => {
+		wallets = [
+			{
+				icon: LogoPolkadotWallet,
+				name: 'Polkadot.js',
+				action: (window as any).__polkadotjs ? 'Connect' : 'Download'
+			},
+			{ icon: LogoWalletConnect, name: 'WalletConnect', action: 'Connect' },
+			{
+				icon: LogoNovaWallet,
+				name: 'Nova Wallet',
+				//TODO: nova_wallet?
+				action: (window as any).nova_wallet ? 'Connect' : 'Download'
+			},
+			{
+				icon: LogoTalisman,
+				name: 'Talisman',
+				action: (window as any).talismanEth ? 'Connect' : 'Download'
+			}
+		];
+	});
+
+	let accounts: InjectedAccountWithMeta[] = [];
 
 	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
 	let selectedWallet: any = null;
-	let selectedAccount: any = null;
 
-	function selectWallet(wallet: any) {
+	async function selectWallet(wallet: WalletInfo) {
+		if (wallet.action === 'Download') {
+			switch (wallet.name) {
+				case 'Polkadot.js':
+					window.open('https://polkadot.js.org/extension/', '_blank')!.focus();
+				case 'WalletConnect':
+					return;
+				case 'Nova Wallet':
+					window.open('https://novawallet.io/', '_blank')!.focus();
+				case 'Talisman':
+					window.open('https://www.talisman.xyz/', '_blank')!.focus();
+			}
+		} else {
+			currentPhase = 'waiting';
+			let extensionName = '';
+			let injectedAccounts: InjectedAccountWithMeta[] = [];
+			switch (wallet.name) {
+				case 'Polkadot.js':
+					extensionName = POLKADOT_EXTENSION;
+					await web3Enable(extensionName);
+					break;
+				case 'WalletConnect':
+					try {
+						injectedAccounts = await walletConnect();
+					} catch (e) {
+						//TODO: show rejection message?
+						return;
+					}
+					break;
+				case 'Nova Wallet':
+					extensionName = NOVA_EXTENSION;
+					await web3Enable(extensionName);
+					break;
+				case 'Talisman':
+					extensionName = TALISMAN_EXTENSION;
+					await web3Enable(extensionName);
+					break;
+				default:
+					throw new Error('internal error, unsupported extension');
+			}
+			if (wallet.name !== 'WalletConnect') {
+				accounts = await web3Accounts({
+					extensions: [extensionName],
+					ss58Format: 0
+				});
+			}
+
+			loggedAccounts.set(injectedAccounts);
+		}
+
 		selectedWallet = wallet;
-		currentPhase = 'waiting';
-
-		setTimeout(() => {
-			currentPhase = 'accountSelection';
-		}, 3000);
+		currentPhase = 'accountSelection';
 	}
 
-	function selectAccount(account: any) {
-		selectedAccount = account;
+	function selectAccount(account: InjectedAccountWithMeta) {
+		activeAccount.set(account);
+		isLoggedIn.set(true);
+		open = false;
 	}
 
 	function backToWalletSelection() {
@@ -83,104 +127,99 @@
 </script>
 
 <!-- Base Modal Layout -->
-{#if opened}
-	<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
-	<div class="flex justify-center fixed inset-0 w-screen z-20 py-52">
-		<div class="flex flex-col w-[300px] md:w-[490px] h-fit rounded-md bg-primary pt-5 px-5 pb-3">
-			<!-- Header -->
-			<div class="flex justify-between items-center">
-				{#if currentPhase !== 'walletSelection'}
-					<button on:click={backToWalletSelection}>
-						<BackIcon />
-					</button>
-				{/if}
-
-				<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
-					{#if dismissable}
-						<button on:click={() => (opened = false)}>
-							<CloseIcon />
-						</button>
-					{/if}
-				</div>
-			</div>
-
-			<section class="max-h-96 pb-3">
-				<!-- Wallet Selection -->
-				{#if currentPhase === 'walletSelection'}
-					<p class="flex justify-center text-2xl text-white">{title}</p>
-					<hr class="border-white opacity-35 w-full mt-4 mb-3" />
-					<div class="cursor-pointer">
-						{#each wallets as wallet}
-							<div on:click={() => selectWallet(wallet)}>
-								<WalletItem icon={wallet.icon} name={wallet.name} action={wallet.action} />
-							</div>
-						{/each}
-					</div>
-
-					<!-- Waiting for Authorization -->
-				{:else if currentPhase === 'waiting'}
-					<div class="p-12">
-						<div class="flex items-center justify-center">
-							<div class="relative">
-								<div class="w-6 h-6 ml-4 mt-4">
-									{#if selectedWallet?.icon}
-										<svelte:component this={selectedWallet.icon} />
-									{/if}
-								</div>
-								<div
-									class="absolute top-0 left-0 w-14 h-14 border-4 border-t-gray-500 border-white rounded-full animate-spin"
-								></div>
-							</div>
-						</div>
-
-						<div class="grid items-center text-center gap-2 text-white text-md mt-14">
-							<p>WAITING FOR AUTHORIZATION</p>
-							<p>
-								Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
-							</p>
-						</div>
-					</div>
-
-					<!-- Account Selection -->
-				{:else if currentPhase === 'accountSelection'}
-					<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
-					<hr class="border-white opacity-35 mt-4 w-full" />
-					<div class="account-items max-h-64 overflow-y-auto pr-3">
-						{#each accounts as account}
-							<div on:click={() => selectAccount(account)}>
-								<AccountItem
-									identicon={account.identicon}
-									name={account.name}
-									address={account.address}
-									action={account.action}
-								/>
-							</div>
-						{/each}
-					</div>
-				{/if}
-			</section>
-
-			<!-- Footer -->
+<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
+<div class="flex justify-center fixed inset-0 w-screen z-20 py-52">
+	<div class="flex flex-col w-[300px] md:w-[490px] h-fit rounded-md bg-primary pt-5 px-5 pb-3">
+		<!-- Header -->
+		<div class="flex justify-between items-center">
 			{#if currentPhase !== 'walletSelection'}
-				<div class="mt-auto">
-					<hr class="border-white opacity-35 mb-3 w-full" />
-					<div class="flex justify-end items-center">
-						<div class="w-6 h-6">
-							{#if selectedWallet?.icon}
-								<svelte:component this={selectedWallet.icon} />
-							{/if}
+				<button on:click={backToWalletSelection}>
+					<BackIcon />
+				</button>
+			{/if}
+
+			<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
+				<button on:click={() => (open = false)}>
+					<CloseIcon />
+				</button>
+			</div>
+		</div>
+
+		<section class="max-h-96 pb-3">
+			<!-- Wallet Selection -->
+			{#if currentPhase === 'walletSelection'}
+				<p class="flex justify-center text-2xl text-white">{title}</p>
+				<hr class="border-white opacity-35 w-full mt-4 mb-3" />
+				<div class="cursor-pointer">
+					{#each wallets as wallet}
+						<div on:click={() => selectWallet(wallet)}>
+							<WalletItem {wallet} />
 						</div>
-						<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button
-						>
-						<button on:click={backToWalletSelection} class="text-white flex items-center"
-							>Switch
-						</button>
+					{/each}
+				</div>
+
+				<!-- Waiting for Authorization -->
+			{:else if currentPhase === 'waiting'}
+				<div class="p-12">
+					<div class="flex items-center justify-center">
+						<div class="relative">
+							<div class="w-6 h-6 ml-4 mt-4">
+								{#if selectedWallet?.icon}
+									<svelte:component this={selectedWallet.icon} />
+								{/if}
+							</div>
+							<div
+								class="absolute top-0 left-0 w-14 h-14 border-4 border-t-gray-500 border-white rounded-full animate-spin"
+							></div>
+						</div>
 					</div>
+
+					<div class="grid items-center text-center gap-2 text-white text-md mt-14">
+						<p>WAITING FOR AUTHORIZATION</p>
+						<p>
+							Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
+						</p>
+					</div>
+				</div>
+
+				<!-- Account Selection -->
+			{:else if currentPhase === 'accountSelection'}
+				<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
+				<hr class="border-white opacity-35 mt-4 w-full" />
+				<div class="account-items max-h-64 overflow-y-auto pr-3">
+					{#each accounts as account}
+						<div on:click={() => selectAccount(account)}>
+							<AccountItem
+								identicon={TempIdenticon}
+								name={account.meta.name}
+								address={account.address}
+								action="Select"
+							/>
+						</div>
+					{/each}
 				</div>
 			{/if}
-		</div>
+		</section>
+
+		<!-- Footer -->
+		{#if currentPhase !== 'walletSelection'}
+			<div class="mt-auto">
+				<hr class="border-white opacity-35 mb-3 w-full" />
+				<div class="flex justify-end items-center">
+					<div class="w-6 h-6">
+						{#if selectedWallet?.icon}
+							<svelte:component this={selectedWallet.icon} />
+						{/if}
+					</div>
+					<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button>
+					<button on:click={backToWalletSelection} class="text-white flex items-center"
+						>Switch
+					</button>
+				</div>
+			</div>
+		{/if}
 	</div>
-{/if}
+</div>
 
 <style>
 	.animate-spin {
