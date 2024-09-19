@@ -5,11 +5,6 @@
 		name: SupportedWallets;
 		action: 'Download' | 'Connect';
 	};
-	export type AccountInfo = {
-		identicon: any;
-		name: string | undefined;
-		address: string;
-	};
 </script>
 
 <script lang="ts">
@@ -60,7 +55,7 @@
 		];
 	});
 
-	let accounts: AccountInfo[] = [];
+	let accounts: InjectedAccountWithMeta[] = [];
 
 	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
 	let selectedWallet: any = null;
@@ -106,20 +101,13 @@
 					throw new Error('internal error, unsupported extension');
 			}
 			if (wallet.name !== 'WalletConnect') {
-				injectedAccounts = await web3Accounts({
+				accounts = await web3Accounts({
 					extensions: [extensionName],
 					ss58Format: 0
 				});
 			}
 
 			loggedAccounts.set(injectedAccounts);
-			accounts = injectedAccounts.map((account) => {
-				return {
-					identicon: TempIdenticon,
-					name: account.meta.name,
-					address: account.address
-				};
-			});
 		}
 
 		selectedWallet = wallet;
@@ -202,8 +190,8 @@
 					{#each accounts as account}
 						<div on:click={() => selectAccount(account)}>
 							<AccountItem
-								identicon={account.identicon}
-								name={account.name}
+								identicon={TempIdenticon}
+								name={account.meta.name}
 								address={account.address}
 								action="Select"
 							/>
