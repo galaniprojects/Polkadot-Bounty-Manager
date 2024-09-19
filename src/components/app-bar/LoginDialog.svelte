@@ -17,7 +17,7 @@
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 	import { onMount } from 'svelte';
-	import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
+	import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 	import { walletConnect } from './wallet-connect';
 	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 	import { isLoggedIn, loggedAccounts, activeAccount } from '../../stores';
@@ -33,23 +33,23 @@
 	let wallets: WalletInfo[] = [];
 
 	onMount(async () => {
+		let extensionNames = Object.keys((window as any).injectedWeb3);
 		wallets = [
 			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
-				action: (window as any).__polkadotjs ? 'Connect' : 'Download'
+				action: extensionNames.includes(POLKADOT_EXTENSION) ? 'Connect' : 'Download'
 			},
 			{ icon: LogoWalletConnect, name: 'WalletConnect', action: 'Connect' },
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				//TODO: nova_wallet?
-				action: (window as any).nova_wallet ? 'Connect' : 'Download'
+				action: extensionNames.includes(NOVA_EXTENSION) ? 'Connect' : 'Download'
 			},
 			{
 				icon: LogoTalisman,
 				name: 'Talisman',
-				action: (window as any).talismanEth ? 'Connect' : 'Download'
+				action: extensionNames.includes(TALISMAN_EXTENSION) ? 'Connect' : 'Download'
 			}
 		];
 	});
@@ -74,15 +74,15 @@
 		} else {
 			currentPhase = 'waiting';
 			let extensionName = '';
-			let injectedAccounts: InjectedAccountWithMeta[] = [];
 			switch (wallet.name) {
 				case 'Polkadot.js':
 					extensionName = POLKADOT_EXTENSION;
-					await web3Enable(extensionName);
+					await web3Enable('Bounty Manager');
+					await web3FromSource(extensionName);
 					break;
 				case 'WalletConnect':
 					try {
-						injectedAccounts = await walletConnect();
+						accounts = await walletConnect();
 					} catch (e) {
 						//TODO: show rejection message?
 						return;
@@ -90,11 +90,13 @@
 					break;
 				case 'Nova Wallet':
 					extensionName = NOVA_EXTENSION;
-					await web3Enable(extensionName);
+					await web3Enable('Bounty Manager');
+					await web3FromSource(extensionName);
 					break;
 				case 'Talisman':
 					extensionName = TALISMAN_EXTENSION;
-					await web3Enable(extensionName);
+					await web3Enable('Bounty Manager');
+					await web3FromSource(extensionName);
 					break;
 				default:
 					throw new Error('internal error, unsupported extension');
@@ -106,13 +108,13 @@
 				});
 			}
 
-			for (let i = 0; i < injectedAccounts.length; i++) {
-				if (!injectedAccounts[i].meta.name) {
-					injectedAccounts[i].meta.name = `[${extensionName}] ${i + 1}`;
+			for (let i = 0; i < accounts.length; i++) {
+				if (!accounts[i].meta.name) {
+					accounts[i].meta.name = `[${extensionName}] ${i + 1}`;
 				}
 			}
 
-			loggedAccounts.set(injectedAccounts);
+			loggedAccounts.set(accounts);
 		}
 
 		selectedWallet = wallet;
@@ -120,8 +122,9 @@
 	}
 
 	function selectAccount(account: InjectedAccountWithMeta) {
-		activeAccount.set(account);
+		console.log(activeAccount);
 		isLoggedIn.set(true);
+		activeAccount.set(account);
 		open = false;
 	}
 
