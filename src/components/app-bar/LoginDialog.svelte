@@ -11,7 +11,6 @@
 	import WalletItem from './WalletItem.svelte';
 	import BackIcon from '../svg/BackIcon.svelte';
 	import CloseIcon from '../svg/CloseIcon.svelte';
-	import TempIdenticon from '../svg/TempIdenticon.svelte';
 	import AccountItem from './AccountItem.svelte';
 	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
@@ -107,9 +106,9 @@
 				});
 			}
 
-			for(let i = 0; i < injectedAccounts.length; i++){
-				if (!injectedAccounts[i].meta.name ){
-					injectedAccounts[i].meta.name = `[${extensionName}] ${i+1}`
+			for (let i = 0; i < injectedAccounts.length; i++) {
+				if (!injectedAccounts[i].meta.name) {
+					injectedAccounts[i].meta.name = `[${extensionName}] ${i + 1}`;
 				}
 			}
 
