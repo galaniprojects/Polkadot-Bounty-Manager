@@ -11,7 +11,11 @@
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
-	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
+	import {
+		showErrorDialog,
+		showLoadingDialog,
+		showSuccessDialog
+	} from '../../utils/loading-screen';
 
 	export let bountyInfo: BountyInfo;
 	let curatorFee: string | undefined = undefined;
@@ -31,7 +35,7 @@
 		}
 	}
 	async function submit() {
-		showLoadingDialog("Submitting Transaction")
+		showLoadingDialog('Submitting Transaction');
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
 			showErrorDialog('Curator address is invalid');

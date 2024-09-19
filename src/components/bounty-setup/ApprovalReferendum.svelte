@@ -13,7 +13,11 @@
 	import { activeAccount } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
-	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
+	import {
+		showErrorDialog,
+		showLoadingDialog,
+		showSuccessDialog
+	} from '../../utils/loading-screen';
 
 	export let bountyInfo: BountyInfo;
 
@@ -49,7 +53,7 @@
 			changeTab();
 			return;
 		}
-		showLoadingDialog("Submitting transaction")
+		showLoadingDialog('Submitting transaction');
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));

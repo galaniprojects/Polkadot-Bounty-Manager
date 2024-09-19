@@ -10,9 +10,7 @@
 	export let opened = false;
 	export let bounty: Bounty;
 	let fee = '-';
-	let value = 
-
-	onMount(async () => {
+	let value = onMount(async () => {
 		await calculateFee();
 	});
 
