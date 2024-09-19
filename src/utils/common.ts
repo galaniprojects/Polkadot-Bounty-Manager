@@ -24,3 +24,11 @@ function parseBalance(balance: string | undefined): bigint {
 	const cleanedBalance = balance.replace(/[, ]/g, '');
 	return BigInt(cleanedBalance);
 }
+
+export function truncateString(input: string, maxLength: number) {
+  if (input.length > maxLength) {
+    return input.slice(0, maxLength) + "...";
+  } else {
+    return input;
+  }
+}

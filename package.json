@@ -41,6 +41,7 @@
 	"dependencies": {
 		"@polkadot/api": "^12.3.1",
 		"@polkadot/extension-dapp": "^0.51.1",
+		"@polkadot/ui-shared": "^3.9.1",
 		"@walletconnect/modal": "2.6.2",
 		"@walletconnect/sign-client": "2.12.2",
 		"@walletconnect/types": "2.12.2",

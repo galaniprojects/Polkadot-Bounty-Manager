@@ -11,7 +11,6 @@
 	import WalletItem from './WalletItem.svelte';
 	import BackIcon from '../svg/BackIcon.svelte';
 	import CloseIcon from '../svg/CloseIcon.svelte';
-	import TempIdenticon from '../svg/TempIdenticon.svelte';
 	import AccountItem from './AccountItem.svelte';
 	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
@@ -107,6 +106,12 @@
 				});
 			}
 
+			for (let i = 0; i < injectedAccounts.length; i++) {
+				if (!injectedAccounts[i].meta.name) {
+					injectedAccounts[i].meta.name = `[${extensionName}] ${i + 1}`;
+				}
+			}
+
 			loggedAccounts.set(injectedAccounts);
 		}
 
@@ -189,12 +194,7 @@
 				<div class="account-items max-h-64 overflow-y-auto pr-3">
 					{#each accounts as account}
 						<div on:click={() => selectAccount(account)}>
-							<AccountItem
-								identicon={TempIdenticon}
-								name={account.meta.name}
-								address={account.address}
-								action="Select"
-							/>
+							<AccountItem name={account.meta.name} address={account.address} />
 						</div>
 					{/each}
 				</div>
