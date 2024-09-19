@@ -5,15 +5,15 @@ export function isInteger(input: string) {
 	return Number.isInteger(num) && num.toString() === input;
 }
 
-export function parseBounty(obj: any, id: number): Bounty { 
+export function parseBounty(obj: any, id: number): Bounty {
 	return {
 		...obj,
 		id,
 		value: parseBalance(obj.value),
 		fee: parseBalance(obj.fee),
 		curatorDeposit: parseBalance(obj.curator_deposit),
-		bond: parseBalance(obj.bond),
-	}
+		bond: parseBalance(obj.bond)
+	};
 }
 
 function parseBalance(balance: string | undefined): bigint {
@@ -26,9 +26,9 @@ function parseBalance(balance: string | undefined): bigint {
 }
 
 export function truncateString(input: string, maxLength: number) {
-  if (input.length > maxLength) {
-    return input.slice(0, maxLength) + "...";
-  } else {
-    return input;
-  }
+	if (input.length > maxLength) {
+		return input.slice(0, maxLength) + '...';
+	} else {
+		return input;
+	}
 }

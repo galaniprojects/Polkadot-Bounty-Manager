@@ -37,7 +37,7 @@
 
 		{#each bounties as bounty}
 			<div>
-				<AccordionItem bounty={bounty}/>
+				<AccordionItem {bounty} />
 			</div>
 		{/each}
 	</div>

@@ -5,7 +5,6 @@ import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
 
-
 // Session.
 export const isLoggedIn = writable(false);
 
@@ -17,7 +16,7 @@ export const activeAccount = writable(account);
 
 export const usedExtension = writable('');
 
-// WalletConnect. 
+// WalletConnect.
 let provider: UniversalProvider | undefined;
 export const walletConnectProvider = writable(provider);
 
@@ -29,11 +28,10 @@ export const walletConnectSigner = writable(signer);
 
 // Loading Dialog.
 const state: LoadingDialogState = {
-    open: false,
-    status: 'loading',
-    title: '',
-    successMessage: '',
-    errorMessage: ''
+	open: false,
+	status: 'loading',
+	title: '',
+	successMessage: '',
+	errorMessage: ''
 };
-export const loadingDialogState = writable(state)
-
+export const loadingDialogState = writable(state);
