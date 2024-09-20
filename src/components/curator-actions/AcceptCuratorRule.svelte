@@ -6,8 +6,9 @@
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
+	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
 
-	export let opened = false;
+	export let open = false;
 	export let bounty: Bounty;
 	let fee = '-';
 
@@ -16,10 +17,17 @@
 	});
 
 	async function acceptCuratorRule() {
+		showLoadingDialog('Submitting transaction');
 		const wsProvider = new WsProvider('ws://localhost:8000');
 		const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 		let tx = api.tx.bounties.acceptCurator(bounty.id);
 		const { errorMessage } = await dryRunAndSubmitTransaction(api, tx, $activeAccount);
+		if (errorMessage) {
+			showErrorDialog(errorMessage);
+			return;
+		}
+		showSuccessDialog('Submitting Transaction', 'Operation Success');
+		open = false;
 	}
 
 	async function calculateFee() {
@@ -39,10 +47,10 @@
 	}
 </script>
 
-<BountyDialog bind:opened title="Accept Curator Rule">
+<BountyDialog bind:opened={open} title="Accept Curator Rule">
 	<div class="flex justify-center items-center">
 		<div>
-			<p>bounty.id</p>
+			<p>{bounty.id}</p>
 			{#if bounty.description !== undefined}
 				<p>{bounty.description}</p>
 			{/if}
