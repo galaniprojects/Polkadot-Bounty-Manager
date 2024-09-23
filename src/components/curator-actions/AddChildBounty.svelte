@@ -1,53 +1,151 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import {
+		convertDotToPlanck,
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction
+	} from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
+	import {
+		showErrorDialog,
+		showLoadingDialog,
+		showSuccessDialog
+	} from '../../utils/loading-screen';
+	import { isInteger } from '../../utils/common';
+	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
-	export let opened = false;
+	export let open = true;
 	export let bounty: Bounty;
+
+	let bountyValue: string | undefined;
+	let bountyTitle = '';
+
 	let fee = '-';
-	let value = onMount(async () => {
+	onMount(async () => {
 		await calculateFee();
 	});
 
-	async function acceptCuratorRule() {
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-		let tx = api.tx.bounties.acceptCurator(bounty.id);
-		const { errorMessage } = await dryRunAndSubmitTransaction(api, tx, $activeAccount);
+	async function submit() {
+		showLoadingDialog('Submitting transaction');
+		try {
+			if (!$activeAccount) {
+				showErrorDialog('wallet is not connected');
+				return;
+			}
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+
+			if (bountyTitle.length === 0) {
+				showErrorDialog('bounty title is empty');
+				return;
+			}
+			if (!bountyValue) {
+				showErrorDialog('Bounty value is invalid');
+				return;
+			}
+			if (!isInteger(bountyValue)) {
+				showErrorDialog('Bounty value is invalid');
+				return;
+			}
+
+			let value = convertDotToPlanck(BigInt(bountyValue));
+			let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
+
+			const { errorMessage, result } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount
+			);
+
+			if (errorMessage) {
+				showErrorDialog(errorMessage);
+				return;
+			}
+
+			// We don't get transaction result using Multix.
+			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+				//todo show another success screen.
+
+				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+				return;
+			}
+
+			if (result == undefined) {
+				showErrorDialog('Internal error.');
+				return;
+			}
+
+			//TODO: refetch child bounties.
+
+			showSuccessDialog('Submitting Transaction', 'Operation Success');
+		} catch (e) {
+			console.error(e);
+			showErrorDialog(`${e}`);
+		}
 	}
 
 	async function calculateFee() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			if (bountyValue && bountyTitle && $activeAccount) {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let value = convertDotToPlanck(BigInt(bountyValue));
+				let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
 
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
-		} catch (e) {
-			console.error(e);
+				let observableFee = transaction.paymentInfo($activeAccount.address);
+
+				const paymentInfo = await firstValueFrom(observableFee);
+				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			} else {
+				fee = '-';
+			}
+		} catch {
+			fee = '-';
+		}
+	}
+
+	let inputTimeout = setTimeout(() => {}, 4000);
+	function inputChange() {
+		if (bountyValue && bountyTitle && $activeAccount) {
+			fee = 'Calculating...';
+			clearTimeout(inputTimeout);
+			inputTimeout = setTimeout(calculateFee, 2000);
+		} else {
 			fee = '-';
 		}
 	}
 </script>
 
-<BountyDialog bind:opened title="Accept Curator Rule">
+<BountyDialog bind:opened={open} title="Add Child Bounty">
 	<div class="flex justify-center items-center">
 		<div>
-			<p>bounty.id</p>
+			<p>{bounty.id}</p>
 			{#if bounty.description !== undefined}
 				<p>{bounty.description}</p>
 			{/if}
 
 			<p>Fee: {fee}</p>
-			<button on:click={acceptCuratorRule} class="button-active">Submit</button>
+		</div>
+	</div>
+	<div class="flex justify-center items-center">
+		<div class="grid">
+			<input
+				bind:value={bountyTitle}
+				on:input={inputChange}
+				class="rounded-md bg-gray-100 pl-3 pt-1"
+				placeholder="Give your Bounty a title"
+			/>
+			<input
+				bind:value={bountyValue}
+				class="border pt-1 pl-2 rounded-md bg-white"
+				placeholder="1000"
+				on:input={inputChange}
+			/>
+			<button on:click={submit} class="button-active">Submit</button>
 		</div>
 	</div>
 </BountyDialog>
