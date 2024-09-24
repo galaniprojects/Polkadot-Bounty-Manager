@@ -26,7 +26,7 @@
 	});
 </script>
 
-<div class="main flex justify-center items-center">
+<div class="main flex justify-center items-center overflow-x-hidden">
 	<div class="rounded-md p-6">
 		<div class="flex justify-between">
 			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>

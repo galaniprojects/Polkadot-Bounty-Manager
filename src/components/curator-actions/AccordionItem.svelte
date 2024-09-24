@@ -9,6 +9,8 @@
 	import { onMount } from 'svelte';
 	import { WsProvider, ApiPromise } from '@polkadot/api';
 	import AcceptCuratorRule from './AcceptCuratorRule.svelte';
+	import MagnifyingIcon from '../svg/MagnifyingIcon.svelte';
+	import AccordionItemHeader from './AccordionItemHeader.svelte';
 
 	let bountyDetails = {
 		title: 'Community Event Activity Bounty'
@@ -55,7 +57,7 @@
 	}
 </script>
 
-<div class="bg-secondary border border-accent rounded-md my-6">
+<div class="bg-curatorMainBackground overflow-x-hidden rounded-md my-6">
 	<!-- Mobile design-->
 	<div class="lg:hidden">
 		<div
@@ -106,7 +108,7 @@
 				</section>
 
 				<div class="flex justify-between">
-					<div class="grid">
+					<div class="grid max-w-52">
 						<section>
 							<p class="text-xs">Remaining balance</p>
 							<p><span>1,230.9800</span> DOT</p>
@@ -135,7 +137,7 @@
 					</div>
 				</div>
 				<hr class="border-white opacity-30 mt-6 mb-3" />
-				<section class="flex justify-between items-center">
+				<section class="flex justify-between items-center w-64">
 					<p class="text-xs">Curator ({curators.length})</p>
 					<button
 						class="material-symbols-outlined flex justify-center items-center bg-accent text-white rounded-full w-6 h-6 text-lg ml-3"
@@ -148,7 +150,7 @@
 						{/if}
 					</button>
 				</section>
-				<div class="flex justify-between my-3">
+				<div class="flex justify-between my-3 w-64">
 					<p class="main-curator">13iTojfEzgwrKzvEkuAmxrtm</p>
 					<button class="material-symbols-outlined text-accent w-6 h-6">content_copy</button>
 				</div>
@@ -222,7 +224,7 @@
 				<ChildBountyCard
 					id="8887"
 					title="Marketing Allocation"
-					status="payout pending"
+					status="claimed"
 					value="47,370.0000 DOT"
 					curatorFee="1.9857 DOT"
 					subCurator="7H1RjCf3...Ngcq"
@@ -236,37 +238,175 @@
 	</div>
 
 	<!-- Desktop design -->
-	<div
-		class="lg:w-[960px] xl:w-[1200px] 2xl:w-[1280px] hidden lg:flex justify-between items-center max-h-20 pl-10 pr-6"
-	>
-		<div class="text-white flex">
-			<span class="text-2xl">#89</span>
-			<span class="text-2xl ml-3">Community Event Activities Bounty 02</span>
-		</div>
+	<div class="container mx-auto hidden lg:grid lg:grid-cols-1 xl:grid-cols-1 2xl:grid-cols-1">
+		<AccordionItemHeader {bounty}></AccordionItemHeader>
 
-		<div class="flex justify-between items-center">
-			<button class="info-svg w-6 h-6 m-2"><InfoSvg /></button>
-			<button
-				class="curator-btn text-accent border-accent border min-w-fit rounded-md font-bold px-3 ml-2 mr-5"
-				>ACCEPT CURATOR
-			</button>
+		<!-- Content Section -->
+		{#if !expanded}
+			<div class="p-3 pt-6 flex flex-col lg:flex-row justify-between text-white lg:pr-0 xl:pr-28">
+				<div class="first-column flex flex-col gap-3 justify-start lg:ml-7 lg:flex-1">
+					<section class="flex flex-col lg:flex-row space-x-10">
+						<div>
+							<p class="text-xs">Remaining balance</p>
+							<p class="text-2xl"><span>1,230.9800</span> DOT</p>
+						</div>
 
-			<button class="info-svg w-6 h-6 m-2"><InfoSvg /></button>
-			<button
-				class="optin-btn text-darkgray border-darkgray border min-w-fit rounded-md font-bold px-9 ml-2 mr-6"
-				>OPT-IN
-			</button>
-			<button
-				class="material-symbols-outlined border-white text-white border-2 rounded-full p-2 w-6 h-6 text-xl flex justify-center items-center"
-				on:click={handleToggleClick}
-			>
-				{#if expanded}
-					keyboard_arrow_up
-				{:else}
-					keyboard_arrow_down
-				{/if}
-			</button>
-		</div>
+						<div class="curator-section mt-4 lg:ml-0 lg:mt-0 w-full lg:w-auto">
+							<p class="text-xs">Curator ({curators.length})</p>
+							<div class="flex items-center space-x-1">
+								<p class="main-curator break-words lg:break-normal">13iTojfEzgwrKzvEkuAmxrtm</p>
+								<button class="material-symbols-outlined w-6 h-6">content_copy</button>
+								<button
+									class="material-symbols-outlined flex justify-center items-center border border-white text-white rounded-full w-5 h-5 text-lg ml-3"
+									on:click={handleCuratorsToggleClick}
+								>
+									{#if curatorsExpended}
+										keyboard_arrow_up
+									{:else}
+										keyboard_arrow_down
+									{/if}
+								</button>
+							</div>
+
+							{#if curatorsExpended}
+								<div class="mt-1">
+									{#each curators as curator, index}
+										<CuratorItem {index} {curator} />
+									{/each}
+								</div>
+							{/if}
+						</div>
+
+						<div class="ml-2 mt-4 lg:mt-0">
+							<p class="text-xs">Curator Fee</p>
+							<p class="text-md"><span>4.0057</span> DOT</p>
+						</div>
+					</section>
+
+					<section class="text-xs max-w-52">
+						<p>Description</p>
+						<p>
+							This proposal stems from the need to enhance system upgrade testing procedures,
+							minimizing feature regression. Recent discussions in various channels, spurred by …
+						</p>
+					</section>
+				</div>
+
+				<section class="flex xl:items-start space-x-4">
+					<div
+						class="flex lg:flex-col xl:flex-row xl:space-x-3 lg:space-y-2 items-end text-sm xl:mr-4 lg:mr-7"
+					>
+						<p class="text-center">Add Beneficiary Claim Form</p>
+						<div class="space-x-2">
+							<button class="bg-accent rounded-md font-bold min-w-32 pt-1">ADD</button>
+							<button class="pt-1 w-5 h-5"><InfoSvg /></button>
+						</div>
+					</div>
+
+					<!-- ToDo: change place after design final -->
+					<!-- <p>Award Bounty</p> -->
+					<!-- <button class="bg-accent rounded-md font-bold min-w-32 pt-1">READ FIRST</button> -->
+				</section>
+			</div>
+
+			<!-- Child Bounty Section -->
+			<div class="bg-childBountyBackground p-3 m-3">
+				<section class="flex flex-col lg:flex-row justify-between px-5 pb-6">
+					<div class="grid gap-2 w-1/2">
+						<p class="text-xs">Child Bounties</p>
+						<p class="text-2xl">Child Bounties</p>
+						<div class="relative w-full h-10">
+							<input
+								class="border border-borderColor pt-1 w-full rounded-md bg-white pl-2"
+								placeholder="Bounty Search"
+							/>
+							<div
+								class="border border-accent absolute right-8 top-4 transform -translate-y-1/2 h-5"
+							></div>
+							<MagnifyingIcon></MagnifyingIcon>
+						</div>
+					</div>
+
+					<div class="grid mt-6 lg:mt-0 space-y-3 lg:pr-0 xl:pr-24">
+						<div class="flex justify-end items-center py-3">
+							<p class="mr-3 text-md">New Child Bounty</p>
+							<button class="bg-accent text-white rounded-md font-bold pt-1 min-w-32 mr-3"
+								>ADD</button
+							>
+						</div>
+						<div class="flex justify-end items-center pb-3">
+							<p class="mr-3 text-md">Salary Child Bounties</p>
+							<button class="bg-accent text-white rounded-md font-bold pt-1 min-w-32 mr-3"
+								>ADD</button
+							>
+						</div>
+					</div>
+				</section>
+
+				<!-- Child Bounty Cards -->
+				<ChildBountyCard
+					id="8887"
+					title="Marketing Allocation"
+					status="created"
+					value="47,370.0000 DOT"
+					curatorFee="1.9857 DOT"
+					subCurator="7H1RjCf3...Ngcq"
+					beneficiary="Nodal_point_12"
+					dateCreated="MAY 09, 2024"
+					dateOfPayout="AUG 21, 2024"
+					timeUntilPayout="1d : 8h : 42min : 18sec"
+				/>
+				<ChildBountyCard
+					id="8887"
+					title="Marketing Allocation"
+					status="sub-curator proposed"
+					value="47,370.0000 DOT"
+					curatorFee="1.9857 DOT"
+					subCurator="7H1RjCf3...Ngcq"
+					beneficiary="Nodal_point_12"
+					dateCreated="MAY 09, 2024"
+					dateOfPayout="AUG 21, 2024"
+					timeUntilPayout="1d : 8h : 42min : 18sec"
+				/>
+				<ChildBountyCard
+					id="8887"
+					title="Bounty 2"
+					status="active"
+					value="47,370.0000 DOT"
+					curatorFee="1.9857 DOT"
+					subCurator="7H1RjCf3...Ngcq"
+					beneficiary="Nodal_point_12"
+					dateCreated="MAY 09, 2024"
+					dateOfPayout="AUG 21, 2024"
+					timeUntilPayout="1d : 8h : 42min : 18sec"
+				/>
+				<ChildBountyCard
+					id="8887"
+					title="Bounty 3"
+					status="awarded"
+					value="47,370.0000 DOT"
+					curatorFee="1.9857 DOT"
+					subCurator="7H1RjCf3...Ngcq"
+					beneficiary="Nodal_point_12"
+					dateCreated="MAY 09, 2024"
+					dateOfPayout="AUG 21, 2024"
+					timeUntilPayout="1d : 8h : 42min : 18sec"
+				/>
+				<ChildBountyCard
+					id="8887"
+					title="Bounty 4 
+				"
+					status="claimed"
+					value="47,370.0000 DOT"
+					curatorFee="1.9857 DOT"
+					subCurator="7H1RjCf3...Ngcq"
+					beneficiary="Nodal_point_12"
+					dateCreated="MAY 09, 2024"
+					dateOfPayout="AUG 21, 2024"
+					timeUntilPayout="1d : 8h : 42min : 18sec"
+				/>
+			</div>
+		{/if}
 	</div>
 </div>
 {#if acceptCuratorRuleDialogOpened}
@@ -274,11 +414,6 @@
 {/if}
 
 <style>
-	.proposer-name,
-	.main-curator {
-		font-family: 'PT Mono';
-	}
-
 	hr {
 		box-shadow: 0 -1px 0 0 gray;
 	}
