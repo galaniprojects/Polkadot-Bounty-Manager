@@ -3,26 +3,80 @@
 	import AccordionItem from './AccordionItem.svelte';
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
-	import { parseBounty } from '../../utils/common';
+	import type { ChildBounty } from '../../types/child-bounty';
+	import { parseBounty, parseChildBounty } from '../../utils/common';
+	import {
+		hideLoadingDialog,
+		showErrorDialog,
+		showLoadingDialog
+	} from '../../utils/loading-screen';
 
-	let bounties: Array<Bounty> = [];
-	let s = [1, 2, 3, 4, 5];
+	let bounties: Bounty[] = [];
 
 	onMount(async () => {
-		// Query all bounties.
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const api = await ApiPromise.create({ provider: wsProvider });
-		let bountyNumber = Number((await api.query.bounties.bountyCount()).toString());
-		for (let index = 0; index < bountyNumber; index++) {
-			const bounty: Bounty | null = (
-				await api.query.bounties.bounties(index)
-			).toHuman() as unknown as Bounty;
-			if (bounty != null) {
-				bounties.push(parseBounty(bounty, index));
-				bounties = bounties;
+		showLoadingDialog('Loading...');
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await ApiPromise.create({ provider: wsProvider });
+
+			// Query all bounties.
+			const unparsedBounties = await api.query.bounties.bounties.entries();
+			for (let unparsedBounty of unparsedBounties) {
+				let index = Number((unparsedBounty[0].toHuman() as unknown as any)[0].replace(',', ''));
+				bounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
 			}
+
+			bounties.sort((bounty1, bounty2) => {
+				if (bounty1.id > bounty2.id) {
+					return -1;
+				} else {
+					return 1;
+				}
+			});
+
+			// Query bounty description.
+			const bountiesDescriptions = await api.query.bounties.bountyDescriptions.entries();
+			for (let desc of bountiesDescriptions) {
+				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let description = desc[1].toHuman() as string;
+				let bounty = bounties.find((bounty) => bounty.id == index);
+				if (bounty) {
+					bounty.description = description;
+				}
+			}
+
+			// Query child bounties.
+			let childBounties: ChildBounty[] = [];
+			const unparsedChildBounties = await api.query.childBounties.childBounties.entries();
+			for (let childBounty of unparsedChildBounties) {
+				let id = Number((childBounty[0].toHuman() as unknown as any)[1].replace(',', ''));
+				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
+			}
+
+			for (let i = 0; i < bounties.length; i++) {
+				bounties[i].childBounties = childBounties.filter((childBounty) => {
+					return childBounty.parentBounty === bounties[i].id;
+				});
+			}
+
+			// Query child bounty description.
+			const childBountiesDescriptions =
+				await api.query.childBounties.childBountyDescriptions.entries();
+			for (let desc of childBountiesDescriptions) {
+				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let description = desc[1].toHuman() as string;
+				let childBounty = childBounties.find((childBounty) => childBounty.id == index);
+				if (childBounty) {
+					childBounty.description = description;
+				}
+			}
+
+			bounties = bounties;
+		} catch (e) {
+			console.error(e);
+			showErrorDialog('Error while loading bounty details');
 		}
-		console.log(bounties);
+		hideLoadingDialog();
 	});
 </script>
 
@@ -30,11 +84,14 @@
 	<div class="rounded-md p-6">
 		<div class="flex justify-between">
 			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>
-			<button class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
+			<button
+				on:click={() => {
+					window.location = '/';
+				}}
+				class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
 				>CREATE NEW BOUNTY</button
 			>
 		</div>
-
 		{#each bounties as bounty}
 			<div>
 				<AccordionItem {bounty} />
