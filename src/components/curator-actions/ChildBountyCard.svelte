@@ -10,7 +10,7 @@
 	export let childBounty: ChildBounty;
 	let status: Status;
 
-	export let id: string | number = '>>>>';
+	// export let id: string | number = '>>>>';
 	export let beneficiary: string = '';
 	export let dateCreated: string = '';
 	export let dateOfPayout: string = '';
@@ -19,23 +19,23 @@
 
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
-	let statusColor = 'black';
+	let statusColorClass = '';
 
 	$: switch (status) {
 		case 'added':
-			statusColor = 'active';
+			statusColorClass = 'added';
 			break;
 		case 'sub-curator proposed':
-			statusColor = 'active';
+			statusColorClass = 'sub-curator-proposed';
 			break;
 		case 'active':
-			statusColor = 'active';
+			statusColorClass = 'active';
 			break;
 		case 'pending payout':
-			statusColor = 'pending-payout';
+			statusColorClass = 'pending-payout';
 			break;
 		default:
-			statusColor = 'pending-payout';
+			statusColorClass = 'added';
 	}
 
 	onMount(() => {
@@ -45,12 +45,15 @@
 		if (typeof childBounty.status === 'object') {
 			if ('Active' in childBounty.status) {
 				status = 'active';
+				return;
 			}
 			if ('CuratorProposed' in childBounty.status) {
 				status = 'sub-curator proposed';
+				return;
 			}
 			if ('PendingPayout' in childBounty.status) {
 				status = 'pending payout';
+				return;
 			}
 		}
 	});
@@ -90,11 +93,11 @@
 <div class="bg-white pb-3 lg:w-full xl:w-full mb-3">
 	<!-- Header Section -->
 	<div
-		class="flex flex-col lg:flex-row justify-between text-white pl-6 pr-3 pt-1 min-h-6 {statusColor}"
+		class="flex flex-col lg:flex-row justify-between text-white pl-6 pr-3 pt-1 min-h-6 {statusColorClass}"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-60 mb-2 lg:mb-0">
-				<span class="text-sm">#{id} {childBounty.description}</span>
+				<span class="text-sm">#{childBounty.id} {childBounty.description}</span>
 			</div>
 
 			<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
@@ -164,7 +167,7 @@
 							<div class="mt-3">
 								<button
 									on:click={onAssign}
-									class="{statusColor} text-white rounded-md font-bold pt-1 px-4 min-w-32"
+									class="{statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32"
 								>
 									{getButtonText(status)}
 								</button>
@@ -173,7 +176,7 @@
 
 						{#if status === 'added' || status === 'sub-curator proposed' || status === 'active'}
 							<button
-								class="border border-{statusColor} text-{statusColor} rounded-md font-bold pt-1 px-4 min-w-32"
+								class="border border-{statusColorClass} text-{statusColorClass} rounded-md font-bold pt-1 px-4 min-w-32"
 							>
 								CLOSE
 							</button>
@@ -198,11 +201,20 @@
 	}
 
 	.active {
-		background-color: theme('colors.orange');
+		background-color: theme('colors.childBountyOrange');
 	}
 
 	.pending-payout {
-		background-color: theme('colors.green');
+		background-color: theme('colors.childBountyGreen');
+	}
+
+	.sub-curator-proposed {
+		background-color: theme('colors.childBountyGray');
+		opacity: 1;
+	}
+
+	.added {
+		background-color: theme('colors.childBountyGray');
 		opacity: 1;
 	}
 </style>

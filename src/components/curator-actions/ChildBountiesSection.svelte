@@ -31,7 +31,7 @@
 			<div class="flex justify-end items-center py-3">
 				<p class="mr-3 text-md">New Child Bounty</p>
 				<button
-					on:click={()=> createChildBountyOpen = true}
+					on:click={() => (createChildBountyOpen = true)}
 					class="bg-accent text-white rounded-md font-bold pt-1 min-w-32 mr-3">ADD</button
 				>
 			</div>
@@ -45,7 +45,6 @@
 	{#each childBounties as childBounty}
 		<ChildBountyCard
 			{childBounty}
-			id="1234"
 			beneficiary="Nodal_point_12"
 			dateCreated="MAY 09, 2024"
 			dateOfPayout="AUG 21, 2024"
