@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LoadingDialogState } from '../types/loaing-screen';
+	import type { LoadingDialogState } from '../types/loading-screen';
 	import BountyDialog from './BountyDialog.svelte';
 
 	export let dialogState: LoadingDialogState;

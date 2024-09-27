@@ -79,6 +79,11 @@ body {
 	background-color: rgba(138, 124, 151, 0.5);
 }
 
+.button-popup {
+	@apply px-10 py-2 rounded-md bg-white text-accent;
+
+}
+
 .material-symbols-outlined {
 	font-family: 'Material Icons Outlined';
 	font-variation-settings:
