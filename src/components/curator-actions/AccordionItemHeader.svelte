@@ -49,7 +49,7 @@
 	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:pl-12 mt-3 lg:mt-0">
 		<section class="flex space-x-1 mr-0 lg:mr-4">
 			<p>Proposer:</p>
-			<p>{truncateString( bounty.proposer, 8)}</p>
+			<p>{truncateString(bounty.proposer, 8)}</p>
 		</section>
 
 		<section class="flex space-x-1 mr-0 lg:mr-4">

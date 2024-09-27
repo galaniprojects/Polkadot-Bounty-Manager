@@ -1,4 +1,4 @@
-import type { ChildBounty } from "./child-bounty";
+import type { ChildBounty } from './child-bounty';
 
 export interface Bounty {
 	id: number;
@@ -9,7 +9,7 @@ export interface Bounty {
 	curatorDeposit: bigint;
 	bond: bigint;
 	status: BountyStatus;
-	childBounties: ChildBounty[]
+	childBounties: ChildBounty[];
 }
 
 export type BountyStatus =
@@ -17,5 +17,5 @@ export type BountyStatus =
 	| 'Approved'
 	| 'Funded'
 	| { CuratorProposed: { curator: string } }
-	| { Active: {curator: string, updateDue: string } }
+	| { Active: { curator: string; updateDue: string } }
 	| { PendingPayout: { curator: string; beneficiary: string; unlockAt: string } };

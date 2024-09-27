@@ -180,7 +180,7 @@
 				</section>
 			</div>
 			{#if status === 'active' || status === 'pending payout'}
-				<ChildBountiesSection bounty={bounty} childBounties={bounty.childBounties} />
+				<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
 			{/if}
 		{/if}
 	</div>

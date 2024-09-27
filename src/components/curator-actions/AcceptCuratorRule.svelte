@@ -6,7 +6,11 @@
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
-	import { showErrorDialog, showLoadingDialog, showSuccessDialog } from '../../utils/loading-screen';
+	import {
+		showErrorDialog,
+		showLoadingDialog,
+		showSuccessDialog
+	} from '../../utils/loading-screen';
 
 	export let open = false;
 	export let bounty: Bounty;
