@@ -81,7 +81,6 @@ body {
 
 .button-popup {
 	@apply px-10 py-2 rounded-md bg-white text-accent;
-
 }
 
 .material-symbols-outlined {
