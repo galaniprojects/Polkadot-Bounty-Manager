@@ -10,31 +10,29 @@
 	<div
 		class="flex justify-center fixed inset-0 w-screen h-screen z-9 behind-dialog-color opacity-40"
 	></div>
-	<div class=" flex justify-center fixed inset-0 w-screen h-screen z-10 py-52">
+	<div class="flex justify-center fixed inset-0 w-screen h-screen z-10 py-52">
 		<div
-			class="w-[300px] md:w-[700px] h-[250px] shadow shadow-gray-500 rounded-md dialog-background-color"
+			class="w-[363px] md:w-[490px] max-h-fit md:max-h-fit p-6 pt-2 md:px-7 md:py-6 rounded-md text-white bg-curatorMainBackground"
 		>
-			<div class="flex justify-between">
-				<p class="m-6 text-xl">
-					{title}
-				</p>
+			<div class="flex justify-end">
 				{#if dismissable}
-					<button class="m-4" on:click={() => (opened = false)}>
+					<button on:click={() => (opened = false)}>
 						<CloseIcon />
 					</button>
 				{/if}
 			</div>
-			<div class="h-[120px]">
-				<slot></slot>
+			<div>
+				<p class="text-2xl">
+					{title}
+				</p>
 			</div>
+
+			<slot></slot>
 		</div>
 	</div>
 {/if}
 
 <style>
-	.dialog-background-color {
-		background-color: #e5e3ee;
-	}
 	.behind-dialog-color {
 		background-color: rgba(0, 0, 0, 0.66);
 	}

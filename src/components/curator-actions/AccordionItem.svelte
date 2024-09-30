@@ -410,7 +410,7 @@
 	</div>
 </div>
 {#if acceptCuratorRuleDialogOpened}
-	<AcceptCuratorRule bind:opened={acceptCuratorRuleDialogOpened} {bounty} />
+	<AcceptCuratorRule bind:open={acceptCuratorRuleDialogOpened} {bounty} />
 {/if}
 
 <style>
