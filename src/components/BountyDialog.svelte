@@ -12,7 +12,7 @@
 	></div>
 	<div class="flex justify-center fixed inset-0 w-screen h-screen z-10 py-52">
 		<div
-			class="w-[363px] md:w-[490px] max-h-fit md:max-h-fit p-6 pt-2 md:px-7 md:py-6 rounded-md text-white bg-curatorMainBackground"
+			class="w-[363px] md:w-[490px] h-fit p-6 pt-2 md:px-7 md:py-6 rounded-md text-white bg-curatorMainBackground"
 		>
 			<div class="flex justify-end">
 				{#if dismissable}

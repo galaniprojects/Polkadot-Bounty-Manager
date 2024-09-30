@@ -85,7 +85,7 @@
 
 	<button
 		on:click={acceptCuratorRule}
-		class="{`sm:w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
 	>
 </BountyDialog>
