@@ -4,6 +4,7 @@ import UniversalProvider from '@walletconnect/universal-provider';
 import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
+import type { Bounty } from './types/bounty';
 
 // Session.
 export const isLoggedIn = writable(false);
@@ -35,3 +36,6 @@ const state: LoadingDialogState = {
 	errorMessage: ''
 };
 export const loadingDialogState = writable(state);
+
+const BountiesArray: Bounty[] = []
+export const bounties = writable(BountiesArray)

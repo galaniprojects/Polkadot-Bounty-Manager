@@ -7,10 +7,6 @@
 	import { WsProvider, ApiPromise } from '@polkadot/api';
 	import { truncateString } from '../../utils/common';
 
-	let bountyDetails = {
-		title: 'Community Event Activity Bounty'
-	};
-
 	export let bounty: Bounty;
 	export let status: string;
 
@@ -21,7 +17,6 @@
 		let bountyDescription = (
 			await api.query.bounties.bountyDescriptions(bounty.id)
 		).toHuman() as string;
-		bountyDetails.title = bountyDescription;
 		bounty.description = bountyDescription;
 	});
 </script>
@@ -30,7 +25,7 @@
 	<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
 		<span class="text-xl lg:text-2xl">
 			#{`${bounty.id}`}
-			{`${bountyDetails.title}`}
+			{`${bounty.description}`}
 		</span>
 
 		<div class="flex gap-2 mt-3 lg:mt-0">

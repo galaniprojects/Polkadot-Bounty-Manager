@@ -3,6 +3,7 @@
 	import AccordionItem from './AccordionItem.svelte';
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
+	import { bounties } from '../../stores';
 	import type { ChildBounty } from '../../types/child-bounty';
 	import { parseBounty, parseChildBounty } from '../../utils/common';
 	import {
@@ -10,23 +11,26 @@
 		showErrorDialog,
 		showLoadingDialog
 	} from '../../utils/loading-screen';
-
-	let bounties: Bounty[] = [];
+	import { goto } from '$app/navigation';
 
 	onMount(async () => {
+		if ($bounties.length !== 0) {
+			return;
+		}
 		showLoadingDialog('Loading...');
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await ApiPromise.create({ provider: wsProvider });
+			const parsedBounties: Bounty[] = [];
 
 			// Query all bounties.
 			const unparsedBounties = await api.query.bounties.bounties.entries();
 			for (let unparsedBounty of unparsedBounties) {
 				let index = Number((unparsedBounty[0].toHuman() as unknown as any)[0].replace(',', ''));
-				bounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
+				parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
 			}
 
-			bounties.sort((bounty1, bounty2) => {
+			parsedBounties.sort((bounty1, bounty2) => {
 				if (bounty1.id > bounty2.id) {
 					return -1;
 				} else {
@@ -39,7 +43,7 @@
 			for (let desc of bountiesDescriptions) {
 				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
-				let bounty = bounties.find((bounty) => bounty.id == index);
+				let bounty = parsedBounties.find((bounty) => bounty.id == index);
 				if (bounty) {
 					bounty.description = description;
 				}
@@ -53,9 +57,9 @@
 				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
 			}
 
-			for (let i = 0; i < bounties.length; i++) {
-				bounties[i].childBounties = childBounties.filter((childBounty) => {
-					return childBounty.parentBounty === bounties[i].id;
+			for (let i = 0; i < parsedBounties.length; i++) {
+				parsedBounties[i].childBounties = childBounties.filter((childBounty) => {
+					return childBounty.parentBounty === parsedBounties[i].id;
 				});
 			}
 
@@ -71,7 +75,7 @@
 				}
 			}
 
-			bounties = bounties;
+			bounties.set(parsedBounties);
 		} catch (e) {
 			console.error(e);
 			showErrorDialog('Error while loading bounty details');
@@ -86,13 +90,13 @@
 			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>
 			<button
 				on:click={() => {
-					window.location = '/';
+					goto('/');
 				}}
 				class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
 				>CREATE NEW BOUNTY</button
 			>
 		</div>
-		{#each bounties as bounty}
+		{#each $bounties as bounty}
 			<div>
 				<AccordionItem {bounty} />
 			</div>
