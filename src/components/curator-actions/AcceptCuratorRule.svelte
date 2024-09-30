@@ -11,10 +11,13 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../utils/loading-screen';
+	import ToggleIcon from '../svg/ToggleIcon.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;
+
 	let fee = '-';
+	let isToggled = false;
 
 	onMount(async () => {
 		await calculateFee();
@@ -51,15 +54,38 @@
 	}
 </script>
 
-<BountyDialog bind:opened={open} title="Accept Curator Rule">
-	<div class="flex justify-center items-center">
-		<div>
-			<p>{bounty.id}</p>
+<BountyDialog bind:opened={open} title="ACCEPT CURATOR ROLE">
+	<section class="space-y-5">
+		<div class="space-x-1">
+			<span>#{bounty.id}</span>
 			{#if bounty.description !== undefined}
-				<p>{bounty.description}</p>
+				<span>{bounty.description}</span>
 			{/if}
-			<p>Fee: {fee}</p>
-			<button on:click={acceptCuratorRule} class="button-active">Submit</button>
 		</div>
-	</div>
+
+		<div>
+			<p class="text-xs">Accept Curator role</p>
+			<div class="flex justify-between items-start">
+				<p>I agree</p>
+				<ToggleIcon bind:checked={isToggled} />
+			</div>
+		</div>
+
+		<div class="flex space-x-24">
+			<div>
+				<p class="text-xs">Calculated Fee</p>
+				<p>{fee}</p>
+			</div>
+			<div>
+				<p class="text-xs">Fee</p>
+				<p>{fee}</p>
+			</div>
+		</div>
+	</section>
+
+	<button
+		on:click={acceptCuratorRule}
+		class="{`sm:w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+  {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
+	>
 </BountyDialog>
