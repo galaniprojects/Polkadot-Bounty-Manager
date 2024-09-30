@@ -13,7 +13,11 @@ export function convertDotToPlanck(value: bigint) {
 	return value * 10000000000n;
 }
 
-export function convertPlanckToDot(value: number) {
+export function convertPlanckToDot(value: number | bigint): number {
+	//TODO: deal with case with decimals.
+	if (typeof value === 'bigint') {
+		return Number(value / BigInt(10000000000));
+	}
 	return value / 10000000000;
 }
 

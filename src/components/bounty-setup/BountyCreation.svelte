@@ -90,6 +90,7 @@
 				value: BigInt(bountyValue)
 			};
 			showSuccessDialog('Submitting Transaction', 'Operation Success');
+			success = true;
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);

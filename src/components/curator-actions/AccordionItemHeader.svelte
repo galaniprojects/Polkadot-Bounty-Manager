@@ -5,12 +5,14 @@
 	import type { Bounty } from '../../types/bounty';
 	import { onMount } from 'svelte';
 	import { WsProvider, ApiPromise } from '@polkadot/api';
+	import { truncateString } from '../../utils/common';
 
 	let bountyDetails = {
 		title: 'Community Event Activity Bounty'
 	};
 
 	export let bounty: Bounty;
+	export let status: string;
 
 	onMount(async () => {
 		// Query all bounties.
@@ -47,7 +49,12 @@
 	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:pl-12 mt-3 lg:mt-0">
 		<section class="flex space-x-1 mr-0 lg:mr-4">
 			<p>Proposer:</p>
-			<p>JDoe_Chain</p>
+			<p>{truncateString(bounty.proposer, 8)}</p>
+		</section>
+
+		<section class="flex space-x-1 mr-0 lg:mr-4">
+			<p>Status:</p>
+			<p>{status}</p>
 		</section>
 
 		<section class="flex space-x-1 mt-1 lg:mt-0 lg:ml-7">
