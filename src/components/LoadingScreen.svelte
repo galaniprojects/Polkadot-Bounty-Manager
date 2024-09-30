@@ -6,7 +6,7 @@
 </script>
 
 <BountyDialog
-	bind:opened={dialogState.open}
+	bind:open={dialogState.open}
 	title={dialogState.title}
 	dismissable={!(dialogState.status === 'loading')}
 >

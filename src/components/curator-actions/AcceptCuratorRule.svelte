@@ -54,7 +54,7 @@
 	}
 </script>
 
-<BountyDialog bind:opened={open} title="ACCEPT CURATOR ROLE">
+<BountyDialog bind:open={open} title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

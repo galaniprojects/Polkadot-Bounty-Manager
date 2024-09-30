@@ -12,6 +12,7 @@
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './ChildBountiesSection.svelte';
+	import { goto } from '$app/navigation';
 
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpened = false;
@@ -155,7 +156,7 @@
 								<div class="space-x-2">
 									<button
 										on:click={() => {
-											window.location = '/';
+											goto("/")
 										}}
 										class="bg-accent rounded-md font-bold min-w-32 pt-1">PROPOSE</button
 									>

@@ -120,7 +120,7 @@
 	}
 </script>
 
-<BountyDialog bind:opened={open} title="Add Child Bounty">
+<BountyDialog bind:open={open} title="Add Child Bounty">
 	<div class="flex justify-center items-center">
 		<div>
 			<p>{bounty.id}</p>
