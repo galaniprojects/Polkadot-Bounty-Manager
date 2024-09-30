@@ -156,7 +156,7 @@
 								<div class="space-x-2">
 									<button
 										on:click={() => {
-											goto("/")
+											goto('/');
 										}}
 										class="bg-accent rounded-md font-bold min-w-32 pt-1">PROPOSE</button
 									>
@@ -167,20 +167,20 @@
 
 						<!-- TODO:  show only when curator proposed -->
 						<!-- {#if status === 'curator proposed'} -->
-							<div
-								class="flex lg:flex-col xl:flex-row xl:space-x-3 lg:space-y-2 items-end text-sm xl:mr-4 lg:mr-7"
-							>
-								<p class="text-center">Curator Rule</p>
-								<div class="space-x-2">
-									<button
-										on:click={() => {
-											acceptCuratorRuleDialogOpened = true
-										}}
-										class="bg-accent rounded-md font-bold min-w-32 pt-1">ACCEPT</button
-									>
-									<button class="pt-1 w-5 h-5"><InfoSvg /></button>
-								</div>
+						<div
+							class="flex lg:flex-col xl:flex-row xl:space-x-3 lg:space-y-2 items-end text-sm xl:mr-4 lg:mr-7"
+						>
+							<p class="text-center">Curator Rule</p>
+							<div class="space-x-2">
+								<button
+									on:click={() => {
+										acceptCuratorRuleDialogOpened = true;
+									}}
+									class="bg-accent rounded-md font-bold min-w-32 pt-1">ACCEPT</button
+								>
+								<button class="pt-1 w-5 h-5"><InfoSvg /></button>
 							</div>
+						</div>
 						<!-- {/if} -->
 						<div
 							class="flex lg:flex-col xl:flex-row xl:space-x-3 lg:space-y-2 items-end text-sm xl:mr-4 lg:mr-7"
@@ -198,7 +198,7 @@
 					<!-- <button class="bg-accent rounded-md font-bold min-w-32 pt-1">READ FIRST</button> -->
 				</section>
 			</div>
-			{#if status === 'active' || status === 'pending payout'}
+			{#if status === 'active'}
 				<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
 			{/if}
 		{/if}
