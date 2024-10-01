@@ -25,11 +25,13 @@
 	let bountyTitle = '';
 
 	let fee = '-';
+
 	onMount(async () => {
 		await calculateFee();
 	});
 
 	async function submit() {
+		open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
