@@ -1,21 +1,21 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../../utils/polkadot';
+	import BountyDialog from '../../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import ToggleIcon from '../svg/ToggleIcon.svelte';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	} from '../../../utils/loading-screen';
+	import ToggleIcon from '../../svg/ToggleIcon.svelte';
+	import type { ChildBounty } from '../../../types/child-bounty';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 
 	export let open = false;
-	export let bounty: Bounty;
+	export let childBounty: ChildBounty;
 
 	let fee = '-';
 	let isToggled = false;
@@ -35,7 +35,10 @@
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.childBounties.acceptCurator(
+				childBounty.parentBounty,
+				childBounty.id
+			);
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
@@ -72,7 +75,10 @@
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.childBounties.acceptCurator(
+				childBounty.parentBounty,
+				childBounty.id
+			);
 
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 			fee =
@@ -88,9 +94,9 @@
 <BountyDialog bind:open title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
-			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
-				<span>{bounty.description}</span>
+			<span>#{childBounty.id}</span>
+			{#if childBounty.description !== undefined}
+				<span>{childBounty.description}</span>
 			{/if}
 		</div>
 

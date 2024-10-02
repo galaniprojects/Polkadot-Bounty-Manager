@@ -44,6 +44,7 @@
 
 	{#each childBounties as childBounty}
 		<ChildBountyCard
+			parentBounty={bounty}
 			{childBounty}
 			beneficiary="Nodal_point_12"
 			dateCreated="MAY 09, 2024"

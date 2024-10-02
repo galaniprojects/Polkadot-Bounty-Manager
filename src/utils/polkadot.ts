@@ -99,7 +99,7 @@ export async function dryRunAndSubmitTransaction(
 			return { result: submittableResult, errorMessage: errorMsg };
 		} else {
 			console.error(submittableResult.toHuman());
-			return { result: submittableResult, errorMessage: 'something went wrong' };
+			return { result: submittableResult, errorMessage: `Something went wrong, ${submittableResult.dispatchError || ""}` };
 		}
 	}
 	return { result: submittableResult };
