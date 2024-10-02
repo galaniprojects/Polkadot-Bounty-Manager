@@ -17,12 +17,12 @@
 	} from '../../utils/loading-screen';
 	import { isInteger } from '../../utils/common';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	import PolkaCoin from '../svg/PolkaCoin.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
 
 	let bountyValue: string | undefined;
-	//let bountyValue = '';
 	let bountyTitle = '';
 	let bountyDescription = '';
 
@@ -121,7 +121,6 @@
 		}
 	}
 
-
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
@@ -134,7 +133,7 @@
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
+			{#if bounty.description}
 				<span>{bounty.description}</span>
 			{/if}
 		</div>
@@ -142,8 +141,9 @@
 			Please use a descriptive title and add info about the task and beneficiary in the description.
 		</p>
 	</div>
+
 	<div class="flex flex-col gap-6 mt-6">
-		<section>
+		<section class="relative">
 			<p class="text-xs">Value</p>
 			<input
 				bind:value={bountyValue}
@@ -151,6 +151,8 @@
 				placeholder="e.g. 100,000.0000"
 				on:input={inputChange}
 			/>
+			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
+			<div class="absolute right-2 top-[26px]"><PolkaCoin /></div>
 		</section>
 		<section>
 			<p class="text-xs">Title</p>
@@ -161,12 +163,13 @@
 				placeholder="Child bounty name"
 			/>
 		</section>
-		<section>
+
+		<section class="scrollbar">
 			<p class="text-xs">Description</p>
-			<input
+			<textarea
 				bind:value={bountyDescription}
 				on:input={inputChange}
-				class="border border-black rounded-[3px] bg-white pl-2 h-40 w-full p-2"
+				class="scrollbar border border-black rounded-[3px] bg-white h-40 w-full p-2"
 				placeholder="Description"
 			/>
 		</section>
@@ -177,8 +180,23 @@
 
 		<button
 			on:click={submit}
-			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'opacity-50 cursor-not-allowed'}`}
-		{`${!isFormValid ? 'button-active' : 'cursor-allowed'}`}">SIGN</button
+			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'cursor-not-allowed'}`}
+		{`${!isFormValid ? 'button-active' : 'cursor-allowed'}`}"
+			disabled={!isFormValid}>SIGN</button
 		>
 	</div>
 </BountyDialog>
+
+<style>
+	.scrollbar::-webkit-scrollbar {
+		@apply w-[5px];
+	}
+
+	.scrollbar::-webkit-scrollbar-track {
+		@apply mt-2 bg-accent bg-opacity-50 rounded-lg;
+	}
+
+	.scrollbar::-webkit-scrollbar-thumb {
+		@apply bg-accent rounded-lg;
+	}
+</style>
