@@ -24,6 +24,7 @@
 	});
 
 	async function acceptCuratorRule() {
+		open = false;
 		showLoadingDialog('Submitting transaction');
 		const wsProvider = new WsProvider('ws://localhost:8000');
 		const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
