@@ -19,6 +19,9 @@
 	let fee = '-';
 	let isToggled = false;
 
+	let className = '';
+	export { className as class };
+
 	onMount(async () => {
 		await calculateFee();
 	});
@@ -54,7 +57,7 @@
 	}
 </script>
 
-<BountyDialog bind:open={open} title="ACCEPT CURATOR ROLE">
+<BountyDialog bind:open title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -85,7 +88,7 @@
 
 	<button
 		on:click={acceptCuratorRule}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+		class="{`w-full md:w-fit mt-10 h-12 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
 	>
 </BountyDialog>

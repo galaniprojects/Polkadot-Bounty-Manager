@@ -22,7 +22,9 @@
 	export let bounty: Bounty;
 
 	let bountyValue: string | undefined;
+	//let bountyValue = '';
 	let bountyTitle = '';
+	let bountyDescription = '';
 
 	let fee = '-';
 	onMount(async () => {
@@ -118,34 +120,65 @@
 			fee = '-';
 		}
 	}
+
+
+	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<BountyDialog bind:open={open} title="Add Child Bounty">
-	<div class="flex justify-center items-center">
-		<div>
-			<p>{bounty.id}</p>
+<BountyDialog
+	bind:open
+	title="ADD NEW CHILD BOUNTY"
+	backgroundColor="childBountyBackground"
+	textColor="primary"
+>
+	<div class="space-y-5">
+		<div class="space-x-1">
+			<span>#{bounty.id}</span>
 			{#if bounty.description !== undefined}
-				<p>{bounty.description}</p>
+				<span>{bounty.description}</span>
 			{/if}
-
-			<p>Fee: {fee}</p>
 		</div>
+		<p>
+			Please use a descriptive title and add info about the task and beneficiary in the description.
+		</p>
 	</div>
-	<div class="flex justify-center items-center">
-		<div class="grid">
+	<div class="flex flex-col gap-6 mt-6">
+		<section>
+			<p class="text-xs">Value</p>
+			<input
+				bind:value={bountyValue}
+				class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
+				placeholder="e.g. 100,000.0000"
+				on:input={inputChange}
+			/>
+		</section>
+		<section>
+			<p class="text-xs">Title</p>
 			<input
 				bind:value={bountyTitle}
 				on:input={inputChange}
-				class="rounded-md bg-gray-100 pl-3 pt-1"
-				placeholder="Give your Bounty a title"
+				class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+				placeholder="Child bounty name"
 			/>
+		</section>
+		<section>
+			<p class="text-xs">Description</p>
 			<input
-				bind:value={bountyValue}
-				class="border pt-1 pl-2 rounded-md bg-white"
-				placeholder="1000"
+				bind:value={bountyDescription}
 				on:input={inputChange}
+				class="border border-black rounded-[3px] bg-white pl-2 h-40 w-full p-2"
+				placeholder="Description"
 			/>
-			<button on:click={submit} class="button-active">Submit</button>
-		</div>
+		</section>
+		<section class="mt-10">
+			<p class="text-xs">Calculated Fee:</p>
+			<p>{fee}</p>
+		</section>
+
+		<button
+			on:click={submit}
+			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'opacity-50 cursor-not-allowed'}`}
+		{`${!isFormValid ? 'button-active' : 'cursor-allowed'}`}">SIGN</button
+		>
 	</div>
 </BountyDialog>

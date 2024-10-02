@@ -15,7 +15,7 @@ export default {
 			childBountyOrange: '#DD700D',
 			childBountyGray: '#65708B',
 			childBountyGreen: '#087C2B',
-			childBountyBackground: '#C4C0D5',
+			childBountyBackground: '#D7D5E2',
 			curatorMainBackground: '#836FAC',
 			curatorCarousel: '#7A66A0',
 			darkgray: '#94889F',
