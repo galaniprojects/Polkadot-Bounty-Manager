@@ -12,6 +12,7 @@
 	} from '../../../utils/loading-screen';
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -26,17 +27,44 @@
 	async function acceptCuratorRule() {
 		open = false;
 		showLoadingDialog('Submitting transaction');
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-		let tx = api.tx.childBounties.acceptCurator(childBounty.parentBounty, childBounty.id);
-		const { errorMessage } = await dryRunAndSubmitTransaction(api, tx, $activeAccount);
-		if (errorMessage) {
-			showErrorDialog(errorMessage);
-			return;
+		try {
+			const wsProvider = new WsProvider('ws://localhost:8000');
+			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+
+			let transaction = api.tx.childBounties.acceptCurator(
+				childBounty.parentBounty,
+				childBounty.id
+			);
+			const { errorMessage, result } = await dryRunAndSubmitTransaction(
+				api,
+				transaction,
+				$activeAccount
+			);
+
+			if (errorMessage) {
+				showErrorDialog(errorMessage);
+				return;
+			}
+
+			// We don't get transaction result using Multix.
+			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+				//todo show another success screen.
+
+				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+				return;
+			}
+
+			if (result == undefined) {
+				showErrorDialog('Internal error.');
+				return;
+			}
+
+			showSuccessDialog('Submitting Transaction', 'Operation Success');
+		} catch (e) {
+			console.error(e);
+			showErrorDialog(`${e}`);
 		}
-		showSuccessDialog('Submitting Transaction', 'Operation Success');
 		open = false;
-		//TODO: handle multix.
 	}
 
 	async function calculateFee() {
