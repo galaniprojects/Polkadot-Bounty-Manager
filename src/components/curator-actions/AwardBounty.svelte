@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+
+		isValidAddress
+
+	} from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
@@ -11,34 +17,36 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../utils/loading-screen';
-	import ToggleIcon from '../svg/ToggleIcon.svelte';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
-	export let open = false;
+	export let open = true;
 	export let bounty: Bounty;
 
+	let beneficiary = '';
+
 	let fee = '-';
-	let isToggled = false;
-
-	let className = '';
-	export { className as class };
-
 	onMount(async () => {
 		await calculateFee();
 	});
 
-	async function acceptCuratorRule() {
-		open = false;
+	async function submit() {
+	  open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
 				showErrorDialog('wallet is not connected');
 				return;
 			}
+			if (!isValidAddress(beneficiary)) {
+				showErrorDialog('beneficiary address is invalid.');
+				return;
+			}
+
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.bounties.awardBounty(bounty.id, beneficiary);
+
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
@@ -68,59 +76,45 @@
 			console.error(e);
 			showErrorDialog(`${e}`);
 		}
-		open = false;
 	}
 
 	async function calculateFee() {
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
 
+			let transaction = api.tx.bounties.awardBounty(bounty.id, $activeAccount.address);
 			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
+
+			const paymentInfo = await firstValueFrom(observableFee);
+			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
 		} catch (e) {
 			console.error(e);
-			fee = '-';
+			fee = '--';
 		}
 	}
 </script>
 
-<BountyDialog bind:open title="ACCEPT CURATOR ROLE">
-	<section class="space-y-5">
-		<div class="space-x-1">
-			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
-				<span>{bounty.description}</span>
-			{/if}
-		</div>
+<BountyDialog bind:open title="Award Bounty">
+	<div>
+		<p>#{bounty.id}</p>
+		{#if bounty.description !== undefined}
+			<p>{bounty.description}</p>
+		{/if}
 
-		<div>
-			<p class="text-xs">Accept Curator role</p>
-			<div class="flex justify-between items-start">
-				<p>I agree</p>
-				<ToggleIcon bind:checked={isToggled} />
-			</div>
+		<div class="my-4">
+			<p>Beneficiary:</p>
+			<input
+				bind:value={beneficiary}
+				class="rounded-md bg-gray-100 pl-3 pt-1 w-80 text-black"
+				placeholder="beneficiary address"
+			/>
 		</div>
-
-		<div class="flex space-x-24">
-			<div>
-				<p class="text-xs">Calculated Fee</p>
-				<p>{fee}</p>
-			</div>
-			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
-			</div>
+		<p>Fee: {fee}</p>
+	</div>
+	<div class="flex justify-center items-center">
+		<div class="grid">
+			<button on:click={submit} disabled={beneficiary.length === 0} class="button-active">Submit</button>
 		</div>
-	</section>
-
-	<button
-		on:click={acceptCuratorRule}
-		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
-  {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
-	>
+	</div>
 </BountyDialog>

@@ -1,27 +1,24 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../../utils/polkadot';
+	import BountyDialog from '../../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import ToggleIcon from '../svg/ToggleIcon.svelte';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	} from '../../../utils/loading-screen';
+	import ToggleIcon from '../../svg/ToggleIcon.svelte';
+	import type { ChildBounty } from '../../../types/child-bounty';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 
 	export let open = false;
-	export let bounty: Bounty;
+	export let childBounty: ChildBounty;
 
 	let fee = '-';
 	let isToggled = false;
-
-	let className = '';
-	export { className as class };
 
 	onMount(async () => {
 		await calculateFee();
@@ -35,10 +32,15 @@
 				showErrorDialog('wallet is not connected');
 				return;
 			}
+
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.childBounties.closeChildBounty(
+				childBounty.parentBounty,
+				childBounty.id
+			);
+
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
@@ -68,14 +70,16 @@
 			console.error(e);
 			showErrorDialog(`${e}`);
 		}
-		open = false;
 	}
 
 	async function calculateFee() {
 		try {
 			const wsProvider = new WsProvider('ws://localhost:8000');
 			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.childBounties.closeChildBounty(
+				childBounty.parentBounty,
+				childBounty.id
+			);
 
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 			fee =
@@ -88,19 +92,26 @@
 	}
 </script>
 
-<BountyDialog bind:open title="ACCEPT CURATOR ROLE">
+<BountyDialog bind:open title="Close Down Child Bounty">
 	<section class="space-y-5">
 		<div class="space-x-1">
-			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
-				<span>{bounty.description}</span>
+			<span>#{childBounty.id}</span>
+			{#if childBounty.description !== undefined}
+				<span>{childBounty.description}</span>
 			{/if}
+		</div>
+		<div class="m-y-4">
+		  <p>Only close a child bounty after communicating with the sub-curator and the projected beneficiary.
+
+The funds will be reallocated to the parent bounty. </p>
+
+
 		</div>
 
 		<div>
-			<p class="text-xs">Accept Curator role</p>
+			<p class="text-xs">I understand</p>
 			<div class="flex justify-between items-start">
-				<p>I agree</p>
+				<p>Close down anyway</p>
 				<ToggleIcon bind:checked={isToggled} />
 			</div>
 		</div>
