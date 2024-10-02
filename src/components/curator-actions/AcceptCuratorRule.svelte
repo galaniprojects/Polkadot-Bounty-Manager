@@ -20,6 +20,9 @@
 	let fee = '-';
 	let isToggled = false;
 
+	let className = '';
+	export { className as class };
+
 	onMount(async () => {
 		await calculateFee();
 	});
