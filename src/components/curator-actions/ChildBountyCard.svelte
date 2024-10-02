@@ -6,54 +6,61 @@
 	import LogoTreasuryIcon from '../svg/LogoTreasuryIcon.svelte';
 	import { truncateString } from '../../utils/common';
 	import { convertPlanckToDot } from '../../utils/polkadot';
+	import AssignSubCurator from './child-bounties/AssignSubCurator.svelte';
+	import type { Bounty } from '../../types/bounty';
+	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRule.svelte';
+	import CloseDownChildBounty from './child-bounties/CloseDownChildBounty.svelte';
 
+	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
 	let status: Status;
 
-	// export let id: string | number = '>>>>';
 	export let beneficiary: string = '';
 	export let dateCreated: string = '';
 	export let dateOfPayout: string = '';
 	export let timeUntilPayout: string = '';
-	export let onAssign: () => void = () => {};
+
+	let assignSubCuratorOpen = false;
+	let acceptSubCuratorRuleOpen = false;
+	let closeDownChildBountyOpen = false;
 
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
 	let statusColorClass = '';
+	let statusColor = '';
 
 	$: switch (status) {
 		case 'added':
 			statusColorClass = 'added';
+			statusColor = 'childBountyGray';
 			break;
 		case 'sub-curator proposed':
 			statusColorClass = 'sub-curator-proposed';
+			statusColor = 'childBountyGray';
 			break;
 		case 'active':
 			statusColorClass = 'active';
+			statusColor = 'childBountyOrange';
 			break;
 		case 'pending payout':
 			statusColorClass = 'pending-payout';
+			statusColor = 'childBountyGreen';
 			break;
 		default:
 			statusColorClass = 'added';
+			statusColor = 'childBountyGray';
 	}
 
 	onMount(() => {
 		if (childBounty.status === 'Added') {
 			status = 'added';
-		}
-		if (typeof childBounty.status === 'object') {
+		} else if (typeof childBounty.status === 'object') {
 			if ('Active' in childBounty.status) {
 				status = 'active';
-				return;
-			}
-			if ('CuratorProposed' in childBounty.status) {
+			} else if ('CuratorProposed' in childBounty.status) {
 				status = 'sub-curator proposed';
-				return;
-			}
-			if ('PendingPayout' in childBounty.status) {
+			} else if ('PendingPayout' in childBounty.status) {
 				status = 'pending payout';
-				return;
 			}
 		}
 	});
@@ -61,31 +68,14 @@
 	function getCurator() {
 		if (childBounty.status === 'Added') {
 			return '-';
-		}
-		if (typeof childBounty.status === 'object') {
+		} else if (typeof childBounty.status === 'object') {
 			if ('Active' in childBounty.status) {
 				return childBounty.status.Active.curator;
-			}
-
-			if ('CuratorProposed' in childBounty.status) {
+			} else if ('CuratorProposed' in childBounty.status) {
 				return childBounty.status.CuratorProposed.curator;
-			}
-			if ('PendingPayout' in childBounty.status) {
+			} else if ('PendingPayout' in childBounty.status) {
 				return childBounty.status.PendingPayout.curator;
 			}
-		}
-	}
-
-	function getButtonText(status: Status): string {
-		switch (status) {
-			case 'added':
-				return 'ASSIGN';
-			case 'sub-curator proposed':
-				return 'ACCEPT';
-			case 'active':
-				return 'AWARD';
-			default:
-				return '';
 		}
 	}
 </script>
@@ -154,33 +144,42 @@
 		</div>
 
 		<!-- Action Buttons -->
-		<div
-			class="mt-4 lg:mt-0 flex lg:flex-col space-y-4 lg:space-y-2 lg:space-x-4 xl:flex-row lg:mr-2"
-		>
+		<div class="mt-4 lg:mt-0 flex lg:flex-col lg:space-y-2 lg:space-x-4 xl:flex-row lg:mr-2">
 			<div class="flex space-x-2">
-				{#if status === 'added'}
-					<p class="lg:mt-3 xl:mt-4">Sub-curator</p>
-				{/if}
-				<div class="flex lg:flex-col xl:flex-row flex-wrap space-x-4">
-					<div class="space-y-3">
-						{#if getButtonText(status) !== ''}
-							<div class="mt-3">
-								<button
-									on:click={onAssign}
-									class="{statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32"
-								>
-									{getButtonText(status)}
-								</button>
-							</div>
-						{/if}
+				<!-- TODO: show only when added? -->
+				<!-- {#if status === 'added'} -->
 
-						{#if status === 'added' || status === 'sub-curator proposed' || status === 'active'}
+				<div class="flex lg:flex-col xl:flex-row flex-wrap space-x-2">
+					<div class="space-y-3">
+						<div class="mt-3 flex items-center justify-end gap-3">
+							<p>Sub Curator</p>
 							<button
-								class="border border-{statusColorClass} text-{statusColorClass} rounded-md font-bold pt-1 px-4 min-w-32"
+								on:click={() => (assignSubCuratorOpen = true)}
+								class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
 							>
-								CLOSE
+								ASSIGN
 							</button>
-						{/if}
+						</div>
+
+						<div class="mt-3 flex items-center justify-end gap-3">
+							<p>Sub Curator Rule</p>
+							<button
+								on:click={() => (acceptSubCuratorRuleOpen = true)}
+								class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
+							>
+								ACCEPT
+							</button>
+						</div>
+
+						<div class="flex justify-end">
+							<button
+								id="close"
+								on:click={() => (closeDownChildBountyOpen = true)}
+								class={`bg-transparent border  ${statusColorClass}  rounded-md font-bold pt-1 px-4 min-w-32`}
+							>
+								CLOSE DOWN
+							</button>
+						</div>
 					</div>
 
 					<!-- Apply flex-wrap to this div for wrapping the icons -->
@@ -194,6 +193,16 @@
 		</div>
 	</div>
 </div>
+{#if assignSubCuratorOpen}
+	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
+{/if}
+{#if acceptSubCuratorRuleOpen}
+	<AcceptSubCuratorRule bind:open={acceptSubCuratorRuleOpen} {childBounty} />
+{/if}
+
+{#if closeDownChildBountyOpen}
+	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} />
+{/if}
 
 <style>
 	.status {
@@ -203,18 +212,36 @@
 	.active {
 		background-color: theme('colors.childBountyOrange');
 	}
+	#close.active {
+		background-color: theme('colors.transparent');
+		border-color: theme('colors.childBountyOrange');
+		color: theme('colors.childBountyOrange');
+	}
 
 	.pending-payout {
 		background-color: theme('colors.childBountyGreen');
 	}
+	#close.pending-payout {
+		background-color: theme('colors.transparent');
+		border-color: theme('colors.childBountyGreen');
+		color: theme('colors.childBountyGreen');
+	}
 
 	.sub-curator-proposed {
 		background-color: theme('colors.childBountyGray');
-		opacity: 1;
+	}
+	#close.sub-curator-proposed {
+		background-color: theme('colors.transparent');
+		border-color: theme('colors.childBountyGray');
+		color: theme('colors.childBountyGray');
 	}
 
 	.added {
 		background-color: theme('colors.childBountyGray');
-		opacity: 1;
+	}
+	#close.added {
+		background-color: theme('colors.transparent');
+		border-color: theme('colors.childBountyGray');
+		color: theme('colors.childBountyGray');
 	}
 </style>
