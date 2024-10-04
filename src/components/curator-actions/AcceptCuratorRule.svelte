@@ -19,8 +19,6 @@
 
 	let fee = '-';
 	let isToggled = false;
-
-	let className = '';
 	export { className as class };
 
 	onMount(async () => {
@@ -120,7 +118,7 @@
 	<button
 		on:click={acceptCuratorRule}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+		class="{`w-full md:w-fit mt-10 h-12 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
 	>
 </BountyDialog>
