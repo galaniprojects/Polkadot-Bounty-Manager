@@ -11,23 +11,23 @@
 </div>
 
 <style>
-	.toggle {
+	:global(.toggle) {
 		display: inline-flex;
 		align-items: center;
 		cursor: pointer;
 	}
 
-	.switch {
+	:global(.switch) {
 		width: 52px;
 		height: 26px;
 		border-radius: 20px;
-		background-color: white;
+		background-color: var(--toggle-background, white);
 		position: relative;
 		transition: background-color 0.3s;
 	}
 
-	.switch::before {
-		@apply bg-curatorMainBackground;
+	:global(.switch::before) {
+		background-color: var(--switch-background, theme('colors.curatorMainBackground'));
 		content: '';
 		width: 22px;
 		height: 22px;
@@ -40,8 +40,8 @@
 			background-color 0.3s;
 	}
 
-	.checked::before {
-		@apply bg-accent;
+	:global(.checked::before) {
+		background-color: var(--switch-checked-background, theme('colors.accent'));
 		transform: translateX(25px);
 	}
 </style>
