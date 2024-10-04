@@ -150,7 +150,7 @@
 			<input
 				bind:value={bountyValue}
 				class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
-				placeholder="e.g. 100,000.0000"
+				placeholder="1000000000"
 				on:input={inputChange}
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
