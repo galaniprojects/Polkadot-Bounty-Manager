@@ -121,7 +121,7 @@
 
 <BountyDialog bind:open title="ASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
 	<div>
-		<p class="px-2 py-1 bg-childBountyGray">
+		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
 			{#if childBounty.description !== undefined}
 				{childBounty.description}
@@ -158,6 +158,6 @@
 		class="{`w-full md:w-fit mt-10 h-12 bg-childBountyGray ${
 			curatorAddress.length !== 0 ? 'basic-button' : 'cursor-not-allowed'
 		}`}
-		{`${curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}`}">Submit</button
+		{`${curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}`}">SIGN</button
 	>
 </BountyDialog>

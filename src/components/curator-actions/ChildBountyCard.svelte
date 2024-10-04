@@ -8,7 +8,7 @@
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import AssignSubCurator from './child-bounties/AssignSubCurator.svelte';
 	import type { Bounty } from '../../types/bounty';
-	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRule.svelte';
+	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './child-bounties/CloseDownChildBounty.svelte';
 
 	export let parentBounty: Bounty;

@@ -2,7 +2,7 @@
 	import CuratorItem from './CuratorItem.svelte';
 	import InfoSvg from '../svg/InfoIcon.svelte';
 	import type { Bounty } from '../../types/bounty';
-	import AcceptCuratorRule from './AcceptCuratorRule.svelte';
+	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
 	import AccordionItemHeader from './AccordionItemHeader.svelte';
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
