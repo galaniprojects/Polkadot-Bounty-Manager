@@ -5,8 +5,24 @@
 	export let title = '';
 	export let dismissable = true;
 	export let backgroundColor = 'curatorMainBackground';
-	export let textColor = 'white';
-	</script>
+	export let textColor: string = 'white';
+
+	const colorVariants = {
+		white: 'fill-white',
+		primary: 'fill-primary'
+	};
+
+	function isValidColor(color: string): color is 'white' | 'primary' {
+		return color === 'white' || color === 'primary';
+	}
+
+	function getColorClass(color: string): string {
+		if (isValidColor(color)) {
+			return colorVariants[color];
+		}
+		return colorVariants['white'];
+	}
+</script>
 
 {#if open}
 	<div
@@ -18,7 +34,7 @@
 		>
 			<div class="flex justify-end">
 				{#if dismissable}
-					<button class={`fill-${textColor}`} on:click={() => (open = false)}>
+					<button class={getColorClass(textColor)} on:click={() => (open = false)}>
 						<CloseIcon />
 					</button>
 				{/if}

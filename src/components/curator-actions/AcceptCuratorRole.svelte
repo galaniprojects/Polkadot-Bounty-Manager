@@ -14,12 +14,12 @@
 	import ToggleIcon from '../svg/ToggleIcon.svelte';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
+	export { className as class };
 	export let open = false;
 	export let bounty: Bounty;
 
 	let fee = '-';
 	let isToggled = false;
-	export { className as class };
 
 	onMount(async () => {
 		await calculateFee();
@@ -118,7 +118,8 @@
 	<button
 		on:click={acceptCuratorRole}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 h-12 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
-  {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
+		class="w-full md:w-fit mt-10 h-12 button-popup {isToggled
+			? 'button-popup'
+			: 'opacity-50 cursor-not-allowed'}">SIGN</button
 	>
 </BountyDialog>
