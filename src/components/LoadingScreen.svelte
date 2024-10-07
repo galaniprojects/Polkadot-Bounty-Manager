@@ -10,7 +10,7 @@
 	title={dialogState.title}
 	dismissable={!(dialogState.status === 'loading')}
 >
-	<div class="flex h-full justify-center items-center gap-3 px-7">
+	<div class="h-full gap-3">
 		{#if dialogState.status === 'loading'}
 			<p class="mt-1">This might take a moment</p>
 			<span class="loader"></span>

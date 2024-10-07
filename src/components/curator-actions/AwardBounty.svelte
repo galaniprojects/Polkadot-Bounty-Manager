@@ -3,9 +3,7 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
-
 		isValidAddress
-
 	} from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
@@ -22,23 +20,24 @@
 	export let open = true;
 	export let bounty: Bounty;
 
+	let showTransactionDialog = false;
 	let beneficiary = '';
-
 	let fee = '-';
+
 	onMount(async () => {
 		await calculateFee();
 	});
 
 	async function submit() {
-	  open = false;
+		open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('wallet is not connected');
+				showErrorDialog('Wallet is not connected');
 				return;
 			}
 			if (!isValidAddress(beneficiary)) {
-				showErrorDialog('beneficiary address is invalid.');
+				showErrorDialog('Beneficiary address is invalid.');
 				return;
 			}
 
@@ -71,7 +70,7 @@
 				return;
 			}
 
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
+			showSuccessDialog('Bounty closed', 'Your bounty has been awarded and can be claimed');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);
@@ -93,28 +92,57 @@
 			fee = '--';
 		}
 	}
+
+	async function proceed() {
+		showTransactionDialog = true;
+	}
 </script>
 
-<BountyDialog bind:open title="Award Bounty">
-	<div>
-		<p>#{bounty.id}</p>
-		{#if bounty.description !== undefined}
-			<p>{bounty.description}</p>
+<BountyDialog bind:open title="AWARD BOUNTY">
+	<div class="space-y-10">
+		<div class="space-x-1">
+			<span>#{bounty.id}</span>
+			{#if bounty.description !== undefined}
+				<span>{bounty.description}</span>
+			{/if}
+		</div>
+		{#if !showTransactionDialog}
+			<section class="mt-10">
+				<p class="text-xs">Bounty value</p>
+				<p>
+					A bounty can only be awarded in whole as long as no child bounties exist. In this case, it
+					is still highly recommended to manage the funds through child bounties and not award the
+					whole bounty at once.
+				</p>
+			</section>
+			<button on:click={proceed} class="w-full md:w-fit mt-10 h-12 button-popup">PROCEED</button>
 		{/if}
 
-		<div class="my-4">
-			<p>Beneficiary:</p>
-			<input
-				bind:value={beneficiary}
-				class="rounded-md bg-gray-100 pl-3 pt-1 w-80 text-black"
-				placeholder="beneficiary address"
-			/>
-		</div>
-		<p>Fee: {fee}</p>
-	</div>
-	<div class="flex justify-center items-center">
-		<div class="grid">
-			<button on:click={submit} disabled={beneficiary.length === 0} class="button-active">Submit</button>
-		</div>
+		{#if showTransactionDialog}
+			<section class="mt-10">
+				<p class="text-xs">Bounty value</p>
+				<p><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+			</section>
+			<div class="my-4">
+				<p class="text-xs">Beneficiary account address</p>
+				<input
+					bind:value={beneficiary}
+					class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
+					placeholder="enter"
+				/>
+			</div>
+			<section class="mt-10">
+				<p class="text-xs">Calculated Fee</p>
+				<p>{fee}</p>
+			</section>
+
+			<button
+				on:click={submit}
+				disabled={beneficiary.length === 0}
+				class="w-full md:w-fit mt-10 h-12 button-popup {beneficiary.length === 0
+					? 'opacity-50 cursor-not-allowed'
+					: ''}">SIGN</button
+			>
+		{/if}
 	</div>
 </BountyDialog>

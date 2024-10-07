@@ -123,10 +123,8 @@
 	<button
 		on:click={acceptCuratorRole}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 h-12 bg-childBountyGray ${
-			isToggled ? 'basic-button' : 'cursor-not-allowed'
-		}`}
-		{`${!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}`}">SIGN</button
+		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
+		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
 	>
 </BountyDialog>
 

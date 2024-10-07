@@ -29,8 +29,9 @@
 	const WS_URL = 'ws://localhost:8000';
 	let api: ApiRx;
 
-	async function getApi() {
-		let wsProvider = new WsProvider(WS_URL);
+	async function getApi(): Promise<ApiRx> {
+		if (api) return api;
+		const wsProvider = new WsProvider(WS_URL);
 		api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 		return api;
 	}
@@ -155,9 +156,7 @@
 	<button
 		on:click={submit}
 		disabled={!curatorAddress.length}
-		class="{`w-full md:w-fit mt-10 h-12 bg-childBountyGray ${
-			curatorAddress.length !== 0 ? 'basic-button' : 'cursor-not-allowed'
-		}`}
-		{`${curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}`}">SIGN</button
+		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
+		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
 	>
 </BountyDialog>
