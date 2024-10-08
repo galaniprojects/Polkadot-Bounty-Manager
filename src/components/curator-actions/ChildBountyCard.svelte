@@ -10,6 +10,7 @@
 	import type { Bounty } from '../../types/bounty';
 	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './child-bounties/CloseDownChildBounty.svelte';
+	import AwardChildBounty from './child-bounties/AwardChildBounty.svelte';
 
 	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
@@ -23,6 +24,7 @@
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
 	let closeDownChildBountyOpen = false;
+	let awardChildBountyOpen = false;
 
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
@@ -180,6 +182,15 @@
 								CLOSE DOWN
 							</button>
 						</div>
+
+						<div class="flex justify-end">
+							<button
+								on:click={() => (awardChildBountyOpen = true)}
+								class={`bg-transparent border  ${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
+							>
+								AWARD
+							</button>
+						</div>
 					</div>
 
 					<!-- Apply flex-wrap to this div for wrapping the icons -->
@@ -202,6 +213,10 @@
 
 {#if closeDownChildBountyOpen}
 	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} />
+{/if}
+
+{#if awardChildBountyOpen}
+	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} />
 {/if}
 
 <style>
