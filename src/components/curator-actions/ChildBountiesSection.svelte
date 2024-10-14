@@ -23,26 +23,26 @@
 </script>
 
 <div class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
-	<section class="flex flex-col lg:flex-row justify-between">
-		<div class="flex flex-col gap-2 lg:w-1/2 px-3">
+	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
+		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
 			<p class="text-2xl">Child Bounties</p>
 		</div>
 
-		<div class="flex flex-col lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row ">
-			<div>
+		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row ">
+			<div class="space-y-3 lg:space-y-1">
 				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3">
 					<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
 					<button
 						on:click={() => (createChildBountyOpen = true)}
-						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:mr-6 lg:min-w-32"
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
 						>ADD</button
 					>
 				</div>
 				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3">
 					<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
 					<button
-						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:mr-6 lg:min-w-32"
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
 						>ADD</button
 					>
 				</div>

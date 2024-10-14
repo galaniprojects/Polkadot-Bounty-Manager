@@ -203,7 +203,7 @@
 		<div class="grid space-y-5 bg-curatorCarousel px-[10px] py-5 text-white">
 			<button
 				on:click={handleCuratorsToggleClick}
-				class="w-full md:w-fit h-12 button-popup font-bold rounded-md"
+				class="w-full lg:w-fit h-12 button-popup font-bold rounded-md"
 				>SHOW CURATORS
 			</button>
 			<div>
@@ -290,7 +290,7 @@
 		<p class="pt-2 text-sm text-white">
 			<span class="lg:hidden">Add</span> Beneficiary Claim Form
 		</p>
-		<button class="w-full h-12 button-popup font-bold rounded-md md:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+		<button class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
 			><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
 			<span class="hidden lg:inline-flex">ADD</span></button
 		>

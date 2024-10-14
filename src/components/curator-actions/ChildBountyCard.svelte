@@ -133,8 +133,8 @@
 
 	<!-- Child Bounty Card Content -->
 	<div class="flex flex-col lg:flex-row justify-between lg:pr-6 lg:pt-1 lg:pl-4">
-		<div class="bg-childBountyHeaderBackground md:bg-white">
-			<div class="lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
+		<div class="bg-childBountyHeaderBackground lg:bg-white">
+			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
 				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
@@ -189,7 +189,7 @@
 			{/if}
 		</div>
 		{#if detailsExpended}
-			<div class="flex flex-col bg-childBountyHeaderBackground px-3 space-y-3 pb-5">
+			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
 					<p class="">{convertPlanckToDot(childBounty.fee)}</p>
@@ -218,6 +218,7 @@
 					<button class="w-10 h-10"><LogoTreasuryIcon /></button>
 					<button class="w-10 h-10"><LogoPolkassembly /></button>
 					<button class="w-10 h-10"><LogoSubscan /></button>
+					<button class="w-10 h-10"><LogoSubsquarePink/></button>
 				</div>
 			</div>
 		{/if}
@@ -244,7 +245,7 @@
 
 				<button
 					on:click={() => (assignSubCuratorOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
 				>
 					ASSIGN
 				</button>
@@ -261,7 +262,7 @@
 				<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 				<button
 					on:click={() => (acceptSubCuratorRuleOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
 				>
 					ACCEPT
 				</button>
@@ -271,7 +272,7 @@
 				<button
 					id="close"
 					on:click={() => (closeDownChildBountyOpen = true)}
-					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 md:text-base md:w-fit md:h-fit lg:min-w-32`}
+					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 lg:w-fit lg:h-fit lg:min-w-32`}
 				>
 					CLOSE DOWN
 				</button>
@@ -280,7 +281,7 @@
 			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 				<button
 					on:click={() => (awardChildBountyOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
 				>
 					AWARD
 				</button>
