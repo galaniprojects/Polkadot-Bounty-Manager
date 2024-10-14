@@ -117,13 +117,13 @@
 		class="flex justify-between text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 {statusColorClass}"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
-			<div class="flex flex-col lg:w-[650px] mb-2 lg:mb-0">
+			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
 				<span class="text-sm">#{childBounty.id} {childBounty.description}</span>
 			</div>
 
 			<div class="hidden lg:flex flex-col mb-2 lg:mb-0">
 				{#if dateCreated}
-					<p class="text-xs">added: {dateCreated}</p>
+					<p class="text-xs">created: {dateCreated}</p>
 				{/if}
 			</div>
 		</div>
@@ -135,7 +135,7 @@
 	<div class="flex flex-col lg:flex-row justify-between lg:pr-6 lg:pt-1 lg:pl-4">
 		<div class="bg-childBountyHeaderBackground md:bg-white">
 			<div class="lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
-				<div class="mt-3 flex flex-col lg:w-[490px]">
+				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
 						<p class="text-base">{convertPlanckToDot(childBounty.value)} DOT</p>
@@ -146,7 +146,7 @@
 					</section>
 				</div>
 
-				<div class="hidden lg:flex flex-col xl:w-40 lg:mt-0">
+				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
 						<p class="text-base">{convertPlanckToDot(childBounty.fee)} DOT</p>
@@ -238,19 +238,19 @@
 			{/if}
 		</div>
 
-		<div class="space-y-3 p-2 mr-32">
+		<div class="space-y-3 p-2 2xl:mr-32">
 			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 				<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
 				<button
 					on:click={() => (assignSubCuratorOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-8 w-full h-12 md:w-fit md:h-fit`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
 				>
 					ASSIGN
 				</button>
 			</div>
 
-			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2">
+			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassembly /></button>
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscan /></button>
@@ -261,7 +261,7 @@
 				<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 				<button
 					on:click={() => (acceptSubCuratorRuleOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-8 w-full h-12 md:w-fit md:h-fit`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
 				>
 					ACCEPT
 				</button>
@@ -271,7 +271,7 @@
 				<button
 					id="close"
 					on:click={() => (closeDownChildBountyOpen = true)}
-					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 px-3 w-1/2 h-10 md:text-base md:w-fit md:h-fit lg:min-w-32`}
+					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 md:text-base md:w-fit md:h-fit lg:min-w-32`}
 				>
 					CLOSE DOWN
 				</button>
@@ -280,7 +280,7 @@
 			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 				<button
 					on:click={() => (awardChildBountyOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-4 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:min-w-32`}
 				>
 					AWARD
 				</button>

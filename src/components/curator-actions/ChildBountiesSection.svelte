@@ -22,37 +22,37 @@
 	}
 </script>
 
-<div class="bg-childBountyBackground p-3 m-3 w-full lg:w-[900px] xl:w-full rounded-md">
+<div class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
 	<section class="flex flex-col lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 px-3">
 			<p class="text-xs">Child Bounties</p>
 			<p class="text-2xl">Child Bounties</p>
 		</div>
 
-		<div class="flex flex-col lg:flex-row mt-4 lg:mt-0 space-y-5 lg:pr-0">
+		<div class="flex flex-col lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row ">
 			<div>
 				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3">
 					<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
 					<button
 						on:click={() => (createChildBountyOpen = true)}
-						class="bg-accent text-white rounded-md font-bold pt-1 px-10 w-full h-12 md:w-fit md:h-fit lg:mr-6"
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:mr-6 lg:min-w-32"
 						>ADD</button
 					>
 				</div>
 				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3">
 					<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
 					<button
-						class="bg-accent text-white rounded-md font-bold pt-1 px-10 w-full h-12 md:w-fit md:h-fit lg:mr-6"
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 md:w-fit md:h-fit lg:mr-6 lg:min-w-32"
 						>ADD</button
 					>
 				</div>
 			</div>
-			<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3">
-				<p class="text-xs lg:hidden lg:mr-3 lg:text-md">Filter child bounties</p>
+			<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0">
+				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 				<div class="flex justify-between">
 					<p class="mt-2 lg:hidden">by <span>{selectedFilter}</span></p>
 					<div>
-						<div class="w-52 lg:w-36">
+						<div class="w-52 lg:w-32 xl:w-36">
 							<button
 								on:click={openUpFilterDropdownToggleClick}
 								type="button"

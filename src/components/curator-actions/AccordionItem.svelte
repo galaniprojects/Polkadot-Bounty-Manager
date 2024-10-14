@@ -101,7 +101,7 @@
 		<div class="hidden lg:flex lg:flex-col gap-3 justify-start lg:ml-7">
 			<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
 				<section class="flex flex-col lg:flex-row">
-					<div class="xl:w-[490px]">
+					<div class="lg:w-[250px] xl:w-[490px]">
 						<p class="text-xs">Remaining Balance</p>
 						<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
 					</div>
@@ -112,13 +112,13 @@
 					</div>
 				</section>
 				<div
-					class="bounty-button-container lg:flex lg:flex-row lg:justify-end lg:space-x-3 xl:mr-44"
+					class="bounty-button-container lg:flex lg:justify-end lg:space-x-3 lg:mr-12 2xl:mr-44"
 				>
 					<p class="hidden text-center lg:inline-flex">Curators</p>
 					<div class="space-x-2">
 						<button
 							on:click={handleCuratorsToggleClick}
-							class="w-full md:w-fit button-popup font-bold rounded-md pt-1"
+							class="w-full md:w-fit button-popup font-bold rounded-md pt-1 lg:min-w-32"
 						>
 							SHOW <span class="lg:hidden">CURATORS</span>
 						</button>
@@ -127,14 +127,14 @@
 			</section>
 			<section class="flex-col lg:flex lg:flex-row lg:justify-between">
 				<section class="flex justify-start">
-					<div class="text-xs xl:w-[490px] pr-3">
+					<div class="text-xs lg:w-[250px] xl:w-[490px] pr-3">
 						<p>Description</p>
 						<p>
 							This proposal stems from the need to enhance system upgrade testing procedures,
 							minimizing feature regression. Recent discussions in various channels, spurred by …
 						</p>
 					</div>
-					<div class="flex justify-between space-x-16">
+					<div class="flex justify-between lg:space-x-8 xl:space-x-16">
 						<section>
 							<p class="text-xs">Created</p>
 							<p>8th Aug 2024</p>
@@ -146,7 +146,7 @@
 						</section>
 					</div>
 				</section>
-				<div class="flex justify-center space-x-2 xl:mr-44">
+				<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
 					<button class="w-10 h-10 lg:w-6 lg:h-6">
 						<LogoTreasuryWhite />
 					</button>
@@ -285,12 +285,12 @@
 	</div>
 
 	<section
-		class="flex flex-col space-y-1 px-3 py-5 xl:pr-48 lg:flex-row lg:space-x-3 lg:justify-end"
+		class="flex flex-col space-y-1 px-3 py-5 lg:mr-12 2xl:pr-36 lg:flex-row lg:space-x-3 lg:justify-end"
 	>
 		<p class="pt-2 text-sm text-white">
 			<span class="lg:hidden">Add</span> Beneficiary Claim Form
 		</p>
-		<button class="w-full h-12 button-popup font-bold rounded-md md:w-fit lg:h-auto lg:pt-1"
+		<button class="w-full h-12 button-popup font-bold rounded-md md:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
 			><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
 			<span class="hidden lg:inline-flex">ADD</span></button
 		>

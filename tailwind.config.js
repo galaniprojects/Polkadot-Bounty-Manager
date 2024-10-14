@@ -34,8 +34,6 @@ export default {
 			  'xl': '1280px',     // Desktops
 			  '2xl': '1440px',    // Larger desktops
 			  '3xl': '1920px',    // Full HD and large desktops
-			  '4xl': '2560px',    // Ultra Wide
-			  '5xl': '3840px',    // 4K displays
 			}
 		  }
 	},
