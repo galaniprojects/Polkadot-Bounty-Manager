@@ -1,11 +1,12 @@
 <script lang="ts">
-	import LogoPolkassembly from '../svg/LogoPolkassembly.svelte';
-	import LogoTreasuryIcon from '../svg/LogoTreasuryIcon.svelte';
-	import LogoSubscan from '../svg/LogoSubscan.svelte';
 	import type { Bounty } from '../../types/bounty';
 	import { onMount } from 'svelte';
 	import { WsProvider, ApiPromise } from '@polkadot/api';
 	import { truncateString } from '../../utils/common';
+	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
+	import LogoTreasuryWhite from '../svg/curator-actions-logo/LogoTreasuryWhite.svelte';
+	import LogoPolkassemblyWhite from '../svg/curator-actions-logo/LogoPolkassemblyWhite.svelte';
+	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 
 	export let bounty: Bounty;
 	export let status: string;
@@ -28,38 +29,41 @@
 			{`${bounty.description}`}
 		</span>
 
-		<div class="flex gap-2 mt-3 lg:mt-0">
+		<!-- <div class="hidden lg:flex gap-2 mt-3 lg:mt-0">
 			<button class="w-5 h-5 lg:w-6 lg:h-6">
-				<LogoTreasuryIcon />
+				<LogoTreasuryWhite />
 			</button>
 			<button class="w-5 h-5 lg:w-6 lg:h-6">
-				<LogoPolkassembly />
+				<LogoPolkassemblyWhite />
 			</button>
 			<button class="w-5 h-5 lg:w-6 lg:h-6">
-				<LogoSubscan />
+				<LogoSubscanWhite />
 			</button>
-		</div>
+			<button class="w-5 h-5 lg:w-6 lg:h-6">
+				<LogoSubsquareWhite />
+			</button>
+		</div> -->
 	</div>
 
-	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:pl-12 mt-3 lg:mt-0">
-		<section class="flex space-x-1 mr-0 lg:mr-4">
+	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:pl-12 lg:mt-0">
+		<section class="flex space-x-1 mr-0 lg:w-52">
 			<p>Proposer:</p>
 			<p>{truncateString(bounty.proposer, 8)}</p>
 		</section>
 
-		<section class="flex space-x-1 mr-0 lg:mr-4">
+		<!-- <section class="hidden lg:flex space-x-1 mr-0 lg:mr-4">
 			<p>Status:</p>
 			<p>{status}</p>
-		</section>
+		</section> -->
 
-		<section class="flex space-x-1 mt-1 lg:mt-0 lg:ml-7">
+		<!-- <section class="hidden lg:flex space-x-1 mt-1 lg:mt-0 lg:w-64">
 			<p>Created:</p>
 			<p>8th August 2024</p>
 		</section>
 
-		<section class="flex space-x-1 mt-1 lg:mt-0 lg:ml-40">
+		<section class="hidden lg:flex space-x-1 mt-1 lg:mt-0">
 			<p>Expiration date:</p>
 			<p>27th September 2024</p>
-		</section>
+		</section> -->
 	</div>
 </section>
