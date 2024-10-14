@@ -16,14 +16,28 @@ export default {
 			childBountyGray: '#65708B',
 			childBountyGreen: '#087C2B',
 			childBountyBackground: '#D7D5E2',
+			childBountyHeaderBackground: '#F4F4F4',
 			curatorMainBackground: '#836FAC',
-			curatorCarousel: '#7A66A0',
+			curatorCarousel: '#6B598C',
 			darkgray: '#94889F',
 			gray: colors.gray,
 			notifications: '#FFAA35',
 			transparent: colors.transparent,
 			white: colors.white
-		}
+		},
+		extend: {
+			screens: {
+			  'xs': '320px',      // Phones
+			  'sm': '640px',      // Tablets
+			  'md': '768px',      // Landscape Tablets
+			  'lg': '1080px',     // Laptops
+			  'xl': '1280px',     // Desktops
+			  '2xl': '1440px',    // Larger desktops
+			  '3xl': '1920px',    // Full HD and large desktops
+			  '4xl': '2560px',    // Ultra Wide
+			  '5xl': '3840px',    // 4K displays
+			}
+		  }
 	},
 	plugins: []
 };

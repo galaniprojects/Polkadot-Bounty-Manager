@@ -101,11 +101,10 @@
 			{/if}
 		</div>
 		<div class="m-y-4">
-		  <p>Only close a child bounty after communicating with the sub-curator and the projected beneficiary.
-
-The funds will be reallocated to the parent bounty. </p>
-
-
+			<p>
+				Only close a child bounty after communicating with the sub-curator and the projected
+				beneficiary. The funds will be reallocated to the parent bounty.
+			</p>
 		</div>
 
 		<div>

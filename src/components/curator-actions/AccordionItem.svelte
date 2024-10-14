@@ -96,7 +96,7 @@
 	<AccordionItemHeader {bounty} {status}></AccordionItemHeader>
 
 	<!-- Content Section -->
-	<div class="bg-curatorCarousel pl-3 xl:pt-6 text-white w-full">
+	<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-3">
 		<!-- Desktop design -->
 		<div class="hidden lg:flex lg:flex-col gap-3 justify-start lg:ml-7">
 			<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
@@ -112,7 +112,7 @@
 					</div>
 				</section>
 				<div
-					class="bounty-button-container lg:flex lg:flex-row lg:justify-end lg:space-x-3 xl:mr-48"
+					class="bounty-button-container lg:flex lg:flex-row lg:justify-end lg:space-x-3 xl:mr-44"
 				>
 					<p class="hidden text-center lg:inline-flex">Curators</p>
 					<div class="space-x-2">
@@ -146,7 +146,7 @@
 						</section>
 					</div>
 				</section>
-				<div class="flex justify-center space-x-2 xl:mr-48">
+				<div class="flex justify-center space-x-2 xl:mr-44">
 					<button class="w-10 h-10 lg:w-6 lg:h-6">
 						<LogoTreasuryWhite />
 					</button>
