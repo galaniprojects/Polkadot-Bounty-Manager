@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
 	export const TABS = ['Creation', 'Approval', 'Curator Proposal'];
+	export const TABS_QUERY_PARAMS = ['creation', 'approval', 'curator-proposal'];
 	export type BountyTab = (typeof TABS)[number];
 	export type BountyInfo = {
 		id?: number;
@@ -9,10 +10,18 @@
 </script>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import ApprovalReferendum from './ApprovalReferendum.svelte';
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
 	import CuratorProposal from './CuratorProposal.svelte';
+	import { ApiPromise, WsProvider } from '@polkadot/api';
+	import {
+		hideLoadingDialog,
+		showErrorDialog,
+		showLoadingDialog
+	} from '../../utils/loading-screen';
 
 	let bountyInfo: BountyInfo = {};
 
@@ -24,8 +33,61 @@
 
 	function changeTab(tab: BountyTab) {
 		activeTab = tab;
+
+		const urlParams = new URLSearchParams(window.location.search);
+
+		if (tab === TABS[0]) {
+			urlParams.set('step', TABS_QUERY_PARAMS[0]);
+		} else if (tab === TABS[1]) {
+			urlParams.set('step', TABS_QUERY_PARAMS[1]);
+		} else if (tab === TABS[2]) {
+			urlParams.set('step', TABS_QUERY_PARAMS[2]);
+		}
+		const url = new URL(window.location.toString());
+		history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+
 		return undefined;
 	}
+	onMount(async () => {
+		const urlParams = new URLSearchParams(window.location.search);
+
+		let step = urlParams.get('step');
+		if (step) {
+			if (step === TABS_QUERY_PARAMS[0]) {
+				activeTab = TABS[0];
+			} else if (step === TABS_QUERY_PARAMS[1]) {
+				activeTab = TABS[1];
+			} else if (step === TABS_QUERY_PARAMS[2]) {
+				activeTab = TABS[2];
+			}
+		}
+
+		let bountyId = urlParams.get('bounty-id');
+		if (bountyId) {
+			showLoadingDialog('Loading bounty info');
+			try {
+				const wsProvider = new WsProvider('ws://localhost:8000');
+				const api = await ApiPromise.create({ provider: wsProvider });
+				let bountyDescription = (
+					await api.query.bounties.bountyDescriptions(bountyId)
+				).toHuman() as string;
+				console.log(bountyDescription);
+				if (!bountyDescription) {
+					showErrorDialog('Failed to load bounty info');
+					return;
+				}
+
+				bountyInfo = {
+					id: Number(bountyId),
+					description: bountyDescription,
+					value: undefined
+				};
+				hideLoadingDialog();
+			} catch {
+				showErrorDialog('Failed to load bounty info');
+			}
+		}
+	});
 </script>
 
 <div class="main flex justify-center items-center md:py-20 lg:py-40">

@@ -147,7 +147,7 @@
 							<div class="space-x-2">
 								<button
 									on:click={() => {
-										goto('/');
+										goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
 									}}
 									class="bounty-button">PROPOSE</button
 								>

@@ -89,6 +89,13 @@
 				description: bountyTitle,
 				value: BigInt(bountyValue)
 			};
+
+			// Set bounty-id in query parameters.
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set('bounty-id', String(bountyIndex));
+			const url = new URL(window.location.toString());
+			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+
 			showSuccessDialog('Submitting Transaction', 'Operation Success');
 			success = true;
 		} catch (e) {

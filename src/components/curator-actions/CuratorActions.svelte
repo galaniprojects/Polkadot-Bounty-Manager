@@ -90,7 +90,7 @@
 			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>
 			<button
 				on:click={() => {
-					goto('/');
+					goto('/bounty-setup');
 				}}
 				class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
 				>CREATE NEW BOUNTY</button

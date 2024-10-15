@@ -11,7 +11,7 @@
 	export let status: string;
 
 	onMount(async () => {
-		// Query all bounties.
+		// TODO:  use entries to query all descriptions.
 		const wsProvider = new WsProvider('ws://localhost:8000');
 		const api = await ApiPromise.create({ provider: wsProvider });
 		let bountyDescription = (
