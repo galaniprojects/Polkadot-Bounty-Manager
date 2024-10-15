@@ -1,6 +1,5 @@
 <script lang="ts">
 	import CuratorItem from './CuratorItem.svelte';
-	import InfoSvg from '../svg/InfoIcon.svelte';
 	import type { Bounty } from '../../types/bounty';
 	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
 	import AccordionItemHeader from './AccordionItemHeader.svelte';
@@ -111,14 +110,12 @@
 						<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
 				</section>
-				<div
-					class="bounty-button-container lg:flex lg:justify-end lg:space-x-3 lg:mr-12 2xl:mr-44"
-				>
+				<div class="bounty-button-container lg:flex lg:justify-end lg:space-x-3 lg:mr-12 2xl:mr-44">
 					<p class="hidden text-center lg:inline-flex">Curators</p>
 					<div class="space-x-2">
 						<button
 							on:click={handleCuratorsToggleClick}
-							class="w-full md:w-fit button-popup font-bold rounded-md pt-1 lg:min-w-32"
+							class="w-full button-popup font-bold rounded-md pt-1 lg:min-w-32 lg:h-fit"
 						>
 							SHOW <span class="lg:hidden">CURATORS</span>
 						</button>
@@ -163,9 +160,9 @@
 			</section>
 		</div>
 
-		<!-- No Design currently, therefore commented out
+		<!-- No Design currently, therefore design not updated
 		ToDo: rework desing after design on invision exists -->
-		<!-- <section class="flex flex-row-reverse xl:items-start space-x-4">
+		<section class="flex flex-row-reverse xl:items-start space-x-4">
 			<div class="flex flex-col items-end space-y-7">
 				{#if status === 'proposed' || status === 'approved' || status === 'funded'}
 					<div class="bounty-button-container">
@@ -177,7 +174,6 @@
 								}}
 								class="bounty-button">PROPOSE</button
 							>
-							<button class="pt-1 w-5 h-5"><InfoSvg /></button>
 						</div>
 					</div>
 				{/if}
@@ -191,11 +187,10 @@
 							}}
 							class="bounty-button">ACCEPT</button
 						>
-						<button class="pt-1 w-5 h-5"><InfoSvg /></button>
 					</div>
 				</div>
 			</div>
-		</section> -->
+		</section>
 	</div>
 
 	<!-- Mobile design -->
@@ -290,7 +285,8 @@
 		<p class="pt-2 text-sm text-white">
 			<span class="lg:hidden">Add</span> Beneficiary Claim Form
 		</p>
-		<button class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+		<button
+			class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
 			><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
 			<span class="hidden lg:inline-flex">ADD</span></button
 		>

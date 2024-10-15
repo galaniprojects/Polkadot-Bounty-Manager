@@ -218,7 +218,7 @@
 					<button class="w-10 h-10"><LogoTreasuryIcon /></button>
 					<button class="w-10 h-10"><LogoPolkassembly /></button>
 					<button class="w-10 h-10"><LogoSubscan /></button>
-					<button class="w-10 h-10"><LogoSubsquarePink/></button>
+					<button class="w-10 h-10"><LogoSubsquarePink /></button>
 				</div>
 			</div>
 		{/if}
@@ -255,6 +255,8 @@
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassembly /></button>
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscan /></button>
+
+				<!-- ToDo: Fix the last icon -->
 				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
 			</div>
 

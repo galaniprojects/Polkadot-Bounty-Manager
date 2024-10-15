@@ -29,7 +29,7 @@
 			<p class="text-2xl">Child Bounties</p>
 		</div>
 
-		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row ">
+		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
 				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3">
 					<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
@@ -47,7 +47,9 @@
 					>
 				</div>
 			</div>
-			<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0">
+			<div
+				class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
+			>
 				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 				<div class="flex justify-between">
 					<p class="mt-2 lg:hidden">by <span>{selectedFilter}</span></p>
