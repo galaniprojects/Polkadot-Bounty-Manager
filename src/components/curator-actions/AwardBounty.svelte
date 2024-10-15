@@ -3,6 +3,7 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
+		getApi,
 		isValidAddress
 	} from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
@@ -41,8 +42,7 @@
 				return;
 			}
 
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let api = await getApi();
 
 			let transaction = api.tx.bounties.awardBounty(bounty.id, beneficiary);
 
@@ -79,8 +79,7 @@
 
 	async function calculateFee() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let api = await getApi();
 
 			let transaction = api.tx.bounties.awardBounty(bounty.id, $activeAccount.address);
 			let observableFee = transaction.paymentInfo($activeAccount.address);

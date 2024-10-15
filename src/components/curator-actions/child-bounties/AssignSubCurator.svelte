@@ -2,6 +2,7 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
+		getApi,
 		isValidAddress
 	} from '../../../utils/polkadot';
 	import BountyDialog from '../../BountyDialog.svelte';
@@ -25,16 +26,6 @@
 	let curatorAddress = '';
 	let curatorFee = '';
 	let fee = '-';
-
-	const WS_URL = 'ws://localhost:8000';
-	let api: ApiRx;
-
-	async function getApi(): Promise<ApiRx> {
-		if (api) return api;
-		const wsProvider = new WsProvider(WS_URL);
-		api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-		return api;
-	}
 
 	onMount(async () => {
 		await calculateFee();

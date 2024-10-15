@@ -12,7 +12,7 @@
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
@@ -55,8 +55,7 @@
 		}
 		showLoadingDialog('Submitting transaction');
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			const transaction = createApprovalTransaction(api);
 
 			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
@@ -87,8 +86,7 @@
 	async function calculateFee() {
 		if (bountyInfo.id) {
 			try {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const api = await getApi();
 				const transaction = createApprovalTransaction(api);
 
 				let observableFee = transaction.paymentInfo($activeAccount.address);
@@ -104,8 +102,7 @@
 
 	async function calculateDeposit() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			const base = Number(
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
@@ -171,16 +168,6 @@
 				</div>
 
 				<hr class="border-white mt-5 mb-3 w-96" />
-
-				<p class="text-xs mb-1">Submit with account</p>
-				<select
-					class="border border-borderColor w-1/4 rounded-md h-7 px-1 pt-1"
-					name="accounts"
-					id="accounts"
-				>
-					<option value="alice">Alice</option>
-					<option value="bob">Bob</option>
-				</select>
 
 				<div class="mt-5 h-24 mb-10">
 					<section class="mb-3">
