@@ -18,7 +18,7 @@
 	});
 </script>
 
-<section class="text-white max-h-20 px-5 lg:px-10 my-4">
+<section class="text-white max-h-30 px-5 my-4 lg:px-10">
 	<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
 		<span class="text-xl lg:text-2xl">
 			#{`${bounty.id}`}

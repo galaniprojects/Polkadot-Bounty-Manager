@@ -51,10 +51,12 @@
 				class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
 			>
 				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
-				<div class="flex justify-between">
-					<p class="mt-2 lg:hidden">by <span>{selectedFilter}</span></p>
-					<div>
-						<div class="w-52 lg:w-32 xl:w-36">
+				<div class="flex justify-between gap-3">
+					<p class="mt-2 hidden sm:inline-flex sm:gap-1 lg:hidden">
+						by <span>{selectedFilter}</span>
+					</p>
+					<div class="w-full">
+						<div class="w-full lg:w-32 xl:w-36">
 							<button
 								on:click={openUpFilterDropdownToggleClick}
 								type="button"

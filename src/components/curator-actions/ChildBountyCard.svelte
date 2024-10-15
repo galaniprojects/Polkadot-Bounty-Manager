@@ -114,7 +114,7 @@
 <div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex justify-between text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 {statusColorClass}"
+		class="flex justify-between gap-4 text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 {statusColorClass}"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
@@ -128,7 +128,7 @@
 			</div>
 		</div>
 
-		<span class="status justify-end items-center text-xs flex-shrink-0 mr-5">{status}</span>
+		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">{status}</span>
 	</div>
 
 	<!-- Child Bounty Card Content -->

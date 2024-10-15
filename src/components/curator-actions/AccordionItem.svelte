@@ -95,7 +95,7 @@
 	<AccordionItemHeader {bounty} {status}></AccordionItemHeader>
 
 	<!-- Content Section -->
-	<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-3">
+	<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
 		<!-- Desktop design -->
 		<div class="hidden lg:flex lg:flex-col gap-3 justify-start lg:ml-7">
 			<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
@@ -159,38 +159,6 @@
 				</div>
 			</section>
 		</div>
-
-		<!-- No Design currently, therefore design not updated
-		ToDo: rework desing after design on invision exists -->
-		<section class="flex flex-row-reverse xl:items-start space-x-4">
-			<div class="flex flex-col items-end space-y-7">
-				{#if status === 'proposed' || status === 'approved' || status === 'funded'}
-					<div class="bounty-button-container">
-						<p class="text-center">Curator Role</p>
-						<div class="space-x-2">
-							<button
-								on:click={() => {
-									goto('/');
-								}}
-								class="bounty-button">PROPOSE</button
-							>
-						</div>
-					</div>
-				{/if}
-
-				<div class="bounty-button-container">
-					<p class="text-center">Curator Role</p>
-					<div class="space-x-2">
-						<button
-							on:click={() => {
-								acceptCuratorRuleDialogOpen = true;
-							}}
-							class="bounty-button">ACCEPT</button
-						>
-					</div>
-				</div>
-			</div>
-		</section>
 	</div>
 
 	<!-- Mobile design -->
@@ -279,17 +247,40 @@
 		{/if}
 	</div>
 
-	<section
-		class="flex flex-col space-y-1 px-3 py-5 lg:mr-12 2xl:pr-36 lg:flex-row lg:space-x-3 lg:justify-end"
-	>
-		<p class="pt-2 text-sm text-white">
-			<span class="lg:hidden">Add</span> Beneficiary Claim Form
-		</p>
-		<button
-			class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
-			><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
-			<span class="hidden lg:inline-flex">ADD</span></button
-		>
+	<section class="flex flex-col space-y-1 px-3 py-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
+		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+			<p class="pt-2 text-sm text-white">
+				<span class="lg:hidden">Add</span> Beneficiary Claim Form
+			</p>
+			<button
+				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+				><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
+				<span class="hidden lg:inline-flex">ADD</span></button
+			>
+		</div>
+
+		{#if status === 'proposed' || status === 'approved' || status === 'funded'}
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">Curator Role</p>
+
+				<button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
+					on:click={() => {
+						goto('/');
+					}}>PROPOSE</button
+				>
+			</div>
+		{/if}
+
+		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+			<p class="pt-2 text-sm text-white">Curator Role</p>
+			<button
+				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+				on:click={() => {
+					acceptCuratorRuleDialogOpen = true;
+				}}>ACCEPT</button
+			>
+		</div>
 	</section>
 
 	<div class="w-full pr-6">
@@ -304,13 +295,3 @@
 {#if awardBountyDialogOpen}
 	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
 {/if}
-
-<style>
-	.bounty-button {
-		@apply bg-accent rounded-md font-bold min-w-32 pt-1;
-	}
-
-	.bounty-button-container {
-		@apply flex lg:flex-col xl:flex-row xl:space-x-3 lg:space-y-2 items-end text-sm;
-	}
-</style>
