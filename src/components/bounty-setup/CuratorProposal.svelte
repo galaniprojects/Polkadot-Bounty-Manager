@@ -7,6 +7,7 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
+		getApi,
 		isValidAddress
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
@@ -48,8 +49,7 @@
 		}
 
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			if (!curatorFee) {
 				showErrorDialog('Invalid value of curator fee');
 				return;
@@ -91,8 +91,7 @@
 
 	async function calculateDeposit() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			const base = Number(
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
@@ -106,8 +105,7 @@
 	async function calculateFee() {
 		try {
 			if (curatorAddress && curatorFee && $activeAccount) {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const api = await getApi();
 				const transaction = createProposalTransaction(api);
 				let observableFee = transaction.paymentInfo($activeAccount.address);
 				fee =

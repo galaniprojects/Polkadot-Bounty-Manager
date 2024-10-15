@@ -12,7 +12,7 @@
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
@@ -55,8 +55,7 @@
 		}
 		showLoadingDialog('Submitting transaction');
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			const transaction = createApprovalTransaction(api);
 
 			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
@@ -87,8 +86,7 @@
 	async function calculateFee() {
 		if (bountyInfo.id) {
 			try {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				const api = await getApi();
 				const transaction = createApprovalTransaction(api);
 
 				let observableFee = transaction.paymentInfo($activeAccount.address);
@@ -104,8 +102,7 @@
 
 	async function calculateDeposit() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi();
 			const base = Number(
 				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
 			);
