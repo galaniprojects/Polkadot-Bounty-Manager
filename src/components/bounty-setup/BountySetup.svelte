@@ -16,12 +16,13 @@
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
 	import CuratorProposal from './CuratorProposal.svelte';
-	import { ApiPromise, WsProvider } from '@polkadot/api';
+	import { firstValueFrom } from 'rxjs';
 	import {
 		hideLoadingDialog,
 		showErrorDialog,
 		showLoadingDialog
 	} from '../../utils/loading-screen';
+	import { getApi } from '../../utils/polkadot';
 
 	let bountyInfo: BountyInfo = {};
 
@@ -66,12 +67,10 @@
 		if (bountyId) {
 			showLoadingDialog('Loading bounty info');
 			try {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await ApiPromise.create({ provider: wsProvider });
+				const api = await getApi()
 				let bountyDescription = (
-					await api.query.bounties.bountyDescriptions(bountyId)
+					await  firstValueFrom( api.query.bounties.bountyDescriptions(bountyId))
 				).toHuman() as string;
-				console.log(bountyDescription);
 				if (!bountyDescription) {
 					showErrorDialog('Failed to load bounty info');
 					return;

@@ -1,20 +1,24 @@
 <script lang="ts">
 	import '../../app.css';
-	import { ApiPromise, WsProvider } from '@polkadot/api';
+	import { api, nodeEndpoint } from '../../stores';
+	import { goto } from '$app/navigation';
+	import { getApi } from '../../utils/polkadot';
+	import { firstValueFrom } from 'rxjs';
 
 	let days: number = 1;
 	let hours = 1;
 	let mins = 1;
 	let blocks = 1;
 
+	let nodeEndpointInput = '';
+
 	async function fastForward(blocks: number) {
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const api = await ApiPromise.create({ provider: wsProvider });
-		let number = (await api.rpc.chain.getHeader()).number.toNumber();
-		await api.rpc('dev_newBlock', {
+		const api = await getApi();
+		let number = (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber();
+		await firstValueFrom( api.rpc('dev_newBlock', {
 			count: 1,
 			unsafeBlockHeight: number + blocks
-		});
+		}));
 	}
 
 	async function fastForwardDays() {
@@ -31,6 +35,11 @@
 
 	async function fastForwardBlocks() {
 		fastForward(blocks);
+	}
+
+	async function changeEndpoint() {
+		nodeEndpoint.set(nodeEndpointInput);
+		api.set(undefined);
 	}
 </script>
 
@@ -56,6 +65,17 @@
 		<button on:click={fastForwardBlocks} class="button-active min-w-40">BLOCKS </button>
 		<p>(*6 seconds)</p>
 	</div>
+
+	<hr class="border-gray mt-5 mb-1 w-1/2" />
+
+	<div class="m-5 gap-5">
+		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
+		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" bind:value={nodeEndpointInput} />
+		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
+	</div>
+	<button class="button-active mx-5" on:click={() => goto('/curator-actions')}>
+		=> Curator Actions</button
+	>
 </div>
 
 <style lang="postcss">

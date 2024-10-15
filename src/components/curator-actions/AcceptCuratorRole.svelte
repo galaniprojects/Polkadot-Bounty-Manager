@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
@@ -33,8 +33,7 @@
 				showErrorDialog('wallet is not connected');
 				return;
 			}
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let api = await getApi();
 
 			let transaction = api.tx.bounties.acceptCurator(bounty.id);
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
@@ -71,8 +70,7 @@
 
 	async function calculateFee() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let api = await getApi();
 			let transaction = api.tx.bounties.acceptCurator(bounty.id);
 
 			let observableFee = transaction.paymentInfo($activeAccount.address);

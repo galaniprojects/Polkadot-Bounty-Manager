@@ -7,7 +7,8 @@
 	import {
 		dryRunAndSubmitTransaction,
 		convertDotToPlanck,
-		convertPlanckToDot
+		convertPlanckToDot,
+		getApi
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
@@ -38,8 +39,7 @@
 				showErrorDialog('wallet is not connected');
 				return;
 			}
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			let api = await getApi();
 
 			if (bountyTitle.length === 0) {
 				showErrorDialog('bounty title is empty');
@@ -113,8 +113,7 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
 				let transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
 
@@ -133,8 +132,7 @@
 	async function calculateBond() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
 				const transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
 				const base = Number(
