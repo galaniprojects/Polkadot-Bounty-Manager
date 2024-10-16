@@ -1,56 +1,126 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import type { ChildBounty } from '../../types/child-bounty';
-	import MagnifyingIcon from '../svg/MagnifyingIcon.svelte';
 	import AddChildBounty from './AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 
 	export let bounty: Bounty;
 	export let childBounties: ChildBounty[];
 	let createChildBountyOpen = false;
+	let dropdownOpened = false;
+	let selectedFilter = 'all';
+
+	const filters = ['all', 'created', 'sub-curator proposed', 'active', 'awarded', 'claimed'];
+
+	function openUpFilterDropdownToggleClick() {
+		dropdownOpened = !dropdownOpened;
+	}
+
+	function selectFilter(filter: string) {
+		selectedFilter = filter;
+		dropdownOpened = false;
+	}
 </script>
 
-<div class="bg-childBountyBackground p-3 m-3">
-	<section class="flex flex-col lg:flex-row justify-between px-5 pb-6">
-		<div class="grid gap-2 w-1/2">
+<div class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
+	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
+		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
 			<p class="text-2xl">Child Bounties</p>
-			<div class="relative w-full h-10">
-				<input
-					class="border border-borderColor pt-1 w-full rounded-md bg-white pl-2"
-					placeholder="Bounty Search"
-				/>
-				<div
-					class="border border-accent absolute right-8 top-4 transform -translate-y-1/2 h-5"
-				></div>
-				<MagnifyingIcon></MagnifyingIcon>
-			</div>
 		</div>
 
-		<div class="grid mt-6 lg:mt-0 space-y-3 lg:pr-0 xl:pr-24">
-			<div class="flex justify-end items-center py-3">
-				<p class="mr-3 text-md">New Child Bounty</p>
-				<button
-					on:click={() => (createChildBountyOpen = true)}
-					class="bg-accent text-white rounded-md font-bold pt-1 min-w-32 mr-3">ADD</button
-				>
+		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
+			<div class="space-y-3 lg:space-y-1">
+				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3">
+					<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
+					<button
+						on:click={() => (createChildBountyOpen = true)}
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+						>ADD</button
+					>
+				</div>
+				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3">
+					<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
+					<button
+						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+						>ADD</button
+					>
+				</div>
 			</div>
-			<div class="flex justify-end items-center pb-3">
-				<p class="mr-3 text-md">Salary Child Bounties</p>
-				<button class="bg-accent text-white rounded-md font-bold pt-1 min-w-32 mr-3">ADD</button>
+			<div
+				class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
+			>
+				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
+				<div class="flex justify-between gap-3">
+					<p class="mt-2 hidden sm:inline-flex sm:gap-1 lg:hidden">
+						by <span>{selectedFilter}</span>
+					</p>
+					<div class="w-full">
+						<div class="w-full lg:w-32 xl:w-36">
+							<button
+								on:click={openUpFilterDropdownToggleClick}
+								type="button"
+								class="inline-flex w-full justify-between items-center rounded-md bg-white px-2 py-2 text-primary ring-1 ring-inset ring-accent"
+								id="menu-button"
+								aria-expanded="true"
+								aria-haspopup="true"
+							>
+								{selectedFilter}
+								<button class="material-symbols-outlined text-accent"> keyboard_arrow_down </button>
+							</button>
+						</div>
+						{#if dropdownOpened}
+							<div
+								class="absolute z-10 -mt-[42px] origin-bottom-right w-52 bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+								role="menu"
+								aria-orientation="vertical"
+								aria-labelledby="menu-button"
+								tabindex="-1"
+							>
+								<div role="none">
+									{#each filters as status, index}
+										<a
+											href="#"
+											class="block px-4 py-2 text-sm text-primary cursor-pointer
+												{selectedFilter === status ? 'bg-curatorMainBackground text-white' : 'bg-white'}
+												hover:bg-curatorMainBackground focus:bg-curaorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
+											role="menuitem"
+											tabindex="-1"
+											on:click={() => selectFilter(status)}
+										>
+											{status}
+										</a>
+
+										{#if index < filters.length - 1}
+											<hr />
+										{/if}
+									{/each}
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	{#each childBounties as childBounty}
-		<ChildBountyCard
-			parentBounty={bounty}
-			{childBounty}
-			beneficiary="Nodal_point_12"
-			dateCreated="MAY 09, 2024"
-			dateOfPayout="AUG 21, 2024"
-			timeUntilPayout="1d : 8h : 42min : 18sec"
-		/>
-	{/each}
+	<div class="space-y-3">
+		{#each childBounties as childBounty}
+			<ChildBountyCard
+				parentBounty={bounty}
+				{childBounty}
+				beneficiary="Nodal_point_12"
+				dateCreated="MAY 09, 2024"
+				dateOfPayout="AUG 21, 2024"
+				timeUntilPayout="1d : 8h : 42min : 18sec"
+			/>
+		{/each}
+	</div>
 </div>
 <AddChildBounty {bounty} bind:open={createChildBountyOpen} />
+
+<style>
+	.material-symbols-outlined {
+		font-size: 30px;
+	}
+</style>

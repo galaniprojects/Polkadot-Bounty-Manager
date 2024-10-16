@@ -85,9 +85,13 @@ body {
 
 .material-symbols-outlined {
 	font-family: 'Material Icons Outlined';
-	font-variation-settings:
+	line-height: 0px;
+
+	/* ToDo: clean up dead code after icons have a final design to them */
+	/* font-size: 30px; */
+	/* font-variation-settings:
 		'FILL' 0,
 		'wght' 400,
 		'GRAD' 0,
-		'opsz' 24;
+		'opsz' 24; */
 }

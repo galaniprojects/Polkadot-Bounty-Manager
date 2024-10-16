@@ -11,6 +11,8 @@
 	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './child-bounties/CloseDownChildBounty.svelte';
 	import AwardChildBounty from './child-bounties/AwardChildBounty.svelte';
+	import LogoSubscanPink from '../svg/curator-actions-logo/LogoSubsquarePink.svelte';
+	import LogoSubsquarePink from '../svg/curator-actions-logo/LogoSubsquarePink.svelte';
 
 	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
@@ -20,11 +22,13 @@
 	export let dateCreated: string = '';
 	export let dateOfPayout: string = '';
 	export let timeUntilPayout: string = '';
+	export let borderColor: string = 'childBountyGray';
 
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
 	let closeDownChildBountyOpen = false;
 	let awardChildBountyOpen = false;
+	let detailsExpended = false;
 
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
@@ -51,6 +55,27 @@
 		default:
 			statusColorClass = 'added';
 			statusColor = 'childBountyGray';
+	}
+
+	const colorVariants = {
+		childBountyGray: 'childBountyGray',
+		childBountyOrange: 'childBountyOrange',
+		childBountyGreen: 'childBountyGreen'
+	};
+
+	function isValidColor(
+		color: string
+	): color is 'childBountyGray' | 'childBountyOrange' | 'childBountyGreen' {
+		return (
+			color === 'childBountyGray' || color === 'childBountyOrange' || color === 'childBountyGreen'
+		);
+	}
+
+	function getColorClass(color: string): string {
+		if (isValidColor(color)) {
+			return colorVariants[color];
+		}
+		return colorVariants['childBountyGray'];
 	}
 
 	onMount(() => {
@@ -80,126 +105,188 @@
 			}
 		}
 	}
+
+	function handleMoreDetailsToggleClick() {
+		detailsExpended = !detailsExpended;
+	}
 </script>
 
-<div class="bg-white pb-3 lg:w-full xl:w-full mb-3">
+<div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex flex-col lg:flex-row justify-between text-white pl-6 pr-3 pt-1 min-h-6 {statusColorClass}"
+		class="flex justify-between gap-4 text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 {statusColorClass}"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
-			<div class="flex flex-col lg:w-60 mb-2 lg:mb-0">
+			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
 				<span class="text-sm">#{childBounty.id} {childBounty.description}</span>
 			</div>
 
-			<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
+			<div class="hidden lg:flex flex-col mb-2 lg:mb-0">
 				{#if dateCreated}
-					<p class="text-xs">Created: {dateCreated}</p>
-				{/if}
-			</div>
-
-			<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
-				{#if dateOfPayout}
-					<p class="text-xs">Date of payout: {dateOfPayout}</p>
+					<p class="text-xs">created: {dateCreated}</p>
 				{/if}
 			</div>
 		</div>
 
-		<span class="status justify-end items-center text-xs flex-shrink-0">{status}</span>
+		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">{status}</span>
 	</div>
 
 	<!-- Child Bounty Card Content -->
-	<div class="flex flex-col lg:flex-row justify-between pr-6 pt-1 pl-4">
-		<div class="mt-3 flex flex-col lg:flex-row items-start lg:space-x-3">
-			<div class="flex flex-col lg:w-60">
+	<div class="flex flex-col lg:flex-row justify-between lg:pr-6 lg:pt-1 lg:pl-4">
+		<div class="bg-childBountyHeaderBackground lg:bg-white">
+			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
+				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
+					<section class="space-y-2 lg:space-y-0">
+						<p class="text-xs">Value</p>
+						<p class="text-base">{convertPlanckToDot(childBounty.value)} DOT</p>
+					</section>
+					<section class="hidden lg:flex flex-col lg:text-xs mt-3 space-y-2">
+						<p>Description</p>
+						<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
+					</section>
+				</div>
+
+				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
+					<section>
+						<p class="text-xs">Sub-curator Fee</p>
+						<p class="text-base">{convertPlanckToDot(childBounty.fee)} DOT</p>
+					</section>
+					<section class="lg:mt-3">
+						<p class="text-xs">Award date</p>
+						<p class="text-base">{dateOfPayout}</p>
+					</section>
+				</div>
+
+				<div class="flex justify-between w-full lg:flex-col lg:w-48 xl:w-62">
+					{#if typeof childBounty.status === 'object'}
+						<section>
+							<p class="text-xs">Sub-Curator</p>
+							<p class="sub-curator text-base">{truncateString(getCurator() || '-', 9)}</p>
+						</section>
+					{/if}
+					{#if beneficiary}
+						<section class="lg:mt-3">
+							<p class="text-xs">Beneficiary</p>
+							<p class="beneficiary">{beneficiary}</p>
+						</section>
+					{/if}
+				</div>
+			</div>
+		</div>
+		<div class="flex justify-center items-center text-primary lg:hidden">
+			{#if !detailsExpended}
+				<div class="bg-childBountyHeaderBackground max-w-fit rounded-b-md max-h-[24px]">
+					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
+						more details
+					</button>
+					<button
+						class="material-symbols-outlined align-top w-6 h-6 mr-2"
+						on:click={handleMoreDetailsToggleClick}
+					>
+						keyboard_arrow_down
+					</button>
+				</div>
+			{/if}
+		</div>
+		{#if detailsExpended}
+			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
-					<p class="text-xs">Value</p>
-					<p class="text-sm">{convertPlanckToDot(childBounty.value)}</p>
+					<p class="text-xs">Sub-curator Fee</p>
+					<p class="">{convertPlanckToDot(childBounty.fee)}</p>
 				</section>
+
 				<section class="text-xs mt-3">
 					<p>Description</p>
 					<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
 				</section>
-			</div>
-
-			<div class="flex flex-col lg:w-48 xl:w-64">
-				{#if typeof childBounty.status === 'object'}
-					<section>
-						<p class="text-xs">Sub-Curator</p>
-						<p class="sub-curator text-sm">{truncateString(getCurator() || '-', 9)}</p>
-					</section>
-				{/if}
-				{#if beneficiary}
-					<section class="mt-3">
-						<p class="text-xs">Beneficiary</p>
-						<p class="beneficiary text-sm">{beneficiary}</p>
-					</section>
-				{/if}
-			</div>
-
-			<div class="flex flex-col xl:w-60 mt-3 lg:mt-0">
-				<section>
-					<p class="text-xs">Sub-curator Fee</p>
-					<p class="text-sm">{convertPlanckToDot(childBounty.fee)}</p>
-				</section>
-			</div>
-		</div>
-
-		<!-- Action Buttons -->
-		<div class="mt-4 lg:mt-0 flex lg:flex-col lg:space-y-2 lg:space-x-4 xl:flex-row lg:mr-2">
-			<div class="flex space-x-2">
-				<!-- TODO: show only when added? -->
-				<!-- {#if status === 'added'} -->
-
-				<div class="flex lg:flex-col xl:flex-row flex-wrap space-x-2">
-					<div class="space-y-3">
-						<div class="mt-3 flex items-center justify-end gap-3">
-							<p>Sub Curator</p>
-							<button
-								on:click={() => (assignSubCuratorOpen = true)}
-								class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
-							>
-								ASSIGN
-							</button>
-						</div>
-
-						<div class="mt-3 flex items-center justify-end gap-3">
-							<p>Sub Curator Rule</p>
-							<button
-								on:click={() => (acceptSubCuratorRuleOpen = true)}
-								class={`${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
-							>
-								ACCEPT
-							</button>
-						</div>
-
-						<div class="flex justify-end">
-							<button
-								id="close"
-								on:click={() => (closeDownChildBountyOpen = true)}
-								class={`bg-transparent border  ${statusColorClass}  rounded-md font-bold pt-1 px-4 min-w-32`}
-							>
-								CLOSE DOWN
-							</button>
-						</div>
-
-						<div class="flex justify-end">
-							<button
-								on:click={() => (awardChildBountyOpen = true)}
-								class={`bg-transparent border  ${statusColorClass} text-white rounded-md font-bold pt-1 px-4 min-w-32`}
-							>
-								AWARD
-							</button>
-						</div>
+				<div class="flex justify-between">
+					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
+						{#if dateCreated}
+							<p class="text-xs">added</p>
+							<p class="">{dateCreated}</p>
+						{/if}
 					</div>
 
-					<!-- Apply flex-wrap to this div for wrapping the icons -->
-					<div class="flex gap-2 mt-3 flex-wrap">
-						<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
-						<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassembly /></button>
-						<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscan /></button>
+					<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
+						{#if dateOfPayout}
+							<p class="text-xs">Date of payout:</p>
+							<p>{dateOfPayout}</p>
+						{/if}
 					</div>
 				</div>
+				<div class="mt-3 flex-wrap flex justify-center items-center space-x-5">
+					<button class="w-10 h-10"><LogoTreasuryIcon /></button>
+					<button class="w-10 h-10"><LogoPolkassembly /></button>
+					<button class="w-10 h-10"><LogoSubscan /></button>
+					<button class="w-10 h-10"><LogoSubsquarePink /></button>
+				</div>
+			</div>
+		{/if}
+
+		<div class="flex justify-center items-center">
+			{#if detailsExpended}
+				<div class="bg-childBountyHeaderBackground max-w-fit rounded-b-md max-h-[24px]">
+					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
+						less details
+					</button>
+					<button
+						class="material-symbols-outlined align-top w-6 h-6 mr-2"
+						on:click={handleMoreDetailsToggleClick}
+					>
+						keyboard_arrow_up
+					</button>
+				</div>
+			{/if}
+		</div>
+
+		<div class="space-y-3 p-2 2xl:mr-32">
+			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+				<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
+
+				<button
+					on:click={() => (assignSubCuratorOpen = true)}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+				>
+					ASSIGN
+				</button>
+			</div>
+
+			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassembly /></button>
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscan /></button>
+
+				<!-- ToDo: Fix the last icon -->
+				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
+			</div>
+
+			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+				<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
+				<button
+					on:click={() => (acceptSubCuratorRuleOpen = true)}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+				>
+					ACCEPT
+				</button>
+			</div>
+
+			<div class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end">
+				<button
+					id="close"
+					on:click={() => (closeDownChildBountyOpen = true)}
+					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 lg:w-fit lg:h-fit lg:min-w-32`}
+				>
+					CLOSE DOWN
+				</button>
+			</div>
+
+			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
+				<button
+					on:click={() => (awardChildBountyOpen = true)}
+					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+				>
+					AWARD
+				</button>
 			</div>
 		</div>
 	</div>
@@ -258,5 +345,9 @@
 		background-color: theme('colors.transparent');
 		border-color: theme('colors.childBountyGray');
 		color: theme('colors.childBountyGray');
+	}
+
+	.childContainer {
+		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
 	}
 </style>
