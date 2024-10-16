@@ -6,12 +6,14 @@
 	import { bounties } from '../../stores';
 	import type { ChildBounty } from '../../types/child-bounty';
 	import { parseBounty, parseChildBounty } from '../../utils/common';
+	import { firstValueFrom } from 'rxjs';
 	import {
 		hideLoadingDialog,
 		showErrorDialog,
 		showLoadingDialog
 	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
+	import { getApi } from '../../utils/polkadot';
 
 	onMount(async () => {
 		if ($bounties.length !== 0) {
@@ -19,12 +21,11 @@
 		}
 		showLoadingDialog('Loading...');
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await ApiPromise.create({ provider: wsProvider });
+			const api = await getApi();
 			const parsedBounties: Bounty[] = [];
 
 			// Query all bounties.
-			const unparsedBounties = await api.query.bounties.bounties.entries();
+			const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
 			for (let unparsedBounty of unparsedBounties) {
 				let index = Number((unparsedBounty[0].toHuman() as unknown as any)[0].replace(',', ''));
 				parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
@@ -39,7 +40,9 @@
 			});
 
 			// Query bounty description.
-			const bountiesDescriptions = await api.query.bounties.bountyDescriptions.entries();
+			const bountiesDescriptions = await firstValueFrom(
+				api.query.bounties.bountyDescriptions.entries()
+			);
 			for (let desc of bountiesDescriptions) {
 				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
@@ -51,7 +54,9 @@
 
 			// Query child bounties.
 			let childBounties: ChildBounty[] = [];
-			const unparsedChildBounties = await api.query.childBounties.childBounties.entries();
+			const unparsedChildBounties = await firstValueFrom(
+				api.query.childBounties.childBounties.entries()
+			);
 			for (let childBounty of unparsedChildBounties) {
 				let id = Number((childBounty[0].toHuman() as unknown as any)[1].replace(',', ''));
 				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
@@ -64,8 +69,9 @@
 			}
 
 			// Query child bounty description.
-			const childBountiesDescriptions =
-				await api.query.childBounties.childBountyDescriptions.entries();
+			const childBountiesDescriptions = await firstValueFrom(
+				api.query.childBounties.childBountyDescriptions.entries()
+			);
 			for (let desc of childBountiesDescriptions) {
 				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
@@ -90,7 +96,7 @@
 			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>
 			<button
 				on:click={() => {
-					goto('/');
+					goto('/bounty-setup');
 				}}
 				class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
 				>CREATE NEW BOUNTY</button

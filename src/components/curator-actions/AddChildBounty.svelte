@@ -3,7 +3,8 @@
 	import {
 		convertDotToPlanck,
 		convertPlanckToDot,
-		dryRunAndSubmitTransaction
+		dryRunAndSubmitTransaction,
+		getApi
 	} from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
@@ -40,9 +41,8 @@
 				showErrorDialog('wallet is not connected');
 				return;
 			}
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
 
+			const api = await getApi();
 			if (bountyTitle.length === 0) {
 				showErrorDialog('bounty title is empty');
 				return;
@@ -95,8 +95,7 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				const wsProvider = new WsProvider('ws://localhost:8000');
-				const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
 				let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
 

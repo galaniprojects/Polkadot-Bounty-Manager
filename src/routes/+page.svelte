@@ -1,5 +1,9 @@
 <script lang="ts">
-	import BountySetup from '../components/bounty-setup/BountySetup.svelte';
+	import { goto } from "$app/navigation";
+	import { onMount } from "svelte";
+
+onMount(()=>{
+		goto("/curator-actions")
+	})
 </script>
 
-<BountySetup />

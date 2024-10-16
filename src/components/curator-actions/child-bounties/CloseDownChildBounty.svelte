@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
 	import BountyDialog from '../../BountyDialog.svelte';
 	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
@@ -33,9 +33,7 @@
 				return;
 			}
 
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-
+			const api = await getApi();
 			let transaction = api.tx.childBounties.closeChildBounty(
 				childBounty.parentBounty,
 				childBounty.id
@@ -74,8 +72,7 @@
 
 	async function calculateFee() {
 		try {
-			const wsProvider = new WsProvider('ws://localhost:8000');
-			const api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+			const api = await getApi()
 			let transaction = api.tx.childBounties.closeChildBounty(
 				childBounty.parentBounty,
 				childBounty.id

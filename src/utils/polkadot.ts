@@ -1,4 +1,4 @@
-import { ApiRx } from '@polkadot/api';
+import { ApiRx, WsProvider } from '@polkadot/api';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { ISubmittableResult } from '@polkadot/types/types';
 import { firstValueFrom, filter } from 'rxjs';
@@ -7,7 +7,7 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
 import { get } from 'svelte/store';
-import { walletConnectProvider, walletConnectSession } from '../stores';
+import { api, nodeEndpoint, walletConnectProvider, walletConnectSession } from '../stores';
 
 export function convertDotToPlanck(value: bigint) {
 	return value * 10000000000n;
@@ -19,6 +19,18 @@ export function convertPlanckToDot(value: number | bigint): number {
 		return Number(value / BigInt(10000000000));
 	}
 	return value / 10000000000;
+}
+
+export async function getApi(): Promise<ApiRx> {
+	const apiFromStore = get(api) as unknown as ApiRx | undefined;
+
+	if (apiFromStore) {
+		return apiFromStore;
+	}
+	const wsProvider = new WsProvider(get(nodeEndpoint));
+	const apiNew = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
+	api.set(apiNew);
+	return apiNew;
 }
 
 /**
@@ -99,7 +111,10 @@ export async function dryRunAndSubmitTransaction(
 			return { result: submittableResult, errorMessage: errorMsg };
 		} else {
 			console.error(submittableResult.toHuman());
-			return { result: submittableResult, errorMessage: `Something went wrong, ${submittableResult.dispatchError || ""}` };
+			return {
+				result: submittableResult,
+				errorMessage: `Something went wrong, ${submittableResult.dispatchError || ''}`
+			};
 		}
 	}
 	return { result: submittableResult };

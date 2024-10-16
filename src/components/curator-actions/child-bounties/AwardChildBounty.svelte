@@ -2,6 +2,7 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
+		getApi,
 		isValidAddress
 	} from '../../../utils/polkadot';
 	import BountyDialog from '../../BountyDialog.svelte';
@@ -20,21 +21,12 @@
 	export let open = true;
 	export let childBounty: ChildBounty;
 
-	const WS_URL = 'ws://localhost:8000';
-	let api: ApiRx;
 	let beneficiary = '';
 	let fee = '-';
 
 	onMount(async () => {
 		await calculateFee();
 	});
-
-	async function getApi(): Promise<ApiRx> {
-		if (api) return api;
-		const wsProvider = new WsProvider(WS_URL);
-		api = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-		return api;
-	}
 
 	async function submit() {
 		open = false;

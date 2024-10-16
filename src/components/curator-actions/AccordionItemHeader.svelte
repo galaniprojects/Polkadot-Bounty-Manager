@@ -1,21 +1,9 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { onMount } from 'svelte';
-	import { WsProvider, ApiPromise } from '@polkadot/api';
 	import { truncateString } from '../../utils/common';
 
 	export let bounty: Bounty;
 	export let status: string;
-
-	onMount(async () => {
-		// Query all bounties.
-		const wsProvider = new WsProvider('ws://localhost:8000');
-		const api = await ApiPromise.create({ provider: wsProvider });
-		let bountyDescription = (
-			await api.query.bounties.bountyDescriptions(bounty.id)
-		).toHuman() as string;
-		bounty.description = bountyDescription;
-	});
 </script>
 
 <section class="text-white max-h-30 px-5 my-4 lg:px-10">
