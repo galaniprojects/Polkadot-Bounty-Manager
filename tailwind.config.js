@@ -27,15 +27,15 @@ export default {
 		},
 		extend: {
 			screens: {
-			  'xs': '320px',      // Phones
-			  'sm': '640px',      // Tablets
-			  'md': '768px',      // Landscape Tablets
-			  'lg': '1080px',     // Laptops
-			  'xl': '1280px',     // Desktops
-			  '2xl': '1440px',    // Larger desktops
-			  '3xl': '1920px',    // Full HD and large desktops
+				// Extended and overridden values to match the specific design requirements for screen sizes.
+				// These adjustments were made based on the design specs to ensure consistent layout across
+				// different viewports as per the latest design mockups.
+				xs: '320px',
+				lg: '1080px',
+				'2xl': '1440px',
+				'3xl': '1920px'
 			}
-		  }
+		}
 	},
 	plugins: []
 };
