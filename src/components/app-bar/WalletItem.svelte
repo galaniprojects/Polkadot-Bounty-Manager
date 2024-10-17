@@ -8,9 +8,11 @@
 	async function walletClicked() {}
 </script>
 
-<div class={`cursor-pointer flex justify-between items-center p-4 rounded-lg mb-2 ${bgClass}`}>
+<div
+	class={`cursor-pointer flex flex-col p-2 s:flex-row s:justify-between s:items-center s:p-4 rounded-lg ${bgClass}`}
+>
 	<!-- Wallet Icon and Name -->
-	<div class="flex items-center space-x-3">
+	<div class="flex items-center space-x-1 sm:space-x-2">
 		<span class="w-10 h-10">
 			<svelte:component this={wallet.icon} />
 		</span>
@@ -18,8 +20,8 @@
 	</div>
 
 	<!-- Action Button -->
-	<button on:click={walletClicked} class="flex items-center space-x-1">
+	<button on:click={walletClicked} class="flex justify-end items-center sm:space-x-1">
 		<span class="text-white">{wallet.action}</span>
-		<span class="mb-1"><ForwardIcon></ForwardIcon></span>
+		<span class="mb-1 w-5 h-5"><ForwardIcon /></span>
 	</button>
 </div>

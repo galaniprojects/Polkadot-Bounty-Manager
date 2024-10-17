@@ -12,7 +12,9 @@
 	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
+	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import BountyCard from './BountyCard.svelte';
+
 
 	onMount(async () => {
 		if ($bounties.length !== 0) {
@@ -89,16 +91,19 @@
 	});
 </script>
 
-<div class="main flex justify-center items-center overflow-x-hidden">
-	<div class="w-full rounded-md p-3 sm:p-12">
-		<div class="flex justify-between">
-			<h2 class="title mt-1 font-bold text-lg text-white">Curator Actions</h2>
+<div class="main bg-primary flex justify-center items-center overflow-x-hidden">
+	<div class="w-full rounded-md px-3 py-6 sm:p-12">
+		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
+			<div class="hidden space-x-3 items-center lg:inline-flex">
+				<h2 class="title mt-1 text-3xl text-white">Create new bounty here</h2>
+				<div class="w-8 h-8"><ForwardIcon /></div>
+			</div>
 			<button
 				on:click={() => {
 					goto('/bounty-setup');
 				}}
-				class="border-accent bg-accent rounded-md px-2 h-9 text-white font-bold text-base"
-				>CREATE NEW BOUNTY</button
+				class="border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
+				>NEW BOUNTY</button
 			>
 		</div>
 		{#each $bounties as bounty}
@@ -110,12 +115,11 @@
 </div>
 
 <style>
-	.main {
-		@apply border border-y-accent border-x-0;
-		background: linear-gradient(180deg, #311033 0%, #6c003d 100%);
+	.actions-container {
+		background-color: #836fac40;
 	}
 
 	.title {
-		font-family: 'Secular One';
+		font-family: 'Overpass';
 	}
 </style>

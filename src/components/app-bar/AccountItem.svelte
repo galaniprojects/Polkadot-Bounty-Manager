@@ -8,7 +8,7 @@
 </script>
 
 <div
-	class="cursor-pointer flex justify-between items-center bg-white bg-opacity-20 px-5 py-2 rounded-lg mt-2"
+	class="cursor-pointer flex justify-between items-center bg-white bg-opacity-20 px-2 s:px-5 py-2 rounded-lg mt-2"
 >
 	<!-- Account Identicon and Name -->
 	<div class="flex items-center space-x-3">

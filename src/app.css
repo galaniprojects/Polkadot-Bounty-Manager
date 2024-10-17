@@ -3,6 +3,13 @@
 @tailwind utilities;
 
 @font-face {
+	font-family: 'Overpass Light';
+	src: url('/fonts/Overpass-Light.ttf') format('sans-serif');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
 	font-family: 'Overpass';
 	src: url('/fonts/Overpass-Regular.ttf') format('truetype');
 	font-weight: 400;
@@ -10,7 +17,7 @@
 }
 
 @font-face {
-	font-family: 'Overpass';
+	font-family: 'Overpass Bold';
 	src: url('/fonts/Overpass-Bold.ttf') format('truetype');
 	font-weight: 700;
 	font-style: normal;

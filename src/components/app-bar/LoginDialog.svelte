@@ -137,9 +137,9 @@
 <!-- Base Modal Layout -->
 <div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
 <div class="flex justify-center fixed inset-0 w-screen z-20 py-52">
-	<div class="flex flex-col w-[300px] md:w-[490px] h-fit rounded-md bg-primary pt-5 px-5 pb-3">
+	<div class="flex flex-col mx-2 h-fit w-[300px] xs:w-[490px] rounded-md bg-primary p-3 sm:p-5">
 		<!-- Header -->
-		<div class="flex justify-between items-center">
+		<div class="flex justify-between items-center mb-1 sm:mb-0">
 			{#if currentPhase !== 'walletSelection'}
 				<button on:click={backToWalletSelection}>
 					<BackIcon />
@@ -147,18 +147,18 @@
 			{/if}
 
 			<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
-				<button on:click={() => (open = false)}>
+				<button class="fill-white" on:click={() => (open = false)}>
 					<CloseIcon />
 				</button>
 			</div>
 		</div>
 
-		<section class="max-h-96 pb-3">
+		<section class="s:max-h-96 pb-3">
 			<!-- Wallet Selection -->
 			{#if currentPhase === 'walletSelection'}
 				<p class="flex justify-center text-2xl text-white">{title}</p>
 				<hr class="border-white opacity-35 w-full mt-4 mb-3" />
-				<div class="cursor-pointer">
+				<div class="cursor-pointer space-y-3">
 					{#each wallets as wallet}
 						<div on:click={() => selectWallet(wallet)}>
 							<WalletItem {wallet} />
