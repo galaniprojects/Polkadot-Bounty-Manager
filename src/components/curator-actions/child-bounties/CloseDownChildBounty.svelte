@@ -72,7 +72,7 @@
 
 	async function calculateFee() {
 		try {
-			const api = await getApi()
+			const api = await getApi();
 			let transaction = api.tx.childBounties.closeChildBounty(
 				childBounty.parentBounty,
 				childBounty.id

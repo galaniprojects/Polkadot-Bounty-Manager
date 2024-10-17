@@ -2,7 +2,6 @@
 	import type { Bounty } from '../../types/bounty';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
-	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';

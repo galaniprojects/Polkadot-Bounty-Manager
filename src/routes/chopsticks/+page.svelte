@@ -15,10 +15,12 @@
 	async function fastForward(blocks: number) {
 		const api = await getApi();
 		let number = (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber();
-		await firstValueFrom( api.rpc('dev_newBlock', {
-			count: 1,
-			unsafeBlockHeight: number + blocks
-		}));
+		await firstValueFrom(
+			api.rpc('dev_newBlock', {
+				count: 1,
+				unsafeBlockHeight: number + blocks
+			})
+		);
 	}
 
 	async function fastForwardDays() {

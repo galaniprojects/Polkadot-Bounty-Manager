@@ -1,18 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ChildBounty } from '../../types/child-bounty';
-	import LogoPolkassembly from '../svg/LogoPolkassembly.svelte';
-	import LogoSubscan from '../svg/LogoSubscan.svelte';
-	import LogoTreasuryIcon from '../svg/LogoTreasuryIcon.svelte';
-	import { truncateString } from '../../utils/common';
-	import { convertPlanckToDot } from '../../utils/polkadot';
-	import AssignSubCurator from './child-bounties/AssignSubCurator.svelte';
-	import type { Bounty } from '../../types/bounty';
-	import AcceptSubCuratorRule from './child-bounties/AcceptSubCuratorRole.svelte';
-	import CloseDownChildBounty from './child-bounties/CloseDownChildBounty.svelte';
-	import AwardChildBounty from './child-bounties/AwardChildBounty.svelte';
-	import LogoSubscanPink from '../svg/curator-actions-logo/LogoSubsquarePink.svelte';
-	import LogoSubsquarePink from '../svg/curator-actions-logo/LogoSubsquarePink.svelte';
+	import type { ChildBounty } from '../../../types/child-bounty';
+	import LogoPolkassembly from '../../svg/LogoPolkassembly.svelte';
+	import LogoSubscan from '../../svg/LogoSubscan.svelte';
+	import LogoTreasuryIcon from '../../svg/LogoTreasuryIcon.svelte';
+	import { truncateString } from '../../../utils/common';
+	import { convertPlanckToDot } from '../../../utils/polkadot';
+	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
+	import type { Bounty } from '../../../types/bounty';
+	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
+	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
+	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
+	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
 
 	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
@@ -55,27 +54,6 @@
 		default:
 			statusColorClass = 'added';
 			statusColor = 'childBountyGray';
-	}
-
-	const colorVariants = {
-		childBountyGray: 'childBountyGray',
-		childBountyOrange: 'childBountyOrange',
-		childBountyGreen: 'childBountyGreen'
-	};
-
-	function isValidColor(
-		color: string
-	): color is 'childBountyGray' | 'childBountyOrange' | 'childBountyGreen' {
-		return (
-			color === 'childBountyGray' || color === 'childBountyOrange' || color === 'childBountyGreen'
-		);
-	}
-
-	function getColorClass(color: string): string {
-		if (isValidColor(color)) {
-			return colorVariants[color];
-		}
-		return colorVariants['childBountyGray'];
 	}
 
 	onMount(() => {

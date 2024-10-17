@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { ApiPromise, WsProvider } from '@polkadot/api';
-	import AccordionItem from './AccordionItem.svelte';
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
 	import { bounties } from '../../stores';
@@ -15,6 +13,8 @@
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
 	import ForwardIcon from '../svg/ForwardIcon.svelte';
+	import BountyCard from './BountyCard.svelte';
+
 
 	onMount(async () => {
 		if ($bounties.length !== 0) {
@@ -108,7 +108,7 @@
 		</div>
 		{#each $bounties as bounty}
 			<div>
-				<AccordionItem {bounty} />
+				<BountyCard {bounty} />
 			</div>
 		{/each}
 	</div>

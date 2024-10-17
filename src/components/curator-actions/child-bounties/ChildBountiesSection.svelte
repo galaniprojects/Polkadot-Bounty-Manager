@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
-	import type { ChildBounty } from '../../types/child-bounty';
+	import type { Bounty } from '../../../types/bounty';
+	import type { ChildBounty } from '../../../types/child-bounty';
 	import AddChildBounty from './AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 
