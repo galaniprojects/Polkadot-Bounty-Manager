@@ -1,24 +1,23 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
+	import type { Bounty } from '../../../types/bounty';
 	import {
 		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
 		getApi
-	} from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
-	import { ApiRx, WsProvider } from '@polkadot/api';
+	} from '../../../utils/polkadot';
+	import BountyDialog from '../../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import { isInteger } from '../../utils/common';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
-	import PolkaCoin from '../svg/PolkaCoin.svelte';
+	} from '../../../utils/loading-screen';
+	import { isInteger } from '../../../utils/common';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import PolkaCoin from '../../svg/PolkaCoin.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;

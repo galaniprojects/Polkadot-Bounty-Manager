@@ -67,9 +67,9 @@
 		if (bountyId) {
 			showLoadingDialog('Loading bounty info');
 			try {
-				const api = await getApi()
+				const api = await getApi();
 				let bountyDescription = (
-					await  firstValueFrom( api.query.bounties.bountyDescriptions(bountyId))
+					await firstValueFrom(api.query.bounties.bountyDescriptions(bountyId))
 				).toHuman() as string;
 				if (!bountyDescription) {
 					showErrorDialog('Failed to load bounty info');

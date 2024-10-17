@@ -14,10 +14,14 @@
 		</span>
 	</div>
 
-	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:pl-12 lg:mt-0">
-		<section class="flex space-x-1 mr-0 lg:w-52">
+	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
+		<section class="flex space-x-1 lg:w-52">
 			<p>Proposer:</p>
 			<p>{truncateString(bounty.proposer, 8)}</p>
+		</section>
+		<section class="flex space-x-1 lg:w-52">
+			<p>Status:</p>
+			<p>{status}</p>
 		</section>
 	</div>
 </section>

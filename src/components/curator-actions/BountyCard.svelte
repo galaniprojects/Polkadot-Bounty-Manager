@@ -1,18 +1,16 @@
 <script lang="ts">
-	import CuratorItem from './CuratorItem.svelte';
 	import type { Bounty } from '../../types/bounty';
 	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
-	import AccordionItemHeader from './AccordionItemHeader.svelte';
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
-	import ChildBountiesSection from './ChildBountiesSection.svelte';
+	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import { goto } from '$app/navigation';
 	import AwardBounty from './AwardBounty.svelte';
-	import { truncateString } from '../../utils/common';
 	import LogoTreasuryWhite from '../svg/curator-actions-logo/LogoTreasuryWhite.svelte';
 	import LogoPolkassemblyWhite from '../svg/curator-actions-logo/LogoPolkassemblyWhite.svelte';
 	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
+	import BountyCardHeader from './BountyCardHeader.svelte';
 
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
@@ -49,41 +47,11 @@
 		}
 	});
 
-	let curators = [
-		{ name: '13iTojfEzgwRKzvEkuAm2xrtm' },
-		{ name: 'Nick_dot_play' },
-		{ name: '12BJP1geE8wAq1wjUtdvNdNz' },
-		{ name: '13mscy5gwheBhwgPJApclOKw' },
-		{ name: 'AppliedBC Labs' },
-		{ name: '13msAmDwBgwhjLePJApctfQoi' },
-		{ name: 'Rekt Street Capital' },
-		{ name: '13mYAmgswnDc3GpR1ApctW9Gy' },
-		{ name: 'Khastor' },
-		{ name: '13mscyw5fekWGwpR1ApctqOP8' },
-		{ name: 'AppliedBC Labs' },
-		{ name: '13mscy5wffy43rkWRApctMW89' }
-	];
-
 	let curatorsExpended = false;
 	let detailsExpended = false;
-	let expanded = false;
 
 	function handleCuratorsToggleClick() {
 		curatorsExpended = !curatorsExpended;
-	}
-
-	function getCurator(): string | undefined {
-		if (typeof bounty.status === 'object') {
-			if ('Active' in bounty.status) {
-				return bounty.status.Active.curator;
-			}
-			if ('CuratorProposed' in bounty.status) {
-				return bounty.status.CuratorProposed.curator;
-			}
-			if ('PendingPayout' in bounty.status) {
-				return bounty.status.PendingPayout.curator;
-			}
-		}
 	}
 
 	function handleMoreDetailsToggleClick() {
@@ -92,7 +60,7 @@
 </script>
 
 <div class="bg-curatorMainBackground overflow-x-hidden rounded-md my-6">
-	<AccordionItemHeader {bounty} {status}></AccordionItemHeader>
+	<BountyCardHeader {bounty} {status}></BountyCardHeader>
 
 	<!-- Content Section -->
 	<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
