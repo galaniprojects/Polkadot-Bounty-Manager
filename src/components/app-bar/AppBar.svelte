@@ -7,9 +7,6 @@
 
 	let loginDialogOpen = false;
 
-	//Milestone 2 feature, hidden for now
-	// let isToggled = false;
-
 	async function showLoginDialog() {
 		loginDialogOpen = true;
 	}
@@ -33,13 +30,6 @@
 
 			<w3m-button></w3m-button>
 		{:else}
-			<!-- <select class="w-52 h-10 rounded-md" bind:value={$activeAccount}>
-				{#each $loggedAccounts as account}
-					<option value={account}>
-						({account.meta.name || ''}) {account.address.toWellFormed().substring(0, 15) + '...'}
-					</option>
-				{/each}
-			</select> -->
 			<div class="flex items-center space-x-3">
 				<select class="w-fit h-10 bg-primary text-white rounded-md" bind:value={$activeAccount}>
 					{#each $loggedAccounts as account}
@@ -56,22 +46,6 @@
 	</div>
 </header>
 
-<!-- Milestone 2 feature, hidden for now -->
-<!-- <section class="h-10 bg-secondary w-full flex items-center justify-center space-x-2">
-	<p class="text-sm text-white {!isToggled ? '' : 'text-opacity-50'}">All bounties</p>
-	<span class="custom-toggle"><ToggleIcon bind:checked={isToggled} /> </span>
-	<p class="text-white text-sm {isToggled ? '' : 'text-opacity-50'}">Curator view</p>
-</section> -->
-
 {#if loginDialogOpen}
 	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />
 {/if}
-
-<!-- Milestone 2 feature, hidden for now -->
-<!-- <style>
-	.custom-toggle {
-		--toggle-background: rgba(255,255,255,0.5);
-		--switch-background: theme('colors.white');
-		--switch-checked-background: theme('colors.white');
-	}
-</style> -->

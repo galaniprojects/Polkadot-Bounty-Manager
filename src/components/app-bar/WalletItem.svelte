@@ -22,6 +22,6 @@
 	<!-- Action Button -->
 	<button on:click={walletClicked} class="flex justify-end items-center sm:space-x-1">
 		<span class="text-white">{wallet.action}</span>
-		<span class="mb-1 w-5 h-5"><ForwardIcon></ForwardIcon></span>
+		<span class="mb-1 w-5 h-5"><ForwardIcon /></span>
 	</button>
 </div>
