@@ -31,6 +31,7 @@ export default {
 				// These adjustments were made based on the design specs to ensure consistent layout across
 				// different viewports as per the latest design mockups.
 				xs: '320px',
+				s: '375px',
 				lg: '1080px',
 				'2xl': '1440px',
 				'3xl': '1920px'
