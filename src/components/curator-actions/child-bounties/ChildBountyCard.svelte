@@ -57,7 +57,6 @@
 	}
 
 	onMount(() => {
-		console.log(childBounty)
 		if (childBounty.status === 'Added') {
 			status = 'added';
 		} else if (typeof childBounty.status === 'object') {
@@ -69,8 +68,6 @@
 				status = 'pending payout';
 			}
 		}
-		
-		console.log(status)
 	});
 
 	function getCurator() {
