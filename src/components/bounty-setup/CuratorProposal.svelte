@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { ApiRx } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount } from '../../stores';

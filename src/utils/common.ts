@@ -6,6 +6,7 @@ export function isInteger(input: string) {
 	return Number.isInteger(num) && num.toString() === input;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseBounty(obj: any, id: number): Bounty {
 	return {
 		...obj,
@@ -17,6 +18,7 @@ export function parseBounty(obj: any, id: number): Bounty {
 	};
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseChildBounty(obj: any, id: number): ChildBounty {
 	return {
 		...obj,

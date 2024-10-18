@@ -32,8 +32,8 @@
 	</div>
 
 	<!-- Action Button -->
-	<button class="flex items-center space-x-1">
+	<div class="flex items-center space-x-1">
 		<span class="text-white text-base">Select</span>
 		<span class="mb-1"><ForwardIcon /></span>
-	</button>
+	</div>
 </div>

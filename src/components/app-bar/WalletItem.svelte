@@ -4,8 +4,6 @@
 
 	export let wallet: WalletInfo;
 	let bgClass = wallet.action === 'Connect' ? 'bg-white bg-opacity-20' : 'bg-white bg-opacity-10';
-
-	async function walletClicked() {}
 </script>
 
 <div
@@ -20,8 +18,8 @@
 	</div>
 
 	<!-- Action Button -->
-	<button on:click={walletClicked} class="flex justify-end items-center sm:space-x-1">
+	<div class="flex justify-end items-center sm:space-x-1">
 		<span class="text-white">{wallet.action}</span>
 		<span class="mb-1 w-5 h-5"><ForwardIcon /></span>
-	</button>
+	</div>
 </div>

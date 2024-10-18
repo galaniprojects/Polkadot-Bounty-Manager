@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
 	export type SupportedWallets = 'Polkadot.js' | 'WalletConnect' | 'Nova Wallet' | 'Talisman';
 	export type WalletInfo = {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		icon: any;
 		name: SupportedWallets;
 		action: 'Download' | 'Connect';
@@ -33,6 +34,7 @@
 	let wallets: WalletInfo[] = [];
 
 	onMount(async () => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let extensionNames = Object.keys((window as any).injectedWeb3);
 		wallets = [
 			{
@@ -65,12 +67,15 @@
 			switch (wallet.name) {
 				case 'Polkadot.js':
 					window.open('https://polkadot.js.org/extension/', '_blank')!.focus();
+					return;
 				case 'WalletConnect':
 					return;
 				case 'Nova Wallet':
 					window.open('https://novawallet.io/', '_blank')!.focus();
+					return;
 				case 'Talisman':
 					window.open('https://www.talisman.xyz/', '_blank')!.focus();
+					return;
 			}
 		} else {
 			currentPhase = 'waiting';
@@ -84,7 +89,7 @@
 				case 'WalletConnect':
 					try {
 						accounts = await walletConnect();
-					} catch (e) {
+					} catch {
 						//TODO: show rejection message?
 						return;
 					}
@@ -158,11 +163,11 @@
 			{#if currentPhase === 'walletSelection'}
 				<p class="flex justify-center text-2xl text-white">{title}</p>
 				<hr class="border-white opacity-35 w-full mt-4 mb-3" />
-				<div class="cursor-pointer space-y-3">
+				<div class="cursor-pointer w-full space-y-3">
 					{#each wallets as wallet}
-						<div on:click={() => selectWallet(wallet)}>
+						<button class="w-full" on:click={() => selectWallet(wallet)}>
 							<WalletItem {wallet} />
-						</div>
+						</button>
 					{/each}
 				</div>
 
@@ -194,11 +199,11 @@
 			{:else if currentPhase === 'accountSelection'}
 				<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
 				<hr class="border-white opacity-35 mt-4 w-full" />
-				<div class="account-items max-h-64 overflow-y-auto pr-3">
+				<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 					{#each accounts as account}
-						<div on:click={() => selectAccount(account)}>
+						<button class="w-full" on:click={() => selectAccount(account)}>
 							<AccountItem name={account.meta.name} address={account.address} />
-						</div>
+						</button>
 					{/each}
 				</div>
 			{/if}

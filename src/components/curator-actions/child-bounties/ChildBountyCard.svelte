@@ -7,21 +7,17 @@
 	import { truncateString } from '../../../utils/common';
 	import { convertPlanckToDot } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
-	import type { Bounty } from '../../../types/bounty';
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
 	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
 	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
 
-	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
 	let status: Status;
 
 	export let beneficiary: string = '';
 	export let dateCreated: string = '';
 	export let dateOfPayout: string = '';
-	export let timeUntilPayout: string = '';
-	export let borderColor: string = 'childBountyGray';
 
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
@@ -32,28 +28,22 @@
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
 	let statusColorClass = '';
-	let statusColor = '';
 
 	$: switch (status) {
 		case 'added':
 			statusColorClass = 'added';
-			statusColor = 'childBountyGray';
 			break;
 		case 'sub-curator proposed':
 			statusColorClass = 'sub-curator-proposed';
-			statusColor = 'childBountyGray';
 			break;
 		case 'active':
 			statusColorClass = 'active';
-			statusColor = 'childBountyOrange';
 			break;
 		case 'pending payout':
 			statusColorClass = 'pending-payout';
-			statusColor = 'childBountyGreen';
 			break;
 		default:
 			statusColorClass = 'added';
-			statusColor = 'childBountyGray';
 	}
 
 	onMount(() => {
