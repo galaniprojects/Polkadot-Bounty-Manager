@@ -72,7 +72,6 @@
 	<div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
 		<BountyCardHeader
 			{bounty}
-			bountyIndex={index}
 			{status}
 			isParentExpanded={expandedBounties[index] || false}
 			on:toggleExpand={() => handleExpandBountyToggleClick(index)}

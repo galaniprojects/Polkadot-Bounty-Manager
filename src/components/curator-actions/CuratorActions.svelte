@@ -15,7 +15,6 @@
 	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import BountyCard from './BountyCard.svelte';
 
-
 	onMount(async () => {
 		if ($bounties.length !== 0) {
 			return;
