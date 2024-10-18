@@ -15,7 +15,6 @@
 	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import BountyCard from './BountyCard.svelte';
 
-
 	onMount(async () => {
 		if ($bounties.length !== 0) {
 			return;
@@ -28,7 +27,7 @@
 			// Query all bounties.
 			const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
 			for (let unparsedBounty of unparsedBounties) {
-				let index = Number((unparsedBounty[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((unparsedBounty[0].toHuman()! as string[])[0].replace(',', ''));
 				parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
 			}
 
@@ -45,7 +44,7 @@
 				api.query.bounties.bountyDescriptions.entries()
 			);
 			for (let desc of bountiesDescriptions) {
-				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((desc[0].toHuman()! as string[])[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
 				let bounty = parsedBounties.find((bounty) => bounty.id == index);
 				if (bounty) {
@@ -59,7 +58,7 @@
 				api.query.childBounties.childBounties.entries()
 			);
 			for (let childBounty of unparsedChildBounties) {
-				let id = Number((childBounty[0].toHuman() as unknown as any)[1].replace(',', ''));
+				let id = Number((childBounty[0].toHuman()! as string[])[1].replace(',', ''));
 				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
 			}
 
@@ -74,7 +73,7 @@
 				api.query.childBounties.childBountyDescriptions.entries()
 			);
 			for (let desc of childBountiesDescriptions) {
-				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((desc[0].toHuman()! as string[])[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
 				let childBounty = childBounties.find((childBounty) => childBounty.id == index);
 				if (childBounty) {

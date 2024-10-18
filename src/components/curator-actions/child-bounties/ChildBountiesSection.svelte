@@ -79,9 +79,8 @@
 							>
 								<div role="none">
 									{#each filters as status, index}
-										<a
-											href="#"
-											class="block px-4 py-2 text-sm text-primary cursor-pointer
+										<button
+											class="block w-full px-4 py-2 text-sm text-primary cursor-pointer
 												{selectedFilter === status ? 'bg-curatorMainBackground text-white' : 'bg-white'}
 												hover:bg-curatorMainBackground focus:bg-curaorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
 											role="menuitem"
@@ -89,7 +88,7 @@
 											on:click={() => selectFilter(status)}
 										>
 											{status}
-										</a>
+										</button>
 
 										{#if index < filters.length - 1}
 											<hr />
@@ -107,12 +106,10 @@
 	<div class="space-y-3">
 		{#each childBounties as childBounty}
 			<ChildBountyCard
-				parentBounty={bounty}
 				{childBounty}
 				beneficiary="Nodal_point_12"
 				dateCreated="MAY 09, 2024"
 				dateOfPayout="AUG 21, 2024"
-				timeUntilPayout="1d : 8h : 42min : 18sec"
 			/>
 		{/each}
 	</div>

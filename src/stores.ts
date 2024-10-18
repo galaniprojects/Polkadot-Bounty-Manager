@@ -5,7 +5,6 @@ import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
-import type { ApiRx } from '@polkadot/api';
 
 export const nodeEndpoint = writable('ws://localhost:8000');
 
