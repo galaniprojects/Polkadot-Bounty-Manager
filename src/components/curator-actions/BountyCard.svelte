@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
+	import BeneficiaryClaimForm from './BeneficiaryClaimForm.svelte';
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
@@ -15,6 +16,7 @@
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
 	let awardBountyDialogOpen = false;
+	let beneficiaryClaimFormDialogOpen = false;
 
 	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
 
@@ -57,6 +59,16 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
+
+	function updateBodyScroll() {
+		if (acceptCuratorRuleDialogOpen || awardBountyDialogOpen || beneficiaryClaimFormDialogOpen) {
+			document.body.style.overflow = 'hidden'; 
+		} else {
+			document.body.style.overflow = ''; 
+		}
+	}
+	
+	$: updateBodyScroll();
 </script>
 
 <div class="bg-curatorMainBackground overflow-x-hidden rounded-md my-6">
@@ -222,6 +234,9 @@
 			</p>
 			<button
 				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+				on:click={() => {
+					beneficiaryClaimFormDialogOpen = true;
+				}}
 				><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
 				<span class="hidden lg:inline-flex">ADD</span></button
 			>
@@ -262,4 +277,7 @@
 {/if}
 {#if awardBountyDialogOpen}
 	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
+{/if}
+{#if beneficiaryClaimFormDialogOpen}
+	<BeneficiaryClaimForm bind:open={beneficiaryClaimFormDialogOpen} {bounty} />
 {/if}
