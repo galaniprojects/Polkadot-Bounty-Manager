@@ -4,13 +4,13 @@
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import LoadingScreen from '../components/LoadingScreen.svelte';
 	import { loadingDialogState } from '../stores';
-	import FooterBar from '../components/FooterBar.svelte';
+	import Footer from '../components/Footer.svelte';
 </script>
 
 <AppBar />
 <LoadingScreen bind:dialogState={$loadingDialogState} />
 <slot />
-<FooterBar />
+<Footer />
 
 <style lang="postcss">
 	:global(html) {
