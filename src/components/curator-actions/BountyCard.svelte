@@ -59,16 +59,6 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
-
-	function updateBodyScroll() {
-		if (acceptCuratorRuleDialogOpen || awardBountyDialogOpen || beneficiaryClaimFormDialogOpen) {
-			document.body.style.overflow = 'hidden'; 
-		} else {
-			document.body.style.overflow = ''; 
-		}
-	}
-	
-	$: updateBodyScroll();
 </script>
 
 <div class="bg-curatorMainBackground overflow-x-hidden rounded-md my-6">
