@@ -18,6 +18,7 @@
 	let awardBountyDialogOpen = false;
 
 	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
+	let curator: string | undefined = undefined;
 
 	onMount(() => {
 		if (bounty.status === 'Proposed') {
@@ -35,13 +36,16 @@
 		if (typeof bounty.status === 'object') {
 			if ('Active' in bounty.status) {
 				status = 'active';
+				curator = bounty.status.Active.curator
 				return;
 			}
 			if ('CuratorProposed' in bounty.status) {
 				status = 'curator proposed';
+				curator = bounty.status.CuratorProposed.curator
 				return;
 			}
 			if ('PendingPayout' in bounty.status) {
+				curator = bounty.status.PendingPayout.curator
 				status = 'pending payout';
 				return;
 			}
@@ -242,7 +246,7 @@
 				>
 			</div>
 		{/if}
-		{#if status === 'proposed' && typeof bounty.status === 'object' && 'CuratorProposed' in bounty.status && bounty.status.CuratorProposed.curator === $activeAccount.address}
+		{#if status === 'curator proposed' && $activeAccount && curator === $activeAccount.address}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 				<p class="pt-2 text-sm text-white">Curator Role</p>
 				<button
