@@ -36,16 +36,16 @@
 		if (typeof bounty.status === 'object') {
 			if ('Active' in bounty.status) {
 				status = 'active';
-				curator = bounty.status.Active.curator
+				curator = bounty.status.Active.curator;
 				return;
 			}
 			if ('CuratorProposed' in bounty.status) {
 				status = 'curator proposed';
-				curator = bounty.status.CuratorProposed.curator
+				curator = bounty.status.CuratorProposed.curator;
 				return;
 			}
 			if ('PendingPayout' in bounty.status) {
-				curator = bounty.status.PendingPayout.curator
+				curator = bounty.status.PendingPayout.curator;
 				status = 'pending payout';
 				return;
 			}
