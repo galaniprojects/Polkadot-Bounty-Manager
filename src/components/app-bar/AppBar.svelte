@@ -43,7 +43,8 @@
 					<div class="w-6 h-6">
 						<PolkadotIcon address={$activeAccount.address} />
 					</div>
-					{$activeAccount.meta.name || 'Account'} <span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
+					{$activeAccount.meta.name || 'Account'}
+					<span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
 				</div>
 				<button on:click={() => logOut()}>
 					<LogoutIcon />

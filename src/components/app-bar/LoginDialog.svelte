@@ -130,7 +130,7 @@
 	function selectAccount(account: InjectedAccountWithMeta) {
 		isLoggedIn.set(true);
 		activeAccount.set(account);
-		SetActiveAccountBounties()
+		SetActiveAccountBounties();
 		open = false;
 	}
 
