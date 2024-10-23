@@ -22,6 +22,7 @@
 	import { walletConnect } from './wallet-connect';
 	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 	import { isLoggedIn, loggedAccounts, activeAccount } from '../../stores';
+	import { SetActiveAccountBounties } from '../../utils/bounties';
 
 	const POLKADOT_EXTENSION = 'polkadot-js';
 	//TODO: check name of extension.
@@ -127,9 +128,9 @@
 	}
 
 	function selectAccount(account: InjectedAccountWithMeta) {
-		console.log(activeAccount);
 		isLoggedIn.set(true);
 		activeAccount.set(account);
+		SetActiveAccountBounties()
 		open = false;
 	}
 

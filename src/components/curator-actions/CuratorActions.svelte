@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
-	import { bounties } from '../../stores';
+	import { activeAccountBounties, bounties } from '../../stores';
 	import type { ChildBounty } from '../../types/child-bounty';
 	import { parseBounty, parseChildBounty } from '../../utils/common';
 	import { firstValueFrom } from 'rxjs';

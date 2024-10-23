@@ -11,6 +11,7 @@
 	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
+	import { activeAccount } from '../../stores';
 
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
@@ -216,39 +217,42 @@
 	</div>
 
 	<section class="flex flex-col space-y-1 px-3 py-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
-		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-			<p class="pt-2 text-sm text-white">
-				<span class="lg:hidden">Add</span> Beneficiary Claim Form
-			</p>
-			<button
-				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
-				><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
-				<span class="hidden lg:inline-flex">ADD</span></button
-			>
-		</div>
-
-		{#if status === 'proposed' || status === 'approved' || status === 'funded'}
+		<!-- TODO: beneficiary claim form -->
+		{#if false}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-				<p class="pt-2 text-sm text-white">Curator Role</p>
-
+				<p class="pt-2 text-sm text-white">
+					<span class="lg:hidden">Add</span> Beneficiary Claim Form
+				</p>
 				<button
-					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
-					on:click={() => {
-						goto('/');
-					}}>PROPOSE</button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+					><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
+					<span class="hidden lg:inline-flex">ADD</span></button
 				>
 			</div>
 		{/if}
 
-		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-			<p class="pt-2 text-sm text-white">Curator Role</p>
-			<button
-				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
-				on:click={() => {
-					acceptCuratorRuleDialogOpen = true;
-				}}>ACCEPT</button
-			>
-		</div>
+		{#if status === 'proposed' || status === 'approved' || status === 'funded'}
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">Curator Role</p>
+				<button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
+					on:click={() => {
+						goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
+					}}>PROPOSE</button
+				>
+			</div>
+		{/if}
+		{#if status === 'proposed' && typeof bounty.status === 'object' && 'CuratorProposed' in bounty.status && bounty.status.CuratorProposed.curator === $activeAccount.address}
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">Curator Role</p>
+				<button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+					on:click={() => {
+						acceptCuratorRuleDialogOpen = true;
+					}}>ACCEPT</button
+				>
+			</div>
+		{/if}
 	</section>
 
 	<div class="w-full pr-6">

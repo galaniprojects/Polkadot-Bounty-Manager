@@ -108,7 +108,7 @@
 			<input
 				bind:value={beneficiary}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder="enter"
+				placeholder=""
 			/>
 		</div>
 		<section class="mt-10">
