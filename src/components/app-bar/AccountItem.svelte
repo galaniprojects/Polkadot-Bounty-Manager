@@ -13,7 +13,7 @@
 	<!-- Account Identicon and Name -->
 	<div class="flex items-center space-x-3">
 		<div class="w-10 h-10">
-			<PolkadotIcon address />
+			<PolkadotIcon {address} />
 		</div>
 		<div class="grid justify-center text-white">
 			<span>{name}</span>
