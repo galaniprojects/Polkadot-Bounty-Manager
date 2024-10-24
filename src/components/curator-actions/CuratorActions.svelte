@@ -12,7 +12,6 @@
 	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
-	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import BountyCard from './BountyCard.svelte';
 
 	onMount(async () => {
@@ -95,9 +94,7 @@
 		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
 			<div class="hidden space-x-5 items-center lg:inline-flex">
 				<h2 class="title mt-1 text-3xl text-white">Create new bounty here</h2>
-				<span class="material-symbols-outlined text-white text-xl">
-					arrow_forward_ios
-					</span>
+				<span class="material-symbols-outlined text-white text-xl"> arrow_forward_ios </span>
 			</div>
 			<button
 				on:click={() => {

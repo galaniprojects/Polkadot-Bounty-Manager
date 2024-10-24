@@ -14,7 +14,6 @@
 	import ExtendBounty from './ExtendBounty.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 
-
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
 	let awardBountyDialogOpen = false;
@@ -261,8 +260,6 @@
 				>
 			</div>
 		{/if}
-
-  
 	</section>
 	<div class="flex flex-col space-y-1 px-3 pb-3 lg:flex-row lg:space-x-6 lg:justify-end 2xl:pr-36">
 		<p class="pt-2 text-sm text-white">Extend Bounty</p>

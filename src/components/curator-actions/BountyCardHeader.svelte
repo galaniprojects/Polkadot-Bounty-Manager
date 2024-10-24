@@ -24,9 +24,7 @@
 				<p>{status}</p>
 			</section>
 		</div>
-		<span
-			class="material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden"
-		>
+		<span class="material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden">
 			warning
 		</span>
 	</div>

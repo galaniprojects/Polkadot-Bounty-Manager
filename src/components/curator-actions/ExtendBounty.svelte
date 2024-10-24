@@ -1,23 +1,15 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
+	import { convertPlanckToDot, getApi } from '../../utils/polkadot';
 	import BountyDialog from '../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import ToggleIcon from '../svg/ToggleIcon.svelte';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
 	export let open = false;
 	export let bounty: Bounty;
 
 	let fee = '-';
-	let isToggled = false;
 
 	onMount(async () => {
 		await calculateFee();
