@@ -20,6 +20,7 @@ export default {
 			curatorMainBackground: '#836FAC',
 			curatorCarousel: '#6B598C',
 			darkgray: '#94889F',
+			extendButtonBackground: '#660000',
 			gray: colors.gray,
 			notifications: '#FFAA35',
 			transparent: colors.transparent,

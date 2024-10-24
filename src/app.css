@@ -31,15 +31,15 @@
 }
 
 @font-face {
-	font-family: 'Material Icons';
-	src: url('/fonts/MaterialIcons-Regular.ttf');
+	font-family: 'Material Symbols Rounded';
+	src: url('/fonts/MaterialSymbolsRounded.ttf');
 	font-style: normal;
 	font-weight: 400;
 }
 
 @font-face {
-	font-family: 'Material Icons Outlined';
-	src: url('/fonts/MaterialIconsOutlined-Regular.otf');
+	font-family: 'Material Symbols Outlined';
+	src: url('/fonts/MaterialSymbolsOutlined.ttf');
 	font-weight: 400;
 	font-style: normal;
 }
@@ -91,14 +91,15 @@ body {
 }
 
 .material-symbols-outlined {
-	font-family: 'Material Icons Outlined';
+	font-family: 'Material Symbols Outlined';
 	line-height: 0px;
+}
 
-	/* ToDo: clean up dead code after icons have a final design to them */
-	/* font-size: 30px; */
-	/* font-variation-settings:
+.material-symbols-rounded {
+	font-family: 'Material Symbols Rounded';
+	font-variation-settings:
 		'FILL' 0,
 		'wght' 400,
 		'GRAD' 0,
-		'opsz' 24; */
+		'opsz' 24;
 }

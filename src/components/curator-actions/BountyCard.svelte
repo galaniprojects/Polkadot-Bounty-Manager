@@ -11,11 +11,13 @@
 	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
+	import ExtendBounty from './ExtendBounty.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
 	let awardBountyDialogOpen = false;
+	let extendBountyDialogOpen = false;
 
 	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
 	let curator: string | undefined = undefined;
@@ -246,6 +248,7 @@
 				>
 			</div>
 		{/if}
+
 		{#if $showAllCuratorOptions || (status === 'curator proposed' && $activeAccount && curator === $activeAccount.address)}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 				<p class="pt-2 text-sm text-white">Curator Role</p>
@@ -258,6 +261,20 @@
 			</div>
 		{/if}
 	</section>
+	<div class="flex flex-col space-y-1 px-3 pb-3 lg:flex-row lg:space-x-6 lg:justify-end 2xl:pr-36">
+		<p class="pt-2 text-sm text-white">Extend Bounty</p>
+		<button
+			class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+			on:click={() => {
+				extendBountyDialogOpen = true;
+			}}>EXTEND</button
+		>
+		<span
+			class="material-symbols-rounded text-2xl text-extendButtonBackground hidden lg:inline-flex"
+		>
+			warning
+		</span>
+	</div>
 
 	<div class="w-full pr-6">
 		{#if status === 'active'}
@@ -270,4 +287,7 @@
 {/if}
 {#if awardBountyDialogOpen}
 	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
+{/if}
+{#if extendBountyDialogOpen}
+	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />
 {/if}
