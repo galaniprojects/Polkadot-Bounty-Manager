@@ -11,7 +11,7 @@
 	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { activeAccount } from '../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../stores';
 
 	export let bounty: Bounty;
 	let acceptCuratorRuleDialogOpen = false;
@@ -235,7 +235,7 @@
 			</div>
 		{/if}
 
-		{#if status === 'proposed' || status === 'approved' || status === 'funded'}
+		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 				<p class="pt-2 text-sm text-white">Curator Role</p>
 				<button
@@ -246,7 +246,7 @@
 				>
 			</div>
 		{/if}
-		{#if status === 'curator proposed' && $activeAccount && curator === $activeAccount.address}
+		{#if $showAllCuratorOptions || (status === 'curator proposed' && $activeAccount && curator === $activeAccount.address)}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 				<p class="pt-2 text-sm text-white">Curator Role</p>
 				<button
