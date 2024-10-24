@@ -41,8 +41,7 @@
 			}
 
 			const api = await getApi();
-
-			let transaction = api.tx.bounties.awardBounty(childBounty.id, beneficiary);
+			let transaction = api.tx.childBounties.awardChildBounty(childBounty.parentBounty, childBounty.id, $activeAccount.address);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
@@ -79,7 +78,7 @@
 		try {
 			const api = await getApi();
 
-			let transaction = api.tx.bounties.awardBounty(childBounty.id, $activeAccount.address);
+			let transaction = api.tx.childBounties.awardChildBounty(childBounty.parentBounty, childBounty.id, $activeAccount.address);
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 
 			const paymentInfo = await firstValueFrom(observableFee);
