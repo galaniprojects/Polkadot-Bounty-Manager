@@ -13,23 +13,18 @@ export const api = writable();
 // Session.
 export const isLoggedIn = writable(false);
 
-const addresses: InjectedAccountWithMeta[] = [];
-export const loggedAccounts = writable(addresses);
+export const loggedAccounts = writable<InjectedAccountWithMeta[]>([]);
 
-let account: InjectedAccountWithMeta | undefined;
-export const activeAccount = writable(account);
+export const activeAccount = writable<InjectedAccountWithMeta | undefined>(undefined);
 
-export const usedExtension = writable('');
+export const usedExtension = writable<string>('');
 
 // WalletConnect.
-let provider: UniversalProvider | undefined;
-export const walletConnectProvider = writable(provider);
+export const walletConnectProvider = writable<UniversalProvider | undefined>(undefined);
 
-let session: SessionTypes.Struct | undefined;
-export const walletConnectSession = writable(session);
+export const walletConnectSession = writable<SessionTypes.Struct | undefined>(undefined);
 
-let signer: WalletConnectSigner | undefined;
-export const walletConnectSigner = writable(signer);
+export const walletConnectSigner = writable<WalletConnectSigner | undefined>(undefined);
 
 // Loading Dialog.
 const state: LoadingDialogState = {
