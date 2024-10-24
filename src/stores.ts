@@ -41,5 +41,7 @@ const state: LoadingDialogState = {
 };
 export const loadingDialogState = writable(state);
 
-const BountiesArray: Bounty[] = [];
-export const bounties = writable(BountiesArray);
+export const bounties = writable<Bounty[]>([]);
+
+// Bounties and child bounties that are related to the active account.
+export const activeAccountBounties = writable<Bounty[]>([]);
