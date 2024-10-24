@@ -18,7 +18,7 @@
 	async function calculateFee() {
 		try {
 			let api = await getApi();
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			let transaction = api.tx.bounties.extendBounty(bounty.id);
 
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 			fee =
