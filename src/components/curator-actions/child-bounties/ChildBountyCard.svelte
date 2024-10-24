@@ -12,8 +12,11 @@
 	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
 	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+	import type { Bounty } from '../../../types/bounty';
+	import { getBountyCurator } from '../../../utils/bounties';
 
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
 	let status: Status;
 	let subCurator: string;
 
@@ -247,8 +250,7 @@
 				</div>
 			{/if}
 
-			<!-- TODO: can the curator close the child bounty and not the sub curator?  -->
-			{#if $showAllCuratorOptions || status === 'added' || ((status === 'active' || status === 'sub-curator proposed') && $activeAccount && subCurator === $activeAccount.address)}
+			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address)}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -262,7 +264,8 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || (status === 'active' && subCurator === $activeAccount.address)}
+			<!-- TODO: only when active?  -->
+			{#if $showAllCuratorOptions || (status === 'active' && getBountyCurator(parentBounty) === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}

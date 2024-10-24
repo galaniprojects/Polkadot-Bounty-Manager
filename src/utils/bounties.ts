@@ -64,3 +64,18 @@ function filterChildBounties(childBounties: ChildBounty[], address: string): Chi
 	}
 	return filteredChildBounties;
 }
+
+export function getBountyCurator(bounty: Bounty): string | undefined {
+	if (typeof bounty.status === 'object') {
+		if ('Active' in bounty.status) {
+			return bounty.status.Active.curator;
+		}
+		if ('CuratorProposed' in bounty.status) {
+			return bounty.status.CuratorProposed.curator;
+		}
+		if ('PendingPayout' in bounty.status) {
+			return bounty.status.PendingPayout.curator;
+		}
+	}
+	return undefined;
+}
