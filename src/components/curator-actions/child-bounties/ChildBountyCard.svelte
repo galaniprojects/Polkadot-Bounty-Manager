@@ -247,7 +247,8 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || ((status === 'added' || status === 'active' || status === 'sub-curator proposed') && $activeAccount && subCurator === $activeAccount.address)}
+			<!-- TODO: can the curator close the child bounty and not the sub curator?  -->
+			{#if $showAllCuratorOptions || status === 'added' || ((status === 'active' || status === 'sub-curator proposed') && $activeAccount && subCurator === $activeAccount.address)}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
