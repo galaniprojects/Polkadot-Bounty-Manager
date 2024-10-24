@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
-	import { bounties } from '../../stores';
+	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import type { ChildBounty } from '../../types/child-bounty';
 	import { parseBounty, parseChildBounty } from '../../utils/common';
 	import { firstValueFrom } from 'rxjs';
@@ -107,11 +107,22 @@
 				>NEW BOUNTY</button
 			>
 		</div>
-		{#each $bounties as bounty}
-			<div>
-				<BountyCard {bounty} />
+		<div class="min-h-[70vh]">
+			{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty}
+				<div>
+					<BountyCard {bounty} />
+				</div>
+			{/each}
+		</div>
+		{#if $activeAccountBounties.length === 0}
+			<div class="h-[70vh]">
+				{#if $activeAccount}
+					<div class="lg:mt-40 mt-10 flex justify-center text-white">
+						Connected Address does not have any bounties or child bounties.
+					</div>
+				{/if}
 			</div>
-		{/each}
+		{/if}
 	</div>
 </div>
 
