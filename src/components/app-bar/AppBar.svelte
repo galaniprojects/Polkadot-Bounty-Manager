@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { isLoggedIn, loggedAccounts, activeAccount, activeAccountBounties } from '../../stores';
+	import {
+		isLoggedIn,
+		loggedAccounts,
+		activeAccount,
+		activeAccountBounties,
+		showAllBounties,
+		showAllCuratorOptions
+	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
@@ -24,6 +31,14 @@
 </script>
 
 <header class="relative flex items-center justify-between h-20 bg-primary px-4 sm:px-12">
+	<label class="flex gap-3 mx-4">
+		<input type="checkbox" bind:checked={$showAllBounties} />
+		<p class="text-white">all bounties</p>
+	</label>
+	<label class="flex gap-3">
+		<input type="checkbox" bind:checked={$showAllCuratorOptions} />
+		<p class="text-white">all options</p>
+	</label>
 	<div class="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 pt-2">
 		<button on:click={() => goto('/curator-actions')} class="hidden md:inline-flex"
 			><LogoBountyManagerDesktop /></button
