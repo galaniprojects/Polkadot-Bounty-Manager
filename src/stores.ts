@@ -5,6 +5,7 @@ import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
+import type { BlockInfo } from './utils/polkadot';
 
 export const nodeEndpoint = writable('ws://localhost:8000');
 
@@ -44,3 +45,4 @@ export const activeAccountBounties = writable<Bounty[]>([]);
 // misc
 export const showAllBounties = writable<boolean>(false);
 export const showAllCuratorOptions = writable<boolean>(false);
+export const currentBlock = writable<BlockInfo | undefined>(undefined);

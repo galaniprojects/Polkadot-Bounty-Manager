@@ -4,8 +4,8 @@
 	import LogoPolkassembly from '../../svg/LogoPolkassembly.svelte';
 	import LogoSubscan from '../../svg/LogoSubscan.svelte';
 	import LogoTreasuryIcon from '../../svg/LogoTreasuryIcon.svelte';
-	import { truncateString } from '../../../utils/common';
-	import { convertPlanckToDot } from '../../../utils/polkadot';
+	import { formatDate, truncateString } from '../../../utils/common';
+	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
@@ -20,9 +20,9 @@
 	let status: Status;
 	let subCurator: string;
 
-	export let beneficiary: string = '';
-	export let dateCreated: string = '';
-	export let dateOfPayout: string = '';
+	let beneficiary: string | undefined;
+	let dateCreated: string | undefined;
+	let dateOfPayout: string | undefined;
 
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
@@ -51,7 +51,7 @@
 			statusColorClass = 'added';
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		if (childBounty.status === 'Added') {
 			status = 'added';
 		} else if (typeof childBounty.status === 'object') {
@@ -64,6 +64,11 @@
 			} else if ('PendingPayout' in childBounty.status) {
 				subCurator = childBounty.status.PendingPayout.curator;
 				status = 'pending payout';
+				let currentBlockInfo = await getCurrentBlock();
+				let blocksToExpire =
+					Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', '')) -
+					currentBlockInfo.blockNumber;
+				dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
 			}
 		}
 	});
@@ -127,10 +132,12 @@
 						<p class="text-xs">Sub-curator Fee</p>
 						<p class="text-base">{convertPlanckToDot(childBounty.fee)} DOT</p>
 					</section>
-					<section class="lg:mt-3">
-						<p class="text-xs">Award date</p>
-						<p class="text-base">{dateOfPayout}</p>
-					</section>
+					{#if dateOfPayout}
+						<section class="lg:mt-3">
+							<p class="text-xs">Award date</p>
+							<p class="text-base">{dateOfPayout}</p>
+						</section>
+					{/if}
 				</div>
 
 				<div class="flex justify-between w-full lg:flex-col lg:w-48 xl:w-62">
