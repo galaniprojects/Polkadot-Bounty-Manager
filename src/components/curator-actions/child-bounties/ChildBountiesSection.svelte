@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { activeAccount } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import AddChildBounty from './AddChildBounty.svelte';
@@ -31,21 +32,30 @@
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
-				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3">
-					<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
-					<button
-						on:click={() => (createChildBountyOpen = true)}
-						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-						>ADD</button
+				{#if typeof bounty.status === 'object' && 'Active' in bounty.status && $activeAccount && bounty.status.Active.curator === $activeAccount.address}
+					<div
+						class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3"
 					>
-				</div>
-				<div class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3">
-					<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
-					<button
-						class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-						>ADD</button
+						<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
+						<button
+							on:click={() => (createChildBountyOpen = true)}
+							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+							>ADD</button
+						>
+					</div>
+				{/if}
+				<!-- TODO: salary child bounties -->
+				{#if false}
+					<div
+						class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3"
 					>
-				</div>
+						<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
+						<button
+							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+							>ADD</button
+						>
+					</div>
+				{/if}
 			</div>
 			<div
 				class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
@@ -79,9 +89,8 @@
 							>
 								<div role="none">
 									{#each filters as status, index}
-										<a
-											href="#"
-											class="block px-4 py-2 text-sm text-primary cursor-pointer
+										<button
+											class="block w-full px-4 py-2 text-sm text-primary cursor-pointer
 												{selectedFilter === status ? 'bg-curatorMainBackground text-white' : 'bg-white'}
 												hover:bg-curatorMainBackground focus:bg-curaorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
 											role="menuitem"
@@ -89,7 +98,7 @@
 											on:click={() => selectFilter(status)}
 										>
 											{status}
-										</a>
+										</button>
 
 										{#if index < filters.length - 1}
 											<hr />
@@ -107,12 +116,11 @@
 	<div class="space-y-3">
 		{#each childBounties as childBounty}
 			<ChildBountyCard
-				parentBounty={bounty}
 				{childBounty}
+				parentBounty={bounty}
 				beneficiary="Nodal_point_12"
 				dateCreated="MAY 09, 2024"
 				dateOfPayout="AUG 21, 2024"
-				timeUntilPayout="1d : 8h : 42min : 18sec"
 			/>
 		{/each}
 	</div>

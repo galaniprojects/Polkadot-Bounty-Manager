@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-	import { ApiRx, WsProvider } from '@polkadot/api';
+	import { ApiRx } from '@polkadot/api';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';

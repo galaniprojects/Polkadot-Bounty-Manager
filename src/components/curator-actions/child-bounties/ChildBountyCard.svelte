@@ -7,21 +7,22 @@
 	import { truncateString } from '../../../utils/common';
 	import { convertPlanckToDot } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
-	import type { Bounty } from '../../../types/bounty';
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
 	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
 	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
+	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+	import type { Bounty } from '../../../types/bounty';
+	import { getBountyCurator } from '../../../utils/bounties';
 
-	export let parentBounty: Bounty;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
 	let status: Status;
+	let subCurator: string;
 
 	export let beneficiary: string = '';
 	export let dateCreated: string = '';
 	export let dateOfPayout: string = '';
-	export let timeUntilPayout: string = '';
-	export let borderColor: string = 'childBountyGray';
 
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
@@ -32,28 +33,22 @@
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
 	let statusColorClass = '';
-	let statusColor = '';
 
 	$: switch (status) {
 		case 'added':
 			statusColorClass = 'added';
-			statusColor = 'childBountyGray';
 			break;
 		case 'sub-curator proposed':
 			statusColorClass = 'sub-curator-proposed';
-			statusColor = 'childBountyGray';
 			break;
 		case 'active':
 			statusColorClass = 'active';
-			statusColor = 'childBountyOrange';
 			break;
 		case 'pending payout':
 			statusColorClass = 'pending-payout';
-			statusColor = 'childBountyGreen';
 			break;
 		default:
 			statusColorClass = 'added';
-			statusColor = 'childBountyGray';
 	}
 
 	onMount(() => {
@@ -62,9 +57,12 @@
 		} else if (typeof childBounty.status === 'object') {
 			if ('Active' in childBounty.status) {
 				status = 'active';
+				subCurator = childBounty.status.Active.curator;
 			} else if ('CuratorProposed' in childBounty.status) {
 				status = 'sub-curator proposed';
+				subCurator = childBounty.status.CuratorProposed.curator;
 			} else if ('PendingPayout' in childBounty.status) {
+				subCurator = childBounty.status.PendingPayout.curator;
 				status = 'pending payout';
 			}
 		}
@@ -218,16 +216,18 @@
 		</div>
 
 		<div class="space-y-3 p-2 2xl:mr-32">
-			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
-				<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
+			{#if status === 'added'}
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
-				<button
-					on:click={() => (assignSubCuratorOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
-				>
-					ASSIGN
-				</button>
-			</div>
+					<button
+						on:click={() => (assignSubCuratorOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						ASSIGN
+					</button>
+				</div>
+			{/if}
 
 			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
 				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
@@ -238,34 +238,43 @@
 				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
 			</div>
 
-			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
-				<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
-				<button
-					on:click={() => (acceptSubCuratorRuleOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
-				>
-					ACCEPT
-				</button>
-			</div>
+			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && subCurator === $activeAccount.address)}
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
+					<button
+						on:click={() => (acceptSubCuratorRuleOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						ACCEPT
+					</button>
+				</div>
+			{/if}
 
-			<div class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end">
-				<button
-					id="close"
-					on:click={() => (closeDownChildBountyOpen = true)}
-					class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 lg:w-fit lg:h-fit lg:min-w-32`}
+			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address)}
+				<div
+					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
-					CLOSE DOWN
-				</button>
-			</div>
+					<button
+						id="close"
+						on:click={() => (closeDownChildBountyOpen = true)}
+						class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						CLOSE DOWN
+					</button>
+				</div>
+			{/if}
 
-			<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
-				<button
-					on:click={() => (awardChildBountyOpen = true)}
-					class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
-				>
-					AWARD
-				</button>
-			</div>
+			<!-- TODO: only when active?  -->
+			{#if $showAllCuratorOptions || (status === 'active' && getBountyCurator(parentBounty) === $activeAccount.address)}
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
+					<button
+						on:click={() => (awardChildBountyOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						AWARD
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>

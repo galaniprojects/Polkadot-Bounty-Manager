@@ -11,6 +11,8 @@
 	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
+	import ExtendBounty from './ExtendBounty.svelte';
+	import { activeAccount, showAllCuratorOptions } from '../../stores';
 
 	export let bounty: Bounty;
 	let index: number;
@@ -20,7 +22,11 @@
 	let curatorsExpended = false;
 	let detailsExpended = false;
 	let expandedBounties: Record<number, boolean> = { 0: true };
+
+	let extendBountyDialogOpen = false;
+
 	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
+	let curator: string | undefined = undefined;
 
 	onMount(() => {
 		if (bounty.status === 'Proposed') {
@@ -38,13 +44,16 @@
 		if (typeof bounty.status === 'object') {
 			if ('Active' in bounty.status) {
 				status = 'active';
+				curator = bounty.status.Active.curator;
 				return;
 			}
 			if ('CuratorProposed' in bounty.status) {
 				status = 'curator proposed';
+				curator = bounty.status.CuratorProposed.curator;
 				return;
 			}
 			if ('PendingPayout' in bounty.status) {
+				curator = bounty.status.PendingPayout.curator;
 				status = 'pending payout';
 				return;
 			}
@@ -255,13 +264,69 @@
 				</div>
 			{/if}
 
+
+
+					<section class="flex-col text-end">
+						<p class="text-xs">Expiration date</p>
+						<p>27th Sep 2024</p>
+					</section>
+				</div>
+				<div class="flex justify-center items-center space-x-5">
+					<button class="w-10 h-10 lg:w-6 lg:h-6">
+						<LogoTreasuryWhite />
+					</button>
+					<button class="w-10 h-10 lg:w-6 lg:h-6">
+						<LogoPolkassemblyWhite />
+					</button>
+					<button class="w-10 h-10 lg:w-6 lg:h-6">
+						<LogoSubscanWhite />
+					</button>
+					<button class="w-10 h-10 lg:w-6 lg:h-6">
+						<LogoSubsquareWhite />
+					</button>
+				</div>
+			</div>
+			<div class="flex justify-center items-center">
+				{#if detailsExpended}
+					<div class="text-white bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
+						<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
+							less details
+						</button>
+						<button
+							class="material-symbols-outlined align-top w-6 h-6"
+							on:click={handleMoreDetailsToggleClick}
+						>
+							keyboard_arrow_up
+						</button>
+					</div>
+				{/if}
+			</div>
+		{/if}
+	</div>
+
+	<section class="flex flex-col space-y-1 px-3 py-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
+		<!-- TODO: beneficiary claim form -->
+		{#if false}
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">
+					<span class="lg:hidden">Add</span> Beneficiary Claim Form
+				</p>
+				<button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
+					><span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
+					<span class="hidden lg:inline-flex">ADD</span></button
+				>
+			</div>
+		{/if}
+
+		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
 			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 				<p class="pt-2 text-sm text-white">Curator Role</p>
 				<button
 					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 					on:click={() => {
-						acceptCuratorRuleDialogOpen = true;
-					}}>ACCEPT</button
+						goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
+					}}>PROPOSE</button
 				>
 			</div>
 		</section>
@@ -283,6 +348,38 @@
 			</button>
 		</div>
 	{/if}
+		{#if $showAllCuratorOptions || (status === 'curator proposed' && $activeAccount && curator === $activeAccount.address)}
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">Curator Role</p>
+				<button
+					class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+					on:click={() => {
+						acceptCuratorRuleDialogOpen = true;
+					}}>ACCEPT</button
+				>
+			</div>
+		{/if}
+	</section>
+	<div class="flex flex-col space-y-1 px-3 pb-3 lg:flex-row lg:space-x-6 lg:justify-end 2xl:pr-36">
+		<p class="pt-2 text-sm text-white">Extend Bounty</p>
+		<button
+			class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+			on:click={() => {
+				extendBountyDialogOpen = true;
+			}}>EXTEND</button
+		>
+		<span
+			class="material-symbols-rounded text-2xl text-extendButtonBackground hidden lg:inline-flex"
+		>
+			warning
+		</span>
+	</div>
+
+	<div class="w-full pr-6">
+		{#if status === 'active'}
+			<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
+		{/if}
+	</div>
 </div>
 
 {#if acceptCuratorRuleDialogOpen}
@@ -290,4 +387,7 @@
 {/if}
 {#if awardBountyDialogOpen}
 	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
+{/if}
+{#if extendBountyDialogOpen}
+	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />
 {/if}

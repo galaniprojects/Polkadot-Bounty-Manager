@@ -6,9 +6,9 @@
 	}
 </script>
 
-<div class="toggle" on:click={toggle}>
+<button class="toggle" on:click={toggle}>
 	<div class="switch {checked ? 'checked' : ''}"></div>
-</div>
+</button>
 
 <style>
 	:global(.toggle) {

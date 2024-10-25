@@ -13,7 +13,6 @@
 	import ToggleIcon from '../svg/ToggleIcon.svelte';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
-	export { className as class };
 	export let open = false;
 	export let bounty: Bounty;
 

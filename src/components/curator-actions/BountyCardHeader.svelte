@@ -34,15 +34,20 @@
 			{/if}
 		</button>
 	</div>
-
-	<div class="flex flex-col lg:flex-row lg:justify-start text-xs mt-2">
-		<section class="flex space-x-1 lg:w-52">
-			<p>Proposer:</p>
-			<p>{truncateString(bounty.proposer, 8)}</p>
-		</section>
-		<section class="flex space-x-1 lg:w-52">
-			<p>Status:</p>
-			<p>{status}</p>
-		</section>
+  
+	<div class="flex justify-between">
+		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
+			<section class="flex space-x-1 lg:w-52">
+				<p>Proposer:</p>
+				<p>{truncateString(bounty.proposer, 8)}</p>
+			</section>
+			<section class="flex space-x-1 lg:w-52">
+				<p>Status:</p>
+				<p>{status}</p>
+			</section>
+		</div>
+		<span class="material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden">
+			warning
+		</span>
 	</div>
 </div>

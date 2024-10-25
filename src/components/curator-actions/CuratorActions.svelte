@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
-	import { bounties } from '../../stores';
+	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import type { ChildBounty } from '../../types/child-bounty';
 	import { parseBounty, parseChildBounty } from '../../utils/common';
 	import { firstValueFrom } from 'rxjs';
@@ -12,7 +12,6 @@
 	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
-	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import BountyCard from './BountyCard.svelte';
 
 	onMount(async () => {
@@ -27,7 +26,7 @@
 			// Query all bounties.
 			const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
 			for (let unparsedBounty of unparsedBounties) {
-				let index = Number((unparsedBounty[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((unparsedBounty[0].toHuman()! as string[])[0].replace(',', ''));
 				parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
 			}
 
@@ -44,7 +43,7 @@
 				api.query.bounties.bountyDescriptions.entries()
 			);
 			for (let desc of bountiesDescriptions) {
-				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((desc[0].toHuman()! as string[])[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
 				let bounty = parsedBounties.find((bounty) => bounty.id == index);
 				if (bounty) {
@@ -58,7 +57,7 @@
 				api.query.childBounties.childBounties.entries()
 			);
 			for (let childBounty of unparsedChildBounties) {
-				let id = Number((childBounty[0].toHuman() as unknown as any)[1].replace(',', ''));
+				let id = Number((childBounty[0].toHuman()! as string[])[1].replace(',', ''));
 				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
 			}
 
@@ -73,7 +72,7 @@
 				api.query.childBounties.childBountyDescriptions.entries()
 			);
 			for (let desc of childBountiesDescriptions) {
-				let index = Number((desc[0].toHuman() as unknown as any)[0].replace(',', ''));
+				let index = Number((desc[0].toHuman()! as string[])[0].replace(',', ''));
 				let description = desc[1].toHuman() as string;
 				let childBounty = childBounties.find((childBounty) => childBounty.id == index);
 				if (childBounty) {
@@ -91,11 +90,11 @@
 </script>
 
 <div class="main bg-primary flex justify-center items-center overflow-x-hidden">
-	<div class="w-full rounded-md px-3 py-6 sm:p-12">
+	<div class="w-full rounded-md px-3 py-6 sm:px-12 sm:pt-2 sm:pb-2">
 		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
-			<div class="hidden space-x-3 items-center lg:inline-flex">
+			<div class="hidden space-x-5 items-center lg:inline-flex">
 				<h2 class="title mt-1 text-3xl text-white">Create new bounty here</h2>
-				<div class="w-8 h-8"><ForwardIcon /></div>
+				<span class="material-symbols-outlined text-white text-xl"> arrow_forward_ios </span>
 			</div>
 			<button
 				on:click={() => {
@@ -105,11 +104,22 @@
 				>NEW BOUNTY</button
 			>
 		</div>
-		{#each $bounties as bounty}
-			<div>
-				<BountyCard {bounty} />
+		<div class="min-h-[70vh]">
+			{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty}
+				<div>
+					<BountyCard {bounty} />
+				</div>
+			{/each}
+		</div>
+		{#if $activeAccountBounties.length === 0}
+			<div class="h-[70vh]">
+				{#if $activeAccount}
+					<div class="lg:mt-40 mt-10 flex justify-center text-white">
+						Connected Address does not have any bounties or child bounties.
+					</div>
+				{/if}
 			</div>
-		{/each}
+		{/if}
 	</div>
 </div>
 

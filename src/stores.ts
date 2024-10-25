@@ -5,7 +5,6 @@ import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
-import type { ApiRx } from '@polkadot/api';
 
 export const nodeEndpoint = writable('ws://localhost:8000');
 
@@ -42,5 +41,11 @@ const state: LoadingDialogState = {
 };
 export const loadingDialogState = writable(state);
 
-const BountiesArray: Bounty[] = [];
-export const bounties = writable(BountiesArray);
+export const bounties = writable<Bounty[]>([]);
+
+// Bounties and child bounties that are related to the active account.
+export const activeAccountBounties = writable<Bounty[]>([]);
+
+// misc
+export const showAllBounties = writable<boolean>(false);
+export const showAllCuratorOptions = writable<boolean>(false);

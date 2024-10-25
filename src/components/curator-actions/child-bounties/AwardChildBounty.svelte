@@ -6,7 +6,6 @@
 		isValidAddress
 	} from '../../../utils/polkadot';
 	import BountyDialog from '../../BountyDialog.svelte';
-	import { ApiRx, WsProvider } from '@polkadot/api';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -42,8 +41,11 @@
 			}
 
 			const api = await getApi();
-
-			let transaction = api.tx.bounties.awardBounty(childBounty.id, beneficiary);
+			let transaction = api.tx.childBounties.awardChildBounty(
+				childBounty.parentBounty,
+				childBounty.id,
+				$activeAccount.address
+			);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
@@ -80,7 +82,11 @@
 		try {
 			const api = await getApi();
 
-			let transaction = api.tx.bounties.awardBounty(childBounty.id, $activeAccount.address);
+			let transaction = api.tx.childBounties.awardChildBounty(
+				childBounty.parentBounty,
+				childBounty.id,
+				$activeAccount.address
+			);
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 
 			const paymentInfo = await firstValueFrom(observableFee);
@@ -109,7 +115,7 @@
 			<input
 				bind:value={beneficiary}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder="enter"
+				placeholder=""
 			/>
 		</div>
 		<section class="mt-10">
