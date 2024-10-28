@@ -109,7 +109,12 @@
 				default:
 					throw new Error('internal error, unsupported extension');
 			}
-			if (wallet.name !== 'WalletConnect') {
+
+			if (wallet.name === 'Nova Wallet') {
+				accounts = await web3Accounts({
+					ss58Format: 0
+				});
+			} else if (wallet.name !== 'WalletConnect') {
 				accounts = await web3Accounts({
 					extensions: [extensionName],
 					ss58Format: 0
