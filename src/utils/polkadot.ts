@@ -49,16 +49,13 @@ export async function dryRunAndSubmitTransaction(
 }> {
 	if (account.meta.source === WALLET_CONNECT_SOURCE) {
 		const provider = get(walletConnectProvider);
-		const session = get(walletConnectSession)
+		const session = get(walletConnectSession);
 		if (!provider || !session) {
 			return {
 				errorMessage: 'Failed to connect with WalletConnect'
 			};
 		}
-		const signer = new WalletConnectSigner(
-			provider.client,
-			session
-		);
+		const signer = new WalletConnectSigner(provider.client, session);
 		try {
 			// In case of wallet connect, only send a signature request since the transaction
 			// will be done through Multix.
