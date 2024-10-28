@@ -14,6 +14,7 @@
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
+	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -28,6 +29,8 @@
 	let acceptSubCuratorRuleOpen = false;
 	let closeDownChildBountyOpen = false;
 	let awardChildBountyOpen = false;
+	let claimChildBountyOpen = false;
+
 	let detailsExpended = false;
 
 	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
@@ -282,6 +285,17 @@
 					</button>
 				</div>
 			{/if}
+
+			{#if $showAllCuratorOptions}
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
+					<button
+						on:click={() => (claimChildBountyOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						CLAIM
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -298,6 +312,10 @@
 
 {#if awardChildBountyOpen}
 	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} />
+{/if}
+
+{#if claimChildBountyOpen}
+	<ClaimChildBounty bind:open={claimChildBountyOpen} {childBounty} />
 {/if}
 
 <style>
