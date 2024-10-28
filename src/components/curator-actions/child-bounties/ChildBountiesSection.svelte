@@ -113,7 +113,7 @@
 		</div>
 	</section>
 
-	<div class="space-y-3">
+	<div>
 		{#each childBounties as childBounty}
 			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}

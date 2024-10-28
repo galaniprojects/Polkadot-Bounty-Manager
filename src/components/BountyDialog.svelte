@@ -1,7 +1,8 @@
 <script lang="ts">
 	import CloseIcon from './svg/CloseIcon.svelte';
+	import { onDestroy } from 'svelte';
 
-	export let open = true;
+	export let open = false;
 	export let title = '';
 	export let dismissable = true;
 	export let backgroundColor = 'curatorMainBackground';
@@ -22,15 +23,26 @@
 		}
 		return colorVariants['white'];
 	}
+
+	$: if (open) {
+		document.body.classList.add('overflow-hidden');
+	} else {
+		document.body.classList.remove('overflow-hidden');
+	}
+	onDestroy(() => {
+		document.body.classList.remove('overflow-hidden');
+	});
 </script>
 
 {#if open}
 	<div
-		class="flex justify-center fixed inset-0 w-screen h-screen z-9 behind-dialog-color opacity-40"
+		class="flex justify-center fixed inset-0 w-screen h-screen z-9 behind-dialog-color opacity-1"
 	></div>
-	<div class="flex justify-center fixed inset-0 w-screen h-screen z-10 py-52">
+	<div
+		class="flex justify-center fixed inset-0 w-screen h-screen z-10 py-10 md:py-40 overflow-y-auto"
+	>
 		<div
-			class={`w-[363px] md:w-[490px] min-h-52 h-fit p-6 pt-2 md:px-7 md:py-6 rounded-md text-${textColor} bg-${backgroundColor}`}
+			class={`w-[363px] md:w-[490px] min-h-52 h-fit p-3 pt-2 md:px-7 md:py-6 rounded-md text-${textColor} bg-${backgroundColor}`}
 		>
 			<div class="flex justify-end">
 				{#if dismissable}
@@ -40,7 +52,7 @@
 				{/if}
 			</div>
 			<div>
-				<p class="text-2xl">
+				<p class="text-2xl pt-1 md:pt-0">
 					{title}
 				</p>
 			</div>

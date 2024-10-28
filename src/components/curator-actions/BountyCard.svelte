@@ -271,25 +271,18 @@
 					>
 				</div>
 			{/if}
-		</section>
 
-		<!-- Add logic/functionality -->
-		<div
-			class="flex flex-col space-y-1 px-3 pt-3 lg:flex-row lg:space-x-3 lg:justify-end lg:pr-6 2xl:pr-[156px]"
-		>
-			<p class="pt-2 text-sm text-white">Extend Bounty</p>
-			<button
-				class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
-				on:click={() => {
-					extendBountyDialogOpen = true;
-				}}>EXTEND</button
-			>
-			<span
-				class="material-symbols-rounded text-2xl text-extendButtonBackground hidden lg:inline-flex"
-			>
-				warning
-			</span>
-		</div>
+			<!-- Add logic/functionality -->
+			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+				<p class="pt-2 text-sm text-white">Extend Bounty</p>
+				<button
+					class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
+					on:click={() => {
+						extendBountyDialogOpen = true;
+					}}>EXTEND</button
+				>
+			</div>
+		</section>
 
 		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
 			<div class="w-full pr-6">

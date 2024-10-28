@@ -39,8 +39,5 @@
 				<p>{status}</p>
 			</section>
 		</div>
-		<span class="pr-0.5 material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden">
-			warning
-		</span>
 	</div>
 </div>
