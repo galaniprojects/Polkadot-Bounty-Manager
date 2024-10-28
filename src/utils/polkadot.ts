@@ -48,9 +48,16 @@ export async function dryRunAndSubmitTransaction(
 	errorMessage?: string;
 }> {
 	if (account.meta.source === WALLET_CONNECT_SOURCE) {
+		const provider = get(walletConnectProvider);
+		const session = get(walletConnectSession)
+		if (!provider || !session) {
+			return {
+				errorMessage: 'Failed to connect with WalletConnect'
+			};
+		}
 		const signer = new WalletConnectSigner(
-			get(walletConnectProvider).client,
-			get(walletConnectSession)
+			provider.client,
+			session
 		);
 		try {
 			// In case of wallet connect, only send a signature request since the transaction

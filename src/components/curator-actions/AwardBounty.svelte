@@ -77,6 +77,10 @@
 	}
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
 		try {
 			let api = await getApi();
 

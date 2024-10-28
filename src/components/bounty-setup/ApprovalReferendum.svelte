@@ -55,6 +55,10 @@
 		}
 		showLoadingDialog('Submitting transaction');
 		try {
+			if (!$activeAccount) {
+				showErrorDialog('wallet is not connected');
+				return;
+			}
 			const api = await getApi();
 			const transaction = createApprovalTransaction(api);
 
@@ -84,6 +88,10 @@
 	}
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
 		if (bountyInfo.id) {
 			try {
 				const api = await getApi();

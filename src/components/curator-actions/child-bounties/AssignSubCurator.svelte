@@ -89,6 +89,10 @@
 	}
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
 		try {
 			const api = await getApi();
 			let transaction = api.tx.childBounties.proposeCurator(

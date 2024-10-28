@@ -36,6 +36,10 @@
 		}
 	}
 	async function submit() {
+		if (!$activeAccount) {
+			showErrorDialog('wallet is not connected');
+			return;
+		}
 		showLoadingDialog('Submitting Transaction');
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
