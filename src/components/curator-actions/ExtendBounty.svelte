@@ -16,6 +16,10 @@
 	});
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
 		try {
 			let api = await getApi();
 			let transaction = api.tx.bounties.extendBounty(bounty.id);

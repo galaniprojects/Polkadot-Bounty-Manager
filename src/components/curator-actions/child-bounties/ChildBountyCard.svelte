@@ -238,7 +238,7 @@
 				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
 			</div>
 
-			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && subCurator === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && $activeAccount && subCurator === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 					<button
@@ -265,7 +265,7 @@
 			{/if}
 
 			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (status === 'active' && getBountyCurator(parentBounty) === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && getBountyCurator(parentBounty) === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}

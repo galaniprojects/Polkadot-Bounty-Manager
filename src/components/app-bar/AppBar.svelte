@@ -48,7 +48,7 @@
 		>
 	</div>
 	<div class="ml-auto">
-		{#if !$isLoggedIn}
+		{#if !$activeAccount}
 			<button class=" text-white" on:click={() => showLoginDialog()}>Connect Wallet</button>
 
 			<w3m-button></w3m-button>

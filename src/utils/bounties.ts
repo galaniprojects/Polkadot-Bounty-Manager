@@ -5,7 +5,10 @@ import type { ChildBounty } from '../types/child-bounty';
 
 export function SetActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
-	const address = get(activeAccount).address;
+	const address = get(activeAccount)?.address;
+	if (!address) {
+		return;
+	}
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {
