@@ -105,9 +105,9 @@
 			>
 		</div>
 		<div class="min-h-[70vh]">
-			{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty}
+			{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
 				<div>
-					<BountyCard {bounty} />
+					<BountyCard {bounty} expanded={index === 0 ? true : false} />
 				</div>
 			{/each}
 		</div>
