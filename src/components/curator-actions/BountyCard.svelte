@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
-	import { convertPlanckToDot } from '../../utils/polkadot';
+	import { convertPlanckToDot, getCurrentBlock } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import { goto } from '$app/navigation';
@@ -13,6 +13,7 @@
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import ExtendBounty from './ExtendBounty.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
+	import { formatDate } from '../../utils/common';
 
 	export let bounty: Bounty;
 
@@ -23,11 +24,12 @@
 	export let expanded: boolean;
 
 	let extendBountyDialogOpen = false;
+	let expiryDate: string | undefined = undefined;
 
 	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
 	let curator: string | undefined = undefined;
 
-	onMount(() => {
+	onMount(async () => {
 		if (bounty.status === 'Proposed') {
 			status = 'proposed';
 			return;
@@ -44,6 +46,10 @@
 			if ('Active' in bounty.status) {
 				status = 'active';
 				curator = bounty.status.Active.curator;
+				let currentBlockInfo = await getCurrentBlock();
+				let blocksToExpire =
+					Number(bounty.status.Active.updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
+				expiryDate = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
 				return;
 			}
 			if ('CuratorProposed' in bounty.status) {
@@ -113,15 +119,12 @@
 							</p>
 						</div>
 						<div class="flex justify-between lg:space-x-8 xl:space-x-16">
-							<section>
-								<p class="text-xs">Created</p>
-								<p>8th Aug 2024</p>
-							</section>
-
-							<section class="flex-col text-start">
-								<p class="text-xs">Expiration date</p>
-								<p>27th Sep 2024</p>
-							</section>
+							{#if expiryDate != undefined}
+								<section class="flex-col text-start">
+									<p class="text-xs">Expiration date</p>
+									<p>{expiryDate}</p>
+								</section>
+							{/if}
 						</div>
 					</section>
 					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
@@ -185,15 +188,12 @@
 						</p>
 					</section>
 					<div class="flex justify-between">
-						<section>
-							<p class="text-xs">Created</p>
-							<p>8th Aug 2024</p>
-						</section>
-
-						<section class="flex-col text-end">
-							<p class="text-xs">Expiration date</p>
-							<p>27th Sep 2024</p>
-						</section>
+						{#if expiryDate}
+							<section class="flex-col text-end">
+								<p class="text-xs">Expiration date</p>
+								<p>{expiryDate}</p>
+							</section>
+						{/if}
 					</div>
 					<div class="flex justify-center items-center space-x-5">
 						<button class="w-10 h-10 lg:w-6 lg:h-6">

@@ -7,7 +7,13 @@ import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
 import { get } from 'svelte/store';
-import { api, nodeEndpoint, walletConnectProvider, walletConnectSession } from '../stores';
+import {
+	currentBlock,
+	api,
+	nodeEndpoint,
+	walletConnectProvider,
+	walletConnectSession
+} from '../stores';
 
 export function convertDotToPlanck(value: bigint) {
 	return value * 10000000000n;
@@ -132,5 +138,24 @@ export function isValidAddress(address: string) {
 		return reEncoded === address;
 	} catch {
 		return false;
+	}
+}
+
+export type BlockInfo = {
+	blockNumber: number;
+	timestamp: number;
+};
+export async function getCurrentBlock(): Promise<BlockInfo> {
+	const currentBlockInfo = get(currentBlock);
+	if (currentBlockInfo) {
+		return currentBlockInfo;
+	} else {
+		const api = await getApi();
+		const info = {
+			blockNumber: (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber(),
+			timestamp: Date.now()
+		};
+		currentBlock.set(info);
+		return info;
 	}
 }
