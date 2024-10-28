@@ -33,6 +33,9 @@
 	export let open;
 
 	let wallets: WalletInfo[] = [];
+	const novaWalletAvailable =
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(window as any).ethereum && (window as any).ethereum.isNovaWallet ? 'Connect' : 'Download';
 
 	onMount(async () => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,14 +44,17 @@
 			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
-				action: extensionNames.includes(POLKADOT_EXTENSION) ? 'Connect' : 'Download'
+				action:
+					// !novaWalletAvailable to prevent polkadot button from being enabled on Nova.
+					extensionNames.includes(POLKADOT_EXTENSION) && !novaWalletAvailable
+						? 'Connect'
+						: 'Download'
 			},
 			{ icon: LogoWalletConnect, name: 'WalletConnect', action: 'Connect' },
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				action: (window as any).ethereum.isNovaWallet ? 'Connect' : 'Download'
+				action: novaWalletAvailable ? 'Connect' : 'Download'
 			},
 			{
 				icon: LogoTalisman,
@@ -99,7 +105,6 @@
 				case 'Nova Wallet':
 					extensionName = NOVA_EXTENSION;
 					await web3Enable('Bounty Manager');
-					await web3FromSource(extensionName);
 					break;
 				case 'Talisman':
 					extensionName = TALISMAN_EXTENSION;
