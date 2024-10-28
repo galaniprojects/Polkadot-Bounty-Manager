@@ -1,17 +1,11 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { truncateString } from '../../utils/common';
-	import { createEventDispatcher } from 'svelte';
 
 	export let bounty: Bounty;
 	export let status: string;
 	export let isParentExpanded: boolean;
 
-	const dispatch = createEventDispatcher();
-
-	function toggleExpand() {
-		dispatch('toggleExpand');
-	}
 </script>
 
 <div class="text-white max-h-fit p-5 lg:px-10 w-full">
@@ -24,7 +18,7 @@
 		</div>
 
 		<button
-			on:click={toggleExpand}
+			on:click={()=>isParentExpanded = !isParentExpanded}
 			class="material-symbols-outlined text-white text-3xl self-start pt-3"
 		>
 			{#if isParentExpanded}

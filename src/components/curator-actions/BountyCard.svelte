@@ -16,12 +16,11 @@
 
 	export let bounty: Bounty;
 
-	let index: number;
 	let acceptCuratorRuleDialogOpen = false;
 	let awardBountyDialogOpen = false;
 	let curatorsExpended = false;
 	let detailsExpended = false;
-	let expandedBounties: Record<number, boolean> = { 0: true };
+	export let expanded: boolean;
 
 	let extendBountyDialogOpen = false;
 
@@ -67,23 +66,14 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
-
-	function handleExpandBountyToggleClick(index: number) {
-		expandedBounties[index] = !expandedBounties[index];
-	}
 </script>
 
 <div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
 	<!-- Header Section -->
-	<BountyCardHeader
-		{bounty}
-		{status}
-		isParentExpanded={expandedBounties[index] || false}
-		on:toggleExpand={() => handleExpandBountyToggleClick(index)}
-	></BountyCardHeader>
+	<BountyCardHeader {bounty} {status} bind:isParentExpanded={expanded}></BountyCardHeader>
 
 	<!-- Content Section -->
-	{#if expandedBounties[index]}
+	{#if expanded}
 		<!-- Desktop design -->
 		<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
 			<!-- Carousel Section -->
@@ -312,10 +302,7 @@
 
 		<!-- Footer Section-->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
-			<button
-				class="flex items-center pt-5 pb-1"
-				on:click={() => handleExpandBountyToggleClick(index)}
-			>
+			<button class="flex items-center pt-5 pb-1" on:click={() => (expanded = !expanded)}>
 				<p class="text-white text-xs">close bounty view</p>
 				<span class="material-symbols-outlined text-white text-3xl"> keyboard_arrow_up </span>
 			</button>
