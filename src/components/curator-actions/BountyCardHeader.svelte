@@ -34,7 +34,7 @@
 			{/if}
 		</button>
 	</div>
-  
+
 	<div class="flex justify-between">
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
 			<section class="flex space-x-1 lg:w-52">
@@ -46,7 +46,7 @@
 				<p>{status}</p>
 			</section>
 		</div>
-		<span class="material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden">
+		<span class="pr-0.5 material-symbols-rounded text-2xl text-extendButtonBackground lg:hidden">
 			warning
 		</span>
 	</div>
