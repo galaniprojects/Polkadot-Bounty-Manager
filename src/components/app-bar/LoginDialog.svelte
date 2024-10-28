@@ -47,7 +47,8 @@
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				action: extensionNames.includes(NOVA_EXTENSION) ? 'Connect' : 'Download'
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				action: (window as any).ethereum.isNovaWallet ? 'Connect' : 'Download'
 			},
 			{
 				icon: LogoTalisman,
