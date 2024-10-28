@@ -76,12 +76,11 @@
 	{#if expanded}
 		<!-- Desktop design -->
 		<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
-			<!-- Carousel Section -->
 			<div class="hidden lg:flex lg:flex-col gap-3 justify-start lg:ml-7">
 				<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
 					<section class="flex flex-col lg:flex-row">
 						<div class="lg:w-[250px] xl:w-[490px]">
-							<p class="text-xs">Remaining Balance</p>
+							<p class="text-xs">Value</p>
 							<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
 						</div>
 
