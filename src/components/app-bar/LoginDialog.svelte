@@ -33,9 +33,8 @@
 	export let open;
 
 	let wallets: WalletInfo[] = [];
-	const novaWalletAvailable =
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		(window as any).ethereum && (window as any).ethereum.isNovaWallet ? 'Connect' : 'Download';
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const novaWalletAvailable = (window as any).ethereum && (window as any).ethereum.isNovaWallet;
 
 	onMount(async () => {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
