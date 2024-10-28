@@ -188,13 +188,12 @@
 						</p>
 					</section>
 					<div class="flex justify-between">
-
 						{#if expiryDate}
-						<section class="flex-col text-end">
-							<p class="text-xs">Expiration date</p>
-							<p>{expiryDate}</p>
-						</section>
-			{/if}
+							<section class="flex-col text-end">
+								<p class="text-xs">Expiration date</p>
+								<p>{expiryDate}</p>
+							</section>
+						{/if}
 					</div>
 					<div class="flex justify-center items-center space-x-5">
 						<button class="w-10 h-10 lg:w-6 lg:h-6">

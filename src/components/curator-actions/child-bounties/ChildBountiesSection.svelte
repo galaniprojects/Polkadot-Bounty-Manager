@@ -115,10 +115,7 @@
 
 	<div class="space-y-3">
 		{#each childBounties as childBounty}
-			<ChildBountyCard
-				{childBounty}
-				parentBounty={bounty}
-			/>
+			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}
 	</div>
 </div>
