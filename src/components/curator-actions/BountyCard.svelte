@@ -1,32 +1,32 @@
+<script lang="ts" context="module">
+	export type BountyStatus =
+		| 'proposed'
+		| 'approved'
+		| 'funded'
+		| 'curator proposed'
+		| 'active'
+		| 'pending payout';
+</script>
+
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
 	import { convertPlanckToDot, getCurrentBlock } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { goto } from '$app/navigation';
-	import AwardBounty from './AwardBounty.svelte';
-	import LogoTreasuryWhite from '../svg/curator-actions-logo/LogoTreasuryWhite.svelte';
-	import LogoPolkassemblyWhite from '../svg/curator-actions-logo/LogoPolkassemblyWhite.svelte';
-	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
-	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import ExtendBounty from './ExtendBounty.svelte';
-	import { activeAccount, showAllCuratorOptions } from '../../stores';
+	import { showAllCuratorOptions } from '../../stores';
 	import { formatDate } from '../../utils/common';
+	import BountyOperations from './BountyOperations.svelte';
+	import ExternalLinks from './ExternalLinks.svelte';
 
 	export let bounty: Bounty;
 
-	let acceptCuratorRuleDialogOpen = false;
-	let awardBountyDialogOpen = false;
 	let curatorsExpended = false;
 	let detailsExpended = false;
 	export let expanded: boolean;
 
-	let extendBountyDialogOpen = false;
 	let expiryDate: string | undefined = undefined;
-
-	let status: 'proposed' | 'approved' | 'funded' | 'curator proposed' | 'active' | 'pending payout';
+	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 
 	onMount(async () => {
@@ -128,18 +128,7 @@
 						</div>
 					</section>
 					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoTreasuryWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoPolkassemblyWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoSubscanWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoSubsquareWhite />
-						</button>
+						<ExternalLinks />
 					</div>
 				</section>
 			</div>
@@ -196,18 +185,7 @@
 						{/if}
 					</div>
 					<div class="flex justify-center items-center space-x-5">
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoTreasuryWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoPolkassemblyWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoSubscanWhite />
-						</button>
-						<button class="w-10 h-10 lg:w-6 lg:h-6">
-							<LogoSubsquareWhite />
-						</button>
+						<ExternalLinks />
 					</div>
 				</div>
 				<div class="flex justify-center items-center">
@@ -229,60 +207,7 @@
 		</div>
 
 		<!-- Buttons/Actions Section -->
-		<section
-			class="flex flex-col space-y-1 px-3 pt-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
-		>
-			{#if false}
-				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm text-white">
-						<span class="lg:hidden">Add</span> Beneficiary Claim Form
-					</p>
-					<button
-						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:min-w-32"
-					>
-						<span class="lg:hidden">BENEFICIARY CLAIM FORM</span>
-						<span class="hidden lg:inline-flex">ADD</span>
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
-				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm text-white">Curator Role</p>
-
-					<button
-						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
-						on:click={() => {
-							goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
-						}}
-						>PROPOSE
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || (status === 'curator proposed' && $activeAccount && curator === $activeAccount.address)}
-				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm text-white">Curator Role</p>
-					<button
-						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
-						on:click={() => {
-							acceptCuratorRuleDialogOpen = true;
-						}}>ACCEPT</button
-					>
-				</div>
-			{/if}
-
-			<!-- Add logic/functionality -->
-			<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-				<p class="pt-2 text-sm text-white">Extend Bounty</p>
-				<button
-					class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
-					on:click={() => {
-						extendBountyDialogOpen = true;
-					}}>EXTEND</button
-				>
-			</div>
-		</section>
+		<BountyOperations {bounty} {curator} {status} />
 
 		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
 			<div class="w-full pr-6">
@@ -301,13 +226,3 @@
 		</div>
 	{/if}
 </div>
-
-{#if acceptCuratorRuleDialogOpen}
-	<AcceptCuratorRule bind:open={acceptCuratorRuleDialogOpen} {bounty} />
-{/if}
-{#if awardBountyDialogOpen}
-	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
-{/if}
-{#if extendBountyDialogOpen}
-	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />
-{/if}
