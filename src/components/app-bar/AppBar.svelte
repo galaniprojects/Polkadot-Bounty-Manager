@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import {
-		isLoggedIn,
-		loggedAccounts,
 		activeAccount,
 		activeAccountBounties,
 		showAllBounties,
@@ -14,6 +13,7 @@
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svelte';
 	import LogoutIcon from '../svg/header-footer-logos/LogoutIcon.svelte';
 	import LoginDialog from './LoginDialog.svelte';
+	import { SetActiveAccountBounties } from '../../utils/bounties';
 
 	let loginDialogOpen = false;
 
@@ -21,11 +21,18 @@
 		loginDialogOpen = true;
 	}
 
+	onMount(() => {
+		// Connect wallet automatically on the same tab.
+		let account = sessionStorage.getItem('account');
+
+		if (account) {
+			activeAccount.set(JSON.parse(account));
+			SetActiveAccountBounties();
+		}
+	});
+
 	async function logOut() {
-		loggedAccounts.set([]);
-		// ToDo: reset active account as well
-		// activeAccount;
-		isLoggedIn.set(false);
+		activeAccount.set(undefined);
 		activeAccountBounties.set([]);
 	}
 </script>
