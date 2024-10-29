@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
 		getApi,
@@ -54,7 +55,7 @@
 				childBounty.parentBounty,
 				childBounty.id,
 				curatorAddress,
-				Number(curatorFee)
+				convertDotToPlanck(BigInt(curatorFee))
 			);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(

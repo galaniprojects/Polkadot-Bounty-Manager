@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { activeAccount } from '../../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import AddChildBounty from './AddChildBounty.svelte';
@@ -32,7 +32,7 @@
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
-				{#if typeof bounty.status === 'object' && 'Active' in bounty.status && $activeAccount && bounty.status.Active.curator === $activeAccount.address}
+				{#if $showAllCuratorOptions || (typeof bounty.status === 'object' && 'Active' in bounty.status && $activeAccount && bounty.status.Active.curator === $activeAccount.address)}
 					<div
 						class="flex flex-col justify-start lg:flex-row lg:justify-end lg:items-center lg:py-3"
 					>
