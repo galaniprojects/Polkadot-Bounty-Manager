@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
 	import BountyCard from './BountyCard.svelte';
+	import { SetActiveAccountBounties } from '../../utils/bounties';
 
 	onMount(async () => {
 		if ($bounties.length !== 0) {
@@ -81,10 +82,12 @@
 			}
 
 			bounties.set(parsedBounties);
+			SetActiveAccountBounties();
 		} catch (e) {
 			console.error(e);
 			showErrorDialog('Error while loading bounty details');
 		}
+
 		hideLoadingDialog();
 	});
 </script>
