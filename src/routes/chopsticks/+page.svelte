@@ -72,7 +72,10 @@
 
 	<div class="m-5 gap-5">
 		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={nodeEndpointInput} />
+		<input
+			class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40"
+			bind:value={nodeEndpointInput}
+		/>
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
 	</div>
 	<button class="button-active mx-5" on:click={() => goto('/curator-actions')}>
