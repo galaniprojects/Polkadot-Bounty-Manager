@@ -12,10 +12,6 @@ export const nodeEndpoint = writable('ws://localhost:8000');
 export const api = writable();
 
 // Session.
-export const isLoggedIn = writable(false);
-
-export const loggedAccounts = writable<InjectedAccountWithMeta[]>([]);
-
 export const activeAccount = writable<InjectedAccountWithMeta | undefined>(undefined);
 
 export const usedExtension = writable<string>('');

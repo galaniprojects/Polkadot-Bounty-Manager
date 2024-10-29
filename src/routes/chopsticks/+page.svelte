@@ -45,25 +45,25 @@
 	}
 </script>
 
-<div class="p-40">
+<div class="py-40 md:px-40">
 	<h1 class="m-5 text-2xl font-bold">Fast Forward</h1>
 	<div class="flex m-5 gap-3">
-		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md bg-white" />
+		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" />
 		<button on:click={fastForwardDays} class="button-active min-w-40">DAYS</button>
 	</div>
 
 	<div class="flex m-5 gap-3">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" bind:value={hours} />
+		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={hours} />
 		<button on:click={fastForwardHours} class="button-active min-w-40">HOURS</button>
 	</div>
 
 	<div class="flex m-5 gap-3">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" bind:value={mins} />
+		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={mins} />
 		<button on:click={fastForwardMinutes} class="button-active min-w-40">MINUTES</button>
 	</div>
 
 	<div class="flex m-5 gap-3 items-center">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" bind:value={blocks} />
+		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={blocks} />
 		<button on:click={fastForwardBlocks} class="button-active min-w-40">BLOCKS </button>
 		<p>(*6 seconds)</p>
 	</div>
@@ -72,7 +72,10 @@
 
 	<div class="m-5 gap-5">
 		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white" bind:value={nodeEndpointInput} />
+		<input
+			class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40"
+			bind:value={nodeEndpointInput}
+		/>
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
 	</div>
 	<button class="button-active mx-5" on:click={() => goto('/curator-actions')}>

@@ -21,7 +21,7 @@
 	import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 	import { walletConnect } from './wallet-connect';
 	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-	import { isLoggedIn, loggedAccounts, activeAccount } from '../../stores';
+	import { activeAccount } from '../../stores';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
 
 	const POLKADOT_EXTENSION = 'polkadot-js';
@@ -130,16 +130,14 @@
 					accounts[i].meta.name = `[${extensionName}] ${i + 1}`;
 				}
 			}
-
-			loggedAccounts.set(accounts);
 		}
 
 		currentPhase = 'accountSelection';
 	}
 
 	function selectAccount(account: InjectedAccountWithMeta) {
-		isLoggedIn.set(true);
 		activeAccount.set(account);
+		sessionStorage.setItem('account', JSON.stringify(account));
 		SetActiveAccountBounties();
 		open = false;
 	}
