@@ -35,6 +35,7 @@
 
 	async function logOut() {
 		activeAccount.set(undefined);
+		sessionStorage.clear()
 		activeAccountBounties.set([]);
 	}
 </script>
