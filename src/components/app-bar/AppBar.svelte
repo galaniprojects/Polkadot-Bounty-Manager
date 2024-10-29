@@ -14,6 +14,7 @@
 	import LogoutIcon from '../svg/header-footer-logos/LogoutIcon.svelte';
 	import LoginDialog from './LoginDialog.svelte';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
+	import { web3Enable } from '@polkadot/extension-dapp';
 
 	let loginDialogOpen = false;
 
@@ -21,12 +22,13 @@
 		loginDialogOpen = true;
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		// Connect wallet automatically on the same tab.
 		let account = sessionStorage.getItem('account');
 
 		if (account) {
 			activeAccount.set(JSON.parse(account));
+			await web3Enable('Bounty Manager');
 			SetActiveAccountBounties();
 		}
 	});
