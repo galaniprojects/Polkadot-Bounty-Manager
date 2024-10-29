@@ -20,6 +20,10 @@ export function parseBounty(obj: any, id: number): Bounty {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseChildBounty(obj: any, id: number): ChildBounty {
+	if(obj.fee != "0"){
+
+	console.log(obj)
+	}
 	return {
 		...obj,
 		id,

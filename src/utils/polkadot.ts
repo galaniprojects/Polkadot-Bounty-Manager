@@ -15,7 +15,7 @@ import {
 	walletConnectSession
 } from '../stores';
 
-export function convertDotToPlanck(value: bigint) {
+export function convertDotToPlanck(value: bigint): bigint {
 	return value * 10000000000n;
 }
 
