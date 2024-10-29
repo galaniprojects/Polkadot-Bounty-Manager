@@ -5,7 +5,7 @@
 	import { activeAccount } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
 	import {
-	convertDotToPlanck,
+		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
 		getApi,
@@ -82,7 +82,7 @@
 		let tx = api.tx.bounties.proposeCurator(
 			bountyInfo.id,
 			curatorAddress,
-			convertDotToPlanck( BigInt(curatorFee) )
+			convertDotToPlanck(BigInt(curatorFee))
 		);
 
 		return api.tx.referenda.submit(
