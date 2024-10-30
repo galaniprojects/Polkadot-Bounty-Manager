@@ -14,7 +14,6 @@
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { showAllCuratorOptions } from '../../stores';
 	import { formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
@@ -209,13 +208,11 @@
 		<!-- Buttons/Actions Section -->
 		<BountyOperations {bounty} {curator} {status} />
 
-		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
-			<div class="w-full pr-6">
-				{#if status === 'active'}
-					<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
-				{/if}
-			</div>
-		{/if}
+		<div class="w-full pr-6">
+			{#if status === 'active'}
+				<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
+			{/if}
+		</div>
 
 		<!-- Footer Section-->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
