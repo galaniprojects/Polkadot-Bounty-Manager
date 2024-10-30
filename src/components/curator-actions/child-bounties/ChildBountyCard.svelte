@@ -260,7 +260,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address)}
+			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address && status !== 'pending payout')}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -275,7 +275,7 @@
 			{/if}
 
 			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && getBountyCurator(parentBounty) === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && subCurator === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}
@@ -286,7 +286,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions}
+			{#if $showAllCuratorOptions || status === 'pending payout'}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (claimChildBountyOpen = true)}

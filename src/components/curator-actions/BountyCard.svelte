@@ -209,13 +209,11 @@
 		<!-- Buttons/Actions Section -->
 		<BountyOperations {bounty} {curator} {status} />
 
-		{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
-			<div class="w-full pr-6">
-				{#if status === 'active'}
-					<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
-				{/if}
-			</div>
-		{/if}
+		<div class="w-full pr-6">
+			{#if status === 'active'}
+				<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
+			{/if}
+		</div>
 
 		<!-- Footer Section-->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
