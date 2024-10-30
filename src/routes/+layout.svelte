@@ -5,8 +5,10 @@
 	import LoadingScreen from '../components/LoadingScreen.svelte';
 	import { loadingDialogState } from '../stores';
 	import Footer from '../components/Footer.svelte';
+	import TestBar from '../components/TestBar.svelte';
 </script>
 
+<TestBar />
 <AppBar />
 <LoadingScreen bind:dialogState={$loadingDialogState} />
 <slot />
