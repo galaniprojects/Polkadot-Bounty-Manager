@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ForwardIcon from '../svg/ForwardIcon.svelte';
 	import type { WalletInfo } from './LoginDialog.svelte';
 
 	export let wallet: WalletInfo;
@@ -18,8 +17,8 @@
 	</div>
 
 	<!-- Action Button -->
-	<div class="flex justify-end items-center sm:space-x-1">
-		<span class="text-white">{wallet.action}</span>
-		<span class="mb-1 w-5 h-5"><ForwardIcon /></span>
+	<div class="flex justify-end items-center sm:space-x-2 text-white">
+		<span>{wallet.action}</span>
+		<span class="material-symbols-outlined mb-1"> arrow_forward_ios </span>
 	</div>
 </div>

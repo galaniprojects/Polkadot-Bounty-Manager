@@ -1,9 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
-	import LogoPolkassembly from '../../svg/LogoPolkassembly.svelte';
-	import LogoSubscan from '../../svg/LogoSubscan.svelte';
-	import LogoTreasuryIcon from '../../svg/LogoTreasuryIcon.svelte';
 	import { formatDate, truncateString } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
@@ -15,6 +12,9 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
+	import LogoTreasuryPink from '../../svg/curator-actions-logo/LogoTreasuryPink.svelte';
+	import LogoPolkassemblyPink from '../../svg/curator-actions-logo/LogoPolkassemblyPink.svelte';
+	import LogoSubscanPink from '../../svg/curator-actions-logo/LogoSubscanPink.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -185,7 +185,7 @@
 					<p>Description</p>
 					<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
 				</section>
-				<div class="flex justify-between">
+				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
 						{#if dateCreated}
 							<p class="text-xs">added</p>
@@ -195,15 +195,15 @@
 
 					<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
 						{#if dateOfPayout}
-							<p class="text-xs">Date of payout:</p>
+							<p class="text-xs">Award date:</p>
 							<p>{dateOfPayout}</p>
 						{/if}
 					</div>
 				</div>
 				<div class="mt-3 flex-wrap flex justify-center items-center space-x-5">
-					<button class="w-10 h-10"><LogoTreasuryIcon /></button>
-					<button class="w-10 h-10"><LogoPolkassembly /></button>
-					<button class="w-10 h-10"><LogoSubscan /></button>
+					<button class="w-10 h-10"><LogoTreasuryPink /></button>
+					<button class="w-10 h-10"><LogoPolkassemblyPink /></button>
+					<button class="w-10 h-10"><LogoSubscanPink /></button>
 					<button class="w-10 h-10"><LogoSubsquarePink /></button>
 				</div>
 			</div>
@@ -240,11 +240,9 @@
 			{/if}
 
 			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryIcon /></button>
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassembly /></button>
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscan /></button>
-
-				<!-- ToDo: Fix the last icon -->
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryPink /></button>
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassemblyPink /></button>
+				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscanPink /></button>
 				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
 			</div>
 

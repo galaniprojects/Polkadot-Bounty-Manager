@@ -15,8 +15,8 @@
 		<div class="w-10 h-10">
 			<PolkadotIcon {address} />
 		</div>
-		<div class="grid justify-center text-white">
-			<span>{name}</span>
+		<div class="flex flex-col text-white">
+			<span class="self-start">{name}</span>
 			<span class="text-sm">{truncateString(address, 20)}</span>
 		</div>
 	</div>
