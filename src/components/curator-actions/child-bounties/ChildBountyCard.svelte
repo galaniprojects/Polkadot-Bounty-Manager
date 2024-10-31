@@ -15,6 +15,7 @@
 	import LogoTreasuryPink from '../../svg/curator-actions-logo/LogoTreasuryPink.svelte';
 	import LogoPolkassemblyPink from '../../svg/curator-actions-logo/LogoPolkassemblyPink.svelte';
 	import LogoSubscanPink from '../../svg/curator-actions-logo/LogoSubscanPink.svelte';
+	import PolkadotIcon from '../../PolkadotIcon.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -72,6 +73,7 @@
 					Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', '')) -
 					currentBlockInfo.blockNumber;
 				dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
+				beneficiary = childBounty.status.PendingPayout.beneficiary;
 			}
 		}
 	});
@@ -147,13 +149,23 @@
 					{#if typeof childBounty.status === 'object'}
 						<section>
 							<p class="text-xs">Sub-Curator</p>
-							<p class="sub-curator text-base">{truncateString(getCurator() || '-', 9)}</p>
+							<div class="flex">
+								<div class="h-5 w-5 mr-2">
+									<PolkadotIcon address={getCurator()} />
+								</div>
+								<p class="sub-curator text-base">{truncateString(getCurator() || '-', 9)}</p>
+							</div>
 						</section>
 					{/if}
 					{#if beneficiary}
 						<section class="lg:mt-3">
 							<p class="text-xs">Beneficiary</p>
-							<p class="beneficiary">{beneficiary}</p>
+							<div class="flex">
+								<div class="h-5 w-5 mr-2">
+									<PolkadotIcon address={beneficiary} />
+								</div>
+								<p>{truncateString(beneficiary, 9)}</p>
+							</div>
 						</section>
 					{/if}
 				</div>
