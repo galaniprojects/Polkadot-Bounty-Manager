@@ -4,7 +4,7 @@
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import AddChildBounty from './AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
-	import DropdownItem from './DropdownItem.svelte';
+	import DropdownMenu from './DropdownMenu.svelte';
 
 	export let bounty: Bounty;
 	export let childBounties: ChildBounty[];
@@ -55,7 +55,7 @@
 				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 				<div class="flex justify-between">
 					<p class="mt-2 lg:hidden">by status</p>
-					<div><DropdownItem bind:selectedFilter {filters} /></div>
+					<div><DropdownMenu bind:selectedItem={selectedFilter} items={filters} /></div>
 				</div>
 			</div>
 		</div>
