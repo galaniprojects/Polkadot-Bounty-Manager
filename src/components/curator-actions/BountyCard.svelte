@@ -10,7 +10,7 @@
 
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot} from '../../utils/polkadot';
+	import { convertPlanckToDot } from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
