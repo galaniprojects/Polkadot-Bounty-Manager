@@ -16,6 +16,7 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../utils/loading-screen';
+	import { goto } from '$app/navigation';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -164,60 +165,60 @@
 </script>
 
 <div>
-	<div class="top-bar flex justify-between">
+	<div class="p-3 md:p-6 bg-secondary">
 		{#if !success}
 			<input
 				bind:value={bountyTitle}
 				on:input={inputChange}
-				class="rounded-md bg-gray-100 w-1/2 pl-3 pt-1"
+				class="rounded-md bg-gray-100 w-full md:w-1/2 pl-3 pt-1"
 				placeholder="Give your Bounty a title"
 			/>
-			<p class="text text-sm mt-1.5 text-white">
-				<span class="opacity-50">Need more information about the Bounty Setup process? </span>
-				<a href="#moreinfo">Tap here</a>
-			</p>
+			{#if false}
+				<p class="text text-sm mt-1.5 text-white">
+					<span class="opacity-50">Need more information about the Bounty Setup process? </span>
+					<a href="#moreinfo">Tap here</a>
+				</p>
+			{/if}
 		{:else}
 			<p class="text-white">{`#${bountyInfo.id} ${bountyInfo.description}`}</p>
 		{/if}
 	</div>
 
 	{#if success}
-		<div class="content">
+		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
 			<p>
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
-				created successfully!
+				has been created successfully!
 				<br /><br />
-				You can either proceed to 2 Referendum <br />
+				You can either proceed to the Referendum <br />
+				for Bounty Approval or return to the main page <br />
 				or go back to the list of all bounties.
 				<br />
 			</p>
 
-			<div class="mt-5 flex">
-				<button class="button-cancel mr-5">LIST</button>
+			<div class="flex-col space-y-2 sm:flex-row mt-5">
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
+					>RETURN HOME</button
+				>
 				<button on:click={changeTab} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
-		<div class="grid content-between content">
+		<div
+			class="grid content-between bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden"
+		>
 			<div>
 				<p class="text-xs">Bounty value</p>
 				<div class="flex mt-2">
 					<input
 						bind:value={bountyValue}
-						class="border pt-1 pl-2 w-1/4 rounded-md bg-white"
+						class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
 						placeholder="1000"
 						on:input={inputChange}
 					/>
 				</div>
-				<hr class="border-white mt-5 mb-1 w-1/2" />
+				<hr class="border-white mt-5 mb-1 w-full md:w-1/2" />
 
-				<p class="text-xs">Bounty description</p>
-				<textarea
-					class="border border-borderColor pt-1 pl-2 w-1/2 h-28 rounded-md bg-white mt-2e mr-2 mt-2"
-					placeholder="Your Bounty description goes here"
-				/>
-
-				<hr class=" border-white mt-5 mb-2 w-1/2" />
 				<div class="mt-5 mb-10 h-24">
 					<section class="mb-3">
 						<p class="label text-xs">Bounty Bond</p>
@@ -229,8 +230,8 @@
 					</section>
 				</div>
 			</div>
-			<div class="buttons flex">
-				<button class="button-cancel mr-5">CANCEL</button>
+			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
+				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
 				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active"
 					>SUBMIT</button
 				>
