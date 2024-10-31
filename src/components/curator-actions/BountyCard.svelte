@@ -10,11 +10,11 @@
 
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, getCurrentBlock } from '../../utils/polkadot';
+	import { convertPlanckToDot} from '../../utils/polkadot';
 	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { formatDate } from '../../utils/common';
+	import { calculateExpirationDate, formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
 
@@ -45,10 +45,10 @@
 			if ('Active' in bounty.status) {
 				status = 'active';
 				curator = bounty.status.Active.curator;
-				let currentBlockInfo = await getCurrentBlock();
-				let blocksToExpire =
-					Number(bounty.status.Active.updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
-				expiryDate = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
+				let calculatedExpiryDate = await calculateExpirationDate(bounty);
+				if (calculatedExpiryDate) {
+					expiryDate = formatDate(calculatedExpiryDate);
+				}
 				return;
 			}
 			if ('CuratorProposed' in bounty.status) {

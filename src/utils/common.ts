@@ -1,5 +1,6 @@
 import type { Bounty } from '../types/bounty';
 import type { ChildBounty } from '../types/child-bounty';
+import { getCurrentBlock } from './polkadot';
 
 export function isInteger(input: string) {
 	const num = parseInt(input, 10);
@@ -55,4 +56,14 @@ export function formatDate(date: Date): string {
 			year: 'numeric'
 		})
 		.toUpperCase();
+}
+
+export async function calculateExpirationDate(bounty: Bounty): Promise<Date | undefined> {
+	if (typeof bounty.status === 'object' && 'Active' in bounty.status) {
+		const currentBlockInfo = await getCurrentBlock();
+		const blocksToExpire =
+			Number(bounty.status.Active.updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
+		return new Date(currentBlockInfo.timestamp + blocksToExpire * 6000);
+	}
+	return undefined;
 }
