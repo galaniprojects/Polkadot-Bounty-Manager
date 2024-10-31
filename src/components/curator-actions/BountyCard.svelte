@@ -177,7 +177,7 @@
 					</section>
 					<div class="flex justify-between">
 						{#if expiryDate}
-							<section class="flex-col text-end">
+							<section class="flex-col text-start">
 								<p class="text-xs">Expiration date</p>
 								<p>{expiryDate}</p>
 							</section>

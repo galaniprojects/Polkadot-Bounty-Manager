@@ -10,8 +10,6 @@
 
 <script lang="ts">
 	import WalletItem from './WalletItem.svelte';
-	import BackIcon from '../svg/BackIcon.svelte';
-	import CloseIcon from '../svg/CloseIcon.svelte';
 	import AccountItem from './AccountItem.svelte';
 	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
@@ -153,16 +151,16 @@
 <div class="flex justify-center fixed inset-0 w-screen z-20 py-52">
 	<div class="flex flex-col mx-2 h-fit w-[300px] xs:w-[490px] rounded-md bg-primary p-3 sm:p-5">
 		<!-- Header -->
-		<div class="flex justify-between items-center mb-1 sm:mb-0">
+		<div class="flex justify-between items-center text-white sm:mb-0">
 			{#if currentPhase !== 'walletSelection'}
-				<button on:click={backToWalletSelection}>
-					<BackIcon />
+				<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
+					arrow_back_ios
 				</button>
 			{/if}
 
 			<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
-				<button class="fill-white" on:click={() => (open = false)}>
-					<CloseIcon />
+				<button class="material-symbols-outlined text-3xl mt-3" on:click={() => (open = false)}>
+					cancel
 				</button>
 			</div>
 		</div>
@@ -257,7 +255,7 @@
 	}
 
 	.account-items::-webkit-scrollbar-track {
-		@apply mt-2;
+		margin-top: 0.5rem;
 		background: rgba(255, 255, 255, 0.25);
 		border-radius: 10px;
 	}
