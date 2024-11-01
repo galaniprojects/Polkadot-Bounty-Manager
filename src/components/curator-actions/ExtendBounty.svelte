@@ -66,7 +66,7 @@
 				return;
 			}
 
-			showSuccessDialog('Bounty Extended','Your bounty has been extended');
+			showSuccessDialog('Bounty Extended', 'Your bounty has been extended');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);
