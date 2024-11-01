@@ -1,103 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Bounty } from '../../types/bounty';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
-	import type { ChildBounty } from '../../types/child-bounty';
-	import { parseBounty, parseChildBounty } from '../../utils/common';
-	import { firstValueFrom } from 'rxjs';
-	import {
-		hideLoadingDialog,
-		showErrorDialog,
-		showLoadingDialog
-	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
-	import { getApi } from '../../utils/polkadot';
 	import BountyCard from './BountyCard.svelte';
-	import { SetActiveAccountBounties } from '../../utils/bounties';
+	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 
 	onMount(async () => {
-		if ($bounties.length !== 0) {
-			return;
+		if ($bounties.length === 0) {
+			await fetchBountiesAndChildBounties();
 		}
-		showLoadingDialog('Loading...');
-		try {
-			const api = await getApi();
-			const parsedBounties: Bounty[] = [];
-
-			// Query all bounties.
-			const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
-			for (let unparsedBounty of unparsedBounties) {
-				let index = Number((unparsedBounty[0].toHuman()! as string[])[0].replaceAll(',', ''));
-				parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
-			}
-
-			parsedBounties.sort((bounty1, bounty2) => {
-				if (bounty1.id > bounty2.id) {
-					return -1;
-				} else {
-					return 1;
-				}
-			});
-
-			// Query bounty description.
-			const bountiesDescriptions = await firstValueFrom(
-				api.query.bounties.bountyDescriptions.entries()
-			);
-			for (let desc of bountiesDescriptions) {
-				let index = Number((desc[0].toHuman()! as string[])[0].replaceAll(',', ''));
-				let description = desc[1].toHuman() as string;
-				let bounty = parsedBounties.find((bounty) => bounty.id == index);
-				if (bounty) {
-					bounty.description = description;
-				}
-			}
-
-			// Query child bounties.
-			let childBounties: ChildBounty[] = [];
-			const unparsedChildBounties = await firstValueFrom(
-				api.query.childBounties.childBounties.entries()
-			);
-
-			for (let childBounty of unparsedChildBounties) {
-				let id = Number((childBounty[0].toHuman()! as string[])[1].replaceAll(',', ''));
-				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
-			}
-
-			childBounties.sort((cb1, cb2) => {
-				if (cb1.id > cb2.id) {
-					return -1;
-				} else {
-					return 1;
-				}
-			});
-
-			for (let i = 0; i < parsedBounties.length; i++) {
-				parsedBounties[i].childBounties = childBounties.filter((childBounty) => {
-					return childBounty.parentBounty === parsedBounties[i].id;
-				});
-			}
-
-			// Query child bounty description.
-			const childBountiesDescriptions = await firstValueFrom(
-				api.query.childBounties.childBountyDescriptions.entries()
-			);
-			for (let desc of childBountiesDescriptions) {
-				let index = Number((desc[0].toHuman()! as string[])[0].replaceAll(',', ''));
-				let description = desc[1].toHuman() as string;
-				let childBounty = childBounties.find((childBounty) => childBounty.id == index);
-				if (childBounty) {
-					childBounty.description = description;
-				}
-			}
-
-			bounties.set(parsedBounties);
-			SetActiveAccountBounties();
-		} catch (e) {
-			console.error(e);
-			showErrorDialog('Error while loading bounty details');
-		}
-
-		hideLoadingDialog();
 	});
 </script>
 

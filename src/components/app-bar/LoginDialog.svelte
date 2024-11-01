@@ -21,6 +21,7 @@
 	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 	import { activeAccount } from '../../stores';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
+	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 
 	const POLKADOT_EXTENSION = 'polkadot-js';
 	//TODO: check name of extension.
@@ -135,7 +136,9 @@
 
 	function selectAccount(account: InjectedAccountWithMeta) {
 		activeAccount.set(account);
-		sessionStorage.setItem('account', JSON.stringify(account));
+		if (account.meta.source !== WALLET_CONNECT_SOURCE) {
+			sessionStorage.setItem('account', JSON.stringify(account));
+		}
 		SetActiveAccountBounties();
 		open = false;
 	}
