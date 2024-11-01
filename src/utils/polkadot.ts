@@ -14,6 +14,7 @@ import {
 	walletConnectProvider,
 	walletConnectSession
 } from '../stores';
+import { fetchBountiesAndChildBounties } from './fetch-bounties';
 
 export function convertDotToPlanck(value: bigint): bigint {
 	return value * 10000000000n;
@@ -126,6 +127,11 @@ export async function dryRunAndSubmitTransaction(
 				errorMessage: `Something went wrong, ${submittableResult.dispatchError || ''}`
 			};
 		}
+	}
+	try {
+		await fetchBountiesAndChildBounties();
+	} catch (e) {
+		console.error(e);
 	}
 	return { result: submittableResult };
 }
