@@ -4,7 +4,7 @@ import type { ISubmittableResult } from '@polkadot/types/types';
 import { firstValueFrom, filter } from 'rxjs';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { web3FromAddress } from '@polkadot/extension-dapp';
+import { web3FromSource } from '@polkadot/extension-dapp';
 import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
 import { get } from 'svelte/store';
 import {
@@ -72,7 +72,7 @@ export async function dryRunAndSubmitTransaction(
 			return {};
 		}
 	} else {
-		const signer = (await web3FromAddress(account.address)).signer;
+		const signer = (await web3FromSource(account.meta.source)).signer;
 
 		const signatureObservable = transaction.signAsync(account.address, { signer });
 		const signedTransaction = await firstValueFrom(signatureObservable);
