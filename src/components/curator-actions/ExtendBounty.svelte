@@ -66,7 +66,7 @@
 				return;
 			}
 
-			showSuccessDialog('Bounty closed', 'Your bounty has been awarded and can be claimed');
+			showSuccessDialog('Bounty Extended', 'Your bounty has been extended');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);

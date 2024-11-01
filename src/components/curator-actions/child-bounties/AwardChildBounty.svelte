@@ -71,7 +71,7 @@
 				return;
 			}
 
-			showSuccessDialog('Bounty closed', 'Your bounty has been awarded and can be claimed');
+			showSuccessDialog('Bounty Awarded', 'Your child bounty has been awarded and can be claimed');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);
