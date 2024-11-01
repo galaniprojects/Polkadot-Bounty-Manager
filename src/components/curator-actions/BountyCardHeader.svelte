@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { truncateString } from '../../utils/common';
+	import PolkadotIcon from '../PolkadotIcon.svelte';
 
 	export let bounty: Bounty;
 	export let status: string;
@@ -30,8 +31,11 @@
 
 	<div class="flex justify-between">
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
-			<section class="flex space-x-1 lg:w-52">
+			<section class="flex justify-center items-center space-x-1 lg:w-52">
 				<p>Proposer:</p>
+				<div class="h-4 w-4">
+					<PolkadotIcon address={bounty.proposer} />
+				</div>
 				<p>{truncateString(bounty.proposer, 8)}</p>
 			</section>
 			<section class="flex space-x-1 lg:w-52">

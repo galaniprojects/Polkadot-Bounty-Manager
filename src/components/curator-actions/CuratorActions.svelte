@@ -57,10 +57,19 @@
 			const unparsedChildBounties = await firstValueFrom(
 				api.query.childBounties.childBounties.entries()
 			);
+
 			for (let childBounty of unparsedChildBounties) {
 				let id = Number((childBounty[0].toHuman()! as string[])[1].replaceAll(',', ''));
 				childBounties.push(parseChildBounty(childBounty[1].toHuman(), id));
 			}
+
+			childBounties.sort((cb1, cb2) => {
+				if (cb1.id > cb2.id) {
+					return -1;
+				} else {
+					return 1;
+				}
+			});
 
 			for (let i = 0; i < parsedBounties.length; i++) {
 				parsedBounties[i].childBounties = childBounties.filter((childBounty) => {
