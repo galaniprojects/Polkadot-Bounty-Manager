@@ -5,6 +5,10 @@ on:
     branches:
       - develop
 
+concurrency:
+  group: promote-dev-to-test
+  cancel-in-progress: true
+
 jobs:
   merge:
     runs-on: ubuntu-latest
