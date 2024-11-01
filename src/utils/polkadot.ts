@@ -130,8 +130,9 @@ export async function dryRunAndSubmitTransaction(
 	}
 	try {
 		await fetchBountiesAndChildBounties();
-	} catch(e) { 
-	console.error(e)}
+	} catch (e) {
+		console.error(e);
+	}
 	return { result: submittableResult };
 }
 
