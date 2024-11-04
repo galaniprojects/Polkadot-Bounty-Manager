@@ -18,8 +18,8 @@
 		filteredChildBounties = childBounties.filter((cb) => {
 			return getChildBountyStatus(cb) === selectedFilter || selectedFilter === 'all';
 		});
-		console.log(childBounties)
-		console.log(filteredChildBounties)
+		console.log(childBounties);
+		console.log(filteredChildBounties);
 	}
 
 	const filters: Array<ChildBountyStatusString | 'all'> = [

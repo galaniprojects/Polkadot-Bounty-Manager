@@ -83,7 +83,9 @@ export function getBountyCurator(bounty: Bounty): string | undefined {
 	return undefined;
 }
 
-export function getChildBountyStatus(childBounty: ChildBounty): ChildBountyStatusString | undefined {
+export function getChildBountyStatus(
+	childBounty: ChildBounty
+): ChildBountyStatusString | undefined {
 	if (childBounty.status === 'Added') {
 		return 'added';
 	} else if (typeof childBounty.status === 'object') {
