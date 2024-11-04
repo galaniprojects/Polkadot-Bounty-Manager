@@ -138,8 +138,8 @@
 </script>
 
 <div>
-	<div class="p-3 md:p-6 bg-secondary text-white">
-		<p class="text-lg sm:text-2xl text-white">
+	<div class="p-3 pt-7 pb-10 md:p-6 bg-secondary">
+		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 			{/if}
@@ -153,7 +153,7 @@
 	</div>
 
 	{#if step === 1}
-		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class="bg-backgroundContent p-3 pt-7 pb-12 md:px-6 w-full box-border overflow-x-hidden">
 			<p class="w-full md:w-2/3">
 				It is strongly recommended to create the Curator Proposal referendum, after the Bounty has
 				been funded and the Curator list has been informally accepted by the community in
@@ -166,7 +166,7 @@
 				been already funded.
 			</p>
 
-			<div class="flex-col space-y-2 sm:flex-row mt-5">
+			<div class="flex-col space-y-2 sm:flex-row mt-20">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>
@@ -176,29 +176,32 @@
 			</div>
 		</div>
 	{:else if step === 2}
-		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
 			<div>
-				<div>
+				<div class="space-y-5">
 					<p class="w-full md:1/3 mb-2">
 						It is highly recommended to use a pure proxy multisig address for the curators!
 					</p>
-					<p class="text-xs my-1">Curator Address</p>
-					<input
-						bind:value={curatorAddress}
-						class="border border-borderColor w-full md:w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
-						placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
-						on:input={inputChange}
-					/>
-					<p class="text-xs my-1">Curator Fee</p>
-					<input
-						bind:value={curatorFee}
-						placeholder="0"
-						on:input={inputChange}
-						class="border border-borderColor pt-1 pl-2 rounded-md bg-white mr-2 w-full md:w-1/3"
-					/>
+					<div class="space-y-3">
+						<p class="text-xs my-1">Curator Address</p>
+						<input
+							bind:value={curatorAddress}
+							class="w-full md:w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
+							on:input={inputChange}
+						/>
+					</div>
+					<div class="space-y-3">
+						<p class="text-xs my-1">Curator Fee</p>
+						<input
+							bind:value={curatorFee}
+							placeholder="0"
+							on:input={inputChange}
+							class="pt-1 pl-2 rounded-md bg-white mr-2 w-full md:w-1/3"
+						/>
+					</div>
 				</div>
 
-				<div class="mt-4">
+				<div class="mt-5 space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
 						class="border w-full md:w-1/4 rounded-md h-7 px-1 pt-1"
@@ -217,26 +220,26 @@
 					</p>
 				</div>
 
-				<hr class="border-white w-full sm:w-1/2 mt-5 mb-3" />
+				<hr class="border-white w-full sm:w-1/2 my-10" />
 
-				<div class="my-5 h-24">
-					<section class="mb-3">
+				<div class="my-5 h-24 space-y-5">
+					<section class="space-y-3">
 						<p class="label text-xs">Deposit</p>
 						<p class="value">{deposit}</p>
 					</section>
-					<section>
+					<section class="space-y-3">
 						<p class="label text-xs">Transaction fee</p>
 						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
-			<div class="flex-col space-y-2 sm:flex-row">
+			<div class="flex-col space-y-2 sm:flex-row mt-10 mb-5">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{:else}
-		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
 			<p class="w-full md:w-2/3">
 				The Referendum for Curator Proposal of Bounty <br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
@@ -251,7 +254,7 @@
 				via the polkadot.js explorer.
 			</p>
 
-			<div class="buttons mt-5 flex">
+			<div class="buttons mt-24 mb-2 flex">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>

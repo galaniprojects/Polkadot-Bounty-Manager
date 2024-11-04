@@ -148,7 +148,7 @@
 			<input
 				bind:value={bountyValue}
 				class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
-				placeholder="1000000000"
+				placeholder="0"
 				on:input={inputChange}
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
@@ -163,16 +163,17 @@
 				placeholder="Child bounty name"
 			/>
 		</section>
-
-		<section class="scrollbar">
-			<p class="text-xs">Description</p>
-			<textarea
-				bind:value={bountyDescription}
-				on:input={inputChange}
-				class="scrollbar border border-black rounded-[3px] bg-white h-40 w-full p-2"
-				placeholder="Description"
-			/>
-		</section>
+		{#if false}
+			<section class="scrollbar">
+				<p class="text-xs">Description</p>
+				<textarea
+					bind:value={bountyDescription}
+					on:input={inputChange}
+					class="scrollbar border border-black rounded-[3px] bg-white h-40 w-full p-2"
+					placeholder="Description"
+				/>
+			</section>
+		{/if}
 		<section class="mt-10">
 			<p class="text-xs">Calculated Fee:</p>
 			<p>{fee}</p>
@@ -186,21 +187,3 @@
 		>
 	</div>
 </BountyDialog>
-
-<style>
-	.scrollbar::-webkit-scrollbar {
-		width: 5px;
-	}
-
-	.scrollbar::-webkit-scrollbar-track {
-		margin-top: 0.5rem;
-		background-color: theme('colors.accent');
-		--tw-bg-opacity: 0.5;
-		border-radius: 0.5rem;
-	}
-
-	.scrollbar::-webkit-scrollbar-thumb {
-		background-color: theme('colors.accent');
-		border-radius: 0.5rem;
-	}
-</style>
