@@ -15,11 +15,9 @@
 	let selectedFilter: ChildBountyStatusString | 'all' = 'all';
 
 	$: if (childBounties.length > 0) {
-		filteredChildBounties = childBounties.filter((cb) => {
-			return getChildBountyStatus(cb) === selectedFilter || selectedFilter === 'all';
+		filteredChildBounties = childBounties.filter((childBounty) => {
+			return getChildBountyStatus(childBounty) === selectedFilter || selectedFilter === 'all';
 		});
-		console.log(childBounties);
-		console.log(filteredChildBounties);
 	}
 
 	const filters: Array<ChildBountyStatusString | 'all'> = [
