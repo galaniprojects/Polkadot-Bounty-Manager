@@ -13,7 +13,7 @@
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { calculateExpirationDate, formatDate } from '../../utils/common';
+	import { calculateExpirationDate, formatDate, truncateString } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
 	import { parse } from 'marked';
@@ -22,7 +22,6 @@
 
 	export let bounty: Bounty;
 
-	let curatorsExpanded = false;
 	let detailsExpanded = false;
 	export let expanded: boolean;
 
@@ -82,10 +81,6 @@
 		expanded = !expanded;
 	}
 
-	function handleCuratorsToggleClick() {
-		curatorsExpanded = !curatorsExpanded;
-	}
-
 	function handleMoreDetailsToggleClick() {
 		detailsExpanded = !detailsExpanded;
 	}
@@ -107,24 +102,20 @@
 							<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
 						</div>
 
-						<div class="mt-4 lg:mt-0">
+						<div class="mt-4 lg:mt-0 lg:w-32 xl:w-40">
 							<p class="text-xs">Curator Fee</p>
 							<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 						</div>
+						{#if curator}
+							<div class="mt-4 lg:mt-0">
+								<p class="text-xs">Curator</p>
+								<p>{truncateString(curator || '-', 30)}</p>
+							</div>
+						{/if}
 					</section>
-					<section
-						class="bounty-button-container lg:flex lg:justify-end lg:space-x-3 lg:mr-12 2xl:mr-44"
-					>
-						<p class="hidden text-center lg:inline-flex">Curators</p>
-						<div class="space-x-2">
-							<button
-								on:click={handleCuratorsToggleClick}
-								class="w-full button-popup font-bold rounded-md pt-1 lg:min-w-32 lg:h-fit"
-							>
-								SHOW <span class="lg:hidden">CURATORS</span>
-							</button>
-						</div>
-					</section>
+					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
+						<ExternalLinks />
+					</div>
 				</section>
 				<section class="flex-col lg:flex lg:flex-row lg:justify-between">
 					<section class="flex justify-start">
@@ -142,9 +133,6 @@
 							{/if}
 						</div>
 					</section>
-					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
-						<ExternalLinks />
-					</div>
 				</section>
 			</div>
 		</div>
@@ -152,11 +140,6 @@
 		<!-- Mobile design -->
 		<div class="lg:hidden">
 			<div class="grid space-y-5 bg-curatorCarousel px-[10px] py-5 text-white">
-				<button
-					on:click={handleCuratorsToggleClick}
-					class="w-full lg:w-fit h-12 button-popup font-bold rounded-md"
-					>SHOW CURATORS
-				</button>
 				<div>
 					<p class="text-xs">Remaining Balance</p>
 					<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
@@ -184,6 +167,12 @@
 						<p class="text-xs">Curator Fee</p>
 						<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
+					{#if curator}
+						<div class="space-y-1">
+							<p class="text-xs">Curator</p>
+							<p>{truncateString(curator || '-', 25)}</p>
+						</div>
+					{/if}
 					{#if description}
 						<section class="text-xs space-y-1">
 							<BountyDescription description={DOMPurify.sanitize(description)} />

@@ -123,7 +123,7 @@
 				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
-						<p class="text-base">{convertPlanckToDot(childBounty.value)} DOT</p>
+						<p>{convertPlanckToDot(childBounty.value)} DOT</p>
 					</section>
 					<section class="hidden lg:flex flex-col lg:text-xs mt-3 space-y-2">
 						<p>Description</p>
@@ -134,12 +134,12 @@
 				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
-						<p class="text-base">{convertPlanckToDot(childBounty.fee)} DOT</p>
+						<p>{convertPlanckToDot(childBounty.fee)} DOT</p>
 					</section>
 					{#if dateOfPayout}
 						<section class="lg:mt-3">
 							<p class="text-xs">Award date</p>
-							<p class="text-base">{dateOfPayout}</p>
+							<p>{dateOfPayout}</p>
 						</section>
 					{/if}
 				</div>
@@ -152,7 +152,7 @@
 								<div class="h-5 w-5 mr-2">
 									<PolkadotIcon address={getCurator()} />
 								</div>
-								<p class="sub-curator text-base">{truncateString(getCurator() || '-', 9)}</p>
+								<p>{truncateString(getCurator() || '-', 9)}</p>
 							</div>
 						</section>
 					{/if}
