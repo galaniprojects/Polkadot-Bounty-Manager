@@ -17,16 +17,20 @@
 	import { calculateExpirationDate, formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
+	import { parse } from 'marked';
+	import DOMPurify from 'dompurify';
+	import BountyDescription from './BountyDescription.svelte';
 
 	export let bounty: Bounty;
 
-	let curatorsExpended = false;
-	let detailsExpended = false;
+	let curatorsExpanded = false;
+	let detailsExpanded = false;
 	export let expanded: boolean;
 
 	let expiryDate: string | undefined = undefined;
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
+	let description: string | undefined;
 
 	onMount(async () => {
 		if (bounty.status === 'Proposed') {
@@ -64,12 +68,36 @@
 		}
 	});
 
+	$: if (expanded) {
+		const bountyId = bounty.id;
+
+		try {
+			const url = `https://polkadot.subsquare.io/api/treasury/bounties/${bountyId}`;
+			fetch(url)
+				.then((response) => {
+					if (!response.ok) {
+						return;
+					}
+					return response.json();
+				})
+				.then(async (data) => {
+					description = await parse(data.content);
+				});
+		} catch {
+			description = undefined;
+		}
+	}
+
+	function expandBounty() {
+		expanded = !expanded;
+	}
+
 	function handleCuratorsToggleClick() {
-		curatorsExpended = !curatorsExpended;
+		curatorsExpanded = !curatorsExpanded;
 	}
 
 	function handleMoreDetailsToggleClick() {
-		detailsExpended = !detailsExpended;
+		detailsExpanded = !detailsExpanded;
 	}
 </script>
 
@@ -110,13 +138,11 @@
 				</section>
 				<section class="flex-col lg:flex lg:flex-row lg:justify-between">
 					<section class="flex justify-start">
-						<div class="text-xs lg:w-[250px] xl:w-[490px] pr-3">
-							<p>Description</p>
-							<p>
-								This proposal stems from the need to enhance system upgrade testing procedures,
-								minimizing feature regression. Recent discussions in various channels, spurred by …
-							</p>
-						</div>
+						{#if description}
+							<div class=" text-xs lg:w-[250px] xl:w-[490px] pr-3">
+								<BountyDescription description={DOMPurify.sanitize(description)} />
+							</div>
+						{/if}
 						<div class="flex justify-between lg:space-x-8 xl:space-x-16">
 							{#if expiryDate != undefined}
 								<section class="flex-col text-start">
@@ -147,7 +173,7 @@
 				</div>
 			</div>
 			<div class="flex justify-center items-center text-white">
-				{#if !detailsExpended}
+				{#if !detailsExpanded}
 					<div class="bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
 						<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 							more details
@@ -162,19 +188,17 @@
 				{/if}
 			</div>
 
-			{#if detailsExpended}
+			{#if detailsExpanded}
 				<div class="bg-curatorCarousel text-white px-[10px] pb-6 space-y-5">
 					<div class="space-y-1">
 						<p class="text-xs">Curator Fee</p>
 						<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
-					<section class="text-xs space-y-1">
-						<p>Description</p>
-						<p>
-							This proposal stems from the need to enhance system upgrade testing procedures,
-							minimizing feature regression. Recent discussions in various channels, spurred by …
-						</p>
-					</section>
+					{#if description}
+						<section class="text-xs space-y-1">
+							<BountyDescription description={DOMPurify.sanitize(description)} />
+						</section>
+					{/if}
 					<div class="flex justify-between">
 						{#if expiryDate}
 							<section class="flex-col text-start">
@@ -188,7 +212,7 @@
 					</div>
 				</div>
 				<div class="flex justify-center items-center">
-					{#if detailsExpended}
+					{#if detailsExpanded}
 						<div class="text-white bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
 							<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 								less details
@@ -216,7 +240,7 @@
 
 		<!-- Footer Section-->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
-			<button class="flex items-center pt-5 pb-1" on:click={() => (expanded = !expanded)}>
+			<button class="flex items-center pt-5 pb-1" on:click={expandBounty}>
 				<p class="text-white text-xs">close bounty view</p>
 				<span class="material-symbols-outlined text-white text-3xl"> keyboard_arrow_up </span>
 			</button>

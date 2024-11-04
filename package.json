@@ -19,6 +19,7 @@
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"@types/dompurify": "^3.0.5",
 		"@types/eslint": "^9.6.0",
 		"amplify-adapter": "^0.1.2",
 		"autoprefixer": "^10.4.20",
@@ -45,6 +46,8 @@
 		"@walletconnect/modal": "2.6.2",
 		"@walletconnect/sign-client": "2.12.2",
 		"@walletconnect/types": "2.12.2",
-		"@walletconnect/universal-provider": "2.12.2"
+		"@walletconnect/universal-provider": "2.12.2",
+		"dompurify": "^3.1.7",
+		"marked": "^14.1.3"
 	}
 }
