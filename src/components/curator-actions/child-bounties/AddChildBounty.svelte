@@ -193,7 +193,6 @@
 	}
 
 	.scrollbar::-webkit-scrollbar-track {
-		/* @apply mt-2 bg-accent bg-opacity-50 rounded-lg; */
 		margin-top: 0.5rem;
 		background-color: theme('colors.accent');
 		--tw-bg-opacity: 0.5;
@@ -201,7 +200,6 @@
 	}
 
 	.scrollbar::-webkit-scrollbar-thumb {
-		/* @apply bg-accent rounded-lg; */
 		background-color: theme('colors.accent');
 		border-radius: 0.5rem;
 	}
