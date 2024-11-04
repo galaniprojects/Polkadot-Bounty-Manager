@@ -110,7 +110,7 @@
 					await web3FromSource(extensionName);
 					break;
 				default:
-					throw new Error('internal error, unsupported extension');
+					throw new Error('Internal error, unsupported extension');
 			}
 
 			if (wallet.name === 'Nova Wallet') {

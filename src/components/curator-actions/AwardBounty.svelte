@@ -37,7 +37,7 @@
 				return;
 			}
 			if (!isValidAddress(beneficiary)) {
-				showErrorDialog('Beneficiary address is invalid.');
+				showErrorDialog('Beneficiary address is invalid');
 				return;
 			}
 
@@ -65,11 +65,11 @@
 			}
 
 			if (result == undefined) {
-				showErrorDialog('Internal error.');
+				showErrorDialog('Internal error');
 				return;
 			}
 
-			showSuccessDialog('Bounty Awarded', 'Your bounty has been awarded and can be claimed');
+			showSuccessDialog('Bounty Awarded', 'Your bounty has been awarded and can now be claimed');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);

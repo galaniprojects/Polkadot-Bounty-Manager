@@ -28,7 +28,7 @@
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('wallet is not connected');
+				showErrorDialog('Wallet is not connected');
 				return;
 			}
 			let api = await getApi();
@@ -54,7 +54,7 @@
 			}
 
 			if (result == undefined) {
-				showErrorDialog('Internal error.');
+				showErrorDialog('Internal error');
 				return;
 			}
 

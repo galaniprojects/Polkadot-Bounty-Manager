@@ -238,7 +238,7 @@
 	{:else}
 		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
 			<p class="w-full md:w-2/3">
-				The Referendum for Curator Proposal of Bounty<br />
+				The Referendum for Curator Proposal of Bounty <br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
 				has been created successfully!
 				<br /><br />

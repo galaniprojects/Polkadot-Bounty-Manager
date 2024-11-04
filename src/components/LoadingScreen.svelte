@@ -10,28 +10,28 @@
 	title={dialogState.title}
 	dismissable={!(dialogState.status === 'loading')}
 >
-	<div class="h-full gap-3">
+	<div class="mt-5 place-self-center text-xl">
 		{#if dialogState.status === 'loading'}
-			<p class="mt-1">This might take a moment</p>
-			<span class="loader"></span>
+			<div class="flex-col space-y-3 text-center">
+				<p>This might take a moment</p>
+				<span class="loader"></span>
+			</div>
 		{/if}
 		{#if dialogState.status === 'success'}
 			<p>{dialogState.successMessage}</p>
 		{/if}
+
 		{#if dialogState.status === 'error'}
-			<p>
-				<span class="text-accent font-bold">Error: </span>
-				{dialogState.errorMessage}
-			</p>
+			<span>{dialogState.errorMessage}</span>
 		{/if}
 	</div>
 </BountyDialog>
 
 <style>
 	.loader {
-		width: 30px;
-		height: 30px;
-		border: 5px solid theme('colors.darkgray');
+		width: 50px;
+		height: 50px;
+		border: 7px solid theme('colors.darkgray');
 		border-bottom-color: theme('colors.primary');
 		border-radius: 50%;
 		display: inline-block;
