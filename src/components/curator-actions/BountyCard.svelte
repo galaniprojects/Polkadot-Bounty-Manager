@@ -19,6 +19,7 @@
 	import ExternalLinks from './ExternalLinks.svelte';
 	import { parse } from 'marked';
 	import DOMPurify from 'dompurify';
+	import BountyDescription from './BountyDescription.svelte';
 
 	export let bounty: Bounty;
 
@@ -70,17 +71,21 @@
 	$: if (expanded) {
 		const bountyId = bounty.id;
 
-		const url = `https://polkadot.subsquare.io/api/treasury/bounties/${bountyId}`;
-		fetch(url)
-			.then((response) => {
-				if (!response.ok) {
-					return;
-				}
-				return response.json();
-			})
-			.then(async (data) => {
-				description = await parse(data.content);
-			});
+		try {
+			const url = `https://polkadot.subsquare.io/api/treasury/bounties/${bountyId}`;
+			fetch(url)
+				.then((response) => {
+					if (!response.ok) {
+						return;
+					}
+					return response.json();
+				})
+				.then(async (data) => {
+					description = await parse(data.content);
+				});
+		} catch {
+			description = undefined;
+		}
 	}
 
 	function expandBounty() {
@@ -134,9 +139,8 @@
 				<section class="flex-col lg:flex lg:flex-row lg:justify-between">
 					<section class="flex justify-start">
 						{#if description}
-							<div class="text-xs lg:w-[250px] xl:w-[490px] pr-3">
-								<p>Description</p>
-								{@html DOMPurify.sanitize(description)}
+							<div class=" text-xs lg:w-[250px] xl:w-[490px] pr-3">
+							<BountyDescription description={DOMPurify.sanitize(description)}/>
 							</div>
 						{/if}
 						<div class="flex justify-between lg:space-x-8 xl:space-x-16">
@@ -190,12 +194,11 @@
 						<p class="text-xs">Curator Fee</p>
 						<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
-					<section class="text-xs space-y-1">
-						<p>Description</p>
-						<p>
-							{@html description}
-						</p>
-					</section>
+					{#if description}
+						<section class="text-xs space-y-1">
+							<BountyDescription description={DOMPurify.sanitize(description)}/>
+						</section>
+					{/if}
 					<div class="flex justify-between">
 						{#if expiryDate}
 							<section class="flex-col text-start">
