@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { formatDate, truncateString } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
