@@ -29,5 +29,11 @@ export default [
 	},
 	{
 		ignores: ['build/', '.svelte-kit/', 'dist/']
+	},
+	{
+		rules: {
+			// Allow usage of {@html}
+			'svelte3/valid-attribute': ['error', { allowHtml: true }]
+		}
 	}
 ];
