@@ -71,9 +71,7 @@
 				let unlockAt = Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', ''));
 				(async () => {
 					let currentBlockInfo = await getCurrentBlock();
-					let blocksToExpire =
-						unlockAt -
-						currentBlockInfo.blockNumber;
+					let blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
 					dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
 				})();
 				beneficiary = childBounty.status.PendingPayout.beneficiary;
