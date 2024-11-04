@@ -39,7 +39,7 @@
 	}
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('wallet is not connected');
+			showErrorDialog('Wallet is not connected');
 			return;
 		}
 		showLoadingDialog('Submitting Transaction');
@@ -78,7 +78,7 @@
 
 	function createProposalTransaction(api: ApiRx) {
 		if (!curatorFee) {
-			throw new Error('curator fee is not set');
+			throw new Error('Curator fee is not set');
 		}
 		let tx = api.tx.bounties.proposeCurator(
 			bountyInfo.id,
@@ -242,10 +242,8 @@
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
 				has been created successfully!
 				<br /><br />
-				Check the Referendum on
-				<a href="/bs" class="link underline underline-offset-2">Polkassembly</a>. Please update the
-				description if necessary and place the decision deposit within 7 days for the referendum to
-				be valid.
+				Check the Referendum on Polkassembly. Please update the description if necessary and place the
+				decision deposit within 7 days for the referendum to be valid.
 				<br /> <br />
 				Please update the description on one of the social platforms like Polkassembly and Subsquare.
 				The decision deposit must be placed within 7 days for the referendum to be valid. (This deposit

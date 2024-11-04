@@ -36,13 +36,13 @@
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('wallet is not connected');
+				showErrorDialog('Wallet is not connected');
 				return;
 			}
 			let api = await getApi();
 
 			if (bountyTitle.length === 0) {
-				showErrorDialog('bounty title is empty');
+				showErrorDialog('Bounty title is empty');
 				return;
 			}
 			if (!bountyValue) {
