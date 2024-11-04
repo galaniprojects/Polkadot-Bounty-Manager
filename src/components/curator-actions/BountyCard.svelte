@@ -140,7 +140,7 @@
 					<section class="flex justify-start">
 						{#if description}
 							<div class=" text-xs lg:w-[250px] xl:w-[490px] pr-3">
-							<BountyDescription description={DOMPurify.sanitize(description)}/>
+								<BountyDescription description={DOMPurify.sanitize(description)} />
 							</div>
 						{/if}
 						<div class="flex justify-between lg:space-x-8 xl:space-x-16">
@@ -196,7 +196,7 @@
 					</div>
 					{#if description}
 						<section class="text-xs space-y-1">
-							<BountyDescription description={DOMPurify.sanitize(description)}/>
+							<BountyDescription description={DOMPurify.sanitize(description)} />
 						</section>
 					{/if}
 					<div class="flex justify-between">

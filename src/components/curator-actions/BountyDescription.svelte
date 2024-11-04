@@ -18,9 +18,8 @@
 
 	onMount(checkOverflow);
 </script>
-<p>
-  Description
-</p>
+
+<p>Description</p>
 <div bind:this={container} class="content-container {isExpanded ? 'expanded' : ''}">
 	{@html description}
 </div>
