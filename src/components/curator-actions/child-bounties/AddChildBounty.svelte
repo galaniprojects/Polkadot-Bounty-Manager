@@ -37,13 +37,13 @@
 		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('wallet is not connected');
+				showErrorDialog('Wallet is not connected');
 				return;
 			}
 
 			const api = await getApi();
 			if (bountyTitle.length === 0) {
-				showErrorDialog('bounty title is empty');
+				showErrorDialog('Bounty title is empty');
 				return;
 			}
 			if (!bountyValue) {
@@ -189,14 +189,20 @@
 
 <style>
 	.scrollbar::-webkit-scrollbar {
-		@apply w-[5px];
+		width: 5px;
 	}
 
 	.scrollbar::-webkit-scrollbar-track {
-		@apply mt-2 bg-accent bg-opacity-50 rounded-lg;
+		/* @apply mt-2 bg-accent bg-opacity-50 rounded-lg; */
+		margin-top: 0.5rem;
+		background-color: theme('colors.accent');
+		--tw-bg-opacity: 0.5;
+		border-radius: 0.5rem;
 	}
 
 	.scrollbar::-webkit-scrollbar-thumb {
-		@apply bg-accent rounded-lg;
+		/* @apply bg-accent rounded-lg; */
+		background-color: theme('colors.accent');
+		border-radius: 0.5rem;
 	}
 </style>

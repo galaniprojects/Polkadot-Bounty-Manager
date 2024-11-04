@@ -40,12 +40,12 @@
 				return;
 			}
 			if (!isValidAddress(curatorAddress)) {
-				showErrorDialog('Curator address is invalid.');
+				showErrorDialog('Curator address is invalid');
 				return;
 			}
 
 			if (!isInteger(curatorFee)) {
-				showErrorDialog('Curator fee value is invalid.');
+				showErrorDialog('Curator fee value is invalid');
 				return;
 			}
 
@@ -78,7 +78,7 @@
 			}
 
 			if (result == undefined) {
-				showErrorDialog('Internal error.');
+				showErrorDialog('Internal error');
 				return;
 			}
 

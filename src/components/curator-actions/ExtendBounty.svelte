@@ -62,7 +62,7 @@
 			}
 
 			if (result == undefined) {
-				showErrorDialog('Internal error.');
+				showErrorDialog('Internal error');
 				return;
 			}
 
