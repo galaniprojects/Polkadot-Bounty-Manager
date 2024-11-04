@@ -165,7 +165,7 @@
 </script>
 
 <div>
-	<div class="p-3 md:p-6 bg-secondary">
+	<div class="p-3 pt-7 pb-10 md:p-6 bg-secondary">
 		{#if !success}
 			<input
 				bind:value={bountyTitle}
@@ -185,7 +185,7 @@
 	</div>
 
 	{#if success}
-		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class="bg-backgroundContent p-3 pt-7 pb-12 md:px-6 w-full box-border overflow-x-hidden">
 			<p>
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 				has been created successfully!
@@ -196,7 +196,7 @@
 				<br />
 			</p>
 
-			<div class="flex-col space-y-2 sm:flex-row mt-5">
+			<div class="flex-col space-y-2 sm:flex-row mt-40">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>
@@ -205,26 +205,26 @@
 		</div>
 	{:else}
 		<div
-			class="grid content-between bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden"
+			class="grid content-between space-y-10 bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden"
 		>
 			<div>
-				<p class="text-xs">Bounty value</p>
-				<div class="flex mt-2">
+				<section class="space-y-3">
+					<p class="text-xs">Bounty value</p>
 					<input
 						bind:value={bountyValue}
 						class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
 						placeholder="1000"
 						on:input={inputChange}
 					/>
-				</div>
-				<hr class="border-white mt-5 mb-1 w-full md:w-1/2" />
+				</section>
+				<hr class="border-white my-10 w-full md:w-1/2" />
 
-				<div class="mt-5 mb-10 h-24">
-					<section class="mb-3">
+				<div class="my-10 h-24 space-y-5">
+					<section class="space-y-3">
 						<p class="label text-xs">Bounty Bond</p>
 						<p class="value">{bondValue}</p>
 					</section>
-					<section>
+					<section class="space-y-3">
 						<p class="label text-xs">Transaction fee</p>
 						<p class="value">{fee}</p>
 					</section>

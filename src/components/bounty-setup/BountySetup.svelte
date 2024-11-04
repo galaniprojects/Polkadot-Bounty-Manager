@@ -108,19 +108,19 @@
 			</div>
 
 			{#if activeTab === TABS[0]}
-				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4">
+				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4 min-h-[500px]">
 					<div class="rounded-t-md overflow-clip">
 						<BountyCreation bind:bountyInfo on:changeTab={changeTabEvent} />
 					</div>
 				</div>
 			{:else if activeTab === TABS[1]}
-				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4">
+				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4 min-h-[500px]">
 					<div class="rounded-t-md overflow-clip">
 						<ApprovalReferendum bind:bountyInfo on:changeTab={changeTabEvent} />
 					</div>
 				</div>
 			{:else}
-				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4">
+				<div class="rounded-md bg-backgroundContentWrapper flex-col p-4 min-h-[500px]">
 					<div class="rounded-t-md overflow-clip">
 						<CuratorProposal bind:bountyInfo />
 					</div>
@@ -133,5 +133,6 @@
 <style>
 	.main {
 		background: linear-gradient(180deg, #311033 0%, #6c003d 100%);
+		height: 100vh;
 	}
 </style>

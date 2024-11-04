@@ -123,8 +123,8 @@
 </script>
 
 <div>
-	<div class="p-3 md:p-6 bg-secondary">
-		<p class="text-lg sm:text-2xl text-white">
+	<div class="p-3 pt-7 pb-10 md:p-6 bg-secondary">
+		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 			{/if}
@@ -138,7 +138,7 @@
 	</div>
 
 	{#if success}
-		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
 			<p class="w-full md:w-2/3">
 				The Referendum for the approval of Bounty <br />
 				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
@@ -162,9 +162,9 @@
 			</div>
 		</div>
 	{:else}
-		<div class=" bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+		<div class=" bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
 			<div>
-				<div>
+				<div class="space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
 						class="border w-full md:w-1/3 rounded-md h-7 px-1 pt-1"
@@ -181,12 +181,12 @@
 
 				<hr class="border-white mt-3 mb-3 w-full md:w-1/3" />
 
-				<div class="mt-5 h-24 mb-10">
-					<section class="mb-3">
+				<div class="my-10 mb-14 h-24 space-y-5">
+					<section class="space-y-3">
 						<p class="label text-xs">Deposit</p>
 						<p>{deposit}</p>
 					</section>
-					<section>
+					<section class="space-y-3">
 						<p class="label text-xs">Transaction fee</p>
 						<p>{fee}</p>
 					</section>
