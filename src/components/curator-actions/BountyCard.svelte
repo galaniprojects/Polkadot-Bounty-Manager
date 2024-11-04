@@ -11,7 +11,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { convertPlanckToDot } from '../../utils/polkadot';
-	import { onMount } from 'svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import { calculateExpirationDate, formatDate } from '../../utils/common';
@@ -32,41 +31,32 @@
 	let curator: string | undefined = undefined;
 	let description: string | undefined;
 
-	onMount(async () => {
+	$: {
 		if (bounty.status === 'Proposed') {
 			status = 'proposed';
-			return;
-		}
-		if (bounty.status === 'Approved') {
+		} else if (bounty.status === 'Approved') {
 			status = 'approved';
-			return;
-		}
-		if (bounty.status === 'Funded') {
+		} else if (bounty.status === 'Funded') {
 			status = 'funded';
-			return;
-		}
-		if (typeof bounty.status === 'object') {
+		} else if (typeof bounty.status === 'object') {
 			if ('Active' in bounty.status) {
 				status = 'active';
 				curator = bounty.status.Active.curator;
-				let calculatedExpiryDate = await calculateExpirationDate(bounty);
-				if (calculatedExpiryDate) {
-					expiryDate = formatDate(calculatedExpiryDate);
-				}
-				return;
-			}
-			if ('CuratorProposed' in bounty.status) {
+				(async () => {
+					let calculatedExpiryDate = await calculateExpirationDate(bounty);
+					if (calculatedExpiryDate) {
+						expiryDate = formatDate(calculatedExpiryDate);
+					}
+				})();
+			} else if ('CuratorProposed' in bounty.status) {
 				status = 'curator proposed';
 				curator = bounty.status.CuratorProposed.curator;
-				return;
-			}
-			if ('PendingPayout' in bounty.status) {
+			} else if ('PendingPayout' in bounty.status) {
 				curator = bounty.status.PendingPayout.curator;
 				status = 'pending payout';
-				return;
 			}
 		}
-	});
+	}
 
 	$: if (expanded) {
 		const bountyId = bounty.id;

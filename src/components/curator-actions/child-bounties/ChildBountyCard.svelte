@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { formatDate, truncateString } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
@@ -55,7 +54,7 @@
 			statusColorClass = 'added';
 	}
 
-	onMount(async () => {
+	$: {
 		if (childBounty.status === 'Added') {
 			status = 'added';
 		} else if (typeof childBounty.status === 'object') {
@@ -68,15 +67,16 @@
 			} else if ('PendingPayout' in childBounty.status) {
 				subCurator = childBounty.status.PendingPayout.curator;
 				status = 'pending payout';
-				let currentBlockInfo = await getCurrentBlock();
-				let blocksToExpire =
-					Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', '')) -
-					currentBlockInfo.blockNumber;
-				dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
+				let unlockAt = Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', ''));
+				(async () => {
+					let currentBlockInfo = await getCurrentBlock();
+					let blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
+					dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
+				})();
 				beneficiary = childBounty.status.PendingPayout.beneficiary;
 			}
 		}
-	});
+	}
 
 	function getCurator() {
 		if (childBounty.status === 'Added') {
