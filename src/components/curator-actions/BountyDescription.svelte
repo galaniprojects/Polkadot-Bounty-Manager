@@ -3,7 +3,7 @@
 
 	let isExpanded = false;
 	let isOverflowing = false;
-	let container: any;
+	let container: HTMLDivElement;
 	export let description: string;
 
 	function checkOverflow() {
