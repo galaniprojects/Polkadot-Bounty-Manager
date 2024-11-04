@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
-	import type { ChildBounty } from '../../../types/child-bounty';
+	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
+	import { getChildBountyStatus } from '../../../utils/bounties';
 	import AddChildBounty from './AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from './DropdownMenu.svelte';
@@ -9,10 +10,23 @@
 	export let bounty: Bounty;
 	export let childBounties: ChildBounty[];
 
+	let filteredChildBounties: ChildBounty[] = [];
 	let createChildBountyOpen = false;
-	let selectedFilter = 'all';
+	let selectedFilter: ChildBountyStatusString | 'all' = 'all';
 
-	const filters = ['all', 'active', 'awarded', 'claimed', 'created', 'sub-curator proposed'];
+	$: if (childBounties.length > 0) {
+		filteredChildBounties = childBounties.filter((childBounty) => {
+			return getChildBountyStatus(childBounty) === selectedFilter || selectedFilter === 'all';
+		});
+	}
+
+	const filters: Array<ChildBountyStatusString | 'all'> = [
+		'all',
+		'added',
+		'active',
+		'sub-curator proposed',
+		'pending payout'
+	];
 </script>
 
 <div class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
@@ -49,22 +63,31 @@
 					</div>
 				{/if}
 			</div>
-			<div
-				class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
-			>
-				<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
-				<div class="flex justify-between">
-					<p class="mt-2 lg:hidden">by status</p>
-					<div><DropdownMenu bind:selectedItem={selectedFilter} items={filters} /></div>
+			{#if childBounties.length > 0}
+				<div
+					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
+				>
+					<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
+					<div class="flex justify-between">
+						<p class="mt-2 lg:hidden">by status</p>
+						<div><DropdownMenu bind:selectedItem={selectedFilter} items={filters} /></div>
+					</div>
 				</div>
-			</div>
+			{/if}
 		</div>
 	</section>
 
 	<div>
-		{#each childBounties as childBounty}
+		{#each filteredChildBounties as childBounty}
 			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}
+		<div class="ml-3 mt-3">
+			{#if childBounties.length === 0}
+				<p>No active child bounties</p>
+			{:else if filteredChildBounties.length === 0}
+				<p>No Child bounties for the selected filter</p>
+			{/if}
+		</div>
 	</div>
 </div>
 <AddChildBounty {bounty} bind:open={createChildBountyOpen} />

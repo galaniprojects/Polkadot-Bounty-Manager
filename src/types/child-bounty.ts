@@ -13,3 +13,9 @@ export type ChildBountyStatus =
 	| { CuratorProposed: { curator: string } }
 	| { Active: { curator: string } }
 	| { PendingPayout: { curator: string; beneficiary: string; unlockAt: string } };
+
+export type ChildBountyStatusString =
+	| 'added'
+	| 'active'
+	| 'sub-curator proposed'
+	| 'pending payout';
