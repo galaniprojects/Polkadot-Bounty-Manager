@@ -187,7 +187,6 @@
 						<input
 							bind:value={curatorAddress}
 							class="w-full md:w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
-							placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
 							on:input={inputChange}
 						/>
 					</div>
