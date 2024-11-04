@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ChildBounty } from '../../../types/child-bounty';
+	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
 	import { formatDate, truncateString } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
@@ -18,7 +18,8 @@
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
-	let status: Status;
+
+	let status: ChildBountyStatusString;
 	let subCurator: string;
 
 	let beneficiary: string | undefined;
@@ -32,8 +33,6 @@
 	let claimChildBountyOpen = false;
 
 	let detailsExpended = false;
-
-	type Status = 'added' | 'active' | 'sub-curator proposed' | 'pending payout';
 
 	let statusColorClass = '';
 
