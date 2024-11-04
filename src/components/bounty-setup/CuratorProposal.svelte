@@ -18,6 +18,7 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../utils/loading-screen';
+	import { goto } from '$app/navigation';
 
 	export let bountyInfo: BountyInfo;
 	let curatorFee: string | undefined = undefined;
@@ -38,7 +39,7 @@
 	}
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('wallet is not connected');
+			showErrorDialog('Wallet is not connected');
 			return;
 		}
 		showLoadingDialog('Submitting Transaction');
@@ -77,7 +78,7 @@
 
 	function createProposalTransaction(api: ApiRx) {
 		if (!curatorFee) {
-			throw new Error('curator fee is not set');
+			throw new Error('Curator fee is not set');
 		}
 		let tx = api.tx.bounties.proposeCurator(
 			bountyInfo.id,
@@ -137,63 +138,70 @@
 </script>
 
 <div>
-	<div class="top-bar flex justify-between text-white">
-		<p class="title text-2xl leading-7">
+	<div class="p-3 md:p-6 bg-secondary text-white">
+		<p class="text-lg sm:text-2xl text-white">
 			{#if bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 			{/if}
 		</p>
-		<p class="text text-sm mt-1.5">
-			<span class="opacity-50">Need more information about the Bounty Setup process? </span>
-			Tap here
-		</p>
+		{#if false}
+			<p class="text text-sm mt-1.5">
+				<span class="opacity-50">Need more information about the Bounty Setup process? </span>
+				Tap here
+			</p>
+		{/if}
 	</div>
 
 	{#if step === 1}
-		<div class="content">
-			<p class="description">
-				As standard practice, this action is performed after the Bounty has been funded.
+		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+			<p class="w-full md:w-2/3">
+				It is strongly recommended to create the Curator Proposal referendum, after the Bounty has
+				been funded and the Curator list has been informally accepted by the community in
+				discussions on the platforms.
 				<br /><br />
 				However if you want to proceed and already have a list of curators to propose, it is possible
 				to do so.
 				<br />
+				Please note: the execution of the Curator Proposal referendum will fail, unless the bounty has
+				been already funded.
 			</p>
 
-			<div class="mt-5 flex">
-				<button class="button-cancel mr-5">LIST</button>
+			<div class="flex-col space-y-2 sm:flex-row mt-5">
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
+					>RETURN HOME</button
+				>
 				<button disabled={!bountyInfo.id} on:click={() => proceed()} class="button-active"
 					>PROCEED</button
 				>
 			</div>
 		</div>
 	{:else if step === 2}
-		<div class="content">
+		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
 			<div>
 				<div>
-					<p class="description mb-2">
+					<p class="w-full md:1/3 mb-2">
 						It is highly recommended to use a pure proxy multisig address for the curators!
 					</p>
 					<p class="text-xs my-1">Curator Address</p>
 					<input
 						bind:value={curatorAddress}
-						class="border border-borderColor w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
+						class="border border-borderColor w-full md:w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
 						placeholder="5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
 						on:input={inputChange}
 					/>
 					<p class="text-xs my-1">Curator Fee</p>
 					<input
 						bind:value={curatorFee}
-						placeholder="100"
+						placeholder="0"
 						on:input={inputChange}
-						class="border border-borderColor pt-1 pl-2 rounded-md bg-white mr-2 w-1/3"
+						class="border border-borderColor pt-1 pl-2 rounded-md bg-white mr-2 w-full md:w-1/3"
 					/>
-					<p class="text-xs mt-1">(total Bounty value: 100.000.0000 DOT)</p>
 				</div>
 
 				<div class="mt-4">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
-						class="border w-1/4 rounded-md h-7 px-1 pt-1"
+						class="border w-full md:w-1/4 rounded-md h-7 px-1 pt-1"
 						bind:value={selectedTreasuryTrack}
 						name="spenders"
 						id="spenders"
@@ -203,12 +211,15 @@
 						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
 						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
 					</select>
-					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
+					<p class="text-xs mt-1">
+						(please select the same or higher treasury track that was used in the Bounty Approval
+						referendum)
+					</p>
 				</div>
 
-				<hr class="border-white w-1/2 mt-5 mb-3" />
+				<hr class="border-white w-full sm:w-1/2 mt-5 mb-3" />
 
-				<div class="mt-5 h-24 mb-10">
+				<div class="my-5 h-24">
 					<section class="mb-3">
 						<p class="label text-xs">Deposit</p>
 						<p class="value">{deposit}</p>
@@ -219,28 +230,31 @@
 					</section>
 				</div>
 			</div>
-			<div class="flex">
-				<button class="button-cancel mr-5">CANCEL</button>
+			<div class="flex-col space-y-2 sm:flex-row">
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{:else}
-		<div class="content">
-			<p class="description">
-				A Curator Proposal Referendum for <br />
+		<div class="bg-backgroundContent p-3 md:px-6 w-full box-border overflow-x-hidden">
+			<p class="w-full md:w-2/3">
+				The Referendum for Curator Proposal of Bounty<br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
-				created successfully!
+				has been created successfully!
 				<br /><br />
-				Check the Referendum on
-				<a href="/bs" class="link underline underline-offset-2">Polkassembly</a>. Please update the
-				description if necessary and place the decision deposit within 7 days for the referendum to
-				be valid.
+				Check the Referendum on Polkassembly. Please update the description if necessary and place the
+				decision deposit within 7 days for the referendum to be valid.
 				<br /> <br />
-				You can go back to the list of all bounties.
+				Please update the description on one of the social platforms like Polkassembly and Subsquare.
+				The decision deposit must be placed within 7 days for the referendum to be valid. (This deposit
+				can be placed by any account). This can be submitted either on one of the social platforms or
+				via the polkadot.js explorer.
 			</p>
 
 			<div class="buttons mt-5 flex">
-				<button class="button-cancel mr-5">RETURN HOME</button>
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
+					>RETURN HOME</button
+				>
 			</div>
 		</div>
 	{/if}

@@ -40,7 +40,9 @@
 	}
 </script>
 
-<header class="relative flex items-center justify-between h-20 bg-primary px-4 sm:px-12">
+<header
+	class="relative flex items-center justify-between h-20 bg-primary px-4 sm:px-12 overflow-clip"
+>
 	<label class="flex gap-3 mx-4">
 		<input type="checkbox" bind:checked={$showAllBounties} />
 		<p class="text-white">all bounties</p>

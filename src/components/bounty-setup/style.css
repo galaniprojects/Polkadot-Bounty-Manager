@@ -3,7 +3,7 @@
 }
 
 .content {
-	@apply py-4 pl-8 bg-backgroundContent min-h-[500px];
+	@apply py-4 p-8 bg-backgroundContent;
 }
 
 .link {
@@ -22,10 +22,6 @@
 	}
 
 	.content input,
-	.content textarea,
-	.content select,
-	.content hr,
-	.content button,
 	.description,
 	.top-bar input {
 		@apply w-full;
@@ -37,10 +33,6 @@
 
 	.top-bar .text {
 		@apply text-xs;
-	}
-
-	.top-bar .title {
-		@apply text-lg;
 	}
 
 	.buttons {
