@@ -180,7 +180,7 @@
 
 	<button
 		on:click={submit}
-		disabled={!beneficiary.length}
+		disabled={!beneficiary.length || !curatorFee.length}
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
 		{beneficiary.length === 0 || curatorFee.length === 0
 			? 'basic-button opacity-50'
