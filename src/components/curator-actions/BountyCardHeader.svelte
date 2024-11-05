@@ -2,6 +2,7 @@
 	import type { Bounty } from '../../types/bounty';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../PolkadotIcon.svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	export let bounty: Bounty;
 	export let status: string;
@@ -48,30 +49,28 @@
 		</button>
 	</div>
 
-	<div class="flex justify-between">
+	<div class="flex">
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
-			<section class="flex justify-center items-center space-x-1 lg:w-52">
-				<p>Proposer:</p>
-				<button
-					class="flex space-x-1"
-					on:click={() => {
-						copyToClipboard(bounty.proposer);
-					}}
-				>
-					<div class="h-4 w-4">
-						<PolkadotIcon address={bounty.proposer} />
-					</div>
-					<span>{truncateString(bounty.proposer, 8)}</span>
-					<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
-					{#if copiedLast}
-						<div
-							class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50 mt-5"
-						>
-							copied to clipboard
+			<div class="flex flex-col justify-start lg:w-60">
+				<section class="flex justify-start items-center space-x-1">
+					<p>Proposer:</p>
+					<button
+						class="flex space-x-1"
+						on:click={() => {
+							copyToClipboard(bounty.proposer);
+						}}
+					>
+						<div class="h-4 w-4">
+							<PolkadotIcon address={bounty.proposer} />
 						</div>
-					{/if}
-				</button>
-			</section>
+						<span>{truncateString(bounty.proposer, 8)}</span>
+						<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+					</button>
+				</section>
+				<div class="w-full">
+					<Tooltip show={copiedLast} text="Copied to clipboard" />
+				</div>
+			</div>
 			<section class="flex space-x-1 lg:w-52">
 				<p>Status:</p>
 				<p>{status}</p>
@@ -79,13 +78,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	.tooltip {
-		opacity: 0;
-		transition: opacity 0.2s ease-in-out;
-	}
-	.tooltip.show {
-		opacity: 1;
-	}
-</style>

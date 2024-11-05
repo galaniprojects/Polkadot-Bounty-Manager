@@ -15,6 +15,7 @@
 	import LogoPolkassemblyPink from '../../svg/curator-actions-logo/LogoPolkassemblyPink.svelte';
 	import LogoSubscanPink from '../../svg/curator-actions-logo/LogoSubscanPink.svelte';
 	import PolkadotIcon from '../../PolkadotIcon.svelte';
+	import Tooltip from '../Tooltip.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -33,6 +34,7 @@
 	let claimChildBountyOpen = false;
 
 	let detailsExpended = false;
+	let recentCopiedStates: { [key: string]: boolean } = { subCurator: false, beneficiary: false };
 
 	let statusColorClass = '';
 
@@ -95,9 +97,7 @@
 		detailsExpended = !detailsExpended;
 	}
 
-	let copiedLast = false;
-
-	async function copyToClipboard(text: string | undefined) {
+	async function copyToClipboard(text: string | undefined, type: 'subCurator' | 'beneficiary') {
 		if (!text) {
 			console.error('No text present to copy');
 			return;
@@ -105,9 +105,13 @@
 
 		try {
 			await navigator.clipboard.writeText(text);
-			copiedLast = true;
+			recentCopiedStates[type] = true;
+
+			const changeType = type === 'subCurator' ? 'beneficiary' : 'subCurator';
+			recentCopiedStates[changeType] = false;
+
 			setTimeout(() => {
-				copiedLast = false;
+				recentCopiedStates[type] = false;
 			}, 1500);
 		} catch (err) {
 			console.error('Failed to copy', err);
@@ -170,7 +174,7 @@
 								<button
 									class="flex"
 									on:click={() => {
-										copyToClipboard(getCurator());
+										copyToClipboard(getCurator(), 'subCurator');
 									}}
 								>
 									<div class="h-5 w-5 mr-2">
@@ -181,6 +185,7 @@
 										content_copy
 									</span>
 								</button>
+								<Tooltip show={recentCopiedStates.subCurator} text="Copied to clipboard" />
 							</section>
 						{/if}
 
@@ -190,7 +195,7 @@
 								<button
 									class="flex"
 									on:click={() => {
-										copyToClipboard(beneficiary);
+										copyToClipboard(beneficiary, 'beneficiary');
 									}}
 								>
 									<div class="h-5 w-5 mr-2">
@@ -204,15 +209,7 @@
 							</section>
 						{/if}
 					</div>
-					<div>
-						{#if copiedLast}
-							<div
-								class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50"
-							>
-								copied to clipboard
-							</div>
-						{/if}
-					</div>
+					<Tooltip show={recentCopiedStates.beneficiary} text="Copied to clipboard" />
 				</div>
 			</div>
 		</div>

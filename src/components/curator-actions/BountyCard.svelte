@@ -19,6 +19,7 @@
 	import { parse } from 'marked';
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
+	import Tooltip from './Tooltip.svelte';
 
 	export let bounty: Bounty;
 
@@ -29,6 +30,8 @@
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let description: string | undefined;
+
+	let copiedLast = false;
 
 	$: {
 		if (bounty.status === 'Proposed') {
@@ -85,8 +88,6 @@
 		detailsExpanded = !detailsExpanded;
 	}
 
-	let copiedLast = false;
-
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
 			console.error('No text present to copy');
@@ -135,14 +136,8 @@
 								>
 									<span>{truncateString(curator || '-', 30)}</span>
 									<span class="material-symbols-outlined"> content_copy </span>
-									{#if copiedLast}
-										<div
-											class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50"
-										>
-											copied to clipboard
-										</div>
-									{/if}
 								</button>
+								<Tooltip show={copiedLast} text="Copied to clipboard" />
 							</div>
 						{/if}
 					</section>
@@ -210,14 +205,8 @@
 							>
 								<span>{truncateString(curator || '-', 25)}</span>
 								<span class="material-symbols-outlined"> content_copy </span>
-								{#if copiedLast}
-									<div
-										class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50 mb-60"
-									>
-										copied to clipboard
-									</div>
-								{/if}
 							</button>
+							<Tooltip show={copiedLast} text="Copied to clipboard" />
 						</div>
 					{/if}
 					{#if description}
