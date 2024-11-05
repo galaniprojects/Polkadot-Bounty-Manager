@@ -21,7 +21,10 @@ jobs:
 
       - name: Lint code
         run: npm run lint
-
+        
+      - name: Move .env.example to .env
+        run: mv .env.example .env
+        
       - name: Build project
         run: npm run build
 
