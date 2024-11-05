@@ -12,6 +12,7 @@
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
 	import PolkadotIcon from '../../PolkadotIcon.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
+	import Batch from './Batch.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -28,6 +29,7 @@
 	let closeDownChildBountyOpen = false;
 	let awardChildBountyOpen = false;
 	let claimChildBountyOpen = false;
+	let batchOpen = false;
 
 	let detailsExpended = false;
 
@@ -242,6 +244,16 @@
 						ASSIGN
 					</button>
 				</div>
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+					<p class="text-xs lg:text-base lg:pt-2">All operations</p>
+
+					<button
+						on:click={() => (batchOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						BATCH
+					</button>
+				</div>
 			{/if}
 
 			<div class="flex justify-end">
@@ -318,6 +330,10 @@
 
 {#if claimChildBountyOpen}
 	<ClaimChildBounty bind:open={claimChildBountyOpen} {childBounty} />
+{/if}
+
+{#if batchOpen}
+	<Batch bind:open={batchOpen} {childBounty} {parentBounty} />
 {/if}
 
 <style>

@@ -44,7 +44,7 @@
 			let transaction = api.tx.childBounties.awardChildBounty(
 				childBounty.parentBounty,
 				childBounty.id,
-				$activeAccount.address
+				beneficiary
 			);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
