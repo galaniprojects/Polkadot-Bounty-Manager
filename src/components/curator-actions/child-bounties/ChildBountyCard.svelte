@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
-	import { formatDate, truncateString } from '../../../utils/common';
+	import { formatDate } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
@@ -30,7 +30,6 @@
 	let claimChildBountyOpen = false;
 
 	let detailsExpended = false;
-	let recentCopiedStates: { [key: string]: boolean } = { subCurator: false, beneficiary: false };
 
 	let statusColorClass = '';
 

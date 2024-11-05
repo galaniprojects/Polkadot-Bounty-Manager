@@ -31,8 +31,6 @@
 	let curator: string | undefined = undefined;
 	let description: string | undefined;
 
-	let copiedLast = false;
-
 	$: {
 		if (bounty.status === 'Proposed') {
 			status = 'proposed';
