@@ -244,8 +244,10 @@
 				</div>
 			{/if}
 
-			<div class="hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-2.5">
-				<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
+			<div class="flex justify-end">
+				<div class="w-32 hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-2.5">
+					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
+				</div>
 			</div>
 
 			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && $activeAccount && subCurator === $activeAccount.address)}
