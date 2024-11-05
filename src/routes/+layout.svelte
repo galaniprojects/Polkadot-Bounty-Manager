@@ -8,6 +8,9 @@
 	import TestBar from '../components/TestBar.svelte';
 </script>
 
+<div class="bg-accent text-white h-10 flex justify-center items-center">
+	<p>This is a beta version, some features may not work correctly.</p>
+</div>
 <TestBar />
 <AppBar />
 <LoadingScreen bind:dialogState={$loadingDialogState} />
