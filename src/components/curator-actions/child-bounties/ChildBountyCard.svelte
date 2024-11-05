@@ -333,7 +333,7 @@
 {/if}
 
 {#if batchOpen}
-	<Batch bind:open={batchOpen} {childBounty}  />
+	<Batch bind:open={batchOpen} {childBounty} />
 {/if}
 
 <style>
