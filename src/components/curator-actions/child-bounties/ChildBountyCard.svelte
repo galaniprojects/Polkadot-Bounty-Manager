@@ -92,7 +92,6 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
-
 </script>
 
 <div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">

@@ -32,7 +32,7 @@
 			<div class="flex flex-col justify-start lg:w-60">
 				<section class="flex justify-start items-center space-x-1">
 					<p>Proposer:</p>
-	<CopyableAddress address={bounty.proposer} />
+					<CopyableAddress address={bounty.proposer} />
 				</section>
 			</div>
 			<section class="flex space-x-1 lg:w-52">
