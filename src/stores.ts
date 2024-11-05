@@ -6,8 +6,9 @@ import { WalletConnectSigner } from './utils/WcSigner';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
 import type { BlockInfo } from './utils/polkadot';
+import { PUBLIC_NODE } from '$env/static/public'
 
-export const nodeEndpoint = writable('ws://localhost:8000');
+export const nodeEndpoint = writable(PUBLIC_NODE || "ws://localhost:8000");
 
 export const api = writable();
 
