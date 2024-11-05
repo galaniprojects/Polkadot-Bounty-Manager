@@ -138,7 +138,7 @@
 </script>
 
 <div>
-	<div class="p-3 pt-7 pb-10 md:p-6 bg-secondary">
+	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
@@ -153,8 +153,10 @@
 	</div>
 
 	{#if step === 1}
-		<div class="bg-backgroundContent p-3 pt-7 pb-12 md:px-6 w-full box-border overflow-x-hidden">
-			<p class="w-full md:w-2/3">
+		<div
+			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		>
+			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				It is strongly recommended to create the Curator Proposal referendum, after the Bounty has
 				been funded and the Curator list has been informally accepted by the community in
 				discussions on the platforms.
@@ -166,7 +168,7 @@
 				been already funded.
 			</p>
 
-			<div class="flex-col space-y-2 sm:flex-row mt-20">
+			<div class="flex-col space-y-2 sm:flex-row my-5 sm:mt-20">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>
@@ -176,13 +178,15 @@
 			</div>
 		</div>
 	{:else if step === 2}
-		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
+		<div
+			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		>
 			<div>
-				<div class="space-y-5">
-					<p class="w-full md:1/3 mb-2">
+				<div class="space-y-2 sm:space-y-5">
+					<p class="w-full md:1/3 mb-2 text-sm sm:text-base">
 						It is highly recommended to use a pure proxy multisig address for the curators!
 					</p>
-					<div class="space-y-3">
+					<div class="space-y-1 sm:space-y-3">
 						<p class="text-xs my-1">Curator Address</p>
 						<input
 							bind:value={curatorAddress}
@@ -190,7 +194,7 @@
 							on:input={inputChange}
 						/>
 					</div>
-					<div class="space-y-3">
+					<div class="space-y-1 sm:space-y-3">
 						<p class="text-xs my-1">Curator Fee</p>
 						<input
 							bind:value={curatorFee}
@@ -201,7 +205,7 @@
 					</div>
 				</div>
 
-				<div class="mt-5 space-y-3">
+				<div class="mt-5 space-y-1 sm:space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
 						class="border w-full md:w-1/4 rounded-md h-7 px-1 pt-1"
@@ -220,27 +224,29 @@
 					</p>
 				</div>
 
-				<hr class="border-white w-full sm:w-1/2 my-10" />
+				<hr class="border-white w-full sm:w-1/2 my-5 sm:my-10" />
 
-				<div class="my-5 h-24 space-y-5">
-					<section class="space-y-3">
+				<div class="my-5 h-24 space-y-2 sm:space-y-5">
+					<section class="space-y-1 sm:space-y-3">
 						<p class="label text-xs">Deposit</p>
 						<p class="value">{deposit}</p>
 					</section>
-					<section class="space-y-3">
+					<section class="space-y-1 sm:space-y-3">
 						<p class="label text-xs">Transaction fee</p>
 						<p class="value">{fee}</p>
 					</section>
 				</div>
 			</div>
-			<div class="flex-col space-y-2 sm:flex-row mt-10 mb-5">
+			<div class="flex-col space-y-2 sm:flex-row my-3 sm:mt-10 sm:mb-5">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
 		</div>
 	{:else}
-		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
-			<p class="w-full md:w-2/3">
+		<div
+			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		>
+			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				The Referendum for Curator Proposal of Bounty <br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
 				has been created successfully!
@@ -254,7 +260,7 @@
 				via the polkadot.js explorer.
 			</p>
 
-			<div class="buttons mt-24 mb-2 flex">
+			<div class="mt-7 sm:mt-24 mb-2 flex">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>

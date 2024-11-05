@@ -4,7 +4,7 @@
 	export let tabName: string;
 </script>
 
-<div class="tab-bar rounded-md w-full h-full">
+<div class="tab-bar rounded-md w-full h-16 sm:h-full">
 	<button
 		class="text-lg sm:text-2xl flex justify-center items-center w-full h-full pt-2
     {activeTab !== tabName
