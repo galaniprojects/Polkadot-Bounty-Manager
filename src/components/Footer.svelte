@@ -1,9 +1,21 @@
 <script>
+	import { goto } from '$app/navigation';
 	import LogoBountyManagerDesktop from './svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
+	import { page } from '$app/stores';
+
+	$: isOnImprintPage = $page.url.pathname === '/imprint';
+	$: text = isOnImprintPage ? 'Back' : 'Imprint';
+	$: link = isOnImprintPage ? '/curator-actions' : '/imprint';
+
+	function handleClick() {
+		goto(link);
+	}
 </script>
 
 <hr class="dotted-line border border-accent border-dotted bg-primary" />
 <footer class="bg-primary flex flex-col justify-center items-center pt-5 pb-6 space-y-6">
 	<p><LogoBountyManagerDesktop /></p>
-	<button class="text-sm text-white underline underline-offset-2 pr-5">Imprint</button>
+	<button on:click={handleClick} class="text-sm text-white underline underline-offset-2 pr-5"
+		>{text}</button
+	>
 </footer>

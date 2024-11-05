@@ -13,12 +13,13 @@
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { calculateExpirationDate, formatDate, truncateString } from '../../utils/common';
+	import { calculateExpirationDate, formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
 	import { parse } from 'marked';
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
+	import CopyableAddress from '../CopyableAddress.svelte';
 
 	export let bounty: Bounty;
 
@@ -109,7 +110,7 @@
 						{#if curator}
 							<div class="mt-4 lg:mt-0">
 								<p class="text-xs">Curator</p>
-								<p>{truncateString(curator || '-', 30)}</p>
+								<CopyableAddress address={curator} />
 							</div>
 						{/if}
 					</section>
@@ -170,7 +171,7 @@
 					{#if curator}
 						<div class="space-y-1">
 							<p class="text-xs">Curator</p>
-							<p>{truncateString(curator || '-', 25)}</p>
+							<CopyableAddress address={curator} />
 						</div>
 					{/if}
 					{#if description}

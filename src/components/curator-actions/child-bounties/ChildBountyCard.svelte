@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
-	import { formatDate, truncateString } from '../../../utils/common';
+	import { formatDate } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
 	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
@@ -10,8 +10,8 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
-	import PolkadotIcon from '../../PolkadotIcon.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
+	import CopyableAddress from '../../CopyableAddress.svelte';
 	import BatchChildBountyCalls from './BatchChildBountyCalls.svelte';
 
 	export let childBounty: ChildBounty;
@@ -143,30 +143,22 @@
 						</section>
 					{/if}
 				</div>
+				<div>
+					<div class="flex flex-col justify-between w-full lg:w-48 xl:w-62">
+						{#if typeof childBounty.status === 'object'}
+							<section>
+								<p class="text-xs">Sub-Curator</p>
+								<CopyableAddress address={getCurator() || '-'} />
+							</section>
+						{/if}
 
-				<div class="flex justify-between w-full lg:flex-col lg:w-48 xl:w-62">
-					{#if typeof childBounty.status === 'object'}
-						<section>
-							<p class="text-xs">Sub-Curator</p>
-							<div class="flex">
-								<div class="h-5 w-5 mr-2">
-									<PolkadotIcon address={getCurator()} />
-								</div>
-								<p>{truncateString(getCurator() || '-', 9)}</p>
-							</div>
-						</section>
-					{/if}
-					{#if beneficiary}
-						<section class="lg:mt-3">
-							<p class="text-xs">Beneficiary</p>
-							<div class="flex">
-								<div class="h-5 w-5 mr-2">
-									<PolkadotIcon address={beneficiary} />
-								</div>
-								<p>{truncateString(beneficiary, 9)}</p>
-							</div>
-						</section>
-					{/if}
+						{#if beneficiary}
+							<section class="mt-3">
+								<p class="text-xs">Beneficiary</p>
+								<CopyableAddress address={beneficiary} />
+							</section>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -375,5 +367,13 @@
 
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+	}
+
+	.tooltip {
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.tooltip.show {
+		opacity: 1;
 	}
 </style>

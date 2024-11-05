@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { truncateString } from '../../utils/common';
-	import PolkadotIcon from '../PolkadotIcon.svelte';
-
+	import CopyableAddress from '../CopyableAddress.svelte';
 	export let bounty: Bounty;
 	export let status: string;
 	export let isParentExpanded: boolean;
@@ -29,15 +27,14 @@
 		</button>
 	</div>
 
-	<div class="flex justify-between">
+	<div class="flex">
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
-			<section class="flex justify-center items-center space-x-1 lg:w-52">
-				<p>Proposer:</p>
-				<div class="h-4 w-4">
-					<PolkadotIcon address={bounty.proposer} />
-				</div>
-				<p>{truncateString(bounty.proposer, 8)}</p>
-			</section>
+			<div class="flex flex-col justify-start lg:w-60">
+				<section class="flex justify-start items-center space-x-1">
+					<p>Proposer:</p>
+					<CopyableAddress address={bounty.proposer} />
+				</section>
+			</div>
 			<section class="flex space-x-1 lg:w-52">
 				<p>Status:</p>
 				<p>{status}</p>
