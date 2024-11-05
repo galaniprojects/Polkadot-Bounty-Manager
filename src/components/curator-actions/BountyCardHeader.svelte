@@ -7,14 +7,20 @@
 	export let status: string;
 	export let isParentExpanded: boolean;
 
+	let copiedLast = false;
+
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
-			console.error('');
+			console.error('No text to copy');
 			return;
 		}
 
 		try {
 			await navigator.clipboard.writeText(text);
+			copiedLast = true;
+			setTimeout(() => {
+				copiedLast = false;
+			}, 1500);
 		} catch (err) {
 			console.error('Failed to copy', err);
 		}
@@ -46,12 +52,24 @@
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
 			<section class="flex justify-center items-center space-x-1 lg:w-52">
 				<p>Proposer:</p>
-				<button on:click={() => copyToClipboard(bounty.proposer)} class="flex space-x-1">
+				<button
+					class="flex space-x-1"
+					on:click={() => {
+						copyToClipboard(bounty.proposer);
+					}}
+				>
 					<div class="h-4 w-4">
 						<PolkadotIcon address={bounty.proposer} />
 					</div>
 					<span>{truncateString(bounty.proposer, 8)}</span>
 					<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+					{#if copiedLast}
+						<div
+							class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50 mt-5"
+						>
+							copied to clipboard
+						</div>
+					{/if}
 				</button>
 			</section>
 			<section class="flex space-x-1 lg:w-52">
@@ -61,3 +79,13 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.tooltip {
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.tooltip.show {
+		opacity: 1;
+	}
+</style>

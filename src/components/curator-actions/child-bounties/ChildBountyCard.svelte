@@ -95,14 +95,20 @@
 		detailsExpended = !detailsExpended;
 	}
 
+	let copiedLast = false;
+
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
-			console.error('');
+			console.error('No text present to copy');
 			return;
 		}
 
 		try {
 			await navigator.clipboard.writeText(text);
+			copiedLast = true;
+			setTimeout(() => {
+				copiedLast = false;
+			}, 1500);
 		} catch (err) {
 			console.error('Failed to copy', err);
 		}
@@ -156,32 +162,57 @@
 						</section>
 					{/if}
 				</div>
+				<div>
+					<div class="flex flex-col justify-between w-full lg:w-48 xl:w-62">
+						{#if typeof childBounty.status === 'object'}
+							<section>
+								<p class="text-xs">Sub-Curator</p>
+								<button
+									class="flex"
+									on:click={() => {
+										copyToClipboard(getCurator());
+									}}
+								>
+									<div class="h-5 w-5 mr-2">
+										<PolkadotIcon address={getCurator()} />
+									</div>
+									<span>{truncateString(getCurator() || '-', 10)}</span>
+									<span class="material-symbols-outlined place-self-center mb-1">
+										content_copy
+									</span>
+								</button>
+							</section>
+						{/if}
 
-				<div class="flex flex-col s:flex-row justify-between w-full lg:flex-col lg:w-48 xl:w-62">
-					{#if typeof childBounty.status === 'object'}
-						<section>
-							<p class="text-xs">Sub-Curator</p>
-							<button class="flex" on:click={() => copyToClipboard(getCurator())}>
-								<div class="h-5 w-5 mr-2">
-									<PolkadotIcon address={getCurator()} />
-								</div>
-								<span>{truncateString(getCurator() || '-', 10)}</span>
-								<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
-							</button>
-						</section>
-					{/if}
-					{#if beneficiary}
-						<section class="lg:mt-3">
-							<p class="text-xs">Beneficiary</p>
-							<button class="flex" on:click={() => copyToClipboard(beneficiary)}>
-								<div class="h-5 w-5 mr-2">
-									<PolkadotIcon address={beneficiary} />
-								</div>
-								<span>{truncateString(beneficiary || '-', 10)}</span>
-								<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
-							</button>
-						</section>
-					{/if}
+						{#if beneficiary}
+							<section class="mt-3">
+								<p class="text-xs">Beneficiary</p>
+								<button
+									class="flex"
+									on:click={() => {
+										copyToClipboard(beneficiary);
+									}}
+								>
+									<div class="h-5 w-5 mr-2">
+										<PolkadotIcon address={beneficiary} />
+									</div>
+									<span>{truncateString(beneficiary || '-', 10)}</span>
+									<span class="material-symbols-outlined place-self-center mb-1">
+										content_copy
+									</span>
+								</button>
+							</section>
+						{/if}
+					</div>
+					<div>
+						{#if copiedLast}
+							<div
+								class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50"
+							>
+								copied to clipboard
+							</div>
+						{/if}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -385,5 +416,13 @@
 
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+	}
+
+	.tooltip {
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.tooltip.show {
+		opacity: 1;
 	}
 </style>

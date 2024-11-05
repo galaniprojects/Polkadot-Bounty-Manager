@@ -85,14 +85,20 @@
 		detailsExpanded = !detailsExpanded;
 	}
 
+	let copiedLast = false;
+
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
-			console.error('');
+			console.error('No text present to copy');
 			return;
 		}
 
 		try {
 			await navigator.clipboard.writeText(text);
+			copiedLast = true;
+			setTimeout(() => {
+				copiedLast = false;
+			}, 1500);
 		} catch (err) {
 			console.error('Failed to copy', err);
 		}
@@ -122,9 +128,20 @@
 						{#if curator}
 							<div class="mt-4 lg:mt-0">
 								<p class="text-xs">Curator</p>
-								<button on:click={() => copyToClipboard(curator)}>
+								<button
+									on:click={() => {
+										copyToClipboard(curator);
+									}}
+								>
 									<span>{truncateString(curator || '-', 30)}</span>
 									<span class="material-symbols-outlined"> content_copy </span>
+									{#if copiedLast}
+										<div
+											class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50"
+										>
+											copied to clipboard
+										</div>
+									{/if}
 								</button>
 							</div>
 						{/if}
@@ -186,9 +203,20 @@
 					{#if curator}
 						<div class="space-y-1">
 							<p class="text-xs">Curator</p>
-							<button on:click={() => copyToClipboard(curator)}>
+							<button
+								on:click={() => {
+									copyToClipboard(curator);
+								}}
+							>
 								<span>{truncateString(curator || '-', 25)}</span>
 								<span class="material-symbols-outlined"> content_copy </span>
+								{#if copiedLast}
+									<div
+										class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50 mb-60"
+									>
+										copied to clipboard
+									</div>
+								{/if}
 							</button>
 						</div>
 					{/if}
@@ -245,3 +273,13 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.tooltip {
+		opacity: 0;
+		transition: opacity 0.2s ease-in-out;
+	}
+	.tooltip.show {
+		opacity: 1;
+	}
+</style>
