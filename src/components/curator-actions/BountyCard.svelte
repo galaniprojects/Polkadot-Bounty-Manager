@@ -187,7 +187,7 @@
 						{/if}
 					</div>
 					<div class="flex justify-center items-center space-x-5">
-						<ExternalLinks />
+						<ExternalLinks bountyId={bounty.id} />
 					</div>
 				</div>
 				<div class="flex justify-center items-center">
