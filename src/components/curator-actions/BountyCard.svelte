@@ -213,7 +213,11 @@
 
 		<div class="w-full pr-6">
 			{#if status === 'active'}
-				<ChildBountiesSection {bounty} childBounties={bounty.childBounties} />
+				<ChildBountiesSection
+					{bounty}
+					childBounties={bounty.childBounties}
+					parentCurator={curator}
+				/>
 			{/if}
 		</div>
 
