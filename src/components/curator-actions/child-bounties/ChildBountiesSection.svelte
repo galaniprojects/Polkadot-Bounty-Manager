@@ -14,7 +14,7 @@
 	let createChildBountyOpen = false;
 	let selectedFilter: ChildBountyStatusString | 'all' = 'all';
 
-	$: if (childBounties.length > 0) {
+	$:  {
 		filteredChildBounties = childBounties.filter((childBounty) => {
 			return getChildBountyStatus(childBounty) === selectedFilter || selectedFilter === 'all';
 		});

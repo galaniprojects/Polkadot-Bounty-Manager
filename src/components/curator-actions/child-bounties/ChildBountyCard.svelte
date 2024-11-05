@@ -190,11 +190,6 @@
 					<p class="text-xs">Sub-curator Fee</p>
 					<p class="">{convertPlanckToDot(childBounty.fee)}</p>
 				</section>
-
-				<section class="text-xs mt-3">
-					<p>Description</p>
-					<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
-				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
 						{#if dateCreated}
