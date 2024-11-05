@@ -15,7 +15,7 @@
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 	import { walletConnect } from './wallet-connect';
 	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -147,97 +147,114 @@
 		currentPhase = 'walletSelection';
 		selectedWallet = undefined;
 	}
+	export let openDialog = true;
+
+	$: if (openDialog) {
+		document.body.classList.add('overflow-hidden');
+	} else {
+		document.body.classList.remove('overflow-hidden');
+	}
+	onDestroy(() => {
+		document.body.classList.remove('overflow-hidden');
+	});
 </script>
 
 <!-- Base Modal Layout -->
-<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
-<div class="flex justify-center fixed inset-0 w-screen z-20 py-52">
-	<div class="flex flex-col mx-2 h-fit w-[300px] xs:w-[490px] rounded-md bg-primary p-3 sm:p-5">
-		<!-- Header -->
-		<div class="flex justify-between items-center text-white sm:mb-0">
-			{#if currentPhase !== 'walletSelection'}
-				<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
-					arrow_back_ios
-				</button>
-			{/if}
+{#if openDialog}
+	<div
+		class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60 overflow-y-auto"
+	></div>
+	<div class="flex justify-center fixed inset-0 w-screen z-20 py-52 overflow-y-auto">
+		<div
+			class="flex flex-col mx-2 h-fit w-[300px] xs:w-[490px] rounded-md bg-primary p-3 sm:p-5 overflow-y-auto"
+		>
+			<!-- Header -->
+			<div class="flex justify-between items-center text-white sm:mb-0">
+				{#if currentPhase !== 'walletSelection'}
+					<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
+						arrow_back_ios
+					</button>
+				{/if}
 
-			<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
-				<button class="material-symbols-outlined text-3xl mt-3" on:click={() => (open = false)}>
-					cancel
-				</button>
-			</div>
-		</div>
-
-		<section class="s:max-h-96 pb-3">
-			<!-- Wallet Selection -->
-			{#if currentPhase === 'walletSelection'}
-				<p class="flex justify-center text-2xl text-white">{title}</p>
-				<hr class="border-white opacity-35 w-full mt-4 mb-3" />
-				<div class="cursor-pointer w-full space-y-3">
-					{#each wallets as wallet}
-						<button class="w-full" on:click={() => selectWallet(wallet)}>
-							<WalletItem {wallet} />
-						</button>
-					{/each}
-				</div>
-
-				<!-- Waiting for Authorization -->
-			{:else if currentPhase === 'waiting'}
-				<div class="p-12">
-					<div class="flex items-center justify-center">
-						<div class="relative">
-							<div class="w-6 h-6 ml-4 mt-4">
-								{#if selectedWallet?.icon}
-									<svelte:component this={selectedWallet.icon} />
-								{/if}
-							</div>
-							<div
-								class="absolute top-0 left-0 w-14 h-14 border-4 border-t-gray-500 border-white rounded-full animate-spin"
-							></div>
-						</div>
-					</div>
-
-					<div class="grid items-center text-center gap-2 text-white text-md mt-14">
-						<p>WAITING FOR AUTHORIZATION</p>
-						<p>
-							Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
-						</p>
-					</div>
-				</div>
-
-				<!-- Account Selection -->
-			{:else if currentPhase === 'accountSelection'}
-				<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
-				<hr class="border-white opacity-35 mt-4 w-full" />
-				<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
-					{#each accounts as account}
-						<button class="w-full" on:click={() => selectAccount(account)}>
-							<AccountItem name={account.meta.name} address={account.address} />
-						</button>
-					{/each}
-				</div>
-			{/if}
-		</section>
-
-		<!-- Footer -->
-		{#if currentPhase !== 'walletSelection'}
-			<div class="mt-auto">
-				<hr class="border-white opacity-35 mb-3 w-full" />
-				<div class="flex justify-end items-center">
-					<div class="w-6 h-6">
-						{#if selectedWallet?.icon}
-							<svelte:component this={selectedWallet.icon} />
-						{/if}
-					</div>
-					<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button>
-					<button on:click={backToWalletSelection} class="text-white flex items-center"
-						>Switch
+				<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
+					<button class="material-symbols-outlined text-3xl mt-3" on:click={() => (open = false)}>
+						cancel
 					</button>
 				</div>
 			</div>
-		{/if}
+
+			<section class="s:max-h-96 pb-3">
+				<!-- Wallet Selection -->
+				{#if currentPhase === 'walletSelection'}
+					<p class="flex justify-center text-2xl text-white">{title}</p>
+					<hr class="border-white opacity-35 w-full mt-4 mb-3" />
+					<div class="cursor-pointer w-full space-y-3">
+						{#each wallets as wallet}
+							<button class="w-full" on:click={() => selectWallet(wallet)}>
+								<WalletItem {wallet} />
+							</button>
+						{/each}
+					</div>
+
+					<!-- Waiting for Authorization -->
+				{:else if currentPhase === 'waiting'}
+					<div class="p-12">
+						<div class="flex items-center justify-center">
+							<div class="relative">
+								<div class="w-6 h-6 ml-4 mt-4">
+									{#if selectedWallet?.icon}
+										<svelte:component this={selectedWallet.icon} />
+									{/if}
+								</div>
+								<div
+									class="absolute top-0 left-0 w-14 h-14 border-4 border-t-gray-500 border-white rounded-full animate-spin"
+								></div>
+							</div>
+						</div>
+
+						<div class="grid items-center text-center gap-2 text-white text-md mt-14">
+							<p>WAITING FOR AUTHORIZATION</p>
+							<p>
+								Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
+							</p>
+						</div>
+					</div>
+
+					<!-- Account Selection -->
+				{:else if currentPhase === 'accountSelection'}
+					<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
+					<hr class="border-white opacity-35 mt-4 w-full" />
+					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
+						{#each accounts as account}
+							<button class="w-full" on:click={() => selectAccount(account)}>
+								<AccountItem name={account.meta.name} address={account.address} />
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</section>
+
+			<!-- Footer -->
+			{#if currentPhase !== 'walletSelection'}
+				<div class="mt-auto">
+					<hr class="border-white opacity-35 mb-3 w-full" />
+					<div class="flex justify-end items-center">
+						<div class="w-6 h-6">
+							{#if selectedWallet?.icon}
+								<svelte:component this={selectedWallet.icon} />
+							{/if}
+						</div>
+						<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button
+						>
+						<button on:click={backToWalletSelection} class="text-white flex items-center"
+							>Switch
+						</button>
+					</div>
+				</div>
+			{/if}
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	.animate-spin {
