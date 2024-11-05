@@ -17,7 +17,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install    
 
       - name: Move .env.example to .env
         run: mv .env.example .env
