@@ -148,10 +148,10 @@
 			{/if}
 		</p>
 		<ol class="text-xs mt-6 ml-4 list-decimal">
-			<li> Assign the connected account as sub-curator.</li>
-			<li> Accept sub-curator role.</li>
-			<li> Award child bounty to the provided beneficiary.</li>
-			<li> Claim child bounty.</li>
+			<li>Assign the connected account as sub-curator.</li>
+			<li>Accept sub-curator role.</li>
+			<li>Award child bounty to the provided beneficiary.</li>
+			<li>Claim child bounty.</li>
 		</ol>
 		<div class="my-4 relative">
 			<p class="text-xs">Sub-curator fee:</p>
