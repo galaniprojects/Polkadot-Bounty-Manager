@@ -8,7 +8,7 @@ import type { Bounty } from './types/bounty';
 import type { BlockInfo } from './utils/polkadot';
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public'
 
-export const nodeEndpoint = writable(PUBLIC_NODE_ENDPOINT || "ws://localhost:8000");
+export const nodeEndpoint = writable(PUBLIC_NODE_ENDPOINT );
 
 export const api = writable();
 
