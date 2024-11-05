@@ -6,16 +6,14 @@
 	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
 	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
-	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
-	import LogoTreasuryPink from '../../svg/curator-actions-logo/LogoTreasuryPink.svelte';
-	import LogoPolkassemblyPink from '../../svg/curator-actions-logo/LogoPolkassemblyPink.svelte';
-	import LogoSubscanPink from '../../svg/curator-actions-logo/LogoSubscanPink.svelte';
 	import PolkadotIcon from '../../PolkadotIcon.svelte';
 	import Tooltip from '../Tooltip.svelte';
+	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
+
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -255,10 +253,7 @@
 					</div>
 				</div>
 				<div class="mt-3 flex-wrap flex justify-center items-center space-x-5">
-					<button class="w-10 h-10"><LogoTreasuryPink /></button>
-					<button class="w-10 h-10"><LogoPolkassemblyPink /></button>
-					<button class="w-10 h-10"><LogoSubscanPink /></button>
-					<button class="w-10 h-10"><LogoSubsquarePink /></button>
+					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
 				</div>
 			</div>
 		{/if}
@@ -293,11 +288,10 @@
 				</div>
 			{/if}
 
-			<div class="hidden lg:flex space-y-1 lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoTreasuryPink /></button>
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoPolkassemblyPink /></button>
-				<button class="w-5 h-5 lg:w-6 lg:h-6"><LogoSubscanPink /></button>
-				<button class="w-5 h-5 lg:w-6 lg:h-6"> <LogoSubsquarePink /></button>
+			<div class="flex justify-end">
+				<div class="w-32 hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-2.5">
+					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
+				</div>
 			</div>
 
 			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && $activeAccount && subCurator === $activeAccount.address)}
