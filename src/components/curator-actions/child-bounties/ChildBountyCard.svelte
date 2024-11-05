@@ -16,6 +16,7 @@
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
+	export let parentCurator: string | undefined;
 
 	let status: ChildBountyStatusString;
 	let subCurator: string;
@@ -228,7 +229,7 @@
 		</div>
 
 		<div class="space-y-3 p-2 2xl:mr-32">
-			{#if $showAllCuratorOptions || status === 'added'}
+			{#if $showAllCuratorOptions || (status === 'added' && $activeAccount && $activeAccount.address === parentCurator)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 

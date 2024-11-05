@@ -9,6 +9,7 @@
 
 	export let bounty: Bounty;
 	export let childBounties: ChildBounty[];
+	export let parentCurator: string | undefined;
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let createChildBountyOpen = false;
@@ -79,7 +80,7 @@
 
 	<div>
 		{#each filteredChildBounties as childBounty}
-			<ChildBountyCard {childBounty} parentBounty={bounty} />
+			<ChildBountyCard {childBounty} parentBounty={bounty} {parentCurator} />
 		{/each}
 		<div class="ml-3 mt-3">
 			{#if childBounties.length === 0}
