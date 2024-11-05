@@ -6,6 +6,19 @@
 	export let bounty: Bounty;
 	export let status: string;
 	export let isParentExpanded: boolean;
+
+	async function copyToClipboard(text: string | undefined) {
+		if (!text) {
+			console.error('');
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch (err) {
+			console.error('Failed to copy', err);
+		}
+	}
 </script>
 
 <div class="text-white max-h-fit p-5 lg:px-10 w-full">
@@ -33,10 +46,13 @@
 		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
 			<section class="flex justify-center items-center space-x-1 lg:w-52">
 				<p>Proposer:</p>
-				<div class="h-4 w-4">
-					<PolkadotIcon address={bounty.proposer} />
-				</div>
-				<p>{truncateString(bounty.proposer, 8)}</p>
+				<button on:click={() => copyToClipboard(bounty.proposer)} class="flex space-x-1">
+					<div class="h-4 w-4">
+						<PolkadotIcon address={bounty.proposer} />
+					</div>
+					<span>{truncateString(bounty.proposer, 8)}</span>
+					<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+				</button>
 			</section>
 			<section class="flex space-x-1 lg:w-52">
 				<p>Status:</p>

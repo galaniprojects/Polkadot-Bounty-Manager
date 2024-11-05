@@ -94,6 +94,19 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
+
+	async function copyToClipboard(text: string | undefined) {
+		if (!text) {
+			console.error('');
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch (err) {
+			console.error('Failed to copy', err);
+		}
+	}
 </script>
 
 <div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
@@ -144,27 +157,29 @@
 					{/if}
 				</div>
 
-				<div class="flex justify-between w-full lg:flex-col lg:w-48 xl:w-62">
+				<div class="flex flex-col s:flex-row justify-between w-full lg:flex-col lg:w-48 xl:w-62">
 					{#if typeof childBounty.status === 'object'}
 						<section>
 							<p class="text-xs">Sub-Curator</p>
-							<div class="flex">
+							<button class="flex" on:click={() => copyToClipboard(getCurator())}>
 								<div class="h-5 w-5 mr-2">
 									<PolkadotIcon address={getCurator()} />
 								</div>
-								<p>{truncateString(getCurator() || '-', 9)}</p>
-							</div>
+								<span>{truncateString(getCurator() || '-', 10)}</span>
+								<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+							</button>
 						</section>
 					{/if}
 					{#if beneficiary}
 						<section class="lg:mt-3">
 							<p class="text-xs">Beneficiary</p>
-							<div class="flex">
+							<button class="flex" on:click={() => copyToClipboard(beneficiary)}>
 								<div class="h-5 w-5 mr-2">
 									<PolkadotIcon address={beneficiary} />
 								</div>
-								<p>{truncateString(beneficiary, 9)}</p>
-							</div>
+								<span>{truncateString(beneficiary || '-', 10)}</span>
+								<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+							</button>
 						</section>
 					{/if}
 				</div>

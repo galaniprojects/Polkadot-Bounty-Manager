@@ -84,6 +84,19 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpanded = !detailsExpanded;
 	}
+
+	async function copyToClipboard(text: string | undefined) {
+		if (!text) {
+			console.error('');
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch (err) {
+			console.error('Failed to copy', err);
+		}
+	}
 </script>
 
 <div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
@@ -109,7 +122,10 @@
 						{#if curator}
 							<div class="mt-4 lg:mt-0">
 								<p class="text-xs">Curator</p>
-								<p>{truncateString(curator || '-', 30)}</p>
+								<button on:click={() => copyToClipboard(curator)}>
+									<span>{truncateString(curator || '-', 30)}</span>
+									<span class="material-symbols-outlined"> content_copy </span>
+								</button>
 							</div>
 						{/if}
 					</section>
@@ -170,7 +186,10 @@
 					{#if curator}
 						<div class="space-y-1">
 							<p class="text-xs">Curator</p>
-							<p>{truncateString(curator || '-', 25)}</p>
+							<button on:click={() => copyToClipboard(curator)}>
+								<span>{truncateString(curator || '-', 25)}</span>
+								<span class="material-symbols-outlined"> content_copy </span>
+							</button>
 						</div>
 					{/if}
 					{#if description}
