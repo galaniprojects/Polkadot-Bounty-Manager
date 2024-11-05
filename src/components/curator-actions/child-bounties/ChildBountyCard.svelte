@@ -265,7 +265,7 @@
 					<button
 						id="close"
 						on:click={() => (closeDownChildBountyOpen = true)}
-						class={`bg-transparent border ${statusColorClass} rounded-md text-xs font-bold pt-1 w-1/2 h-10 lg:w-fit lg:h-fit lg:min-w-32`}
+						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-1/2 h-12 lg:w-fit lg:h-7 lg:min-w-32`}
 					>
 						CLOSE DOWN
 					</button>
@@ -326,21 +326,21 @@
 	}
 
 	.active {
-		background-color: theme('colors.childBountyOrange');
+		background-color: theme('colors.childBountyGreen');
 	}
 	#close.active {
 		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyOrange');
-		color: theme('colors.childBountyOrange');
+		border-color: theme('colors.childBountyGreen');
+		color: theme('colors.childBountyGreen');
 	}
 
 	.pending-payout {
-		background-color: theme('colors.childBountyGreen');
+		background-color: theme('colors.curatorMainBackground');
 	}
 	#close.pending-payout {
 		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGreen');
-		color: theme('colors.childBountyGreen');
+		border-color: theme('colors.curatorMainBackground');
+		color: theme('colors.curatorMainBackground');
 	}
 
 	.sub-curator-proposed {
