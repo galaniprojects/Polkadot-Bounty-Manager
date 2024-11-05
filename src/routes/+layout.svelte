@@ -8,8 +8,8 @@
 	import TestBar from '../components/TestBar.svelte';
 </script>
 
-<div class="bg-accent text-white h-10 flex justify-center items-center">
-	<p>This is a beta version, some features may not work correctly.</p>
+<div class="bg-accent text-xs md:text-lg text-white  flex justify-center items-center">
+	<p class="m-2">This is a beta version, some features may not work correctly.</p>
 </div>
 <TestBar />
 <AppBar />
