@@ -1,31 +1,9 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { truncateString } from '../../utils/common';
-	import PolkadotIcon from '../PolkadotIcon.svelte';
-	import Tooltip from './Tooltip.svelte';
-
+	import CopyableAddress from '../CopyableAddress.svelte';
 	export let bounty: Bounty;
 	export let status: string;
 	export let isParentExpanded: boolean;
-
-	let copiedLast = false;
-
-	async function copyToClipboard(text: string | undefined) {
-		if (!text) {
-			console.error('No text to copy');
-			return;
-		}
-
-		try {
-			await navigator.clipboard.writeText(text);
-			copiedLast = true;
-			setTimeout(() => {
-				copiedLast = false;
-			}, 1500);
-		} catch (err) {
-			console.error('Failed to copy', err);
-		}
-	}
 </script>
 
 <div class="text-white max-h-fit p-5 lg:px-10 w-full">
@@ -54,22 +32,8 @@
 			<div class="flex flex-col justify-start lg:w-60">
 				<section class="flex justify-start items-center space-x-1">
 					<p>Proposer:</p>
-					<button
-						class="flex space-x-1"
-						on:click={() => {
-							copyToClipboard(bounty.proposer);
-						}}
-					>
-						<div class="h-4 w-4">
-							<PolkadotIcon address={bounty.proposer} />
-						</div>
-						<span>{truncateString(bounty.proposer, 8)}</span>
-						<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
-					</button>
+	<CopyableAddress address={bounty.proposer} />
 				</section>
-				<div class="w-full">
-					<Tooltip show={copiedLast} text="Copied to clipboard" />
-				</div>
 			</div>
 			<section class="flex space-x-1 lg:w-52">
 				<p>Status:</p>

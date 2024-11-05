@@ -10,9 +10,8 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
-	import PolkadotIcon from '../../PolkadotIcon.svelte';
-	import Tooltip from '../Tooltip.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
+	import CopyableAddress from '../../CopyableAddress.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -94,26 +93,6 @@
 		detailsExpended = !detailsExpended;
 	}
 
-	async function copyToClipboard(text: string | undefined, type: 'subCurator' | 'beneficiary') {
-		if (!text) {
-			console.error('No text present to copy');
-			return;
-		}
-
-		try {
-			await navigator.clipboard.writeText(text);
-			recentCopiedStates[type] = true;
-
-			const changeType = type === 'subCurator' ? 'beneficiary' : 'subCurator';
-			recentCopiedStates[changeType] = false;
-
-			setTimeout(() => {
-				recentCopiedStates[type] = false;
-			}, 1500);
-		} catch (err) {
-			console.error('Failed to copy', err);
-		}
-	}
 </script>
 
 <div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
@@ -168,45 +147,17 @@
 						{#if typeof childBounty.status === 'object'}
 							<section>
 								<p class="text-xs">Sub-Curator</p>
-								<button
-									class="flex"
-									on:click={() => {
-										copyToClipboard(getCurator(), 'subCurator');
-									}}
-								>
-									<div class="h-5 w-5 mr-2">
-										<PolkadotIcon address={getCurator()} />
-									</div>
-									<span>{truncateString(getCurator() || '-', 10)}</span>
-									<span class="material-symbols-outlined place-self-center mb-1">
-										content_copy
-									</span>
-								</button>
-								<Tooltip show={recentCopiedStates.subCurator} text="Copied to clipboard" />
+								<CopyableAddress address={getCurator() || '-'} />
 							</section>
 						{/if}
 
 						{#if beneficiary}
 							<section class="mt-3">
 								<p class="text-xs">Beneficiary</p>
-								<button
-									class="flex"
-									on:click={() => {
-										copyToClipboard(beneficiary, 'beneficiary');
-									}}
-								>
-									<div class="h-5 w-5 mr-2">
-										<PolkadotIcon address={beneficiary} />
-									</div>
-									<span>{truncateString(beneficiary || '-', 10)}</span>
-									<span class="material-symbols-outlined place-self-center mb-1">
-										content_copy
-									</span>
-								</button>
+								<CopyableAddress address={beneficiary} />
 							</section>
 						{/if}
 					</div>
-					<Tooltip show={recentCopiedStates.beneficiary} text="Copied to clipboard" />
 				</div>
 			</div>
 		</div>

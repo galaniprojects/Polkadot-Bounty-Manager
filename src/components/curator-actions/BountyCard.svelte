@@ -13,13 +13,13 @@
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { calculateExpirationDate, formatDate, truncateString } from '../../utils/common';
+	import { calculateExpirationDate, formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
 	import { parse } from 'marked';
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
-	import Tooltip from './Tooltip.svelte';
+	import CopyableAddress from '../CopyableAddress.svelte';
 
 	export let bounty: Bounty;
 
@@ -87,23 +87,6 @@
 	function handleMoreDetailsToggleClick() {
 		detailsExpanded = !detailsExpanded;
 	}
-
-	async function copyToClipboard(text: string | undefined) {
-		if (!text) {
-			console.error('No text present to copy');
-			return;
-		}
-
-		try {
-			await navigator.clipboard.writeText(text);
-			copiedLast = true;
-			setTimeout(() => {
-				copiedLast = false;
-			}, 1500);
-		} catch (err) {
-			console.error('Failed to copy', err);
-		}
-	}
 </script>
 
 <div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
@@ -129,15 +112,7 @@
 						{#if curator}
 							<div class="mt-4 lg:mt-0">
 								<p class="text-xs">Curator</p>
-								<button
-									on:click={() => {
-										copyToClipboard(curator);
-									}}
-								>
-									<span>{truncateString(curator || '-', 30)}</span>
-									<span class="material-symbols-outlined"> content_copy </span>
-								</button>
-								<Tooltip show={copiedLast} text="Copied to clipboard" />
+								<CopyableAddress address={curator} />
 							</div>
 						{/if}
 					</section>
@@ -198,15 +173,7 @@
 					{#if curator}
 						<div class="space-y-1">
 							<p class="text-xs">Curator</p>
-							<button
-								on:click={() => {
-									copyToClipboard(curator);
-								}}
-							>
-								<span>{truncateString(curator || '-', 25)}</span>
-								<span class="material-symbols-outlined"> content_copy </span>
-							</button>
-							<Tooltip show={copiedLast} text="Copied to clipboard" />
+							<CopyableAddress address={curator} />
 						</div>
 					{/if}
 					{#if description}
