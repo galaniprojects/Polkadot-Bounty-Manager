@@ -114,7 +114,7 @@
 						{/if}
 					</section>
 					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
-						<ExternalLinks />
+						<ExternalLinks bountyId={bounty.id} />
 					</div>
 				</section>
 				<section class="flex-col lg:flex lg:flex-row lg:justify-between">
