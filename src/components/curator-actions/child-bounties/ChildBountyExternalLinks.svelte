@@ -12,7 +12,8 @@
 	on:click={() => {
 		openLinkNewTab(`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`);
 	}}
-	class={`w-${dimension} h-${dimension}`}><LogoTreasuryPink /></button>
+	class={`w-${dimension} h-${dimension}`}><LogoTreasuryPink /></button
+>
 <button
 	on:click={() => {
 		openLinkNewTab(`https://polkadot.polkassembly.io/child_bounty/${childBountyId}`);
