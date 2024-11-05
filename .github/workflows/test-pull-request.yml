@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Move .env.example to .env
+        run: mv .env.example .env
+
       - name: Lint code
         run: npm run lint
 
