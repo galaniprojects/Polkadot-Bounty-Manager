@@ -125,10 +125,6 @@
 						<p class="text-xs">Value</p>
 						<p>{convertPlanckToDot(childBounty.value)} DOT</p>
 					</section>
-					<section class="hidden lg:flex flex-col lg:text-xs mt-3 space-y-2">
-						<p>Description</p>
-						<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
-					</section>
 				</div>
 
 				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
