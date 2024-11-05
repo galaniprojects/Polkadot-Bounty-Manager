@@ -14,7 +14,6 @@
 	import Tooltip from '../Tooltip.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
 
-
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
