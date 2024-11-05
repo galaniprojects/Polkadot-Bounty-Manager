@@ -12,6 +12,7 @@
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
 	import PolkadotIcon from '../../PolkadotIcon.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
+	import BatchChildBountyCalls from './BatchChildBountyCalls.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -28,6 +29,7 @@
 	let closeDownChildBountyOpen = false;
 	let awardChildBountyOpen = false;
 	let claimChildBountyOpen = false;
+	let batchOpen = false;
 
 	let detailsExpended = false;
 
@@ -188,11 +190,6 @@
 					<p class="text-xs">Sub-curator Fee</p>
 					<p class="">{convertPlanckToDot(childBounty.fee)}</p>
 				</section>
-
-				<section class="text-xs mt-3">
-					<p>Description</p>
-					<p>This is a child bounty whose proposer address is shown in on-chain info…</p>
-				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
 						{#if dateCreated}
@@ -240,6 +237,16 @@
 						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
 					>
 						ASSIGN
+					</button>
+				</div>
+				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+					<p class="text-xs lg:text-base lg:pt-2">All operations</p>
+
+					<button
+						on:click={() => (batchOpen = true)}
+						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+					>
+						BATCH
 					</button>
 				</div>
 			{/if}
@@ -318,6 +325,10 @@
 
 {#if claimChildBountyOpen}
 	<ClaimChildBounty bind:open={claimChildBountyOpen} {childBounty} />
+{/if}
+
+{#if batchOpen}
+	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} />
 {/if}
 
 <style>
