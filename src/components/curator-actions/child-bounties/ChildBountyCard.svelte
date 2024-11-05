@@ -12,7 +12,7 @@
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
 	import PolkadotIcon from '../../PolkadotIcon.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
-	import Batch from './Batch.svelte';
+	import BatchChildBountyCalls from './BatchChildBountyCalls.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -328,7 +328,7 @@
 {/if}
 
 {#if batchOpen}
-	<Batch bind:open={batchOpen} {childBounty} />
+	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} />
 {/if}
 
 <style>
