@@ -17,6 +17,7 @@
 	export let bounty: Bounty;
 
 	let fee = '-';
+	let deposit = '=';
 	let isToggled = false;
 
 	onMount(async () => {
@@ -83,6 +84,14 @@
 			console.error(e);
 			fee = '-';
 		}
+		let curatorFee = convertPlanckToDot(bounty.fee);
+		if (curatorFee < 20) {
+			deposit = '10';
+		} else if (curatorFee > 400) {
+			deposit = '200';
+		} else {
+			deposit = String(convertPlanckToDot(bounty.fee / BigInt(2)));
+		}
 	}
 </script>
 
@@ -109,8 +118,8 @@
 				<p>{fee}</p>
 			</div>
 			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
+				<p class="text-xs">Estimated deposit</p>
+				<p>{deposit} DOT</p>
 			</div>
 		</div>
 	</section>

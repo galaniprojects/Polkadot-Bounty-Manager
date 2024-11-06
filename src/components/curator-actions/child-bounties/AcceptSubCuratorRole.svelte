@@ -17,10 +17,11 @@
 	export let childBounty: ChildBounty;
 
 	let fee = '-';
+	let deposit = '10';
 	let isToggled = false;
 
 	onMount(async () => {
-		await calculateFee();
+		await calculateFeeAndDeposit();
 	});
 
 	async function acceptCuratorRole() {
@@ -69,7 +70,7 @@
 		open = false;
 	}
 
-	async function calculateFee() {
+	async function calculateFeeAndDeposit() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
@@ -115,8 +116,8 @@
 				<p>{fee}</p>
 			</div>
 			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
+				<p class="text-xs">Estimated deposit</p>
+				<p>{deposit} DOT</p>
 			</div>
 		</div>
 	</section>
