@@ -97,8 +97,7 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
-			deposit = calculateDeposit(bounty.fee)
-
+			deposit = calculateDeposit(bounty.fee);
 		} catch (e) {
 			console.error(e);
 			fee = '-';
