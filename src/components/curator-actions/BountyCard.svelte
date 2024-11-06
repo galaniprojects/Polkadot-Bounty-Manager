@@ -142,7 +142,7 @@
 		<div class="lg:hidden">
 			<div class="grid space-y-5 bg-curatorCarousel px-[10px] py-5 text-white">
 				<div>
-					<p class="text-xs">Remaining Balance</p>
+					<p class="text-xs">Value</p>
 					<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
 				</div>
 			</div>

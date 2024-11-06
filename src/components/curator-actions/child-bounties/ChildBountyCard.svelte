@@ -177,7 +177,7 @@
 			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
-					<p class="">{convertPlanckToDot(childBounty.fee)}</p>
+					<p class="">{convertPlanckToDot(childBounty.fee)} DOT</p>
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
@@ -265,7 +265,7 @@
 					<button
 						id="close"
 						on:click={() => (closeDownChildBountyOpen = true)}
-						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-1/2 h-12 lg:w-fit lg:h-7 lg:min-w-32`}
+						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32`}
 					>
 						CLOSE DOWN
 					</button>
