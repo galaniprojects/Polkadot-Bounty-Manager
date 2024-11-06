@@ -20,7 +20,6 @@
 	export let open = true;
 	export let bounty: Bounty;
 
-	let showTransactionDialog = false;
 	let beneficiary = '';
 	let fee = '-';
 
@@ -93,10 +92,6 @@
 			console.error(e);
 			fee = '--';
 		}
-	}
-
-	async function proceed() {
-		showTransactionDialog = true;
 	}
 </script>
 

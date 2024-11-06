@@ -32,7 +32,6 @@
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let description: string | undefined;
-	let acceptCuratorRuleDialogOpen = false;
 	let awardBountyDialogOpen = false;
 
 	$: {
