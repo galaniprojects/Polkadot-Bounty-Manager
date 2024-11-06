@@ -51,7 +51,7 @@
 		<label class="flex gap-3">
 			<input type="checkbox" bind:checked={$showAllCuratorOptions} />
 			<p class="text-white">all options</p>
-		</label>å
+		</label>
 	</div>
 
 	<div class="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 pt-2">
