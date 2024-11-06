@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import {
-		activeAccount,
-		activeAccountBounties,
-		showAllBounties,
-		showAllCuratorOptions
-	} from '../../stores';
+	import { activeAccount, activeAccountBounties } from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
@@ -73,16 +68,6 @@
 		{/if}
 	</div>
 </header>
-<div class="flex sm:hidden mb-3">
-	<label class="flex gap-3 mx-4">
-		<input type="checkbox" bind:checked={$showAllBounties} />
-		<p class="text-white">all bounties</p>
-	</label>
-	<label class="flex gap-3">
-		<input type="checkbox" bind:checked={$showAllCuratorOptions} />
-		<p class="text-white">all options</p>
-	</label>
-</div>
 
 {#if loginDialogOpen}
 	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />
