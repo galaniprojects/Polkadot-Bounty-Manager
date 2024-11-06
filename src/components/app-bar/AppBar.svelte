@@ -73,16 +73,6 @@
 		{/if}
 	</div>
 </header>
-<div class="flex sm:hidden mb-3">
-	<label class="flex gap-3 mx-4">
-		<input type="checkbox" bind:checked={$showAllBounties} />
-		<p class="text-white">all bounties</p>
-	</label>
-	<label class="flex gap-3">
-		<input type="checkbox" bind:checked={$showAllCuratorOptions} />
-		<p class="text-white">all options</p>
-	</label>
-</div>
 
 {#if loginDialogOpen}
 	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />
