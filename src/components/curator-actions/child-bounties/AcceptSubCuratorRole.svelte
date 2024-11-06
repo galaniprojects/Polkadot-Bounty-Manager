@@ -12,12 +12,13 @@
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { calculateDeposit } from '../AcceptCuratorRole.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
 
 	let fee = '-';
-	let deposit = '10';
+	let deposit = '-';
 	let isToggled = false;
 
 	onMount(async () => {
@@ -86,9 +87,11 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
+			deposit = calculateDeposit(childBounty.fee);
 		} catch (e) {
 			console.error(e);
 			fee = '-';
+			deposit = '-';
 		}
 	}
 </script>
