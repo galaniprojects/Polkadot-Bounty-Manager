@@ -46,8 +46,10 @@
 	}
 </script>
 
-<TestBar />
 <div class="bg-primary py-40 md:px-40">
+	<div class="ml-5">
+		<TestBar />
+	</div>
 	<h1 class="m-5 text-2xl font-bold">Fast Forward</h1>
 	<div class="flex m-5 gap-3">
 		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" />
@@ -84,7 +86,7 @@
 		=> Curator Actions</button
 	>
 
-	<div class="hidden sm:flex flex-col sm:flex-row">
+	<div class="mt-5 sm:flex flex-col sm:flex-row">
 		<label class="flex gap-3 mx-4">
 			<input type="checkbox" bind:checked={$showAllBounties} />
 			<p class="text-white">all bounties</p>
