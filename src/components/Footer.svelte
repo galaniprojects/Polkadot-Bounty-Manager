@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 
 	$: isOnImprintPage = $page.url.pathname === '/imprint';
-	$: text = isOnImprintPage ? 'Back' : 'Imprint';
+	$: text = isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions';
 	$: link = isOnImprintPage ? '/curator-actions' : '/imprint';
 
 	function handleClick() {
