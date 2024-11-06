@@ -16,6 +16,8 @@
 
 	export let open = false;
 	export let childBounty: ChildBounty;
+	export let parentCurator: string | undefined;
+	export let subCurator: string;
 
 	let fee = '-';
 	let deposit = '-';
@@ -87,7 +89,11 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
-			deposit = calculateDeposit(childBounty.fee);
+			if (parentCurator && parentCurator === subCurator) {
+				deposit = '0';
+			} else {
+				deposit = calculateDeposit(childBounty.fee);
+			}
 		} catch (e) {
 			console.error(e);
 			fee = '-';
