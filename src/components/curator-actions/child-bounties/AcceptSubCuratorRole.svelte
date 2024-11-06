@@ -12,15 +12,17 @@
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { calculateDeposit } from '../AcceptCuratorRole.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
 
 	let fee = '-';
+	let deposit = '-';
 	let isToggled = false;
 
 	onMount(async () => {
-		await calculateFee();
+		await calculateFeeAndDeposit();
 	});
 
 	async function acceptCuratorRole() {
@@ -69,7 +71,7 @@
 		open = false;
 	}
 
-	async function calculateFee() {
+	async function calculateFeeAndDeposit() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
@@ -85,9 +87,11 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
+			deposit = calculateDeposit(childBounty.fee);
 		} catch (e) {
 			console.error(e);
 			fee = '-';
+			deposit = '-';
 		}
 	}
 </script>
@@ -115,8 +119,8 @@
 				<p>{fee}</p>
 			</div>
 			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
+				<p class="text-xs">Estimated deposit</p>
+				<p>{deposit} DOT</p>
 			</div>
 		</div>
 	</section>

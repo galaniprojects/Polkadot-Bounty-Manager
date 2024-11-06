@@ -1,3 +1,20 @@
+<script lang="ts" context="module">
+	/**
+	 * @param fee fee in planck.
+	 * @returns deposit as a string in dots.
+	 **/
+	export function calculateDeposit(fee: bigint): string {
+		let curatorFee = convertPlanckToDot(fee);
+		if (curatorFee < 20) {
+			return '10';
+		} else if (curatorFee > 400) {
+			return '200';
+		} else {
+			return String(convertPlanckToDot(fee / BigInt(2)));
+		}
+	}
+</script>
+
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
@@ -17,10 +34,11 @@
 	export let bounty: Bounty;
 
 	let fee = '-';
+	let deposit = '=';
 	let isToggled = false;
 
 	onMount(async () => {
-		await calculateFee();
+		await calculateFeeAndDeposit();
 	});
 
 	async function acceptCuratorRole() {
@@ -66,7 +84,7 @@
 		open = false;
 	}
 
-	async function calculateFee() {
+	async function calculateFeeAndDeposit() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
@@ -79,9 +97,11 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
+			deposit = calculateDeposit(bounty.fee);
 		} catch (e) {
 			console.error(e);
 			fee = '-';
+			deposit = '-';
 		}
 	}
 </script>
@@ -109,8 +129,8 @@
 				<p>{fee}</p>
 			</div>
 			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
+				<p class="text-xs">Estimated deposit</p>
+				<p>{deposit} DOT</p>
 			</div>
 		</div>
 	</section>
