@@ -2,7 +2,9 @@
 	const email = 'info@galaniprojects.de';
 </script>
 
-<div class="bg-curatorMainBackground rounded-lg my-5 mx-12 px-5 py-5 flex-col space-y-5 text-white">
+<div
+	class="bg-curatorMainBackground rounded-lg m-0 mb-3 sm:my-5 sm:mx-12 px-5 py-5 flex-col space-y-5 text-white"
+>
 	<h2 class="text-xl">Imprint</h2>
 	<p>
 		INFORMATION IN ACCORDANCE WITH SECTION 5 <br />
@@ -69,7 +71,7 @@
 		The Bounty Manager allows users to manage and execute bounties using various blockchain
 		accounts. Therefore, with the full version you can:
 	</p>
-	<ul class="list-disc m-10">
+	<ul class="list-disc m-7">
 		<li>
 			Sign In using wallets such as Polkadot.js Extension, Nova Wallet, Talisman, or WalletConnect
 			with Multix.
@@ -121,7 +123,7 @@
 		Manager. The list is not exhaustive. It is not excluded that further unknown or unpredictable
 		risks exist.
 	</p>
-	<ul class="list-disc m-10">
+	<ul class="list-disc m-7">
 		<li>
 			Loss of access credentials will result in a complete loss of accessibility of the Bounty
 			Manager in question.
