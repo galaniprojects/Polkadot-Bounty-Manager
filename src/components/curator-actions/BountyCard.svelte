@@ -20,6 +20,8 @@
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
 	import CopyableAddress from '../CopyableAddress.svelte';
+	import { activeAccount, showAllCuratorOptions } from '../../stores';
+	import AwardBounty from './AwardBounty.svelte';
 
 	export let bounty: Bounty;
 
@@ -30,6 +32,8 @@
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let description: string | undefined;
+	let acceptCuratorRuleDialogOpen = false;
+	let awardBountyDialogOpen = false;
 
 	$: {
 		if (bounty.status === 'Proposed') {
@@ -222,6 +226,20 @@
 			{/if}
 		</div>
 
+		<div class="flex flex-col space-y-1 px-3 pt-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
+			{#if $showAllCuratorOptions || ($activeAccount && curator === $activeAccount.address)}
+				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+					<p class="pt-2 text-sm text-white">Award bounty</p>
+					<button
+						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-5"
+						on:click={() => {
+							awardBountyDialogOpen = true;
+						}}>READ FIRST</button
+					>
+				</div>
+			{/if}
+		</div>
+
 		<!-- Footer Section-->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
 			<button class="flex items-center pt-5 pb-1" on:click={expandBounty}>
@@ -231,3 +249,7 @@
 		</div>
 	{/if}
 </div>
+
+{#if awardBountyDialogOpen}
+	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
+{/if}
