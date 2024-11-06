@@ -27,13 +27,21 @@
 				>NEW BOUNTY</button
 			>
 		</div>
+
 		<div class="min-h-[70vh]">
-			{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
-				<div>
-					<BountyCard {bounty} expanded={index === 0 ? true : false} />
+			{#if !$activeAccount}
+				<div class="text-white text-center text-2xl mt-20">
+					Please connect wallet to be able to see and interact with your bounties
 				</div>
-			{/each}
+			{:else}
+				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
+					<div>
+						<BountyCard {bounty} expanded={index === 0 ? true : false} />
+					</div>
+				{/each}
+			{/if}
 		</div>
+
 		{#if $activeAccountBounties.length === 0}
 			<div class="h-[70vh]">
 				{#if $activeAccount}

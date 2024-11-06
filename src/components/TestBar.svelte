@@ -12,7 +12,7 @@
 
 <div class="relative z-50">
 	<select
-		class="border w-1/4 rounded-md h-7 px-1 pt-1"
+		class="border full rounded-md h-7 px-1 pt-1"
 		bind:value={$nodeEndpoint}
 		on:change={() => {
 			sessionStorage.setItem('node', $nodeEndpoint);

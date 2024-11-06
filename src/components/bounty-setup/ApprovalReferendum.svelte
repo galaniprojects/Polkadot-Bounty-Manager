@@ -123,7 +123,7 @@
 </script>
 
 <div>
-	<div class="p-3 pt-7 pb-10 md:p-6 bg-secondary">
+	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
@@ -138,8 +138,10 @@
 	</div>
 
 	{#if success}
-		<div class="bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
-			<p class="w-full md:w-2/3">
+		<div
+			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		>
+			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				The Referendum for the approval of Bounty <br />
 				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
 				has been created successfully!
@@ -154,17 +156,19 @@
 				funded and the Curator list has been informally accepted by the community in discussions on the
 				platforms.
 			</p>
-			<div class="buttons mt-5 flex">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
+			<div class="mt-5 flex-col space-y-2 sm:flex-row max-w-fit">
+				<button on:click={() => goto('/curator-actions')} class="button-cancel sm:mr-5"
 					>RETURN HOME</button
 				>
 				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">PROCEED</button>
 			</div>
 		</div>
 	{:else}
-		<div class=" bg-backgroundContent p-3 pt-7 pb-10 md:px-6 w-full box-border overflow-x-hidden">
+		<div
+			class=" bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		>
 			<div>
-				<div class="space-y-3">
+				<div class="space-y-1 sm:space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
 					<select
 						class="border w-full md:w-1/3 rounded-md h-7 px-1 pt-1"
@@ -179,14 +183,14 @@
 					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
 				</div>
 
-				<hr class="border-white mt-3 mb-3 w-full md:w-1/3" />
+				<hr class="border-white my-5 sm:my-10 w-full md:w-1/3" />
 
-				<div class="my-10 mb-14 h-24 space-y-5">
-					<section class="space-y-3">
+				<div class="my-5 sm:my-10 sm:mb-14 h-24 space-y-2 sm:space-y-5">
+					<section class="space-y-1 sm:space-y-3">
 						<p class="label text-xs">Deposit</p>
 						<p>{deposit}</p>
 					</section>
-					<section class="space-y-3">
+					<section class="space-y-1 sm:space-y-3">
 						<p class="label text-xs">Transaction fee</p>
 						<p>{fee}</p>
 					</section>

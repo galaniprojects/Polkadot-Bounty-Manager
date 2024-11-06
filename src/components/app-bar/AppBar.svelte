@@ -43,14 +43,17 @@
 <header
 	class="relative flex items-center justify-between h-20 bg-primary px-4 sm:px-12 overflow-clip"
 >
-	<label class="flex gap-3 mx-4">
-		<input type="checkbox" bind:checked={$showAllBounties} />
-		<p class="text-white">all bounties</p>
-	</label>
-	<label class="flex gap-3">
-		<input type="checkbox" bind:checked={$showAllCuratorOptions} />
-		<p class="text-white">all options</p>
-	</label>
+	<div class="hidden sm:flex flex-col sm:flex-row">
+		<label class="flex gap-3 mx-4">
+			<input type="checkbox" bind:checked={$showAllBounties} />
+			<p class="text-white">all bounties</p>
+		</label>
+		<label class="flex gap-3">
+			<input type="checkbox" bind:checked={$showAllCuratorOptions} />
+			<p class="text-white">all options</p>
+		</label>
+	</div>
+
 	<div class="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 pt-2">
 		<button on:click={() => goto('/curator-actions')} class="hidden md:inline-flex"
 			><LogoBountyManagerDesktop /></button
@@ -59,6 +62,7 @@
 			><LogoBountyManagerMobile /></button
 		>
 	</div>
+
 	<div class="ml-auto">
 		{#if !$activeAccount}
 			<button class=" text-white" on:click={() => showLoginDialog()}>Connect Wallet</button>
@@ -80,6 +84,16 @@
 		{/if}
 	</div>
 </header>
+<div class="flex sm:hidden mb-3">
+	<label class="flex gap-3 mx-4">
+		<input type="checkbox" bind:checked={$showAllBounties} />
+		<p class="text-white">all bounties</p>
+	</label>
+	<label class="flex gap-3">
+		<input type="checkbox" bind:checked={$showAllCuratorOptions} />
+		<p class="text-white">all options</p>
+	</label>
+</div>
 
 {#if loginDialogOpen}
 	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />

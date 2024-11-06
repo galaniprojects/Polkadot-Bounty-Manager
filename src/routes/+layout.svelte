@@ -9,7 +9,7 @@
 </script>
 
 <div class="bg-accent text-xs md:text-lg text-white flex justify-center items-center">
-	<p class="m-2">This is a beta version, some features may not work correctly yet.</p>
+	<p class="m-2">This is a beta version, some features may not function properly yet.</p>
 </div>
 <TestBar />
 <AppBar />
