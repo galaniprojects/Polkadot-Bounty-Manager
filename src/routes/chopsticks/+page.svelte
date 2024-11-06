@@ -1,9 +1,10 @@
 <script lang="ts">
 	import '../../app.css';
-	import { api, nodeEndpoint } from '../../stores';
+	import { api, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { goto } from '$app/navigation';
 	import { getApi } from '../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
+	import TestBar from '../../components/TestBar.svelte';
 
 	let days: number = 1;
 	let hours = 1;
@@ -45,6 +46,7 @@
 	}
 </script>
 
+<TestBar />
 <div class="py-40 md:px-40">
 	<h1 class="m-5 text-2xl font-bold">Fast Forward</h1>
 	<div class="flex m-5 gap-3">
@@ -70,7 +72,7 @@
 
 	<hr class="border-gray mt-5 mb-1 w-1/2" />
 
-	<div class="m-5 gap-5">
+	<div class="m-5 gap-5 text-white">
 		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
 		<input
 			class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40"
@@ -81,6 +83,17 @@
 	<button class="button-active mx-5" on:click={() => goto('/curator-actions')}>
 		=> Curator Actions</button
 	>
+
+	<div class="hidden sm:flex flex-col sm:flex-row">
+		<label class="flex gap-3 mx-4">
+			<input type="checkbox" bind:checked={$showAllBounties} />
+			<p class="text-white">all bounties</p>
+		</label>
+		<label class="flex gap-3">
+			<input type="checkbox" bind:checked={$showAllCuratorOptions} />
+			<p class="text-white">all options</p>
+		</label>
+	</div>
 </div>
 
 <style lang="postcss">
