@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import {
-		activeAccount,
-		activeAccountBounties,
-		showAllBounties,
-		showAllCuratorOptions
-	} from '../../stores';
+	import { activeAccount, activeAccountBounties } from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
