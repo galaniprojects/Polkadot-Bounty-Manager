@@ -301,7 +301,7 @@
 	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
 {/if}
 {#if acceptSubCuratorRuleOpen}
-	<AcceptSubCuratorRule bind:open={acceptSubCuratorRuleOpen} {childBounty} />
+	<AcceptSubCuratorRule bind:open={acceptSubCuratorRuleOpen} {childBounty} {parentCurator} />
 {/if}
 
 {#if closeDownChildBountyOpen}
