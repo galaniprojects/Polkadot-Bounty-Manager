@@ -120,10 +120,6 @@
 				<p class="text-xs">Calculated Fee</p>
 				<p>{fee}</p>
 			</div>
-			<div>
-				<p class="text-xs">Fee</p>
-				<p>{fee}</p>
-			</div>
 		</div>
 	</section>
 
