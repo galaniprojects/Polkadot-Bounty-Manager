@@ -31,7 +31,7 @@
 		<div class="min-h-[70vh]">
 			{#if !$activeAccount}
 				<div class="text-white text-center text-2xl mt-20">
-					Please connect wallet to be able to see and interact with your bounties
+					Please connect your wallet to view and interact with your bounties
 				</div>
 			{:else}
 				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
@@ -39,18 +39,14 @@
 						<BountyCard {bounty} expanded={index === 0 ? true : false} />
 					</div>
 				{/each}
-			{/if}
-		</div>
 
-		{#if $activeAccountBounties.length === 0}
-			<div class="h-[70vh]">
-				{#if $activeAccount}
+				{#if $activeAccountBounties.length === 0}
 					<div class="lg:mt-40 mt-10 flex justify-center text-white">
-						Connected Address does not have any bounties or child bounties.
+						Connected Address does not have any bounties or child bounties
 					</div>
 				{/if}
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 </div>
 
