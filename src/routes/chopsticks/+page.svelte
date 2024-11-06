@@ -47,7 +47,7 @@
 </script>
 
 <TestBar />
-<div class="py-40 md:px-40">
+<div class="bg-primary py-40 md:px-40">
 	<h1 class="m-5 text-2xl font-bold">Fast Forward</h1>
 	<div class="flex m-5 gap-3">
 		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" />
