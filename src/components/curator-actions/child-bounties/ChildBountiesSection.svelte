@@ -34,7 +34,7 @@
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
-			<p class="text-2xl">Child Bounties</p>
+			<p class="text-2xl">{childBounties.length} Child Bounties</p>
 		</div>
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
