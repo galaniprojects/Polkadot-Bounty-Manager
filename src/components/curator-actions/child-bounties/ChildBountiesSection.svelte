@@ -92,7 +92,7 @@
 					<div class="text-center space-y-3">
 						<p>No child bounties created yet.</p>
 						<p>Create one.</p>
-						<p class="text-4xl">(•‿•)</p>
+						<p class="text-4xl">(-‿-)</p>
 					</div>
 				</div>
 			</div>
