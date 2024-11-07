@@ -22,8 +22,10 @@
 	import CopyableAddress from '../CopyableAddress.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import AwardBounty from './AwardBounty.svelte';
+	import type { ChildBounty } from '../../types/child-bounty';
 
 	export let bounty: Bounty;
+	export let childBounties: ChildBounty[];
 
 	let detailsExpanded = false;
 	export let expanded: boolean;
@@ -225,8 +227,10 @@
 			{/if}
 		</div>
 
-		<div class="flex flex-col space-y-1 px-3 pt-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
-			{#if $showAllCuratorOptions || ($activeAccount && curator === $activeAccount.address)}
+		<div
+			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
+		>
+			{#if $showAllCuratorOptions || (childBounties.length === 0 && typeof bounty.status === 'object' && 'Active' in bounty.status && $activeAccount && curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 					<p class="pt-2 text-sm text-white">Award bounty</p>
 					<button

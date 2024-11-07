@@ -121,7 +121,6 @@
 			<input
 				bind:value={beneficiary}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder="enter"
 			/>
 		</div>
 		<section class="mt-10">
@@ -136,6 +135,5 @@
 				? 'opacity-50 cursor-not-allowed'
 				: ''}">SIGN</button
 		>
-		<!-- {/if} -->
 	</div>
 </BountyDialog>
