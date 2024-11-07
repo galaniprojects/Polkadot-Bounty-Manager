@@ -34,7 +34,7 @@
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
-			<p class="text-2xl">Child Bounties</p>
+			<p class="text-2xl">{childBounties.length} Child Bounties</p>
 		</div>
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
@@ -82,13 +82,29 @@
 		{#each filteredChildBounties as childBounty}
 			<ChildBountyCard {childBounty} parentBounty={bounty} {parentCurator} />
 		{/each}
-		<div class="ml-3 mt-3">
-			{#if childBounties.length === 0}
-				<p>No active child bounties</p>
-			{:else if filteredChildBounties.length === 0}
-				<p>No Child bounties for the selected filter</p>
-			{/if}
-		</div>
+
+		{#if childBounties.length === 0}
+			<div class="childContainer bg-white lg:w-full rounded-md shadow-lg mt-6">
+				<div class="rounded-t-md pl-[10px] pt-2 lg:pl-4 bg-childBountyGray text-white text-sm">
+					#0000 No child bounties
+				</div>
+				<div class="flex flex-col bg-childBountyHeaderBackground lg:bg-white p-4 rounded-md">
+					<div class="text-center space-y-3">
+						<p>No child bounties created yet.</p>
+						<p>Create one.</p>
+						<p class="text-4xl">(-‿-)</p>
+					</div>
+				</div>
+			</div>
+		{:else if filteredChildBounties.length === 0}
+			<p>No Child bounties for the selected filter</p>
+		{/if}
 	</div>
 </div>
 <AddChildBounty {bounty} bind:open={createChildBountyOpen} />
+
+<style>
+	.childContainer {
+		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+	}
+</style>
