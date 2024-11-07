@@ -20,7 +20,6 @@
 	export let open = true;
 	export let bounty: Bounty;
 
-	let showTransactionDialog = false;
 	let beneficiary = '';
 	let fee = '-';
 
@@ -94,10 +93,6 @@
 			fee = '--';
 		}
 	}
-
-	async function proceed() {
-		showTransactionDialog = true;
-	}
 </script>
 
 <BountyDialog bind:open title="AWARD BOUNTY">
@@ -108,43 +103,37 @@
 				<span>{bounty.description}</span>
 			{/if}
 		</div>
-		{#if !showTransactionDialog}
-			<section class="mt-10">
-				<p class="text-xs">Bounty value</p>
-				<p>
-					A bounty can only be awarded in whole as long as no child bounties exist. In this case, it
-					is still highly recommended to manage the funds through child bounties and not award the
-					whole bounty at once.
-				</p>
-			</section>
-			<button on:click={proceed} class="w-full md:w-fit mt-10 h-12 button-popup">PROCEED</button>
-		{/if}
 
-		{#if showTransactionDialog}
-			<section class="mt-10">
-				<p class="text-xs">Bounty value</p>
-				<p><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
-			</section>
-			<div class="my-4">
-				<p class="text-xs">Beneficiary account address</p>
-				<input
-					bind:value={beneficiary}
-					class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-					placeholder="enter"
-				/>
-			</div>
-			<section class="mt-10">
-				<p class="text-xs">Calculated Fee</p>
-				<p>{fee}</p>
-			</section>
+		<section class="mt-10 space-y-1">
+			<p class="text-xs">Please note</p>
+			<p class="text-red bg-white rounded-sm p-2">
+				A bounty can only be awarded in whole as long as no child bounties exist. In this case, it
+				is still highly recommended to manage the funds through child bounties and not award the
+				whole bounty at once.
+			</p>
+		</section>
+		<section class="mt-10">
+			<p class="text-xs">Bounty value</p>
+			<p><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+		</section>
+		<div class="my-4">
+			<p class="text-xs">Beneficiary account address</p>
+			<input
+				bind:value={beneficiary}
+				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
+			/>
+		</div>
+		<section class="mt-10">
+			<p class="text-xs">Calculated Fee</p>
+			<p>{fee}</p>
+		</section>
 
-			<button
-				on:click={submit}
-				disabled={beneficiary.length === 0}
-				class="w-full md:w-fit mt-10 h-12 button-popup {beneficiary.length === 0
-					? 'opacity-50 cursor-not-allowed'
-					: ''}">SIGN</button
-			>
-		{/if}
+		<button
+			on:click={submit}
+			disabled={beneficiary.length === 0}
+			class="w-full md:w-fit mt-10 h-12 button-popup {beneficiary.length === 0
+				? 'opacity-50 cursor-not-allowed'
+				: ''}">SIGN</button
+		>
 	</div>
 </BountyDialog>
