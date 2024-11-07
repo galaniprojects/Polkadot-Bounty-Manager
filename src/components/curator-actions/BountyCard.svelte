@@ -25,7 +25,7 @@
 	import type { ChildBounty } from '../../types/child-bounty';
 
 	export let bounty: Bounty;
-	export let childBounties: ChildBounty[];
+	let childBounties: ChildBounty[];
 
 	let detailsExpanded = false;
 	export let expanded: boolean;
