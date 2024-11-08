@@ -2,9 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import type { Bounty } from '../../types/bounty';
-	import AcceptCuratorRole from './AcceptCuratorRole.svelte';
+	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
 	import type { BountyStatus } from './BountyCard.svelte';
-	import ExtendBounty from './ExtendBounty.svelte';
+	import ExtendBounty from './operations/ExtendBounty.svelte';
 
 	export let bounty: Bounty;
 	export let curator: string | undefined;

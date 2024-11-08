@@ -5,20 +5,20 @@
 		dryRunAndSubmitTransaction,
 		getApi,
 		isValidAddress
-	} from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { isInteger } from '../../../utils/common';
-	import PolkaCoin from '../../svg/PolkaCoin.svelte';
+	} from '../../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { isInteger } from '../../../../utils/common';
+	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
+	import Dialog from '../../../common/Dialog.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -115,7 +115,7 @@
 
 <!-- ToDo: dynamically change the background colors according to the child bounty the button exists in (only exists in one: created) -->
 
-<BountyDialog bind:open title="ASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="ASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
@@ -154,4 +154,4 @@
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
 		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>

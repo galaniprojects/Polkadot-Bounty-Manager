@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
+	import type { Bounty } from '../../../types/bounty';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
-	import { calculateExpirationDate, formatDate } from '../../utils/common';
+	} from '../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { calculateExpirationDate, formatDate } from '../../../utils/common';
+	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -93,7 +93,7 @@
 	}
 </script>
 
-<BountyDialog bind:open title="EXTEND BOUNTY">
+<Dialog bind:open title="EXTEND BOUNTY">
 	<section class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -134,4 +134,4 @@
 		class="w-full md:w-fit mt-10 h-12 px-10 rounded-md text-white bg-extendButtonBackground"
 		>SIGN</button
 	>
-</BountyDialog>
+</Dialog>
