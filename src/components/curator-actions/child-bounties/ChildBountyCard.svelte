@@ -99,7 +99,7 @@
 						{/if}
 
 						{#if childBounty.beneficiary}
-							<section >
+							<section>
 								<p class="text-xs">Beneficiary</p>
 								<CopyableAddress address={childBounty.beneficiary} />
 							</section>
@@ -130,8 +130,7 @@
 					<p class="">{convertPlanckToDot(childBounty.fee)} DOT</p>
 				</section>
 				<div class="flex flex-col">
-					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
-					</div>
+					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>
 
 					<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
 						{#if childBounty.dateOfPayout}
@@ -247,11 +246,7 @@
 	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
 {/if}
 {#if acceptSubCuratorRuleOpen}
-	<AcceptSubCuratorRule
-		bind:open={acceptSubCuratorRuleOpen}
-		{childBounty}
-		{parentCurator}
-	/>
+	<AcceptSubCuratorRule bind:open={acceptSubCuratorRuleOpen} {childBounty} {parentCurator} />
 {/if}
 
 {#if closeDownChildBountyOpen}
