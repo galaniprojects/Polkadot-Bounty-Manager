@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	import Dialog from '../../Dialog.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
@@ -98,7 +98,7 @@
 	}
 </script>
 
-<BountyDialog
+<Dialog
 	bind:open
 	title="CLAIM CHILD BOUNTY AWARD"
 	backgroundColor="white"
@@ -138,4 +138,4 @@
 	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
 		>SIGN</button
 	>
-</BountyDialog>
+</Dialog>

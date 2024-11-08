@@ -6,7 +6,6 @@
 		dryRunAndSubmitTransaction,
 		getApi
 	} from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -18,6 +17,7 @@
 	import { isInteger } from '../../../utils/common';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 	import PolkaCoin from '../../svg/PolkaCoin.svelte';
+	import Dialog from '../../Dialog.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -124,7 +124,7 @@
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<BountyDialog
+<Dialog
 	bind:open
 	title="ADD NEW CHILD BOUNTY"
 	backgroundColor="childBountyBackground"
@@ -186,4 +186,4 @@
 			disabled={!isFormValid}>SIGN</button
 		>
 	</div>
-</BountyDialog>
+</Dialog>

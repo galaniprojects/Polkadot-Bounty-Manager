@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -12,6 +11,7 @@
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import Dialog from '../../Dialog.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -92,7 +92,7 @@
 	}
 </script>
 
-<BountyDialog bind:open title="Close Down Child Bounty">
+<Dialog bind:open title="Close Down Child Bounty">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{childBounty.id}</span>
@@ -129,4 +129,4 @@
 		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>

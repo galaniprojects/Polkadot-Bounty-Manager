@@ -18,7 +18,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
@@ -29,6 +28,7 @@
 	} from '../../utils/loading-screen';
 	import ToggleIcon from '../svg/ToggleIcon.svelte';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	import Dialog from '../Dialog.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -106,7 +106,7 @@
 	}
 </script>
 
-<BountyDialog bind:open title="ACCEPT CURATOR ROLE">
+<Dialog bind:open title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -142,4 +142,4 @@
 			? 'button-popup'
 			: 'opacity-50 cursor-not-allowed'}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>

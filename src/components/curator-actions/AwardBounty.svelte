@@ -6,7 +6,6 @@
 		getApi,
 		isValidAddress
 	} from '../../utils/polkadot';
-	import BountyDialog from '../BountyDialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../stores';
 	import { onMount } from 'svelte';
@@ -16,6 +15,7 @@
 		showSuccessDialog
 	} from '../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	import Dialog from '../Dialog.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -95,7 +95,7 @@
 	}
 </script>
 
-<BountyDialog bind:open title="AWARD BOUNTY">
+<Dialog bind:open title="AWARD BOUNTY">
 	<div class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -136,4 +136,4 @@
 				: ''}">SIGN</button
 		>
 	</div>
-</BountyDialog>
+</Dialog>
