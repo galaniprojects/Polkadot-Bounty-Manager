@@ -35,7 +35,7 @@
 		case ChildBountyStatus.SubCuratorProposed:
 			statusColorClass = 'sub-curator-proposed';
 			break;
-		case ChildBountyStatus.Added:
+		case ChildBountyStatus.Active:
 			statusColorClass = 'active';
 			break;
 		case ChildBountyStatus.PendingPayout:
