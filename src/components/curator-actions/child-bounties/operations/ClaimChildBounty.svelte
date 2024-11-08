@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../../utils/polkadot';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		getApi
+	} from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { firstValueFrom } from 'rxjs';

@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../../utils/polkadot';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		getApi
+	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
