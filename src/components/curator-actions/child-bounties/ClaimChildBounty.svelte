@@ -98,12 +98,7 @@
 	}
 </script>
 
-<Dialog
-	bind:open
-	title="CLAIM CHILD BOUNTY AWARD"
-	backgroundColor="white"
-	textColor="primary"
->
+<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD" backgroundColor="white" textColor="primary">
 	<div class="space-y-8">
 		<p class="p-1 text-white bg-curatorMainBackground">
 			#{childBounty.id}

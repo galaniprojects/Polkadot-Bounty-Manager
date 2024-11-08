@@ -6,7 +6,7 @@
 		getApi,
 		isValidAddress
 	} from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	import Dialog from '../../Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -134,12 +134,7 @@
 	}
 </script>
 
-<BountyDialog
-	bind:open
-	title="BATCH CHILD BOUNTY CALLS"
-	backgroundColor="white"
-	textColor="primary"
->
+<Dialog bind:open title="BATCH CHILD BOUNTY CALLS" backgroundColor="white" textColor="primary">
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
@@ -186,4 +181,4 @@
 			? 'basic-button opacity-50'
 			: 'cursor-allowed'}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>
