@@ -15,7 +15,7 @@
 		showSuccessDialog
 	} from '../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
-	import Dialog from '../Dialog.svelte';
+	import Dialog from '../common/Dialog.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;

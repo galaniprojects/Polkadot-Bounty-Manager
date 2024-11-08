@@ -11,7 +11,7 @@
 	} from '../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 	import { calculateExpirationDate, formatDate } from '../../utils/common';
-	import Dialog from '../Dialog.svelte';
+	import Dialog from '../common/Dialog.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;

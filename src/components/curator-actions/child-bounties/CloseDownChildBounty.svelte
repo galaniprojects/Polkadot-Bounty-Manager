@@ -11,7 +11,7 @@
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import Dialog from '../../Dialog.svelte';
+	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;

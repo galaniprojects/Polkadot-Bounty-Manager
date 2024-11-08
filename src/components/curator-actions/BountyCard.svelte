@@ -19,7 +19,7 @@
 	import { parse } from 'marked';
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
-	import CopyableAddress from '../CopyableAddress.svelte';
+	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import AwardBounty from './AwardBounty.svelte';
 

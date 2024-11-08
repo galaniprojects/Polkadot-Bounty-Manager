@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { LoadingDialogState } from '../types/loading-screen';
-	import Dialog from './Dialog.svelte';
+	import Dialog from './common/Dialog.svelte';
 
 	export let dialogState: LoadingDialogState;
 </script>

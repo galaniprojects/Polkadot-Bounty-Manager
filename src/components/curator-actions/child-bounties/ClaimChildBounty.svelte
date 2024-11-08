@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import Dialog from '../../Dialog.svelte';
+	import Dialog from '../../common/Dialog.svelte';
 	import type { ChildBounty } from '../../../types/child-bounty';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
@@ -11,7 +11,7 @@
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import PolkadotIcon from '../../PolkadotIcon.svelte';
+	import PolkadotIcon from '../../common/PolkadotIcon.svelte';
 	import { truncateString } from '../../../utils/common';
 
 	export let open = true;

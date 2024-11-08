@@ -6,7 +6,7 @@
 		getApi,
 		isValidAddress
 	} from '../../../utils/polkadot';
-	import Dialog from '../../Dialog.svelte';
+	import Dialog from '../../common/Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';

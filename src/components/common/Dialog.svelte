@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CloseIcon from './svg/CloseIcon.svelte';
+	import CloseIcon from '../svg/CloseIcon.svelte';
 	import { onDestroy } from 'svelte';
 
 	export let open = false;

@@ -17,7 +17,7 @@
 	import { isInteger } from '../../../utils/common';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 	import PolkaCoin from '../../svg/PolkaCoin.svelte';
-	import Dialog from '../../Dialog.svelte';
+	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;

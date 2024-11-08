@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import CopyableAddress from '../CopyableAddress.svelte';
+	import CopyableAddress from '../common/CopyableAddress.svelte';
 	export let bounty: Bounty;
 	export let status: string;
 	export let isParentExpanded: boolean;

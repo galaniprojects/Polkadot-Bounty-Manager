@@ -5,7 +5,7 @@
 	import { getChildBountyStatus } from '../../../utils/bounties';
 	import AddChildBounty from './AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
-	import DropdownMenu from './DropdownMenu.svelte';
+	import DropdownMenu from '../../common/DropdownMenu.svelte';
 
 	export let bounty: Bounty;
 	export let childBounties: ChildBounty[];

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { truncateString } from '../utils/common';
+	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from './PolkadotIcon.svelte';
 
 	let showTooltip = false;

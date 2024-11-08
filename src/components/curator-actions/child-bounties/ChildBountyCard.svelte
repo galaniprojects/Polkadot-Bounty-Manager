@@ -11,7 +11,7 @@
 	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
-	import CopyableAddress from '../../CopyableAddress.svelte';
+	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import BatchChildBountyCalls from './BatchChildBountyCalls.svelte';
 
 	export let childBounty: ChildBounty;
