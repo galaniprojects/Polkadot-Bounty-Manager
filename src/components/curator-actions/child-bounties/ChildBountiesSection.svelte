@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
-	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
+	import type { ChildBounty, ChildBountyStatus } from '../../../types/child-bounty';
 	import { getChildBountyStatus } from '../../../utils/bounties';
 	import AddChildBounty from './operations/AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
@@ -13,7 +13,7 @@
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let createChildBountyOpen = false;
-	let selectedFilter: ChildBountyStatusString | 'all' = 'all';
+	let selectedFilter: ChildBountyStatus | 'all' = 'all';
 
 	$: {
 		filteredChildBounties = childBounties.filter((childBounty) => {
@@ -21,7 +21,7 @@
 		});
 	}
 
-	const filters: Array<ChildBountyStatusString | 'all'> = [
+	const filters: Array<`${ChildBountyStatus}` | 'all'> = [
 		'all',
 		'added',
 		'active',

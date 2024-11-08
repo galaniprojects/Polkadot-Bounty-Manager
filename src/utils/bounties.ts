@@ -1,7 +1,7 @@
 import type { Bounty } from '../types/bounty';
 import { get } from 'svelte/store';
 import { bounties, activeAccount, activeAccountBounties } from '../stores';
-import type { ChildBounty, ChildBountyStatusString } from '../types/child-bounty';
+import type { ChildBounty, ChildBountyStatus } from '../types/child-bounty';
 
 export function SetActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
@@ -44,21 +44,21 @@ export function SetActiveAccountBounties() {
 function filterChildBounties(childBounties: ChildBounty[], address: string): ChildBounty[] {
 	const filteredChildBounties: ChildBounty[] = [];
 	for (const childBounty of childBounties) {
-		if (typeof childBounty.status === 'object') {
+		if (typeof childBounty.statusRaw === 'object') {
 			if (
-				'CuratorProposed' in childBounty.status &&
-				childBounty.status.CuratorProposed.curator === address
+				'CuratorProposed' in childBounty.statusRaw &&
+				childBounty.statusRaw.CuratorProposed.curator === address
 			) {
 				filteredChildBounties.push(childBounty);
 				continue;
 			}
-			if ('Active' in childBounty.status && childBounty.status.Active.curator === address) {
+			if ('Active' in childBounty.statusRaw && childBounty.statusRaw.Active.curator === address) {
 				filteredChildBounties.push(childBounty);
 				continue;
 			}
 			if (
-				'PendingPayout' in childBounty.status &&
-				childBounty.status.PendingPayout.curator === address
+				'PendingPayout' in childBounty.statusRaw &&
+				childBounty.statusRaw.PendingPayout.curator === address
 			) {
 				filteredChildBounties.push(childBounty);
 				continue;
@@ -83,17 +83,15 @@ export function getBountyCurator(bounty: Bounty): string | undefined {
 	return undefined;
 }
 
-export function getChildBountyStatus(
-	childBounty: ChildBounty
-): ChildBountyStatusString | undefined {
-	if (childBounty.status === 'Added') {
+export function getChildBountyStatus(childBounty: ChildBounty): ChildBountyStatus | undefined {
+	if (childBounty.statusRaw === 'Added') {
 		return 'added';
-	} else if (typeof childBounty.status === 'object') {
-		if ('Active' in childBounty.status) {
+	} else if (typeof childBounty.statusRaw === 'object') {
+		if ('Active' in childBounty.statusRaw) {
 			return 'active';
-		} else if ('CuratorProposed' in childBounty.status) {
+		} else if ('CuratorProposed' in childBounty.statusRaw) {
 			return 'sub-curator proposed';
-		} else if ('PendingPayout' in childBounty.status) {
+		} else if ('PendingPayout' in childBounty.statusRaw) {
 			return 'pending payout';
 		}
 	}

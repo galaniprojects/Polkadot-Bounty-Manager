@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
-	import { formatDate } from '../../../utils/common';
-	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
+	import { ChildBountyStatus, type ChildBounty } from '../../../types/child-bounty';
+	import { convertPlanckToDot } from '../../../utils/polkadot';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
@@ -18,13 +17,6 @@
 	export let parentBounty: Bounty;
 	export let parentCurator: string | undefined;
 
-	let status: ChildBountyStatusString;
-	let subCurator: string;
-
-	let beneficiary: string | undefined;
-	let dateCreated: string | undefined;
-	let dateOfPayout: string | undefined;
-
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
 	let closeDownChildBountyOpen = false;
@@ -36,59 +28,21 @@
 
 	let statusColorClass = '';
 
-	$: switch (status) {
-		case 'added':
+	$: switch (childBounty.status) {
+		case ChildBountyStatus.Added:
 			statusColorClass = 'added';
 			break;
-		case 'sub-curator proposed':
+		case ChildBountyStatus.SubCuratorProposed:
 			statusColorClass = 'sub-curator-proposed';
 			break;
-		case 'active':
+		case ChildBountyStatus.Added:
 			statusColorClass = 'active';
 			break;
-		case 'pending payout':
+		case ChildBountyStatus.PendingPayout:
 			statusColorClass = 'pending-payout';
 			break;
 		default:
 			statusColorClass = 'added';
-	}
-
-	$: {
-		if (childBounty.status === 'Added') {
-			status = 'added';
-		} else if (typeof childBounty.status === 'object') {
-			if ('Active' in childBounty.status) {
-				status = 'active';
-				subCurator = childBounty.status.Active.curator;
-			} else if ('CuratorProposed' in childBounty.status) {
-				status = 'sub-curator proposed';
-				subCurator = childBounty.status.CuratorProposed.curator;
-			} else if ('PendingPayout' in childBounty.status) {
-				subCurator = childBounty.status.PendingPayout.curator;
-				status = 'pending payout';
-				let unlockAt = Number(childBounty.status.PendingPayout.unlockAt.replaceAll(',', ''));
-				(async () => {
-					let currentBlockInfo = await getCurrentBlock();
-					let blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
-					dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
-				})();
-				beneficiary = childBounty.status.PendingPayout.beneficiary;
-			}
-		}
-	}
-
-	function getCurator() {
-		if (childBounty.status === 'Added') {
-			return '-';
-		} else if (typeof childBounty.status === 'object') {
-			if ('Active' in childBounty.status) {
-				return childBounty.status.Active.curator;
-			} else if ('CuratorProposed' in childBounty.status) {
-				return childBounty.status.CuratorProposed.curator;
-			} else if ('PendingPayout' in childBounty.status) {
-				return childBounty.status.PendingPayout.curator;
-			}
-		}
 	}
 
 	function handleMoreDetailsToggleClick() {
@@ -105,15 +59,11 @@
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
 				<span class="text-sm">#{childBounty.id} {childBounty.description}</span>
 			</div>
-
-			<div class="hidden lg:flex flex-col mb-2 lg:mb-0">
-				{#if dateCreated}
-					<p class="text-xs">created: {dateCreated}</p>
-				{/if}
-			</div>
 		</div>
 
-		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">{status}</span>
+		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5"
+			>{childBounty.status}</span
+		>
 	</div>
 
 	<!-- Child Bounty Card Content -->
@@ -132,10 +82,10 @@
 						<p class="text-xs">Sub-curator Fee</p>
 						<p>{convertPlanckToDot(childBounty.fee)} DOT</p>
 					</section>
-					{#if dateOfPayout}
+					{#if childBounty.dateOfPayout}
 						<section class="lg:mt-3">
 							<p class="text-xs">Award date</p>
-							<p>{dateOfPayout}</p>
+							<p>{childBounty.dateOfPayout}</p>
 						</section>
 					{/if}
 				</div>
@@ -144,14 +94,14 @@
 						{#if typeof childBounty.status === 'object'}
 							<section>
 								<p class="text-xs">Sub-Curator</p>
-								<CopyableAddress address={getCurator() || '-'} />
+								<CopyableAddress address={childBounty.curator || '-'} />
 							</section>
 						{/if}
 
-						{#if beneficiary}
-							<section class="mt-3">
+						{#if childBounty.beneficiary}
+							<section >
 								<p class="text-xs">Beneficiary</p>
-								<CopyableAddress address={beneficiary} />
+								<CopyableAddress address={childBounty.beneficiary} />
 							</section>
 						{/if}
 					</div>
@@ -181,16 +131,12 @@
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0">
-						{#if dateCreated}
-							<p class="text-xs">added</p>
-							<p class="">{dateCreated}</p>
-						{/if}
 					</div>
 
 					<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
-						{#if dateOfPayout}
+						{#if childBounty.dateOfPayout}
 							<p class="text-xs">Award date:</p>
-							<p>{dateOfPayout}</p>
+							<p>{childBounty.dateOfPayout}</p>
 						{/if}
 					</div>
 				</div>
@@ -217,7 +163,7 @@
 		</div>
 
 		<div class="space-y-3 p-2 2xl:mr-32">
-			{#if $showAllCuratorOptions || (status === 'added' && $activeAccount && $activeAccount.address === parentCurator)}
+			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Added && $activeAccount && $activeAccount.address === parentCurator)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
@@ -246,7 +192,7 @@
 				</div>
 			</div>
 
-			{#if $showAllCuratorOptions || (status === 'sub-curator proposed' && $activeAccount && subCurator === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.SubCuratorProposed && $activeAccount && childBounty.curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 					<button
@@ -258,7 +204,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address && status !== 'pending payout')}
+			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address && childBounty.status !== ChildBountyStatus.PendingPayout)}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -273,7 +219,7 @@
 			{/if}
 
 			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && subCurator === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Active && $activeAccount && childBounty.curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}
@@ -284,7 +230,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || status === 'pending payout'}
+			{#if $showAllCuratorOptions || childBounty.status === ChildBountyStatus.PendingPayout}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (claimChildBountyOpen = true)}
@@ -305,7 +251,6 @@
 		bind:open={acceptSubCuratorRuleOpen}
 		{childBounty}
 		{parentCurator}
-		{subCurator}
 	/>
 {/if}
 
