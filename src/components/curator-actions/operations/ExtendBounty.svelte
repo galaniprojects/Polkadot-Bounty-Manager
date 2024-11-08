@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
+	import type { Bounty } from '../../../types/bounty';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
-	import { calculateExpirationDate, formatDate } from '../../utils/common';
-	import Dialog from '../common/Dialog.svelte';
+	} from '../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { calculateExpirationDate, formatDate } from '../../../utils/common';
+	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;

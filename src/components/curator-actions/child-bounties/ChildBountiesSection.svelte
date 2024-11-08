@@ -3,7 +3,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
 	import { getChildBountyStatus } from '../../../utils/bounties';
-	import AddChildBounty from './AddChildBounty.svelte';
+	import AddChildBounty from './operations/AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
 

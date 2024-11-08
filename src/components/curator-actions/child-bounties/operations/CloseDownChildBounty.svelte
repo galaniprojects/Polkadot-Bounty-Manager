@@ -1,33 +1,29 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import ToggleIcon from '../../svg/ToggleIcon.svelte';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import { calculateDeposit } from '../AcceptCuratorRole.svelte';
-	import Dialog from '../../common/Dialog.svelte';
+	} from '../../../../utils/loading-screen';
+	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
+	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import Dialog from '../../../common/Dialog.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
-	export let parentCurator: string | undefined;
-	export let subCurator: string;
 
 	let fee = '-';
-	let deposit = '-';
 	let isToggled = false;
 
 	onMount(async () => {
-		await calculateFeeAndDeposit();
+		await calculateFee();
 	});
 
-	async function acceptCuratorRole() {
+	async function acceptCuratorRule() {
 		open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
@@ -35,12 +31,13 @@
 				showErrorDialog('Wallet is not connected');
 				return;
 			}
-			const api = await getApi();
 
-			let transaction = api.tx.childBounties.acceptCurator(
+			const api = await getApi();
+			let transaction = api.tx.childBounties.closeChildBounty(
 				childBounty.parentBounty,
 				childBounty.id
 			);
+
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
@@ -70,17 +67,16 @@
 			console.error(e);
 			showErrorDialog(`${e}`);
 		}
-		open = false;
 	}
 
-	async function calculateFeeAndDeposit() {
+	async function calculateFee() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
 		}
 		try {
 			const api = await getApi();
-			let transaction = api.tx.childBounties.acceptCurator(
+			let transaction = api.tx.childBounties.closeChildBounty(
 				childBounty.parentBounty,
 				childBounty.id
 			);
@@ -89,33 +85,33 @@
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
-			if (parentCurator && parentCurator === subCurator) {
-				deposit = '0';
-			} else {
-				deposit = calculateDeposit(childBounty.fee);
-			}
 		} catch (e) {
 			console.error(e);
 			fee = '-';
-			deposit = '-';
 		}
 	}
 </script>
 
-<Dialog bind:open title="ACCEPT SUB-CURATOR ROLE" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="Close Down Child Bounty">
 	<section class="space-y-5">
-		<p class="p-1 text-white bg-childBountyGray">
-			#{childBounty.id}
+		<div class="space-x-1">
+			<span>#{childBounty.id}</span>
 			{#if childBounty.description !== undefined}
-				{childBounty.description}
+				<span>{childBounty.description}</span>
 			{/if}
-		</p>
+		</div>
+		<div class="m-y-4">
+			<p>
+				Only close a child bounty after communicating with the sub-curator and the projected
+				beneficiary. The funds will be reallocated to the parent bounty.
+			</p>
+		</div>
 
 		<div>
-			<p class="text-xs">Accept Sub-curator role</p>
+			<p class="text-xs">I understand</p>
 			<div class="flex justify-between items-start">
-				<p>I agree</p>
-				<span class="custom-toggle"><ToggleIcon bind:checked={isToggled} /></span>
+				<p>Close down anyway</p>
+				<ToggleIcon bind:checked={isToggled} />
 			</div>
 		</div>
 
@@ -124,25 +120,13 @@
 				<p class="text-xs">Calculated Fee</p>
 				<p>{fee}</p>
 			</div>
-			<div>
-				<p class="text-xs">Estimated deposit</p>
-				<p>{deposit} DOT</p>
-			</div>
 		</div>
 	</section>
 
 	<button
-		on:click={acceptCuratorRole}
+		on:click={acceptCuratorRule}
 		disabled={!isToggled}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
+		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+  {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
 	>
 </Dialog>
-
-<style>
-	.custom-toggle {
-		--toggle-background: rgba(101, 112, 139, 0.5);
-		--switch-background: theme('colors.white');
-		--switch-checked-background: theme('colors.childBountyGray');
-	}
-</style>

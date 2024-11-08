@@ -1,11 +1,11 @@
 <script lang="ts">
+	import type { Bounty } from '../../../types/bounty';
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
 		getApi,
 		isValidAddress
 	} from '../../../utils/polkadot';
-	import Dialog from '../../common/Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -15,10 +15,10 @@
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import type { ChildBounty } from '../../../types/child-bounty';
+	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = true;
-	export let childBounty: ChildBounty;
+	export let bounty: Bounty;
 
 	let beneficiary = '';
 	let fee = '-';
@@ -40,12 +40,9 @@
 				return;
 			}
 
-			const api = await getApi();
-			let transaction = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				beneficiary
-			);
+			let api = await getApi();
+
+			let transaction = api.tx.bounties.awardBounty(bounty.id, beneficiary);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
@@ -71,10 +68,7 @@
 				return;
 			}
 
-			showSuccessDialog(
-				'Bounty Awarded',
-				'Your child bounty has been awarded and can now be claimed'
-			);
+			showSuccessDialog('Bounty Awarded', 'Your bounty has been awarded and can now be claimed');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);
@@ -87,13 +81,9 @@
 			return;
 		}
 		try {
-			const api = await getApi();
+			let api = await getApi();
 
-			let transaction = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address
-			);
+			let transaction = api.tx.bounties.awardBounty(bounty.id, $activeAccount.address);
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 
 			const paymentInfo = await firstValueFrom(observableFee);
@@ -105,24 +95,32 @@
 	}
 </script>
 
-<Dialog bind:open title="AWARD CHILD BOUNTY" backgroundColor="white" textColor="primary">
-	<div class="grid">
-		<p class="space-x-1 mb-7 p-1 text-white bg-childBountyGreen">
-			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
+<Dialog bind:open title="AWARD BOUNTY">
+	<div class="space-y-10">
+		<div class="space-x-1">
+			<span>#{bounty.id}</span>
+			{#if bounty.description !== undefined}
+				<span>{bounty.description}</span>
 			{/if}
-		</p>
-		<section>
-			<p class="text-xs">Child bounty value</p>
-			<p><span>{convertPlanckToDot(childBounty.value)}</span> DOT</p>
+		</div>
+
+		<section class="mt-10 space-y-1">
+			<p class="text-xs">Please note</p>
+			<p class="text-red bg-white rounded-sm p-2">
+				A bounty can only be awarded in whole as long as no child bounties exist. In this case, it
+				is still highly recommended to manage the funds through child bounties and not award the
+				whole bounty at once.
+			</p>
 		</section>
-		<div class="mt-5">
+		<section class="mt-10">
+			<p class="text-xs">Bounty value</p>
+			<p><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+		</section>
+		<div class="my-4">
 			<p class="text-xs">Beneficiary account address</p>
 			<input
 				bind:value={beneficiary}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder=""
 			/>
 		</div>
 		<section class="mt-10">
@@ -133,7 +131,7 @@
 		<button
 			on:click={submit}
 			disabled={beneficiary.length === 0}
-			class="w-full md:w-fit mt-10 h-12 bg-childBountyGreen basic-button {beneficiary.length === 0
+			class="w-full md:w-fit mt-10 h-12 button-popup {beneficiary.length === 0
 				? 'opacity-50 cursor-not-allowed'
 				: ''}">SIGN</button
 		>

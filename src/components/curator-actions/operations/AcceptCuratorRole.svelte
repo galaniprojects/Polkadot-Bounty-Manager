@@ -1,4 +1,22 @@
+<script lang="ts" context="module">
+	/**
+	 * @param fee fee in planck.
+	 * @returns deposit as a string in dots.
+	 **/
+	export function calculateDeposit(fee: bigint): string {
+		let curatorFee = convertPlanckToDot(fee);
+		if (curatorFee < 20) {
+			return '10';
+		} else if (curatorFee > 400) {
+			return '200';
+		} else {
+			return String(convertPlanckToDot(fee / BigInt(2)));
+		}
+	}
+</script>
+
 <script lang="ts">
+	import type { Bounty } from '../../../types/bounty';
 	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
@@ -9,21 +27,21 @@
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
-	import type { ChildBounty } from '../../../types/child-bounty';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = false;
-	export let childBounty: ChildBounty;
+	export let bounty: Bounty;
 
 	let fee = '-';
+	let deposit = '=';
 	let isToggled = false;
 
 	onMount(async () => {
-		await calculateFee();
+		await calculateFeeAndDeposit();
 	});
 
-	async function acceptCuratorRule() {
+	async function acceptCuratorRole() {
 		open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
@@ -31,13 +49,9 @@
 				showErrorDialog('Wallet is not connected');
 				return;
 			}
+			let api = await getApi();
 
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-
+			let transaction = api.tx.bounties.acceptCurator(bounty.id);
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
 				transaction,
@@ -67,50 +81,44 @@
 			console.error(e);
 			showErrorDialog(`${e}`);
 		}
+		open = false;
 	}
 
-	async function calculateFee() {
+	async function calculateFeeAndDeposit() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
 		}
 		try {
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
+			let api = await getApi();
+			let transaction = api.tx.bounties.acceptCurator(bounty.id);
 
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 			fee =
 				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
 				' DOT';
+			deposit = calculateDeposit(bounty.fee);
 		} catch (e) {
 			console.error(e);
 			fee = '-';
+			deposit = '-';
 		}
 	}
 </script>
 
-<Dialog bind:open title="Close Down Child Bounty">
+<Dialog bind:open title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
-			<span>#{childBounty.id}</span>
-			{#if childBounty.description !== undefined}
-				<span>{childBounty.description}</span>
+			<span>#{bounty.id}</span>
+			{#if bounty.description !== undefined}
+				<span>{bounty.description}</span>
 			{/if}
-		</div>
-		<div class="m-y-4">
-			<p>
-				Only close a child bounty after communicating with the sub-curator and the projected
-				beneficiary. The funds will be reallocated to the parent bounty.
-			</p>
 		</div>
 
 		<div>
-			<p class="text-xs">I understand</p>
+			<p class="text-xs">Accept Curator role</p>
 			<div class="flex justify-between items-start">
-				<p>Close down anyway</p>
+				<p>I agree</p>
 				<ToggleIcon bind:checked={isToggled} />
 			</div>
 		</div>
@@ -120,13 +128,18 @@
 				<p class="text-xs">Calculated Fee</p>
 				<p>{fee}</p>
 			</div>
+			<div>
+				<p class="text-xs">Estimated deposit</p>
+				<p>{deposit} DOT</p>
+			</div>
 		</div>
 	</section>
 
 	<button
-		on:click={acceptCuratorRule}
+		on:click={acceptCuratorRole}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
-  {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button
+		class="w-full md:w-fit mt-10 h-12 button-popup {isToggled
+			? 'button-popup'
+			: 'opacity-50 cursor-not-allowed'}">SIGN</button
 	>
 </Dialog>

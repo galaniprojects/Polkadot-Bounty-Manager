@@ -5,27 +5,27 @@
 		dryRunAndSubmitTransaction,
 		getApi,
 		isValidAddress
-	} from '../../../utils/polkadot';
+	} from '../../../../utils/polkadot';
+	import Dialog from '../../../common/Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { isInteger } from '../../../utils/common';
-	import PolkaCoin from '../../svg/PolkaCoin.svelte';
-	import Dialog from '../../common/Dialog.svelte';
+	} from '../../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { isInteger } from '../../../../utils/common';
+	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
-	let curatorAddress = '';
 	let curatorFee = '';
 	let fee = '-';
+	let beneficiary: string = '';
 
 	onMount(async () => {
 		await calculateFee();
@@ -39,7 +39,8 @@
 				showErrorDialog('Wallet is not connected');
 				return;
 			}
-			if (!isValidAddress(curatorAddress)) {
+
+			if (!isValidAddress(beneficiary)) {
 				showErrorDialog('Curator address is invalid');
 				return;
 			}
@@ -50,19 +51,26 @@
 			}
 
 			const api = await getApi();
-
-			let transaction = api.tx.childBounties.proposeCurator(
+			let tx1 = api.tx.childBounties.proposeCurator(
 				childBounty.parentBounty,
 				childBounty.id,
-				curatorAddress,
+				$activeAccount.address,
 				convertDotToPlanck(BigInt(curatorFee))
 			);
 
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
+			let tx2 = api.tx.childBounties.acceptCurator(childBounty.parentBounty, childBounty.id);
+
+			let tx3 = api.tx.childBounties.awardChildBounty(
+				childBounty.parentBounty,
+				childBounty.id,
+				beneficiary
 			);
+
+			let tx4 = api.tx.childBounties.claimChildBounty(childBounty.parentBounty, childBounty.id);
+
+			let batch = api.tx.utility.batchAll([tx1, tx2, tx3, tx4]);
+
+			const { errorMessage, result } = await dryRunAndSubmitTransaction(api, batch, $activeAccount);
 
 			if (errorMessage) {
 				showErrorDialog(errorMessage);
@@ -96,13 +104,26 @@
 		}
 		try {
 			const api = await getApi();
-			let transaction = api.tx.childBounties.proposeCurator(
+
+			let tx1 = api.tx.childBounties.proposeCurator(
 				childBounty.parentBounty,
 				childBounty.id,
 				$activeAccount.address,
-				33
+				convertDotToPlanck(BigInt(60))
 			);
-			let observableFee = transaction.paymentInfo($activeAccount.address);
+
+			let tx2 = api.tx.childBounties.acceptCurator(childBounty.parentBounty, childBounty.id);
+
+			let tx3 = api.tx.childBounties.awardChildBounty(
+				childBounty.parentBounty,
+				childBounty.id,
+				$activeAccount.address
+			);
+
+			let tx4 = api.tx.childBounties.claimChildBounty(childBounty.parentBounty, childBounty.id);
+
+			let batch = api.tx.utility.batchAll([tx1, tx2, tx3, tx4]);
+			let observableFee = batch.paymentInfo($activeAccount.address);
 
 			const paymentInfo = await firstValueFrom(observableFee);
 			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
@@ -113,9 +134,7 @@
 	}
 </script>
 
-<!-- ToDo: dynamically change the background colors according to the child bounty the button exists in (only exists in one: created) -->
-
-<Dialog bind:open title="ASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="BATCH CHILD BOUNTY CALLS" backgroundColor="white" textColor="primary">
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
@@ -123,15 +142,12 @@
 				{childBounty.description}
 			{/if}
 		</p>
-
-		<div class="my-4">
-			<p class="text-xs">Sub-curator address:</p>
-			<input
-				bind:value={curatorAddress}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-			/>
-		</div>
-
+		<ol class="text-xs mt-6 ml-4 list-decimal">
+			<li>Assign the connected account as sub-curator.</li>
+			<li>Accept sub-curator role.</li>
+			<li>Award child bounty to the provided beneficiary.</li>
+			<li>Claim child bounty.</li>
+		</ol>
 		<div class="my-4 relative">
 			<p class="text-xs">Sub-curator fee:</p>
 			<input
@@ -142,6 +158,15 @@
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
 			<div class="absolute right-2 top-[26px]"><PolkaCoin /></div>
 		</div>
+
+		<div class="mt-5">
+			<p class="text-xs">Beneficiary account address</p>
+			<input
+				bind:value={beneficiary}
+				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
+				placeholder=""
+			/>
+		</div>
 		<section class="mt-10">
 			<p class="text-xs">Calculated Fee:</p>
 			<p>{fee}</p>
@@ -150,8 +175,10 @@
 
 	<button
 		on:click={submit}
-		disabled={!curatorAddress.length}
+		disabled={!beneficiary.length || !curatorFee.length}
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
+		{beneficiary.length === 0 || curatorFee.length === 0
+			? 'basic-button opacity-50'
+			: 'cursor-allowed'}">SIGN</button
 	>
 </Dialog>
