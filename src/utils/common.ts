@@ -1,5 +1,5 @@
 import type { Bounty } from '../types/bounty';
-import type { ChildBounty } from '../types/child-bounty';
+import { ChildBountyStatus, type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
 import { getCurrentBlock } from './polkadot';
 
 export function isInteger(input: string) {
@@ -19,15 +19,46 @@ export function parseBounty(obj: any, id: number): Bounty {
 	};
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function parseChildBounty(obj: any, id: number): ChildBounty {
+export async function parseChildBounty(obj: ChildBountyRaw, id: number): Promise<ChildBounty> {
+	let status: ChildBountyStatus;
+	let curator: string | undefined;
+	let dateOfPayout: string | undefined;
+	let beneficiary: string | undefined;
+
+	if (obj.status === 'Added') {
+		status = ChildBountyStatus.Added;
+	} else if (typeof obj.status === 'object') {
+		if ('Active' in obj.status) {
+			status = ChildBountyStatus.Active;
+			curator = obj.status.Active.curator;
+		} else if ('CuratorProposed' in obj.status) {
+			status = ChildBountyStatus.SubCuratorProposed;
+			curator = obj.status.CuratorProposed.curator;
+		} else if ('PendingPayout' in obj.status) {
+			curator = obj.status.PendingPayout.curator;
+			status = ChildBountyStatus.PendingPayout;
+			const unlockAt = Number(obj.status.PendingPayout.unlockAt.replace(/[, ]/g, ''));
+			const currentBlockInfo = await getCurrentBlock();
+			const blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
+			dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
+			beneficiary = obj.status.PendingPayout.beneficiary;
+		} else {
+			throw new Error(`Unexpected status type: ${obj.status}`);
+		}
+	} else {
+		throw new Error(`Unexpected status type: ${obj.status}`);
+	}
 	return {
-		...obj,
 		id,
 		parentBounty: Number(obj.parentBounty),
 		value: parseBalance(obj.value),
 		fee: parseBalance(obj.fee),
-		curatorDeposit: parseBalance(obj.curator_deposit)
+		curatorDeposit: parseBalance(obj.curatorDeposit),
+		statusRaw: obj.status,
+		status,
+		curator,
+		dateOfPayout,
+		beneficiary
 	};
 }
 

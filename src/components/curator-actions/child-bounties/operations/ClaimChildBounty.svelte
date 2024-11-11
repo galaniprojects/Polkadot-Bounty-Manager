@@ -21,16 +21,10 @@
 	export let open = true;
 	export let childBounty: ChildBounty;
 
-	let beneficiary: string | undefined;
 	let fee = '-';
 
 	onMount(async () => {
 		await calculateFee();
-		if (typeof childBounty.status === 'object') {
-			if ('PendingPayout' in childBounty.status) {
-				beneficiary = childBounty.status.PendingPayout.beneficiary;
-			}
-		}
 	});
 
 	async function submit() {
@@ -117,14 +111,14 @@
 				The funds will be transferred to the beneficiary’s address.
 			</p>
 		</div>
-		{#if beneficiary}
+		{#if childBounty.beneficiary}
 			<div class="space-y-2">
 				<p class="text-xs">Beneficiary account</p>
 				<div class="flex">
 					<div class="w-5 h-5">
-						<PolkadotIcon address={beneficiary} />
+						<PolkadotIcon address={childBounty.beneficiary} />
 					</div>
-					<p>{truncateString(beneficiary, 13)}</p>
+					<p>{truncateString(childBounty.beneficiary, 13)}</p>
 				</div>
 			</div>
 		{/if}
