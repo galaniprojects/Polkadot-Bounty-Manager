@@ -30,8 +30,32 @@
 
 		<div class="min-h-[70vh]">
 			{#if !$activeAccount}
-				<div class="text-white text-center text-2xl mt-20">
-					Please connect your wallet to view and interact with your bounties
+				<div class="text-white flex justify-center mt-20">
+					<div class="justify-start space-y-8">
+						<p class="text-xl md:text-2xl">
+							Please connect your wallet with a curator address to view and interact with your
+							bounties.
+						</p>
+						<div>
+							<p>To connect a pure proxy curator address through Multix:</p>
+							<ol class="list-decimal list-inside mt-2">
+								<li>Select WalletConnect.</li>
+								<li>Copy the key by clicking on the button next to Connect your Wallet.</li>
+								<li>
+									Navigate to the settings tab on Multix, expand the WalletConnect line and paste
+									the key.
+								</li>
+								<li>Approve the connection request.</li>
+								<li>
+									Navigate to the bounty manager and select your pure proxy account to sign in.
+								</li>
+							</ol>
+						</div>
+						<p class="">
+							Please note: <br /> WalletConnect doesn’t support reading the account names out of Multix
+							at the moment. Select the pure proxy account by its address
+						</p>
+					</div>
 				</div>
 			{:else}
 				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
