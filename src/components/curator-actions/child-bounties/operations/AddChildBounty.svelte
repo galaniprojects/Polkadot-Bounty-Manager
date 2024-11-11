@@ -1,23 +1,23 @@
 <script lang="ts">
-	import type { Bounty } from '../../../types/bounty';
+	import type { Bounty } from '../../../../types/bounty';
 	import {
 		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
 		getApi
-	} from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { isInteger } from '../../../utils/common';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import PolkaCoin from '../../svg/PolkaCoin.svelte';
+	} from '../../../../utils/loading-screen';
+	import { isInteger } from '../../../../utils/common';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
+	import Dialog from '../../../common/Dialog.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -124,7 +124,7 @@
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<BountyDialog
+<Dialog
 	bind:open
 	title="ADD NEW CHILD BOUNTY"
 	backgroundColor="childBountyBackground"
@@ -186,4 +186,4 @@
 			disabled={!isFormValid}>SIGN</button
 		>
 	</div>
-</BountyDialog>
+</Dialog>

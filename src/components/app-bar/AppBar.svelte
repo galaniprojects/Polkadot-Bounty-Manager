@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { activeAccount, activeAccountBounties } from '../../stores';
 	import { truncateString } from '../../utils/common';
-	import PolkadotIcon from '../PolkadotIcon.svelte';
+	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svelte';
 	import LogoutIcon from '../svg/header-footer-logos/LogoutIcon.svelte';

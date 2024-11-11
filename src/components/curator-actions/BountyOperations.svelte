@@ -2,18 +2,16 @@
 	import { goto } from '$app/navigation';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import type { Bounty } from '../../types/bounty';
-	import AcceptCuratorRule from './AcceptCuratorRole.svelte';
-	import AwardBounty from './AwardBounty.svelte';
+	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
 	import type { BountyStatus } from './BountyCard.svelte';
-	import ExtendBounty from './ExtendBounty.svelte';
+	import ExtendBounty from './operations/ExtendBounty.svelte';
 
 	export let bounty: Bounty;
 	export let curator: string | undefined;
 	export let status: BountyStatus;
 
 	let extendBountyDialogOpen = false;
-	let acceptCuratorRuleDialogOpen = false;
-	let awardBountyDialogOpen = false;
+	let acceptCuratorRoleDialogOpen = false;
 </script>
 
 <section class="flex flex-col space-y-1 px-3 pt-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
@@ -51,13 +49,12 @@
 			<button
 				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 				on:click={() => {
-					acceptCuratorRuleDialogOpen = true;
+					acceptCuratorRoleDialogOpen = true;
 				}}>ACCEPT</button
 			>
 		</div>
 	{/if}
 
-	<!-- Add logic/functionality -->
 	{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && curator === $activeAccount.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Extend Bounty</p>
@@ -71,11 +68,8 @@
 	{/if}
 </section>
 
-{#if acceptCuratorRuleDialogOpen}
-	<AcceptCuratorRule bind:open={acceptCuratorRuleDialogOpen} {bounty} />
-{/if}
-{#if awardBountyDialogOpen}
-	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
+{#if acceptCuratorRoleDialogOpen}
+	<AcceptCuratorRole bind:open={acceptCuratorRoleDialogOpen} {bounty} />
 {/if}
 {#if extendBountyDialogOpen}
 	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />

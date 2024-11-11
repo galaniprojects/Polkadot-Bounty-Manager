@@ -23,6 +23,7 @@ export default {
 			extendButtonBackground: '#660000',
 			gray: colors.gray,
 			notifications: '#FFAA35',
+			red: '#E6003D',
 			transparent: colors.transparent,
 			white: colors.white
 		},

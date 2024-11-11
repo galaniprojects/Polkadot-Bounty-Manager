@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LogoPolkassemblyPink from '../../svg/curator-actions-logo/LogoPolkassemblyPink.svelte';
-	import LogoSubsquarePink from '../../svg/curator-actions-logo/LogoSubsquarePink.svelte';
-	import LogoTreasuryPink from '../../svg/curator-actions-logo/LogoTreasuryPink.svelte';
+	import LogoPolkassemblyPink from '../../svg/curator-actions-logos/LogoPolkassemblyPink.svelte';
+	import LogoSubsquarePink from '../../svg/curator-actions-logos/LogoSubsquarePink.svelte';
+	import LogoTreasuryPink from '../../svg/curator-actions-logos/LogoTreasuryPink.svelte';
 	import { openLinkNewTab } from '../ExternalLinks.svelte';
 
 	export let dimension = 5;

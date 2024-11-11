@@ -5,20 +5,20 @@
 		dryRunAndSubmitTransaction,
 		getApi,
 		isValidAddress
-	} from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	} from '../../../../utils/polkadot';
+	import Dialog from '../../../common/Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { isInteger } from '../../../utils/common';
-	import PolkaCoin from '../../svg/PolkaCoin.svelte';
+	} from '../../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { isInteger } from '../../../../utils/common';
+	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -134,12 +134,7 @@
 	}
 </script>
 
-<BountyDialog
-	bind:open
-	title="BATCH CHILD BOUNTY CALLS"
-	backgroundColor="white"
-	textColor="primary"
->
+<Dialog bind:open title="BATCH CHILD BOUNTY CALLS" backgroundColor="white" textColor="primary">
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
@@ -186,4 +181,4 @@
 			? 'basic-button opacity-50'
 			: 'cursor-allowed'}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>

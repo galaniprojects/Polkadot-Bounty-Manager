@@ -8,10 +8,10 @@
 </script>
 
 <script lang="ts">
-	import LogoTreasuryWhite from '../svg/curator-actions-logo/LogoTreasuryWhite.svelte';
-	import LogoPolkassemblyWhite from '../svg/curator-actions-logo/LogoPolkassemblyWhite.svelte';
-	import LogoSubscanWhite from '../svg/curator-actions-logo/LogoSubscanWhite.svelte';
-	import LogoSubsquareWhite from '../svg/curator-actions-logo/LogoSubsquareWhite.svelte';
+	import LogoTreasuryWhite from '../svg/curator-actions-logos/LogoTreasuryWhite.svelte';
+	import LogoPolkassemblyWhite from '../svg/curator-actions-logos/LogoPolkassemblyWhite.svelte';
+	import LogoSubscanWhite from '../svg/curator-actions-logos/LogoSubscanWhite.svelte';
+	import LogoSubsquareWhite from '../svg/curator-actions-logos/LogoSubsquareWhite.svelte';
 
 	export let bountyId: number;
 </script>

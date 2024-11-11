@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { truncateString } from '../../../utils/common';
+	import { truncateString } from '../../utils/common';
 
 	export let items: string[];
 	export let selectedItem: string;

@@ -1,6 +1,6 @@
 <script>
 	import { truncateString } from '../../utils/common';
-	import PolkadotIcon from '../PolkadotIcon.svelte';
+	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import ForwardIcon from '../svg/ForwardIcon.svelte';
 
 	export let name;

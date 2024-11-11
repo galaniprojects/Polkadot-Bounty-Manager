@@ -1,18 +1,22 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		getApi
+	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import ToggleIcon from '../../svg/ToggleIcon.svelte';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import { calculateDeposit } from '../AcceptCuratorRole.svelte';
+	} from '../../../../utils/loading-screen';
+	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
+	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import { calculateDeposit } from '../../operations/AcceptCuratorRole.svelte';
+	import Dialog from '../../../common/Dialog.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -102,7 +106,7 @@
 	}
 </script>
 
-<BountyDialog bind:open title="ACCEPT SUB-CURATOR ROLE" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="ACCEPT SUB-CURATOR ROLE" backgroundColor="white" textColor="primary">
 	<section class="space-y-5">
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
@@ -137,7 +141,7 @@
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
 		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
 	>
-</BountyDialog>
+</Dialog>
 
 <style>
 	.custom-toggle {

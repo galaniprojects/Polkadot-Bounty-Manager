@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { LoadingDialogState } from '../types/loading-screen';
-	import BountyDialog from './BountyDialog.svelte';
+	import Dialog from './common/Dialog.svelte';
 
 	export let dialogState: LoadingDialogState;
 </script>
 
-<BountyDialog
+<Dialog
 	bind:open={dialogState.open}
 	title={dialogState.title}
 	dismissable={!(dialogState.status === 'loading')}
@@ -25,7 +25,7 @@
 			<span>{dialogState.errorMessage}</span>
 		{/if}
 	</div>
-</BountyDialog>
+</Dialog>
 
 <style>
 	.loader {

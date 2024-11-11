@@ -1,18 +1,22 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import BountyDialog from '../../BountyDialog.svelte';
-	import type { ChildBounty } from '../../../types/child-bounty';
+	import {
+		convertPlanckToDot,
+		dryRunAndSubmitTransaction,
+		getApi
+	} from '../../../../utils/polkadot';
+	import Dialog from '../../../common/Dialog.svelte';
+	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { activeAccount } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import PolkadotIcon from '../../PolkadotIcon.svelte';
-	import { truncateString } from '../../../utils/common';
+	} from '../../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import PolkadotIcon from '../../../common/PolkadotIcon.svelte';
+	import { truncateString } from '../../../../utils/common';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -98,12 +102,7 @@
 	}
 </script>
 
-<BountyDialog
-	bind:open
-	title="CLAIM CHILD BOUNTY AWARD"
-	backgroundColor="white"
-	textColor="primary"
->
+<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD" backgroundColor="white" textColor="primary">
 	<div class="space-y-8">
 		<p class="p-1 text-white bg-curatorMainBackground">
 			#{childBounty.id}
@@ -138,4 +137,4 @@
 	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
 		>SIGN</button
 	>
-</BountyDialog>
+</Dialog>

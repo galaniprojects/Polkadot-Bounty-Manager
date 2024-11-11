@@ -2,17 +2,17 @@
 	import type { ChildBounty, ChildBountyStatusString } from '../../../types/child-bounty';
 	import { formatDate } from '../../../utils/common';
 	import { convertPlanckToDot, getCurrentBlock } from '../../../utils/polkadot';
-	import AssignSubCurator from '.././child-bounties/AssignSubCurator.svelte';
-	import AcceptSubCuratorRule from '../child-bounties/AcceptSubCuratorRole.svelte';
-	import CloseDownChildBounty from '../child-bounties/CloseDownChildBounty.svelte';
-	import AwardChildBounty from '../child-bounties/AwardChildBounty.svelte';
+	import AssignSubCurator from './operations/AssignSubCurator.svelte';
+	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
+	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
+	import AwardChildBounty from './operations/AwardChildBounty.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import { getBountyCurator } from '../../../utils/bounties';
-	import ClaimChildBounty from '../child-bounties/ClaimChildBounty.svelte';
+	import ClaimChildBounty from './operations/ClaimChildBounty.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
-	import CopyableAddress from '../../CopyableAddress.svelte';
-	import BatchChildBountyCalls from './BatchChildBountyCalls.svelte';
+	import CopyableAddress from '../../common/CopyableAddress.svelte';
+	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
