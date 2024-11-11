@@ -2,7 +2,6 @@
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import type { ChildBounty, ChildBountyStatus } from '../../../types/child-bounty';
-	import { getChildBountyStatus } from '../../../utils/bounties';
 	import AddChildBounty from './operations/AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
@@ -17,7 +16,7 @@
 
 	$: {
 		filteredChildBounties = childBounties.filter((childBounty) => {
-			return getChildBountyStatus(childBounty) === selectedFilter || selectedFilter === 'all';
+			return childBounty.status === selectedFilter || selectedFilter === 'all';
 		});
 	}
 

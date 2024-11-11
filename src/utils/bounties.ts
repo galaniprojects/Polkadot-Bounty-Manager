@@ -1,7 +1,7 @@
 import type { Bounty } from '../types/bounty';
 import { get } from 'svelte/store';
 import { bounties, activeAccount, activeAccountBounties } from '../stores';
-import type { ChildBounty, ChildBountyStatus } from '../types/child-bounty';
+import type { ChildBounty } from '../types/child-bounty';
 
 export function SetActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
@@ -78,21 +78,6 @@ export function getBountyCurator(bounty: Bounty): string | undefined {
 		}
 		if ('PendingPayout' in bounty.status) {
 			return bounty.status.PendingPayout.curator;
-		}
-	}
-	return undefined;
-}
-
-export function getChildBountyStatus(childBounty: ChildBounty): ChildBountyStatus | undefined {
-	if (childBounty.statusRaw === 'Added') {
-		return 'added';
-	} else if (typeof childBounty.statusRaw === 'object') {
-		if ('Active' in childBounty.statusRaw) {
-			return 'active';
-		} else if ('CuratorProposed' in childBounty.statusRaw) {
-			return 'sub-curator proposed';
-		} else if ('PendingPayout' in childBounty.statusRaw) {
-			return 'pending payout';
 		}
 	}
 	return undefined;
