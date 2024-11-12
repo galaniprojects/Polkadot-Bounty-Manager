@@ -89,7 +89,7 @@
 				</div>
 				<div>
 					<div class="flex flex-col justify-between w-full lg:w-48 xl:w-62">
-						{#if typeof childBounty.status === 'object'}
+						{#if childBounty.curator}
 							<section>
 								<p class="text-xs">Sub-Curator</p>
 								<CopyableAddress address={childBounty.curator || '-'} />
