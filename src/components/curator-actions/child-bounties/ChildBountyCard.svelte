@@ -11,11 +11,13 @@
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
+	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
 	let assignSubCuratorOpen = false;
+	let unassignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
 	let closeDownChildBountyOpen = false;
 	let awardChildBountyOpen = false;
@@ -215,6 +217,20 @@
 				</div>
 			{/if}
 
+			{#if $showAllCuratorOptions || ((childBounty.status === ChildBountyStatus.Active || childBounty.status === ChildBountyStatus.SubCuratorProposed) && $activeAccount && parentBounty.curator === $activeAccount.address)}
+				<div
+					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
+				>
+					<button
+						id="close"
+						on:click={() => (unassignSubCuratorOpen = true)}
+						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32`}
+					>
+						UNASSIGN
+					</button>
+				</div>
+			{/if}
+
 			<!-- TODO: only when active?  -->
 			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Active && $activeAccount && childBounty.curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
@@ -240,6 +256,7 @@
 		</div>
 	</div>
 </div>
+
 {#if assignSubCuratorOpen}
 	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
 {/if}
@@ -265,6 +282,10 @@
 
 {#if batchOpen}
 	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} />
+{/if}
+
+{#if unassignSubCuratorOpen}
+	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} />
 {/if}
 
 <style>

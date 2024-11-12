@@ -6,7 +6,6 @@
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svelte';
-	import LogoutIcon from '../svg/header-footer-logos/LogoutIcon.svelte';
 	import LoginDialog from './LoginDialog.svelte';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
 	import { web3Enable } from '@polkadot/extension-dapp';
@@ -61,8 +60,8 @@
 					{$activeAccount.meta.name || 'Account'}
 					<span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
 				</div>
-				<button on:click={() => logOut()}>
-					<LogoutIcon />
+				<button on:click={() => logOut()} class="mt-2">
+					<span class="material-symbols-outlined text-white text-2xl">logout</span>
 				</button>
 			</div>
 		{/if}
