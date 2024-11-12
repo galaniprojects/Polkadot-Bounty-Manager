@@ -90,9 +90,9 @@
 			sourced through an API from the Subsquare platform.
 		</li>
 		<li>
-			External Links: Follow external links to platforms such as Dotreasury and
-			Subsquare regarding the selected bounty or child bounty. Follow a link to the URL written with
-			a prespecified remark from the Curators.
+			External Links: Follow external links to platforms such as Dotreasury and Subsquare regarding
+			the selected bounty or child bounty. Follow a link to the URL written with a prespecified
+			remark from the Curators.
 		</li>
 	</ul>
 	<p>

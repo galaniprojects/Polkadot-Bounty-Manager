@@ -146,10 +146,10 @@
 				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
 				has been created successfully!
 				<br /><br />
-				Please update the description on one of the social platforms such as Subsquare.
-				The decision deposit must be placed within 7 days, for the referendum to be valid. (This deposit
-				can be placed by any account). This can be submitted either on one of the social platforms or
-				via the polkadot.js explorer.
+				Please update the description on one of the social platforms such as Subsquare. The decision
+				deposit must be placed within 7 days, for the referendum to be valid. (This deposit can be placed
+				by any account). This can be submitted either on one of the social platforms or via the polkadot.js
+				explorer.
 				<br /> <br />
 				You can now return to the home screen or proceed to the Curator Approval Referendum creation.
 				It is strongly recommended to create the Curator Approval Referendum, after the Bounty has been
