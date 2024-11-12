@@ -1,4 +1,4 @@
-import type { Bounty } from '../types/bounty';
+import { BountyStatus, type Bounty, type BountyRaw } from '../types/bounty';
 import { ChildBountyStatus, type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
 import { getCurrentBlock } from './polkadot';
 
@@ -7,15 +7,46 @@ export function isInteger(input: string) {
 	return Number.isInteger(num) && num.toString() === input;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function parseBounty(obj: any, id: number): Bounty {
+export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
+	let status: BountyStatus;
+	let curator: string | undefined = undefined;
+	let expiryDate: Date | undefined = undefined;
+	if (obj.status === 'Proposed') {
+		status = BountyStatus.Proposed;
+	} else if (obj.status === 'Approved') {
+		status = BountyStatus.Approved;
+	} else if (obj.status === 'Funded') {
+		status = BountyStatus.Funded;
+	} else if (typeof obj.status === 'object') {
+		if ('Active' in obj.status) {
+			status = BountyStatus.Active;
+			curator = obj.status.Active.curator;
+			expiryDate = await calculateExpirationDate(obj.status.Active.updateDue);
+		} else if ('CuratorProposed' in obj.status) {
+			status = BountyStatus.CuratorProposed;
+			curator = obj.status.CuratorProposed.curator;
+		} else if ('PendingPayout' in obj.status) {
+			curator = obj.status.PendingPayout.curator;
+			status = BountyStatus.PendingPayout;
+		} else {
+			throw new Error('unexpected bounty structure');
+		}
+	} else {
+		throw new Error('unexpected bounty structure');
+	}
+
 	return {
-		...obj,
 		id,
+		proposer: obj.proposer,
 		value: parseBalance(obj.value),
 		fee: parseBalance(obj.fee),
-		curatorDeposit: parseBalance(obj.curator_deposit),
-		bond: parseBalance(obj.bond)
+		curatorDeposit: parseBalance(obj.curatorDeposit),
+		bond: parseBalance(obj.bond),
+		status,
+		statusRaw: obj.status,
+		curator,
+		expiryDate,
+		childBounties: []
 	};
 }
 
@@ -89,12 +120,8 @@ export function formatDate(date: Date): string {
 		.toUpperCase();
 }
 
-export async function calculateExpirationDate(bounty: Bounty): Promise<Date | undefined> {
-	if (typeof bounty.status === 'object' && 'Active' in bounty.status) {
-		const currentBlockInfo = await getCurrentBlock();
-		const blocksToExpire =
-			Number(bounty.status.Active.updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
-		return new Date(currentBlockInfo.timestamp + blocksToExpire * 6000);
-	}
-	return undefined;
+async function calculateExpirationDate(updateDue: string): Promise<Date> {
+	const currentBlockInfo = await getCurrentBlock();
+	const blocksToExpire = Number(updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
+	return new Date(currentBlockInfo.timestamp + blocksToExpire * 6000);
 }

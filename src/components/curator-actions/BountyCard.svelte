@@ -1,19 +1,8 @@
-<script lang="ts" context="module">
-	export type BountyStatus =
-		| 'proposed'
-		| 'approved'
-		| 'funded'
-		| 'curator proposed'
-		| 'active'
-		| 'pending payout';
-</script>
-
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
+	import { BountyStatus, type Bounty } from '../../types/bounty';
 	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import { calculateExpirationDate, formatDate } from '../../utils/common';
 	import BountyOperations from './BountyOperations.svelte';
 	import ExternalLinks from './ExternalLinks.svelte';
 	import { parse } from 'marked';
@@ -22,44 +11,15 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import AwardBounty from './operations/AwardBounty.svelte';
+	import { formatDate } from '../../utils/common';
 
 	export let bounty: Bounty;
 
 	let detailsExpanded = false;
 	export let expanded: boolean;
 
-	let expiryDate: string | undefined = undefined;
-	let status: BountyStatus;
-	let curator: string | undefined = undefined;
 	let description: string | undefined;
 	let awardBountyDialogOpen = false;
-
-	$: {
-		if (bounty.status === 'Proposed') {
-			status = 'proposed';
-		} else if (bounty.status === 'Approved') {
-			status = 'approved';
-		} else if (bounty.status === 'Funded') {
-			status = 'funded';
-		} else if (typeof bounty.status === 'object') {
-			if ('Active' in bounty.status) {
-				status = 'active';
-				curator = bounty.status.Active.curator;
-				(async () => {
-					let calculatedExpiryDate = await calculateExpirationDate(bounty);
-					if (calculatedExpiryDate) {
-						expiryDate = formatDate(calculatedExpiryDate);
-					}
-				})();
-			} else if ('CuratorProposed' in bounty.status) {
-				status = 'curator proposed';
-				curator = bounty.status.CuratorProposed.curator;
-			} else if ('PendingPayout' in bounty.status) {
-				curator = bounty.status.PendingPayout.curator;
-				status = 'pending payout';
-			}
-		}
-	}
 
 	$: if (expanded) {
 		const bountyId = bounty.id;
@@ -92,7 +52,7 @@
 
 <div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
 	<!-- Header Section -->
-	<BountyCardHeader {bounty} {status} bind:isParentExpanded={expanded}></BountyCardHeader>
+	<BountyCardHeader {bounty} bind:isParentExpanded={expanded}></BountyCardHeader>
 
 	<!-- Content Section -->
 	{#if expanded}
@@ -110,10 +70,10 @@
 							<p class="text-xs">Curator Fee</p>
 							<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 						</div>
-						{#if curator}
+						{#if bounty.curator}
 							<div class="mt-4 lg:mt-0">
 								<p class="text-xs">Curator</p>
-								<CopyableAddress address={curator} />
+								<CopyableAddress address={bounty.curator} />
 							</div>
 						{/if}
 					</section>
@@ -129,10 +89,10 @@
 							</div>
 						{/if}
 						<div class="flex justify-between lg:space-x-8 xl:space-x-16">
-							{#if expiryDate != undefined}
+							{#if bounty.expiryDate != undefined}
 								<section class="flex-col text-start">
 									<p class="text-xs">Expiration date</p>
-									<p>{expiryDate}</p>
+									<p>{formatDate(bounty.expiryDate)}</p>
 								</section>
 							{/if}
 						</div>
@@ -171,10 +131,10 @@
 						<p class="text-xs">Curator Fee</p>
 						<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
-					{#if curator}
+					{#if bounty.curator}
 						<div class="space-y-1">
 							<p class="text-xs">Curator</p>
-							<CopyableAddress address={curator} />
+							<CopyableAddress address={bounty.curator} />
 						</div>
 					{/if}
 					{#if description}
@@ -183,10 +143,10 @@
 						</section>
 					{/if}
 					<div class="flex justify-between">
-						{#if expiryDate}
+						{#if bounty.expiryDate}
 							<section class="flex-col text-start">
 								<p class="text-xs">Expiration date</p>
-								<p>{expiryDate}</p>
+								<p>{formatDate(bounty.expiryDate)}</p>
 							</section>
 						{/if}
 					</div>
@@ -213,22 +173,18 @@
 		</div>
 
 		<!-- Buttons/Actions Section -->
-		<BountyOperations {bounty} {curator} {status} />
+		<BountyOperations {bounty} />
 
 		<div class="w-full pr-6">
-			{#if status === 'active'}
-				<ChildBountiesSection
-					{bounty}
-					childBounties={bounty.childBounties}
-					parentCurator={curator}
-				/>
+			{#if bounty.status === BountyStatus.Active}
+				<ChildBountiesSection {bounty} />
 			{/if}
 		</div>
 
 		<div
 			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
-			{#if $showAllCuratorOptions || (status === 'active' && bounty.childBounties.length === 0 && $activeAccount && curator === $activeAccount.address)}
+			{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.childBounties.length === 0 && $activeAccount && bounty.curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 					<p class="pt-2 text-sm text-white">Award bounty</p>
 					<button

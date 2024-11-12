@@ -136,6 +136,9 @@ export async function dryRunAndSubmitTransaction(
 	return { result: submittableResult };
 }
 
+/**
+ * @returns if provided address ia a valid polkadot address.
+ */
 export function isValidAddress(address: string) {
 	try {
 		const decoded = decodeAddress(address, false, 0);
@@ -151,10 +154,11 @@ export type BlockInfo = {
 	blockNumber: number;
 	timestamp: number;
 };
+
 export async function getCurrentBlock(): Promise<BlockInfo> {
-	const currentBlockInfo = get(currentBlock);
-	if (currentBlockInfo) {
-		return currentBlockInfo;
+	const currentBlockFromStorage = get(currentBlock);
+	if (currentBlockFromStorage) {
+		return currentBlockFromStorage;
 	} else {
 		const api = await getApi();
 		const info = {

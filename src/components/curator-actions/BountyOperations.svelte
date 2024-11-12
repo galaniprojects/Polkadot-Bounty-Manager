@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
-	import type { Bounty } from '../../types/bounty';
+	import { BountyStatus, type Bounty } from '../../types/bounty';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
-	import type { BountyStatus } from './BountyCard.svelte';
 	import ExtendBounty from './operations/ExtendBounty.svelte';
 
 	export let bounty: Bounty;
-	export let curator: string | undefined;
-	export let status: BountyStatus;
 
 	let extendBountyDialogOpen = false;
 	let acceptCuratorRoleDialogOpen = false;
@@ -29,7 +26,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || status === 'proposed' || status === 'approved' || status === 'funded'}
+	{#if $showAllCuratorOptions || bounty.status === BountyStatus.Proposed || bounty.status === BountyStatus.Approved || bounty.status === BountyStatus.Funded}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 
@@ -43,7 +40,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (status === 'curator proposed' && $activeAccount && curator === $activeAccount.address)}
+	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.CuratorProposed && $activeAccount && bounty.curator === $activeAccount.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 			<button
@@ -55,7 +52,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (status === 'active' && $activeAccount && curator === $activeAccount.address)}
+	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && $activeAccount && bounty.curator === $activeAccount.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Extend Bounty</p>
 			<button
