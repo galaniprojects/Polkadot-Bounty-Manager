@@ -184,7 +184,7 @@
 			{/if}
 
 			<div class="flex justify-end">
-				<div class="w-32 hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-2.5">
+				<div class="w-32 hidden lg:flex lg:flex-row lg:items-center lg:justify-end lg:gap-2.5">
 					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
 				</div>
 			</div>
