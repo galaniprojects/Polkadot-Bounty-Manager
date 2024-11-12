@@ -1,5 +1,4 @@
 <script lang="ts">
-	import LogoPolkassemblyPink from '../../svg/curator-actions-logos/LogoPolkassemblyPink.svelte';
 	import LogoSubsquarePink from '../../svg/curator-actions-logos/LogoSubsquarePink.svelte';
 	import LogoTreasuryPink from '../../svg/curator-actions-logos/LogoTreasuryPink.svelte';
 	import { openLinkNewTab } from '../ExternalLinks.svelte';
@@ -13,12 +12,6 @@
 		openLinkNewTab(`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`);
 	}}
 	class={`w-${dimension} h-${dimension}`}><LogoTreasuryPink /></button
->
-<button
-	on:click={() => {
-		openLinkNewTab(`https://polkadot.polkassembly.io/child_bounty/${childBountyId}`);
-	}}
-	class={`w-${dimension} h-${dimension}`}><LogoPolkassemblyPink /></button
 >
 <button
 	on:click={() => {

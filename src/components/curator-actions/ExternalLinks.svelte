@@ -9,7 +9,6 @@
 
 <script lang="ts">
 	import LogoTreasuryWhite from '../svg/curator-actions-logos/LogoTreasuryWhite.svelte';
-	import LogoPolkassemblyWhite from '../svg/curator-actions-logos/LogoPolkassemblyWhite.svelte';
 	import LogoSubscanWhite from '../svg/curator-actions-logos/LogoSubscanWhite.svelte';
 	import LogoSubsquareWhite from '../svg/curator-actions-logos/LogoSubsquareWhite.svelte';
 
@@ -23,14 +22,6 @@
 	class="w-10 h-10 lg:w-6 lg:h-6"
 >
 	<LogoTreasuryWhite />
-</button>
-<button
-	on:click={() => {
-		openLinkNewTab(`https://polkadot.polkassembly.io/bounty/${bountyId}`);
-	}}
-	class="w-10 h-10 lg:w-6 lg:h-6"
->
-	<LogoPolkassemblyWhite />
 </button>
 <button
 	on:click={() => {

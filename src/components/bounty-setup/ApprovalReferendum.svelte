@@ -146,7 +146,7 @@
 				{`#${bountyInfo.id} ${bountyInfo.description}`} <br />
 				has been created successfully!
 				<br /><br />
-				Please update the description on one of the social platforms like Polkassembly or Subsquare.
+				Please update the description on one of the social platforms such as Subsquare.
 				The decision deposit must be placed within 7 days, for the referendum to be valid. (This deposit
 				can be placed by any account). This can be submitted either on one of the social platforms or
 				via the polkadot.js explorer.
