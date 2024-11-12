@@ -87,12 +87,12 @@
 		<li>Sub-curator Actions: Accept roles and manage child bounties.</li>
 		<li>
 			Externally Sourced Descriptions: See user written description of bounties and child bounties,
-			sourced through an API from either the Polkassembly or Subsquare platform.
+			sourced through an API from the Subsquare platform.
 		</li>
 		<li>
-			External Links: Follow external links to platforms such as Polkassembly, Dotreasury and
-			Subsquare regarding the selected bounty or child bounty. Follow a link to the URL written with
-			a prespecified remark from the Curators.
+			External Links: Follow external links to platforms such as Dotreasury and Subsquare regarding
+			the selected bounty or child bounty. Follow a link to the URL written with a prespecified
+			remark from the Curators.
 		</li>
 	</ul>
 	<p>
@@ -145,7 +145,7 @@
 		</li>
 		<li>
 			Externally Sourced Descriptions: See user written description of bounties and child bounties,
-			sourced through an API from either the Polkassembly or Subsquare platform.
+			sourced through an API from the Subsquare platform.
 		</li>
 		<li>
 			Communication through internet-based systems is susceptible to data/information being read out
