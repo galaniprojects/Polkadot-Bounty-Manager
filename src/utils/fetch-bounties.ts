@@ -1,7 +1,7 @@
 import { bounties } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
 import { getApi } from './polkadot';
-import type { Bounty } from '../types/bounty';
+import type { Bounty, BountyRaw } from '../types/bounty';
 import { firstValueFrom } from 'rxjs';
 import { parseBounty, parseChildBounty } from './common';
 import type { ChildBounty, ChildBountyRaw } from '../types/child-bounty';
@@ -12,7 +12,7 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		showLoadingDialog('Loading...');
 	}
 	try {
-		const parsedBounties = await queryBountiesAndDescription();
+		const parsedBounties = await fetchBountiesAndDescription();
 
 		const api = await getApi();
 
@@ -71,14 +71,16 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 	}
 }
 
-async function queryBountiesAndDescription(): Promise<Bounty[]> {
+async function fetchBountiesAndDescription(): Promise<Bounty[]> {
 	const api = await getApi();
 	const parsedBounties: Bounty[] = [];
 
 	const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
 	for (const unparsedBounty of unparsedBounties) {
 		const index = Number((unparsedBounty[0].toHuman()! as string[])[0].replaceAll(',', ''));
-		parsedBounties.push(parseBounty(unparsedBounty[1].toHuman(), index));
+		parsedBounties.push(
+			await parseBounty(unparsedBounty[1].toHuman() as unknown as BountyRaw, index)
+		);
 	}
 
 	parsedBounties.sort((bounty1, bounty2) => {

@@ -2,7 +2,6 @@
 	import type { Bounty } from '../../types/bounty';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	export let bounty: Bounty;
-	export let status: string;
 	export let isParentExpanded: boolean;
 </script>
 
@@ -37,7 +36,7 @@
 			</div>
 			<section class="flex space-x-1 lg:w-52">
 				<p>Status:</p>
-				<p>{status}</p>
+				<p>{bounty.status}</p>
 			</section>
 		</div>
 	</div>

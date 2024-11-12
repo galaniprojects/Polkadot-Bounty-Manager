@@ -10,7 +10,7 @@
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import { calculateExpirationDate, formatDate } from '../../../utils/common';
+	import { formatDate } from '../../../utils/common';
 	import Dialog from '../../common/Dialog.svelte';
 
 	export let open = false;
@@ -21,9 +21,8 @@
 
 	onMount(async () => {
 		await calculateFee();
-		let calculatedExpiryDate = await calculateExpirationDate(bounty);
-		if (calculatedExpiryDate) {
-			expiryDate = formatDate(calculatedExpiryDate);
+		if (bounty.expiryDate) {
+			expiryDate = formatDate(bounty.expiryDate);
 		} else {
 			expiryDate = '-';
 		}

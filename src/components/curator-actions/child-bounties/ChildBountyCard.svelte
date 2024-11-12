@@ -7,7 +7,6 @@
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
-	import { getBountyCurator } from '../../../utils/bounties';
 	import ClaimChildBounty from './operations/ClaimChildBounty.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
@@ -15,7 +14,6 @@
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
-	export let parentCurator: string | undefined;
 
 	let assignSubCuratorOpen = false;
 	let acceptSubCuratorRuleOpen = false;
@@ -162,7 +160,7 @@
 		</div>
 
 		<div class="space-y-3 p-2 2xl:mr-32">
-			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Added && $activeAccount && $activeAccount.address === parentCurator)}
+			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Added && $activeAccount && $activeAccount.address === parentBounty.curator)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
@@ -203,7 +201,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || ($activeAccount && getBountyCurator(parentBounty) === $activeAccount.address && childBounty.status !== ChildBountyStatus.PendingPayout)}
+			{#if $showAllCuratorOptions || ($activeAccount && parentBounty.curator === $activeAccount.address && childBounty.status !== ChildBountyStatus.PendingPayout)}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -246,7 +244,11 @@
 	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
 {/if}
 {#if acceptSubCuratorRuleOpen}
-	<AcceptSubCuratorRule bind:open={acceptSubCuratorRuleOpen} {childBounty} {parentCurator} />
+	<AcceptSubCuratorRule
+		bind:open={acceptSubCuratorRuleOpen}
+		{childBounty}
+		parentCurator={parentBounty.curator}
+	/>
 {/if}
 
 {#if closeDownChildBountyOpen}
