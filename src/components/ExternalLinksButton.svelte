@@ -8,10 +8,12 @@
 </script>
 
 <script lang="ts">
+	import type { SvelteComponent } from 'svelte';
+
 	import ExternalLinksDialog from './ExternalLinksDialog.svelte';
 
 	export let url: string;
-	export let icon: any;
+	export let icon: any |typeof SvelteComponent<any>;
 	export let dimension: number = 10;
 
 	let externalLinksDialogOpen = false;
