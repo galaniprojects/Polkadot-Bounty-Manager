@@ -10,7 +10,6 @@
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
-	import PolkadotIcon from '../../common/PolkadotIcon.svelte';
 	import { truncateString } from '../../../utils/common';
 	import type { Bounty } from '../../../types/bounty';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
