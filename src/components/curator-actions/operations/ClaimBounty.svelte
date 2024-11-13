@@ -13,6 +13,7 @@
 	import PolkadotIcon from '../../common/PolkadotIcon.svelte';
 	import { truncateString } from '../../../utils/common';
 	import type { Bounty } from '../../../types/bounty';
+	import CopyableAddress from '../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -104,12 +105,7 @@
 		{#if bounty.beneficiary}
 			<div class="space-y-2">
 				<p class="text-xs">Beneficiary account</p>
-				<div class="flex">
-					<div class="w-5 h-5">
-						<PolkadotIcon address={bounty.beneficiary} />
-					</div>
-					<p>{truncateString(bounty.beneficiary, 13)}</p>
-				</div>
+				<CopyableAddress address={truncateString(bounty.beneficiary, 13)} />
 			</div>
 		{/if}
 		<div class="space-y-2">

@@ -17,6 +17,7 @@
 	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import PolkadotIcon from '../../../common/PolkadotIcon.svelte';
 	import { truncateString } from '../../../../utils/common';
+	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -114,12 +115,7 @@
 		{#if childBounty.beneficiary}
 			<div class="space-y-2">
 				<p class="text-xs">Beneficiary account</p>
-				<div class="flex">
-					<div class="w-5 h-5">
-						<PolkadotIcon address={childBounty.beneficiary} />
-					</div>
-					<p>{truncateString(childBounty.beneficiary, 13)}</p>
-				</div>
+				<CopyableAddress address={childBounty.beneficiary} />
 			</div>
 		{/if}
 		<div class="space-y-2">
