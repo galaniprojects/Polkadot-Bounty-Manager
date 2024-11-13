@@ -3,12 +3,14 @@
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import { BountyStatus, type Bounty } from '../../types/bounty';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
+	import ClaimBounty from './operations/ClaimBounty.svelte';
 	import ExtendBounty from './operations/ExtendBounty.svelte';
 
 	export let bounty: Bounty;
 
 	let extendBountyDialogOpen = false;
 	let acceptCuratorRoleDialogOpen = false;
+	let claimBountyDialogOpen = false;
 </script>
 
 <section class="flex flex-col space-y-1 px-3 pt-5 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36">
@@ -63,6 +65,17 @@
 			>
 		</div>
 	{/if}
+
+	{#if $showAllCuratorOptions || bounty.status === BountyStatus.PendingPayout}
+		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
+			<button
+				on:click={() => (claimBountyDialogOpen = true)}
+				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-10"
+			>
+				CLAIM
+			</button>
+		</div>
+	{/if}
 </section>
 
 {#if acceptCuratorRoleDialogOpen}
@@ -70,4 +83,7 @@
 {/if}
 {#if extendBountyDialogOpen}
 	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />
+{/if}
+{#if claimBountyDialogOpen}
+	<ClaimBounty bind:open={claimBountyDialogOpen} {bounty} />
 {/if}

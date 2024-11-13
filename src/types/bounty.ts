@@ -12,6 +12,7 @@ export interface BountyRaw {
 export interface Bounty {
 	id: number;
 	description?: string;
+	beneficiary?: string;
 	proposer: string;
 	value: bigint;
 	fee: bigint;

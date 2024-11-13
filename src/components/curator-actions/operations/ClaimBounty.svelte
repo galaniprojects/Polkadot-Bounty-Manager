@@ -1,24 +1,21 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi
-	} from '../../../../utils/polkadot';
-	import Dialog from '../../../common/Dialog.svelte';
-	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
+	import Dialog from '../../common/Dialog.svelte';
 	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
 		showSuccessDialog
-	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
-	import CopyableAddress from '../../../common/CopyableAddress.svelte';
+	} from '../../../utils/loading-screen';
+	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { truncateString } from '../../../utils/common';
+	import type { Bounty } from '../../../types/bounty';
+	import CopyableAddress from '../../common/CopyableAddress.svelte';
 
 	export let open = true;
-	export let childBounty: ChildBounty;
+	export let bounty: Bounty;
 
 	let fee = '-';
 
@@ -26,7 +23,7 @@
 		await calculateFee();
 	});
 
-	async function submit() {
+	async function claimBounty() {
 		open = false;
 		showLoadingDialog('Submitting transaction');
 		try {
@@ -36,10 +33,7 @@
 			}
 
 			const api = await getApi();
-			let transaction = api.tx.childBounties.claimChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
+			let transaction = api.tx.bounties.claimBounty(bounty.id);
 
 			const { errorMessage, result } = await dryRunAndSubmitTransaction(
 				api,
@@ -80,10 +74,7 @@
 		try {
 			const api = await getApi();
 
-			let transaction = api.tx.childBounties.claimChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
+			let transaction = api.tx.bounties.claimBounty(bounty.id);
 			let observableFee = transaction.paymentInfo($activeAccount.address);
 
 			const paymentInfo = await firstValueFrom(observableFee);
@@ -95,14 +86,14 @@
 	}
 </script>
 
-<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD" backgroundColor="white" textColor="primary">
-	<div class="space-y-8">
-		<p class="p-1 text-white bg-curatorMainBackground">
-			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
+<Dialog bind:open title="CLAIM BOUNTY AWARD">
+	<div class="space-y-5">
+		<div class="space-x-1">
+			<span>#{bounty.id}</span>
+			{#if bounty.description !== undefined}
+				<span>{bounty.description}</span>
 			{/if}
-		</p>
+		</div>
 		<div class="space-y-2">
 			<p class="text-xs">What is this action?</p>
 			<p class="text-xs">
@@ -110,10 +101,10 @@
 				The funds will be transferred to the beneficiary’s address.
 			</p>
 		</div>
-		{#if childBounty.beneficiary}
+		{#if bounty.beneficiary}
 			<div class="space-y-2">
 				<p class="text-xs">Beneficiary account</p>
-				<CopyableAddress address={childBounty.beneficiary} />
+				<CopyableAddress address={truncateString(bounty.beneficiary, 13)} />
 			</div>
 		{/if}
 		<div class="space-y-2">
@@ -122,7 +113,5 @@
 		</div>
 	</div>
 
-	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
-		>SIGN</button
-	>
+	<button on:click={claimBounty} class="w-full md:w-fit mt-10 h-12 button-popup">SIGN</button>
 </Dialog>

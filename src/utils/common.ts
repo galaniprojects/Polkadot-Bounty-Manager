@@ -11,6 +11,7 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let expiryDate: Date | undefined = undefined;
+	let beneficiary: string | undefined = undefined;
 	if (obj.status === 'Proposed') {
 		status = BountyStatus.Proposed;
 	} else if (obj.status === 'Approved') {
@@ -28,6 +29,7 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 		} else if ('PendingPayout' in obj.status) {
 			curator = obj.status.PendingPayout.curator;
 			status = BountyStatus.PendingPayout;
+			beneficiary = obj.status.PendingPayout.beneficiary;
 		} else {
 			throw new Error('unexpected bounty structure');
 		}
@@ -46,7 +48,8 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 		statusRaw: obj.status,
 		curator,
 		expiryDate,
-		childBounties: []
+		childBounties: [],
+		beneficiary
 	};
 }
 

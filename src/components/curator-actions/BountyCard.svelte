@@ -76,6 +76,12 @@
 								<CopyableAddress address={bounty.curator} />
 							</div>
 						{/if}
+						{#if bounty.beneficiary}
+							<div class="mt-4 lg:mt-0">
+								<p class="text-xs">Beneficiary</p>
+								<CopyableAddress address={bounty.beneficiary} />
+							</div>
+						{/if}
 					</section>
 					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
 						<ExternalLinks bountyId={bounty.id} />
