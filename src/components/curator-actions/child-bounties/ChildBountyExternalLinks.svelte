@@ -7,7 +7,7 @@
 	export let childBountyId: number;
 </script>
 
-<div class="mr-5">
+<div class="mr-4">
 	<ExternalLinksButton
 		url={`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`}
 		icon={LogoTreasuryPink}
@@ -17,7 +17,7 @@
 		buttonStyle="bg-accent text-white"
 	/>
 </div>
-<div class="mr-5">
+<div class="mr-4">
 	<ExternalLinksButton
 		url={`https://polkadot.subsquare.io/treasury/child-bounties/${childBountyId}`}
 		icon={LogoSubsquarePink}
