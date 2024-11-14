@@ -10,9 +10,9 @@
 <script lang="ts">
 	import ExternalLinksDialog from './ExternalLinksDialog.svelte';
 
-	export let url: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	export let icon: any;
+	export let url: string;
 	export let dimension: number = 10;
 	export let backgroundColor: string = 'curatorMainBackground';
 	export let textColor: string = 'white';
