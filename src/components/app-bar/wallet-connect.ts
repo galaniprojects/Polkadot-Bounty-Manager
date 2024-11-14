@@ -1,15 +1,11 @@
 import { walletConnectProvider, walletConnectSession, walletConnectSigner } from '../../stores';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import UniversalProvider from '@walletconnect/universal-provider';
 import { WalletConnectModal } from '@walletconnect/modal';
 import type { SessionTypes } from '@walletconnect/types';
-import {
-	POLKADOT_CHAIN_ID,
-	WALLET_CONNECT_SOURCE,
-	WalletConnectSigner
-} from '../../utils/WcSigner';
+import { POLKADOT_CHAIN_ID, WalletConnectSigner } from '../../utils/WcSigner';
+import { SupportedSources, type AccountInfo } from '../../types/account';
 
-export async function walletConnect(): Promise<InjectedAccountWithMeta[]> {
+export async function walletConnect(): Promise<AccountInfo[]> {
 	const projectId = '75706f3e77002695ab0d89128b3e35bc';
 	const provider: UniversalProvider = await UniversalProvider.init({
 		projectId: projectId,
@@ -52,11 +48,10 @@ export async function walletConnect(): Promise<InjectedAccountWithMeta[]> {
 
 	const accounts = walletConnectAccount.map((wcAccount) => {
 		const address = wcAccount.split(':')[2];
-		const accountWithMeta: InjectedAccountWithMeta = {
+		const accountWithMeta: AccountInfo = {
+			name: "Account",
 			address: address,
-			meta: {
-				source: WALLET_CONNECT_SOURCE
-			}
+			source: SupportedSources.WalletConnect
 		};
 		return accountWithMeta;
 	});

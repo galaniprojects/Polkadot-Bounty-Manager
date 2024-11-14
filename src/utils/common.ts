@@ -11,39 +11,43 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let expiryDate: Date | undefined = undefined;
-	if (obj.status === 'Proposed') {
-		status = BountyStatus.Proposed;
-	} else if (obj.status === 'Approved') {
-		status = BountyStatus.Approved;
-	} else if (obj.status === 'Funded') {
-		status = BountyStatus.Funded;
-	} else if (typeof obj.status === 'object') {
-		if ('Active' in obj.status) {
+	let beneficiary: string;
+
+	switch (obj.status.type) {
+		case 'Proposed':
+			status = BountyStatus.Proposed;
+			break;
+		case 'Approved':
+			status = BountyStatus.Approved;
+			break;
+		case 'Funded':
+			status = BountyStatus.Funded;
+			break;
+		case 'CuratorProposed':
+		case 'Active':
 			status = BountyStatus.Active;
-			curator = obj.status.Active.curator;
-			expiryDate = await calculateExpirationDate(obj.status.Active.updateDue);
-		} else if ('CuratorProposed' in obj.status) {
-			status = BountyStatus.CuratorProposed;
-			curator = obj.status.CuratorProposed.curator;
-		} else if ('PendingPayout' in obj.status) {
-			curator = obj.status.PendingPayout.curator;
+			curator = obj.status.value.curator;
+			if ('update_due' in obj.status.value) {
+				expiryDate = await calculateExpirationDate(obj.status.value.update_due);
+			}
+			break;
+		case 'PendingPayout':
+			curator = obj.status.value.curator;
 			status = BountyStatus.PendingPayout;
-		} else {
-			throw new Error('unexpected bounty structure');
-		}
-	} else {
-		throw new Error('unexpected bounty structure');
+			beneficiary = obj.status.value.beneficiary;
+			//TODO: unlock at?
+			break;
 	}
+
 
 	return {
 		id,
 		proposer: obj.proposer,
-		value: parseBalance(obj.value),
-		fee: parseBalance(obj.fee),
-		curatorDeposit: parseBalance(obj.curatorDeposit),
-		bond: parseBalance(obj.bond),
+		value: obj.value,
+		fee: obj.fee,
+		curatorDeposit: obj.curator_deposit,
+		bond: obj.bond,
 		status,
-		statusRaw: obj.status,
 		curator,
 		expiryDate,
 		childBounties: []
@@ -56,50 +60,39 @@ export async function parseChildBounty(obj: ChildBountyRaw, id: number): Promise
 	let dateOfPayout: string | undefined;
 	let beneficiary: string | undefined;
 
-	if (obj.status === 'Added') {
-		status = ChildBountyStatus.Added;
-	} else if (typeof obj.status === 'object') {
-		if ('Active' in obj.status) {
-			status = ChildBountyStatus.Active;
-			curator = obj.status.Active.curator;
-		} else if ('CuratorProposed' in obj.status) {
+	switch (obj.status.type) {
+		case 'Added':
+			status = ChildBountyStatus.Added;
+			break;
+		case 'CuratorProposed':
 			status = ChildBountyStatus.SubCuratorProposed;
-			curator = obj.status.CuratorProposed.curator;
-		} else if ('PendingPayout' in obj.status) {
-			curator = obj.status.PendingPayout.curator;
+			curator = obj.status.value.curator;
+			break;
+		case 'Active':
+			status = ChildBountyStatus.Active;
+			curator = obj.status.value.curator;
+			break;
+		case 'PendingPayout':
+			curator = obj.status.value.curator;
 			status = ChildBountyStatus.PendingPayout;
-			const unlockAt = Number(obj.status.PendingPayout.unlockAt.replace(/[, ]/g, ''));
+			const unlockAt = obj.status.value.unlock_at;
 			const currentBlockInfo = await getCurrentBlock();
 			const blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
 			dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
-			beneficiary = obj.status.PendingPayout.beneficiary;
-		} else {
-			throw new Error(`Unexpected status type: ${obj.status}`);
-		}
-	} else {
-		throw new Error(`Unexpected status type: ${obj.status}`);
+			beneficiary = obj.status.value.beneficiary;
+			break;
 	}
 	return {
 		id,
-		parentBounty: Number(obj.parentBounty),
-		value: parseBalance(obj.value),
-		fee: parseBalance(obj.fee),
-		curatorDeposit: parseBalance(obj.curatorDeposit),
-		statusRaw: obj.status,
+		parentBounty: obj.parent_bounty,
+		value: obj.value,
+		fee: obj.fee,
+		curatorDeposit: obj.curator_deposit,
 		status,
 		curator,
 		dateOfPayout,
 		beneficiary
 	};
-}
-
-function parseBalance(balance: string | undefined): bigint {
-	if (!balance) {
-		return BigInt(0);
-	}
-	// Remove commas or spaces from the balance string.
-	const cleanedBalance = balance.replace(/[, ]/g, '');
-	return BigInt(cleanedBalance);
 }
 
 export function truncateString(input: string, maxLength: number) {
@@ -120,8 +113,8 @@ export function formatDate(date: Date): string {
 		.toUpperCase();
 }
 
-async function calculateExpirationDate(updateDue: string): Promise<Date> {
+async function calculateExpirationDate(updateDue: number): Promise<Date> {
 	const currentBlockInfo = await getCurrentBlock();
-	const blocksToExpire = Number(updateDue.replaceAll(',', '')) - currentBlockInfo.blockNumber;
+	const blocksToExpire = updateDue - currentBlockInfo.blockNumber;
 	return new Date(currentBlockInfo.timestamp + blocksToExpire * 6000);
 }

@@ -10,7 +10,6 @@
 		getApi
 	} from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
 	import {
 		showErrorDialog,
 		showLoadingDialog,
@@ -33,75 +32,75 @@
 	let bondValue = '-';
 
 	async function submit() {
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-			let api = await getApi();
-
-			if (bountyTitle.length === 0) {
-				showErrorDialog('Bounty title is empty');
-				return;
-			}
-			if (!bountyValue) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-			if (!isInteger(bountyValue)) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-
-			let value = convertDotToPlanck(BigInt(bountyValue));
-			let description = bountyTitle;
-			let transaction = api.tx.bounties.proposeBounty(value, description);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			let bountyEvent = result.findRecord('bounties', 'BountyProposed');
-			let bountyIndex = bountyEvent?.event.data[0].toJSON();
-			bountyInfo = {
-				id: bountyIndex as number,
-				description: bountyTitle,
-				value: BigInt(bountyValue)
-			};
-
-			// Set bounty-id in query parameters.
-			const urlParams = new URLSearchParams(window.location.search);
-			urlParams.set('bounty-id', String(bountyIndex));
-			const url = new URL(window.location.toString());
-			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-			success = true;
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		// 	let api = await getApi();
+		//
+		// 	if (bountyTitle.length === 0) {
+		// 		showErrorDialog('Bounty title is empty');
+		// 		return;
+		// 	}
+		// 	if (!bountyValue) {
+		// 		showErrorDialog('Bounty value is invalid');
+		// 		return;
+		// 	}
+		// 	if (!isInteger(bountyValue)) {
+		// 		showErrorDialog('Bounty value is invalid');
+		// 		return;
+		// 	}
+		//
+		// 	let value = convertDotToPlanck(BigInt(bountyValue));
+		// 	let description = bountyTitle;
+		// 	let transaction = api.tx.bounties.proposeBounty(value, description);
+		//
+		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
+		// 		api,
+		// 		transaction,
+		// 		$activeAccount
+		// 	);
+		//
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	// We don't get transaction result using Multix.
+		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+		// 		//todo show another success screen.
+		//
+		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+		// 		return;
+		// 	}
+		//
+		// 	if (result == undefined) {
+		// 		showErrorDialog('Internal error');
+		// 		return;
+		// 	}
+		//
+		// 	let bountyEvent = result.findRecord('bounties', 'BountyProposed');
+		// 	let bountyIndex = bountyEvent?.event.data[0].toJSON();
+		// 	bountyInfo = {
+		// 		id: bountyIndex as number,
+		// 		description: bountyTitle,
+		// 		value: BigInt(bountyValue)
+		// 	};
+		//
+		// 	// Set bounty-id in query parameters.
+		// 	const urlParams = new URLSearchParams(window.location.search);
+		// 	urlParams.set('bounty-id', String(bountyIndex));
+		// 	const url = new URL(window.location.toString());
+		// 	history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// 	success = true;
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`${e}`);
+		// }
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
 

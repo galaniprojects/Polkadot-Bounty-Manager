@@ -38,42 +38,42 @@
 		}
 	}
 	async function submit() {
-		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
-			return;
-		}
-		showLoadingDialog('Submitting Transaction');
-
-		if (!curatorAddress || !isValidAddress(curatorAddress)) {
-			showErrorDialog('Curator address is invalid');
-			return;
-		}
-
-		if (!curatorFee || !isInteger(curatorFee)) {
-			showErrorDialog('Invalid value of curator fee');
-			return;
-		}
-
-		try {
-			const api = await getApi();
-			if (!curatorFee) {
-				showErrorDialog('Invalid value of curator fee');
-				return;
-			}
-
-			const transaction = createProposalTransaction(api);
-			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-			step = 3;
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`Something went wrong, ${e}`);
-		}
+		// if (!$activeAccount) {
+		// 	showErrorDialog('Wallet is not connected');
+		// 	return;
+		// }
+		// showLoadingDialog('Submitting Transaction');
+		//
+		// if (!curatorAddress || !isValidAddress(curatorAddress)) {
+		// 	showErrorDialog('Curator address is invalid');
+		// 	return;
+		// }
+		//
+		// if (!curatorFee || !isInteger(curatorFee)) {
+		// 	showErrorDialog('Invalid value of curator fee');
+		// 	return;
+		// }
+		//
+		// try {
+		// 	const api = await getApi();
+		// 	if (!curatorFee) {
+		// 		showErrorDialog('Invalid value of curator fee');
+		// 		return;
+		// 	}
+		//
+		// 	const transaction = createProposalTransaction(api);
+		// 	const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// 	step = 3;
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`Something went wrong, ${e}`);
+		// }
 	}
 
 	function createProposalTransaction(api: ApiRx) {

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import '../../app.css';
-	import { api, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import {  nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { goto } from '$app/navigation';
-	import { getApi } from '../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import TestBar from '../../components/TestBar.svelte';
 

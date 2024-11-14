@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
+	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../stores';
 	import { onMount } from 'svelte';
@@ -9,9 +9,9 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 	import { formatDate } from '../../../utils/common';
 	import Dialog from '../../common/Dialog.svelte';
+	import { SupportedSources } from '../../../types/account';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -29,66 +29,66 @@
 	});
 
 	async function submit() {
-		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			let api = await getApi();
-
-			let transaction = api.tx.bounties.extendBountyExpiry(bounty.id, undefined);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Bounty Extended', 'Your bounty has been extended');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		// open = false;
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		//
+		// 	let api = await getApi();
+		//
+		// 	let transaction = api.tx.bounties.extendBountyExpiry(bounty.id, undefined);
+		//
+		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
+		// 		api,
+		// 		transaction,
+		// 		$activeAccount
+		// 	);
+		//
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	// We don't get transaction result using Multix.
+		// 	if ($activeAccount.source === SupportedSources.WalletConnect) {
+		// 		//todo show another success screen.
+		//
+		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+		// 		return;
+		// 	}
+		//
+		// 	if (result == undefined) {
+		// 		showErrorDialog('Internal error');
+		// 		return;
+		// 	}
+		//
+		// 	showSuccessDialog('Bounty Extended', 'Your bounty has been extended');
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`${e}`);
+		// }
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
-		try {
-			let api = await getApi();
-			let transaction = api.tx.bounties.extendBountyExpiry(bounty.id, undefined);
-
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '-';
-		}
+	// 	if (!$activeAccount) {
+	// 		fee = '-';
+	// 		return;
+	// 	}
+	// 	try {
+	// 		let api = await getApi();
+	// 		let transaction = api.tx.bounties.extendBountyExpiry(bounty.id, undefined);
+	//
+	// 		let observableFee = transaction.paymentInfo($activeAccount.address);
+	// 		fee =
+	// 			convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
+	// 			' DOT';
+	// 	} catch (e) {
+	// 		console.error(e);
+	// 		fee = '-';
+	// 	}
 	}
 </script>
 

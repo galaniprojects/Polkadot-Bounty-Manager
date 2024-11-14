@@ -50,31 +50,31 @@
 	});
 
 	async function submit() {
-		if (success) {
-			changeTab();
-			return;
-		}
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-			const api = await getApi();
-			const transaction = createApprovalTransaction(api);
-
-			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-			success = true;
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`Something went wrong, ${e}`);
-		}
+		// if (success) {
+		// 	changeTab();
+		// 	return;
+		// }
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		// 	const api = await getApi();
+		// 	const transaction = createApprovalTransaction(api);
+		//
+		// 	const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// 	success = true;
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`Something went wrong, ${e}`);
+		// }
 	}
 
 	function createApprovalTransaction(api: ApiRx) {

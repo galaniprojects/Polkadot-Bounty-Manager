@@ -3,7 +3,6 @@
 		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
-		getApi,
 		isValidAddress
 	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
@@ -14,7 +13,6 @@
 		showLoadingDialog,
 		showSuccessDialog
 	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isInteger } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
@@ -32,84 +30,84 @@
 	});
 
 	async function submit() {
-		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-			if (!isValidAddress(curatorAddress)) {
-				showErrorDialog('Curator address is invalid');
-				return;
-			}
-
-			if (!isInteger(curatorFee)) {
-				showErrorDialog('Curator fee value is invalid');
-				return;
-			}
-
-			const api = await getApi();
-
-			let transaction = api.tx.childBounties.proposeCurator(
-				childBounty.parentBounty,
-				childBounty.id,
-				curatorAddress,
-				convertDotToPlanck(BigInt(curatorFee))
-			);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		// open = false;
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		// 	if (!isValidAddress(curatorAddress)) {
+		// 		showErrorDialog('Curator address is invalid');
+		// 		return;
+		// 	}
+		//
+		// 	if (!isInteger(curatorFee)) {
+		// 		showErrorDialog('Curator fee value is invalid');
+		// 		return;
+		// 	}
+		//
+		// 	const api = await getApi();
+		//
+		// 	let transaction = api.tx.childBounties.proposeCurator(
+		// 		childBounty.parentBounty,
+		// 		childBounty.id,
+		// 		curatorAddress,
+		// 		convertDotToPlanck(BigInt(curatorFee))
+		// 	);
+		//
+		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
+		// 		api,
+		// 		transaction,
+		// 		$activeAccount
+		// 	);
+		//
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	// We don't get transaction result using Multix.
+		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+		// 		//todo show another success screen.
+		//
+		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+		// 		return;
+		// 	}
+		//
+		// 	if (result == undefined) {
+		// 		showErrorDialog('Internal error');
+		// 		return;
+		// 	}
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`${e}`);
+		// }
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
-		try {
-			const api = await getApi();
-			let transaction = api.tx.childBounties.proposeCurator(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address,
-				33
-			);
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-
-			const paymentInfo = await firstValueFrom(observableFee);
-			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
+		// if (!$activeAccount) {
+		// 	fee = '-';
+		// 	return;
+		// }
+		// try {
+		// 	const api = await getApi();
+		// 	let transaction = api.tx.childBounties.proposeCurator(
+		// 		childBounty.parentBounty,
+		// 		childBounty.id,
+		// 		$activeAccount.address,
+		// 		33
+		// 	);
+		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
+		//
+		// 	const paymentInfo = await firstValueFrom(observableFee);
+		// 	fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+		// } catch (e) {
+		// 	console.error(e);
+		// 	fee = '--';
+		// }
 	}
 </script>
 

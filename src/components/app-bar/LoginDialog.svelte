@@ -16,35 +16,40 @@
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 	import { walletConnect } from './wallet-connect';
-	import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-	import { activeAccount } from '../../stores';
+	import { activeAccount, injectedPolkadotAccount } from '../../stores';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
-	import { WALLET_CONNECT_SOURCE } from '../../utils/WcSigner';
+	import {
+		connectInjectedExtension,
+		getInjectedExtensions,
+		type InjectedPolkadotAccount
+	} from 'polkadot-api/pjs-signer';
+	import { SupportedSources, type AccountInfo } from '../../types/account';
+	import { showErrorDialog } from '../../utils/loading-screen';
 
-	const POLKADOT_EXTENSION = 'polkadot-js';
-	//TODO: check name of extension.
-	const NOVA_EXTENSION = 'nova';
-	const TALISMAN_EXTENSION = 'talisman';
+	const APP_NAME = 'Bounty Manager';
 
 	export let title = '';
 	export let open;
 
 	let wallets: WalletInfo[] = [];
+	let injectedAccounts: InjectedPolkadotAccount[] | undefined;
+	let accounts: AccountInfo[] = [];
+	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
+	let selectedWallet: WalletInfo | undefined;
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const novaWalletAvailable = (window as any).ethereum && (window as any).ethereum.isNovaWallet;
 
 	onMount(async () => {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let extensionNames = Object.keys((window as any).injectedWeb3);
+		const extensionNames: string[] = getInjectedExtensions();
 		wallets = [
 			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
 				action:
 					// !novaWalletAvailable to prevent polkadot button from being enabled on Nova.
-					extensionNames.includes(POLKADOT_EXTENSION) && !novaWalletAvailable
+					extensionNames.includes(SupportedSources.PolkadotExtension) && !novaWalletAvailable
 						? 'Connect'
 						: 'Download'
 			},
@@ -57,15 +62,10 @@
 			{
 				icon: LogoTalisman,
 				name: 'Talisman',
-				action: extensionNames.includes(TALISMAN_EXTENSION) ? 'Connect' : 'Download'
+				action: extensionNames.includes(SupportedSources.TalismanExtension) ? 'Connect' : 'Download'
 			}
 		];
 	});
-
-	let accounts: InjectedAccountWithMeta[] = [];
-
-	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
-	let selectedWallet: WalletInfo | undefined;
 
 	async function selectWallet(wallet: WalletInfo) {
 		selectedWallet = wallet;
@@ -85,61 +85,73 @@
 			}
 		} else {
 			currentPhase = 'waiting';
-			let extensionName = '';
+			let selectedSource: SupportedSources;
 			switch (wallet.name) {
 				case 'Polkadot.js':
-					extensionName = POLKADOT_EXTENSION;
-					await web3Enable('Bounty Manager');
-					await web3FromSource(extensionName);
+					selectedSource = SupportedSources.PolkadotExtension;
 					break;
 				case 'WalletConnect':
-					try {
-						accounts = await walletConnect();
-					} catch {
-						//TODO: show rejection message?
-						return;
-					}
+					selectedSource = SupportedSources.WalletConnect;
 					break;
 				case 'Nova Wallet':
-					extensionName = NOVA_EXTENSION;
-					await web3Enable('Bounty Manager');
+					selectedSource = SupportedSources.PolkadotExtension;
 					break;
 				case 'Talisman':
-					extensionName = TALISMAN_EXTENSION;
-					await web3Enable('Bounty Manager');
-					await web3FromSource(extensionName);
+					selectedSource = SupportedSources.TalismanExtension;
 					break;
 				default:
 					throw new Error('Internal error, unsupported extension');
 			}
 
-			if (wallet.name === 'Nova Wallet') {
-				accounts = await web3Accounts({
-					ss58Format: 0
-				});
-			} else if (wallet.name !== 'WalletConnect') {
-				accounts = await web3Accounts({
-					extensions: [extensionName],
-					ss58Format: 0
-				});
-			}
-
-			for (let i = 0; i < accounts.length; i++) {
-				if (!accounts[i].meta.name) {
-					accounts[i].meta.name = `[${extensionName}] ${i + 1}`;
+			if (selectedSource == SupportedSources.WalletConnect) {
+				accounts = await walletConnect();
+			} else {
+				let injectedExtension;
+				try {
+					injectedExtension = await connectInjectedExtension(selectedSource, APP_NAME);
+				} catch (e) {
+					open = false;
+					showErrorDialog(
+						'Wallet connection failed. Make sure the Bounty Mananger has access to your wallet accounts.'
+					);
+					return;
 				}
+				injectedAccounts = injectedExtension.getAccounts();
+				accounts = injectedAccounts.map((account) => {
+					return {
+						name: account.name || 'Account',
+						source: selectedSource,
+						address: account.address
+					};
+				});
 			}
+		}
+
+		if (accounts.length === 0) {
+			open = false;
+			showErrorDialog(
+				'No accounts found. Make sure the Bounty Mananger has access to your wallet accounts.'
+			);
+			return;
 		}
 
 		currentPhase = 'accountSelection';
 	}
 
-	function selectAccount(account: InjectedAccountWithMeta) {
+	function selectAccount(account: AccountInfo) {
 		activeAccount.set(account);
-		if (account.meta.source !== WALLET_CONNECT_SOURCE) {
+		if (account.source !== SupportedSources.WalletConnect) {
 			sessionStorage.setItem('account', JSON.stringify(account));
 		}
-		SetActiveAccountBounties();
+
+		if (injectedAccounts) {
+			let injectedAccount = injectedAccounts.filter((acc) => {
+				return acc.address === account.address;
+			});
+			injectedPolkadotAccount.set(injectedAccount[0]);
+
+			SetActiveAccountBounties();
+		}
 		open = false;
 	}
 
@@ -227,7 +239,7 @@
 					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 						{#each accounts as account}
 							<button class="w-full" on:click={() => selectAccount(account)}>
-								<AccountItem name={account.meta.name} address={account.address} />
+								<AccountItem name={account.name} address={account.address} />
 							</button>
 						{/each}
 					</div>

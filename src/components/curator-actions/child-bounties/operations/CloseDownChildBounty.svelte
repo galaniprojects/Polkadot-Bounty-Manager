@@ -2,7 +2,6 @@
 	import {
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
-		getApi
 	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../../stores';
@@ -14,7 +13,6 @@
 	} from '../../../../utils/loading-screen';
 	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import Dialog from '../../../common/Dialog.svelte';
 
 	export let open = false;
@@ -27,72 +25,73 @@
 		await calculateFee();
 	});
 
+	//todo change name
 	async function acceptCuratorRule() {
-		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		// open = false;
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		//
+		// 	const api = await getApi();
+		// 	let transaction = api.tx.childBounties.closeChildBounty(
+		// 		childBounty.parentBounty,
+		// 		childBounty.id
+		// 	);
+		//
+		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
+		// 		api,
+		// 		transaction,
+		// 		$activeAccount
+		// 	);
+		//
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	// We don't get transaction result using Multix.
+		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+		// 		//todo show another success screen.
+		//
+		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+		// 		return;
+		// 	}
+		//
+		// 	if (result == undefined) {
+		// 		showErrorDialog('Internal error');
+		// 		return;
+		// 	}
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`${e}`);
+		// }
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
-		try {
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '-';
-		}
+		// if (!$activeAccount) {
+		// 	fee = '-';
+		// 	return;
+		// }
+		// try {
+		// 	const api = await getApi();
+		// 	let transaction = api.tx.childBounties.closeChildBounty(
+		// 		childBounty.parentBounty,
+		// 		childBounty.id
+		// 	);
+		//
+		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
+		// 	fee =
+		// 		convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
+		// 		' DOT';
+		// } catch (e) {
+		// 	console.error(e);
+		// 	fee = '-';
+		// }
 	}
 </script>
 

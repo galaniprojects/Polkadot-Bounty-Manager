@@ -1,13 +1,13 @@
 import type { ChildBounty } from './child-bounty';
+import { get } from 'svelte/store';
+import { dotApi } from '../stores';
 
-export interface BountyRaw {
-	proposer: string;
-	value: string;
-	fee: string;
-	curatorDeposit: string;
-	bond: string;
-	status: BountyStatusRaw;
-}
+let api = get(dotApi);
+
+export type BountyRaw = Awaited<
+	ReturnType<typeof api.query.Bounties.Bounties.getEntries>
+>[0]['value'];
+
 
 export interface Bounty {
 	id: number;
@@ -17,7 +17,6 @@ export interface Bounty {
 	fee: bigint;
 	curatorDeposit: bigint;
 	bond: bigint;
-	statusRaw: BountyStatusRaw;
 	status: BountyStatus;
 	childBounties: ChildBounty[];
 	curator: string | undefined;

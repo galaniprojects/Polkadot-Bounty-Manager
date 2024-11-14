@@ -4,7 +4,6 @@
 		convertDotToPlanck,
 		convertPlanckToDot,
 		dryRunAndSubmitTransaction,
-		getApi
 	} from '../../../../utils/polkadot';
 	import { firstValueFrom } from 'rxjs';
 	import { activeAccount } from '../../../../stores';
@@ -15,7 +14,6 @@
 		showSuccessDialog
 	} from '../../../../utils/loading-screen';
 	import { isInteger } from '../../../../utils/common';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
 
@@ -33,81 +31,81 @@
 	});
 
 	async function submit() {
-		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			const api = await getApi();
-			if (bountyTitle.length === 0) {
-				showErrorDialog('Bounty title is empty');
-				return;
-			}
-			if (!bountyValue) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-			if (!isInteger(bountyValue)) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-
-			let value = convertDotToPlanck(BigInt(bountyValue));
-			let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error.');
-				return;
-			}
-
-			//TODO: refetch child bounties.
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		// open = false;
+		// showLoadingDialog('Submitting transaction');
+		// try {
+		// 	if (!$activeAccount) {
+		// 		showErrorDialog('Wallet is not connected');
+		// 		return;
+		// 	}
+		//
+		// 	const api = await getApi();
+		// 	if (bountyTitle.length === 0) {
+		// 		showErrorDialog('Bounty title is empty');
+		// 		return;
+		// 	}
+		// 	if (!bountyValue) {
+		// 		showErrorDialog('Bounty value is invalid');
+		// 		return;
+		// 	}
+		// 	if (!isInteger(bountyValue)) {
+		// 		showErrorDialog('Bounty value is invalid');
+		// 		return;
+		// 	}
+		//
+		// 	let value = convertDotToPlanck(BigInt(bountyValue));
+		// 	let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
+		//
+		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
+		// 		api,
+		// 		transaction,
+		// 		$activeAccount
+		// 	);
+		//
+		// 	if (errorMessage) {
+		// 		showErrorDialog(errorMessage);
+		// 		return;
+		// 	}
+		//
+		// 	// We don't get transaction result using Multix.
+		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
+		// 		//todo show another success screen.
+		//
+		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
+		// 		return;
+		// 	}
+		//
+		// 	if (result == undefined) {
+		// 		showErrorDialog('Internal error.');
+		// 		return;
+		// 	}
+		//
+		// 	//TODO: refetch child bounties.
+		//
+		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
+		// } catch (e) {
+		// 	console.error(e);
+		// 	showErrorDialog(`${e}`);
+		// }
 	}
 
 	async function calculateFee() {
-		try {
-			if (bountyValue && bountyTitle && $activeAccount) {
-				let api = await getApi();
-				let value = convertDotToPlanck(BigInt(bountyValue));
-				let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
-
-				let observableFee = transaction.paymentInfo($activeAccount.address);
-
-				const paymentInfo = await firstValueFrom(observableFee);
-				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
-			} else {
-				fee = '-';
-			}
-		} catch {
-			fee = '-';
-		}
+		// try {
+		// 	if (bountyValue && bountyTitle && $activeAccount) {
+		// 		let api = await getApi();
+		// 		let value = convertDotToPlanck(BigInt(bountyValue));
+		// 		let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
+		//
+		// 		let observableFee = transaction.paymentInfo($activeAccount.address);
+		//
+		// 		const paymentInfo = await firstValueFrom(observableFee);
+		// 		fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+		// 	} else {
+		// 		fee = '-';
+		// 	}
+		// } catch {
+		// 	fee = '-';
+		// }
 	}
 
 	let inputTimeout = setTimeout(() => {}, 4000);

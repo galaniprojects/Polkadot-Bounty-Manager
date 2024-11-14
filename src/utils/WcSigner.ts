@@ -4,7 +4,6 @@ import SignClient from '@walletconnect/sign-client';
 import type { SessionTypes } from '@walletconnect/types';
 
 export const POLKADOT_CHAIN_ID = 'polkadot:91b171bb158e2d3848fa23a9f1c25182';
-export const WALLET_CONNECT_SOURCE = 'WalletConnect';
 
 export class WalletConnectSigner {
 	id = 1;
