@@ -5,20 +5,27 @@
 	import ExternalLinksButton from '../ExternalLinksButton.svelte';
 
 	export let bountyId: number;
+	export let dimension = 6;
 </script>
 
-<ExternalLinksButton
-	url={`https://polkadot.dotreasury.com/#/bounties/${bountyId}`}
-	icon={LogoTreasuryWhite}
-	dimension={6}
-/>
-<ExternalLinksButton
-	url={`https://polkadot.subscan.io/bounty/${bountyId}`}
-	icon={LogoSubscanWhite}
-	dimension={6}
-/>
-<ExternalLinksButton
-	url={`https://polkadot.subsquare.io/treasury/bounty/${bountyId}`}
-	icon={LogoSubsquareWhite}
-	dimension={6}
-/>
+<div class="mr-5">
+	<ExternalLinksButton
+		url={`https://polkadot.dotreasury.com/#/bounties/${bountyId}`}
+		icon={LogoTreasuryWhite}
+		{dimension}
+	/>
+</div>
+<div class="mr-5">
+	<ExternalLinksButton
+		url={`https://polkadot.subscan.io/bounty/${bountyId}`}
+		icon={LogoSubscanWhite}
+		{dimension}
+	/>
+</div>
+<div class="mr-5">
+	<ExternalLinksButton
+		url={`https://polkadot.subsquare.io/treasury/bounty/${bountyId}`}
+		icon={LogoSubsquareWhite}
+		{dimension}
+	/>
+</div>

@@ -7,13 +7,23 @@
 	export let childBountyId: number;
 </script>
 
-<ExternalLinksButton
-	url={`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`}
-	icon={LogoTreasuryPink}
-	{dimension}
-/>
-<ExternalLinksButton
-	url={`https://polkadot.subsquare.io/treasury/child-bounties/${childBountyId}`}
-	icon={LogoSubsquarePink}
-	{dimension}
-/>
+<div class="mr-5">
+	<ExternalLinksButton
+		url={`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`}
+		icon={LogoTreasuryPink}
+		{dimension}
+		backgroundColor="white"
+		textColor="primary"
+		buttonStyle="bg-accent text-white"
+	/>
+</div>
+<div class="mr-5">
+	<ExternalLinksButton
+		url={`https://polkadot.subsquare.io/treasury/child-bounties/${childBountyId}`}
+		icon={LogoSubsquarePink}
+		{dimension}
+		backgroundColor="white"
+		textColor="primary"
+		buttonStyle="bg-accent text-white"
+	/>
+</div>

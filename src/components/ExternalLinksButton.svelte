@@ -13,8 +13,11 @@
 	import ExternalLinksDialog from './ExternalLinksDialog.svelte';
 
 	export let url: string;
-	export let icon: any |typeof SvelteComponent<any>;
+	export let icon: any | typeof SvelteComponent<any>;
 	export let dimension: number = 10;
+	export let backgroundColor: string = 'curatorMainBackground';
+	export let textColor: string = 'white';
+	export let buttonStyle: string = 'bg-white text-accent';
 
 	let externalLinksDialogOpen = false;
 
@@ -28,7 +31,14 @@
 	}
 </script>
 
-<ExternalLinksDialog bind:open={externalLinksDialogOpen} {url} on:proceed={proceed} />
+<ExternalLinksDialog
+	bind:open={externalLinksDialogOpen}
+	{url}
+	on:proceed={proceed}
+	{backgroundColor}
+	{textColor}
+	{buttonStyle}
+/>
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
 	<svelte:component this={icon} />

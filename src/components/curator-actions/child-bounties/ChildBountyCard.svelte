@@ -139,7 +139,7 @@
 						{/if}
 					</div>
 				</div>
-				<div class="mt-3 flex-wrap flex justify-center items-center space-x-5">
+				<div class="mt-3 flex-wrap flex justify-center items-center">
 					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
 				</div>
 			</div>
