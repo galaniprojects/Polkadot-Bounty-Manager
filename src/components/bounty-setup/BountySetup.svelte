@@ -133,6 +133,5 @@
 <style>
 	.main {
 		background: linear-gradient(180deg, #311033 0%, #6c003d 100%);
-		height: 100vh;
 	}
 </style>
