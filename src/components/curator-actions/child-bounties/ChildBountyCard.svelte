@@ -161,7 +161,7 @@
 			{/if}
 		</div>
 
-		<div class="space-y-3 p-2 2xl:mr-32">
+		<div class="space-y-3 p-2 2xl:mr-[140px]">
 			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Added && $activeAccount && $activeAccount.address === parentBounty.curator)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>

@@ -192,7 +192,7 @@
 		</div>
 
 		<div
-			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-10 lg:space-y-3 2xl:pr-36"
+			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
 			{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.childBounties.length === 0 && $activeAccount && bounty.curator === $activeAccount.address)}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
