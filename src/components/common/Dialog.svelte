@@ -36,10 +36,10 @@
 
 {#if open}
 	<div
-		class="flex justify-center fixed inset-0 w-screen h-screen z-9 behind-dialog-color opacity-1"
+		class="flex justify-center fixed inset-0 w-screen h-screen z-10 bg-black bg-opacity-60 overflow-y-auto"
 	></div>
 	<div
-		class="flex justify-center fixed inset-0 w-screen h-screen z-10 py-10 md:py-40 overflow-y-auto"
+		class="flex justify-center fixed inset-0 w-screen h-screen z-20 py-10 md:py-40 overflow-y-auto"
 	>
 		<div
 			class={`w-[363px] md:w-[490px] min-h-52 h-fit p-3 pt-2 md:px-7 md:py-6 rounded-md text-${textColor} bg-${backgroundColor}`}
@@ -61,9 +61,3 @@
 		</div>
 	</div>
 {/if}
-
-<style>
-	.behind-dialog-color {
-		background-color: rgba(0, 0, 0, 0.66);
-	}
-</style>
