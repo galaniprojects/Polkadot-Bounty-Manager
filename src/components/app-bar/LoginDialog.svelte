@@ -17,12 +17,17 @@
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { walletConnect } from './wallet-connect';
-	import { activeAccount, injectedPolkadotAccount } from '../../stores';
+	import {
+		activeAccount,
+		injectedPolkadotAccount,
+		walletConnectPolkadotSigner
+	} from '../../stores';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
 	import {
 		connectInjectedExtension,
 		getInjectedExtensions,
-		type InjectedPolkadotAccount
+		type InjectedPolkadotAccount,
+		type PolkadotSigner
 	} from 'polkadot-api/pjs-signer';
 	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
@@ -140,8 +145,13 @@
 
 	function selectAccount(account: AccountInfo) {
 		activeAccount.set(account);
+
 		if (account.source !== SupportedSources.WalletConnect) {
 			sessionStorage.setItem('account', JSON.stringify(account));
+		} else {
+			if ('signer' in account && account.signer) {
+				walletConnectPolkadotSigner.set(account.signer as PolkadotSigner);
+			}
 		}
 
 		if (injectedAccounts) {

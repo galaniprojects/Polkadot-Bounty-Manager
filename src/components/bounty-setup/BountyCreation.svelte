@@ -1,21 +1,13 @@
 <script lang="ts">
-	import { firstValueFrom } from 'rxjs';
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
-	import { activeAccount } from '../../stores';
-	import {
-		dryRunAndSubmitTransaction,
-		convertDotToPlanck,
-		convertPlanckToDot,
-		getApi
-	} from '../../utils/polkadot';
+	import { activeAccount, dotApi } from '../../stores';
+	import { convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../utils/loading-screen';
+	import { showErrorDialog, showSuccessDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
+	import { Binary } from 'polkadot-api';
+	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 
 	const dispatch = createEventDispatcher();
 	function changeTab() {
@@ -32,75 +24,57 @@
 	let bondValue = '-';
 
 	async function submit() {
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		// 	let api = await getApi();
-		//
-		// 	if (bountyTitle.length === 0) {
-		// 		showErrorDialog('Bounty title is empty');
-		// 		return;
-		// 	}
-		// 	if (!bountyValue) {
-		// 		showErrorDialog('Bounty value is invalid');
-		// 		return;
-		// 	}
-		// 	if (!isInteger(bountyValue)) {
-		// 		showErrorDialog('Bounty value is invalid');
-		// 		return;
-		// 	}
-		//
-		// 	let value = convertDotToPlanck(BigInt(bountyValue));
-		// 	let description = bountyTitle;
-		// 	let transaction = api.tx.bounties.proposeBounty(value, description);
-		//
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	let bountyEvent = result.findRecord('bounties', 'BountyProposed');
-		// 	let bountyIndex = bountyEvent?.event.data[0].toJSON();
-		// 	bountyInfo = {
-		// 		id: bountyIndex as number,
-		// 		description: bountyTitle,
-		// 		value: BigInt(bountyValue)
-		// 	};
-		//
-		// 	// Set bounty-id in query parameters.
-		// 	const urlParams = new URLSearchParams(window.location.search);
-		// 	urlParams.set('bounty-id', String(bountyIndex));
-		// 	const url = new URL(window.location.toString());
-		// 	history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
-		//
-		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
-		// 	success = true;
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
+		if (!$activeAccount) {
+			showErrorDialog('Wallet is not connected');
+			return;
+		}
+
+		if (bountyTitle.length === 0) {
+			showErrorDialog('Bounty title is empty');
+			return;
+		}
+		if (!bountyValue) {
+			showErrorDialog('Bounty value is invalid');
+			return;
+		}
+		if (!isInteger(bountyValue)) {
+			showErrorDialog('Bounty value is invalid');
+			return;
+		}
+
+		let value = convertDotToPlanck(BigInt(bountyValue));
+		let description = bountyTitle;
+		let transaction = $dotApi.tx.Bounties.propose_bounty({
+			value,
+			description: Binary.fromText(description)
+		});
+		let result = await submitTransaction(transaction, 'Bounty creation success.');
+		if (!result) {
+			return;
+		}
+
+		let bountyEvent = result.events.find((event) => event.type === 'Bounties');
+		if (!bountyEvent || bountyEvent.value.type !== 'BountyProposed') {
+			return;
+		}
+
+		if ('index' in bountyEvent.value.value) {
+			let bountyIndex: number = bountyEvent.value.value.index as number;
+			bountyInfo = {
+				id: bountyIndex as number,
+				description: bountyTitle,
+				value: BigInt(bountyValue)
+			};
+
+			// Set bounty-id in query parameters.
+			const urlParams = new URLSearchParams(window.location.search);
+			urlParams.set('bounty-id', String(bountyIndex));
+			const url = new URL(window.location.toString());
+			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+		}
+
+		showSuccessDialog('Submitting Transaction', 'Bounty creation was successful.');
+		success = true;
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
 
@@ -112,14 +86,14 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
-				let transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
+				let description = bountyTitle;
+				let transaction = $dotApi.tx.Bounties.propose_bounty({
+					value,
+					description: Binary.fromText(description)
+				});
 
-				let observableFee = transaction.paymentInfo($activeAccount.address);
-
-				const paymentInfo = await firstValueFrom(observableFee);
-				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+				fee = await calculateTransactionFee(transaction);
 			} else {
 				fee = '-';
 			}
@@ -131,17 +105,16 @@
 	async function calculateBond() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
-				const transaction = api.tx.bounties.proposeBounty(value, bountyTitle);
-				const base = Number(
-					(api.consts.bounties.bountyDepositBase.toHuman() as string).replaceAll(',', '')
-				);
-				const perByte = Number(
-					(api.consts.bounties.dataDepositPerByte.toHuman() as string).replaceAll(',', '')
-				);
-				let bytesLen = transaction.args[1].encodedLength;
-				bondValue = String(convertPlanckToDot(base + (bytesLen - 1) * perByte)) + ' DOT';
+				let description = bountyTitle;
+				let transaction = $dotApi.tx.Bounties.propose_bounty({
+					value,
+					description: Binary.fromText(description)
+				});
+				const base = await $dotApi.constants.Bounties.BountyDepositBase();
+				let bytesLen = BigInt(transaction.getEncodedData.length);
+				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
+				bondValue = String(convertPlanckToDot(base + (bytesLen - 1n) * perByte)) + ' DOT';
 			} else {
 				bondValue = '-';
 			}

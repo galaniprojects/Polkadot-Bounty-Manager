@@ -1,9 +1,10 @@
 <script lang="ts">
 	import '../../app.css';
-	import {  nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import {  dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { goto } from '$app/navigation';
 	import { firstValueFrom } from 'rxjs';
 	import TestBar from '../../components/TestBar.svelte';
+	import { get } from 'svelte/store';
 
 	let days: number = 1;
 	let hours = 1;
@@ -13,8 +14,8 @@
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-		const api = await getApi();
-		let number = (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber();
+	let api = get(dotApi);
+		let number = await api.query.System.Number.getValue();
 		await firstValueFrom(
 			api.rpc('dev_newBlock', {
 				count: 1,
@@ -39,10 +40,10 @@
 		fastForward(blocks);
 	}
 
-	async function changeEndpoint() {
-		nodeEndpoint.set(nodeEndpointInput);
-		api.set(undefined);
-	}
+	// async function changeEndpoint() {
+	// 	nodeEndpoint.set(nodeEndpointInput);
+	// 	api.set(undefined);
+	// }
 </script>
 
 <div class="bg-primary py-40 md:px-40">

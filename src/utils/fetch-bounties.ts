@@ -1,9 +1,8 @@
 import { bounties, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
-import type { Bounty, BountyRaw } from '../types/bounty';
-import { firstValueFrom } from 'rxjs';
+import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty } from './common';
-import type { ChildBounty, ChildBountyRaw } from '../types/child-bounty';
+import type { ChildBounty } from '../types/child-bounty';
 import { SetActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
 

@@ -17,17 +17,15 @@
 
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction } from '../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { convertPlanckToDot } from '../../../utils/polkadot';
+	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
 	} from '../../../utils/loading-screen';
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -41,67 +39,36 @@
 	});
 
 	async function acceptCuratorRole() {
-		// open = false;
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		// 	let api = await getApi();
-		//
-		// 	let transaction = api.tx.bounties.acceptCurator(bounty.id);
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
-		// open = false;
+		open = false;
+		const transaction = $dotApi.tx.Bounties.accept_curator({
+			bounty_id: bounty.id
+		});
+		const result = submitTransaction(transaction);
+
+		if (result == undefined) {
+			showErrorDialog('Internal error');
+			return;
+		}
 	}
 
 	async function calculateFeeAndDeposit() {
-		// if (!$activeAccount) {
-		// 	fee = '-';
-		// 	return;
-		// }
-		// try {
-		// 	let api = await getApi();
-		// 	let transaction = api.tx.bounties.acceptCurator(bounty.id);
-		//
-		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
-		// 	fee =
-		// 		convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-		// 		' DOT';
-		// 	deposit = calculateDeposit(bounty.fee);
-		// } catch (e) {
-		// 	console.error(e);
-		// 	fee = '-';
-		// 	deposit = '-';
-		// }
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
+		try {
+			const transaction = $dotApi.tx.Bounties.accept_curator({
+				bounty_id: bounty.id
+			});
+
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
+
+			deposit = calculateDeposit(bounty.fee);
+		} catch (e) {
+			console.error(e);
+			fee = '-';
+			deposit = '-';
+		}
 	}
 </script>
 

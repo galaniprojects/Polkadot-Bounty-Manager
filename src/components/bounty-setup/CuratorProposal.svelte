@@ -1,24 +1,20 @@
 <script lang="ts">
-	import { ApiRx } from '@polkadot/api';
-	import { firstValueFrom } from 'rxjs';
 	import type { BountyInfo } from './BountySetup.svelte';
-	import { activeAccount } from '../../stores';
+	import { activeAccount, dotApi } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
-	import {
-		convertDotToPlanck,
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi,
-		isValidAddress
-	} from '../../utils/polkadot';
+	import { convertDotToPlanck, convertPlanckToDot, isValidAddress } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../utils/loading-screen';
+	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
+	import {
+		MultiAddress,
+		PolkadotRuntimeOriginCaller,
+		PreimagesBounded,
+		TraitsScheduleDispatchTime
+	} from '@polkadot-api/descriptors';
+	import { Binary } from 'polkadot-api';
+	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 
 	export let bountyInfo: BountyInfo;
 	let curatorFee: string | undefined = undefined;
@@ -38,69 +34,67 @@
 		}
 	}
 	async function submit() {
-		// if (!$activeAccount) {
-		// 	showErrorDialog('Wallet is not connected');
-		// 	return;
-		// }
-		// showLoadingDialog('Submitting Transaction');
-		//
-		// if (!curatorAddress || !isValidAddress(curatorAddress)) {
-		// 	showErrorDialog('Curator address is invalid');
-		// 	return;
-		// }
-		//
-		// if (!curatorFee || !isInteger(curatorFee)) {
-		// 	showErrorDialog('Invalid value of curator fee');
-		// 	return;
-		// }
-		//
-		// try {
-		// 	const api = await getApi();
-		// 	if (!curatorFee) {
-		// 		showErrorDialog('Invalid value of curator fee');
-		// 		return;
-		// 	}
-		//
-		// 	const transaction = createProposalTransaction(api);
-		// 	const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
-		// 	step = 3;
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`Something went wrong, ${e}`);
-		// }
+		if (!$activeAccount) {
+			showErrorDialog('Wallet is not connected');
+			return;
+		}
+		showLoadingDialog('Submitting Transaction');
+
+		if (!curatorAddress || !isValidAddress(curatorAddress)) {
+			showErrorDialog('Curator address is invalid');
+			return;
+		}
+
+		if (!curatorFee || !isInteger(curatorFee)) {
+			showErrorDialog('Invalid value of curator fee');
+			return;
+		}
+
+		try {
+			if (!curatorFee) {
+				showErrorDialog('Invalid value of curator fee');
+				return;
+			}
+
+			const transaction = await createProposalTransaction();
+			const result = await submitTransaction(transaction);
+			if (result) {
+				step = 3;
+			}
+		} catch (e) {
+			console.error(e);
+			showErrorDialog(`Something went wrong, ${e}`);
+		}
 	}
 
-	function createProposalTransaction(api: ApiRx) {
+	async function createProposalTransaction() {
 		if (!curatorFee) {
 			throw new Error('Curator fee is not set');
 		}
-		let tx = api.tx.bounties.proposeCurator(
-			bountyInfo.id,
-			curatorAddress,
-			convertDotToPlanck(BigInt(curatorFee))
+		if (!curatorAddress) {
+			throw new Error('Curator address is not set');
+		}
+		if (!bountyInfo.id) {
+			throw new Error('Unexpected error, bounty id is not set');
+		}
+		let transaction = $dotApi.tx.Bounties.propose_curator({
+			bounty_id: bountyInfo.id,
+			curator: MultiAddress.Id(curatorAddress),
+			fee: convertDotToPlanck(BigInt(curatorFee))
+		});
+		let proposal: PreimagesBounded = PreimagesBounded.Inline(
+			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
-
-		return api.tx.referenda.submit(
-			{
-				Origins: selectedTreasuryTrack
-			},
-			{ Inline: tx.method.toHex() },
-			{ After: 1 }
-		);
+		return $dotApi.tx.Referenda.submit({
+			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack),
+			proposal: proposal,
+			enactment_moment: TraitsScheduleDispatchTime.After(1)
+		});
 	}
 
 	async function calculateDeposit() {
 		try {
-			const api = await getApi();
-			const base = Number(
-				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
-			);
+			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
 			deposit = convertPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';
@@ -109,19 +103,18 @@
 
 	let inputTimeout = setTimeout(() => {}, 2000);
 	async function calculateFee() {
-		try {
-			if (curatorAddress && curatorFee && $activeAccount) {
-				const api = await getApi();
-				const transaction = createProposalTransaction(api);
-				let observableFee = transaction.paymentInfo($activeAccount.address);
-				fee =
-					convertPlanckToDot(
-						(await firstValueFrom(observableFee)).partialFee.toNumber()
-					).toString() + ' DOT';
-			} else {
+		if (bountyInfo.id && curatorAddress && curatorFee && $activeAccount) {
+			try {
+				const transaction = await createProposalTransaction();
+				if (!transaction) {
+					fee = '-';
+					return;
+				}
+				fee = (await calculateTransactionFee(transaction)) + ' DOT';
+			} catch {
 				fee = '-';
 			}
-		} catch {
+		} else {
 			fee = '-';
 		}
 	}
