@@ -1,19 +1,12 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		isValidAddress
-	} from '../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { convertPlanckToDot, isValidAddress } from '../../../utils/polkadot';
+	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../utils/loading-screen';
 	import Dialog from '../../common/Dialog.svelte';
+	import { MultiAddress } from '@polkadot-api/descriptors';
+	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -26,70 +19,40 @@
 	});
 
 	async function submit() {
-		// open = false;
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		// 	if (!isValidAddress(beneficiary)) {
-		// 		showErrorDialog('Beneficiary address is invalid');
-		// 		return;
-		// 	}
-		//
-		// 	let api = await getApi();
-		//
-		// 	let transaction = api.tx.bounties.awardBounty(bounty.id, beneficiary);
-		//
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Bounty Awarded', 'Your bounty has been awarded and can now be claimed');
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
+		open = false;
+		try {
+			if (!isValidAddress(beneficiary)) {
+				showErrorDialog('Beneficiary address is invalid');
+				return;
+			}
+
+			const transaction = $dotApi.tx.Bounties.award_bounty({
+				bounty_id: bounty.id,
+				beneficiary: MultiAddress.Id(beneficiary)
+			});
+			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
+		} catch (e) {
+			console.error(e);
+			showErrorDialog(`${e}`);
+		}
 	}
 
 	async function calculateFee() {
-		// if (!$activeAccount) {
-		// 	fee = '-';
-		// 	return;
-		// }
-		// try {
-		// 	let api = await getApi();
-		//
-		// 	let transaction = api.tx.bounties.awardBounty(bounty.id, $activeAccount.address);
-		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
-		//
-		// 	const paymentInfo = await firstValueFrom(observableFee);
-		// 	fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
-		// } catch (e) {
-		// 	console.error(e);
-		// 	fee = '--';
-		// }
+		if (!$activeAccount) {
+			fee = '-';
+			return;
+		}
+		try {
+			const transaction = $dotApi.tx.Bounties.award_bounty({
+				bounty_id: bounty.id,
+				beneficiary: MultiAddress.Id(beneficiary)
+			});
+
+			fee = (await calculateTransactionFee(transaction)) + ' Dot';
+		} catch (e) {
+			console.error(e);
+			fee = '--';
+		}
 	}
 </script>
 

@@ -1,20 +1,11 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-	} from '../../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
 	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { calculateDeposit } from '../../operations/AcceptCuratorRole.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -29,77 +20,31 @@
 	});
 
 	async function acceptCuratorRole() {
-		// open = false;
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		// 	const api = await getApi();
-		//
-		// 	let transaction = api.tx.childBounties.acceptCurator(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id
-		// 	);
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
-		// open = false;
+		open = false;
+		const transaction = $dotApi.tx.ChildBounties.accept_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id
+		});
+		await submitTransaction(transaction);
 	}
 
 	async function calculateFeeAndDeposit() {
-		// if (!$activeAccount) {
-		// 	fee = '-';
-		// 	return;
-		// }
-		// try {
-		// 	const api = await getApi();
-		// 	let transaction = api.tx.childBounties.acceptCurator(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id
-		// 	);
-		//
-		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
-		// 	fee =
-		// 		convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-		// 		' DOT';
-		// 	if (parentCurator && parentCurator === childBounty.curator) {
-		// 		deposit = '0';
-		// 	} else {
-		// 		deposit = calculateDeposit(childBounty.fee);
-		// 	}
-		// } catch (e) {
-		// 	console.error(e);
-		// 	fee = '-';
-		// 	deposit = '-';
-		// }
+		try {
+			const transaction = $dotApi.tx.ChildBounties.accept_curator({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' Dot';
+			if (parentCurator && parentCurator === childBounty.curator) {
+				deposit = '0';
+			} else {
+				deposit = calculateDeposit(childBounty.fee);
+			}
+		} catch (e) {
+			console.error(e);
+			fee = '-';
+			deposit = '-';
+		}
 	}
 </script>
 

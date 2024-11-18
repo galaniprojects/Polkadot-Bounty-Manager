@@ -1,22 +1,19 @@
 <script lang="ts">
 	import {
 		convertDotToPlanck,
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
 		isValidAddress
 	} from '../../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import {  dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import {
 		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
 	} from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isInteger } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
+	import { MultiAddress } from '@polkadot-api/descriptors';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -30,84 +27,39 @@
 	});
 
 	async function submit() {
-		// open = false;
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		// 	if (!isValidAddress(curatorAddress)) {
-		// 		showErrorDialog('Curator address is invalid');
-		// 		return;
-		// 	}
-		//
-		// 	if (!isInteger(curatorFee)) {
-		// 		showErrorDialog('Curator fee value is invalid');
-		// 		return;
-		// 	}
-		//
-		// 	const api = await getApi();
-		//
-		// 	let transaction = api.tx.childBounties.proposeCurator(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id,
-		// 		curatorAddress,
-		// 		convertDotToPlanck(BigInt(curatorFee))
-		// 	);
-		//
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Submitting Transaction', 'Operation Success');
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
+		open = false;
+		if (!isValidAddress(curatorAddress)) {
+			showErrorDialog('Curator address is invalid');
+			return;
+		}
+
+		if (!isInteger(curatorFee)) {
+			showErrorDialog('Curator fee value is invalid');
+			return;
+		}
+
+		const transaction = $dotApi.tx.ChildBounties.propose_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			curator: MultiAddress.Id(curatorAddress),
+			fee: convertDotToPlanck(BigInt(curatorFee))
+		});
+		await submitTransaction(transaction);
 	}
 
 	async function calculateFee() {
-		// if (!$activeAccount) {
-		// 	fee = '-';
-		// 	return;
-		// }
-		// try {
-		// 	const api = await getApi();
-		// 	let transaction = api.tx.childBounties.proposeCurator(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id,
-		// 		$activeAccount.address,
-		// 		33
-		// 	);
-		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
-		//
-		// 	const paymentInfo = await firstValueFrom(observableFee);
-		// 	fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
-		// } catch (e) {
-		// 	console.error(e);
-		// 	fee = '--';
-		// }
+		try {
+			const transaction = $dotApi.tx.ChildBounties.propose_curator({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id,
+				curator: MultiAddress.Id(curatorAddress),
+				fee: convertDotToPlanck(BigInt(curatorFee))
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
+		} catch (e) {
+			console.error(e);
+			fee = '--';
+		}
 	}
 </script>
 

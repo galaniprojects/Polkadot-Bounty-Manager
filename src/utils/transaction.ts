@@ -52,6 +52,9 @@ export async function calculateTransactionFee(
 	transaction: Transaction<any, any, any, any>
 ): Promise<string> {
 	const account = get(activeAccount);
+	if (!account) {
+		throw new Error('can not calculate fee, account is not set');
+	}
 
 	if (account) {
 		let a = await transaction.getPaymentInfo(account.address);

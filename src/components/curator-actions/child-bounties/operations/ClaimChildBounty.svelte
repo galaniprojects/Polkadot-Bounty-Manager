@@ -1,20 +1,11 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-	} from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
 	import PolkadotIcon from '../../../common/PolkadotIcon.svelte';
 	import { truncateString } from '../../../../utils/common';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -26,71 +17,25 @@
 	});
 
 	async function submit() {
-		// open = false;
-		// showLoadingDialog('Submitting transaction');
-		// try {
-		// 	if (!$activeAccount) {
-		// 		showErrorDialog('Wallet is not connected');
-		// 		return;
-		// 	}
-		//
-		// 	const api = await getApi();
-		// 	let transaction = api.tx.childBounties.claimChildBounty(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id
-		// 	);
-		//
-		// 	const { errorMessage, result } = await dryRunAndSubmitTransaction(
-		// 		api,
-		// 		transaction,
-		// 		$activeAccount
-		// 	);
-		//
-		// 	if (errorMessage) {
-		// 		showErrorDialog(errorMessage);
-		// 		return;
-		// 	}
-		//
-		// 	// We don't get transaction result using Multix.
-		// 	if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-		// 		//todo show another success screen.
-		//
-		// 		showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-		// 		return;
-		// 	}
-		//
-		// 	if (result == undefined) {
-		// 		showErrorDialog('Internal error');
-		// 		return;
-		// 	}
-		//
-		// 	showSuccessDialog('Bounty Claimed', 'Your bounty has been claimed');
-		// } catch (e) {
-		// 	console.error(e);
-		// 	showErrorDialog(`${e}`);
-		// }
+		open = false;
+		const transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		});
+		await submitTransaction(transaction, 'Child bounty successfully claimed');
 	}
 
 	async function calculateFee() {
-		// if (!$activeAccount) {
-		// 	fee = '-';
-		// 	return;
-		// }
-		// try {
-		// 	const api = await getApi();
-		//
-		// 	let transaction = api.tx.childBounties.claimChildBounty(
-		// 		childBounty.parentBounty,
-		// 		childBounty.id
-		// 	);
-		// 	let observableFee = transaction.paymentInfo($activeAccount.address);
-		//
-		// 	const paymentInfo = await firstValueFrom(observableFee);
-		// 	fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
-		// } catch (e) {
-		// 	console.error(e);
-		// 	fee = '--';
-		// }
+		try {
+			const transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
+				child_bounty_id: childBounty.id,
+				parent_bounty_id: childBounty.parentBounty
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
+		} catch (e) {
+			console.error(e);
+			fee = '--';
+		}
 	}
 </script>
 
