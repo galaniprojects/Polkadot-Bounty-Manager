@@ -73,7 +73,7 @@
 			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
 		}
 
-		showSuccessDialog('Submitting Transaction', 'Bounty creation was successful.');
+		showSuccessDialog('Submitting Transaction', 'Bounty creation was successful');
 		success = true;
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
