@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
 	export let treasuryTracks = [
-		{ origin: 'SmallSpender', display: 'Small Spender' },
-		{ origin: 'MediumSpender', display: 'Medium Spender' },
-		{ origin: 'BigSpender', display: 'Big Spender' }
+		{ origin: 'Small Spender', display: 'Small Spender' },
+		{ origin: 'Medium Spender', display: 'Medium Spender' },
+		{ origin: 'Big Spender', display: 'Big Spender' }
 	];
 </script>
 
@@ -19,6 +19,7 @@
 		showSuccessDialog
 	} from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
+	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let bountyInfo: BountyInfo;
 
@@ -170,17 +171,14 @@
 			<div>
 				<div class="space-y-1 sm:space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
-					<select
-						class="border w-full md:w-1/3 rounded-md h-7 px-1 pt-1"
-						bind:value={selectedTreasuryTrack}
-						name="spenders"
-						id="spenders"
-					>
-						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
-						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
-						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
-					</select>
-					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
+					<div class="border">
+						<DropdownMenu
+							bind:selectedItem={selectedTreasuryTrack}
+							items={treasuryTracks.map((t) => t.display)}
+							width="w-56 lg:w-80"
+						/>
+					</div>
+					<p class="text-xs">(preselected based on Bounty value)</p>
 				</div>
 
 				<hr class="border-white my-5 sm:my-10 w-full md:w-1/3" />

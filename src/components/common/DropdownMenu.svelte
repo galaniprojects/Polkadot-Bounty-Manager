@@ -3,6 +3,8 @@
 
 	export let items: string[];
 	export let selectedItem: string;
+	export let width: string;
+	export let truncate: boolean = false;
 
 	let dropdownOpen = false;
 	let dropdownContainer: HTMLDivElement | null = null;
@@ -35,17 +37,17 @@
 	}
 </script>
 
-<div class="w-full" bind:this={dropdownContainer}>
-	<div class="relative w-44 lg:w-32 2xl:w-36">
+<div bind:this={dropdownContainer}>
+	<div class="relative">
 		<button
 			on:click={dropdownOnClick}
 			type="button"
-			class="inline-flex w-full justify-between items-center rounded-md bg-white px-2 py-2 text-primary ring-1 ring-inset ring-accent"
+			class="inline-flex {width} justify-between items-center rounded-md bg-white px-2 py-2 text-primary ring-1 ring-inset ring-accent"
 			id="menu-button"
 			aria-expanded="true"
 			aria-haspopup="true"
 		>
-			{truncateString(selectedItem, 9)}
+			{truncate ? truncateString(selectedItem, 9) : selectedItem}
 
 			<button class="material-symbols-outlined text-accent">
 				{#if dropdownOpen}
@@ -58,7 +60,7 @@
 	</div>
 	{#if dropdownOpen}
 		<div
-			class="absolute rounded-md overflow-hidden -mt-10 z-10 w-44 lg:w-32 2xl:w-36 bg-white shadow-lg ring-1 ring-black ring-opacity-20"
+			class="absolute {width} rounded-md overflow-hidden -mt-10 z-10 bg-white shadow-lg ring-1 ring-black ring-opacity-20"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="menu-button"
