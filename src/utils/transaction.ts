@@ -1,4 +1,4 @@
-import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { PolkadotSigner, Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, injectedPolkadotAccount, walletConnectPolkadotSigner } from '../stores';
 import { SupportedSources } from '../types/account';
@@ -9,7 +9,7 @@ import { fetchBountiesAndChildBounties } from './fetch-bounties';
 export async function submitTransaction(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>,
-	sucessMessage?: string
+	successMessage?: string
 ): Promise<TxFinalizedPayload | undefined> {
 	showLoadingDialog('Submitting transaction');
 	const account = get(activeAccount);
@@ -21,13 +21,11 @@ export async function submitTransaction(
 		const signer = get(walletConnectPolkadotSigner);
 		if (signer) {
 			try {
-				const result = await transaction.signAndSubmit(signer);
-				showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
-				await fetchBountiesAndChildBounties(false);
-				return result;
+				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					'Submitting transaction failed. If you are using Multix, ignore this error and continue on Multix.'
+					`Submitting transaction failed. If you are using Multix, ignore this error and continue on Multix. \n See console for error details. \n` +
+						readableError(e)
 				);
 				console.error(e);
 			}
@@ -41,14 +39,53 @@ export async function submitTransaction(
 			return;
 		}
 		try {
-			const result = await transaction.signAndSubmit(injectedAccount.polkadotSigner);
-			await fetchBountiesAndChildBounties(false);
-			showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
-			return result;
+			return await safeSignAndSubmit(transaction, injectedAccount.polkadotSigner, successMessage);
 		} catch (e) {
-			showErrorDialog(`${e}`);
+			showErrorDialog(readableError(e));
 			return;
 		}
+	}
+}
+
+async function safeSignAndSubmit(
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	transaction: Transaction<any, any, any, any>,
+	signer: PolkadotSigner,
+	successMessage?: string
+) {
+	const result = await transaction.signAndSubmit(signer);
+	if (result.dispatchError) {
+		const dispatchError = readableError(result.dispatchError);
+		showErrorDialog(dispatchError);
+		return;
+	} else if (result.ok) {
+		showSuccessDialog('Transaction', successMessage || 'Operation success.');
+		await fetchBountiesAndChildBounties(false);
+		return result;
+	} else {
+		showErrorDialog('Unknown error happened.');
+		return;
+	}
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readableError(error: any): string {
+	if (error.type) {
+		let formatted = error.type;
+
+		if (error.value) {
+			formatted = formatted + ', ' + error.value.type;
+			if (error.value.value) {
+				formatted = formatted + ', ' + error.value.value.type;
+				if (error.value.value.value) {
+					formatted = formatted + ', ' + error.value.value.value.type;
+				}
+			}
+		}
+		return formatted;
+	} else {
+		console.error(error);
+		return 'Error was logged to the console.';
 	}
 }
 

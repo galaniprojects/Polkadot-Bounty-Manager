@@ -32,7 +32,6 @@
 	} from 'polkadot-api/pjs-signer';
 	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
-	import { walletConnect as wcConnection } from '../../stores';
 	import { convertToPolkadotAddress } from '../../utils/polkadot';
 
 	const APP_NAME = 'Bounty Manager';
@@ -73,12 +72,6 @@
 				action: extensionNames.includes(SupportedSources.TalismanExtension) ? 'Connect' : 'Download'
 			}
 		];
-	});
-
-	onDestroy(async () => {
-		if ($wcConnection) {
-			await $wcConnection.disconnect();
-		}
 	});
 
 	async function selectWallet(wallet: WalletInfo) {
@@ -166,7 +159,7 @@
 
 		if (injectedAccounts) {
 			let injectedAccount = injectedAccounts.filter((acc) => {
-				return acc.address === account.address;
+				return convertToPolkadotAddress(acc.address) === account.address;
 			});
 			injectedPolkadotAccount.set(injectedAccount[0]);
 

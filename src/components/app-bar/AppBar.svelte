@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { activeAccount, injectedPolkadotAccount, activeAccountBounties } from '../../stores';
+	import { onDestroy, onMount } from 'svelte';
+	import {
+		walletConnect as wcConnection,
+		activeAccount,
+		injectedPolkadotAccount,
+		activeAccountBounties
+	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
@@ -21,6 +26,12 @@
 	async function showLoginDialog() {
 		loginDialogOpen = true;
 	}
+
+	onDestroy(async () => {
+		if ($wcConnection) {
+			await $wcConnection.disconnect();
+		}
+	});
 
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.

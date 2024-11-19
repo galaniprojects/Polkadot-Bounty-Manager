@@ -34,7 +34,11 @@
 					return response.json();
 				})
 				.then(async (data) => {
-					description = await parse(data.content);
+					try {
+						description = await parse(data.content);
+					} catch {
+						console.error('no description found, skip.');
+					}
 				});
 		} catch {
 			description = undefined;

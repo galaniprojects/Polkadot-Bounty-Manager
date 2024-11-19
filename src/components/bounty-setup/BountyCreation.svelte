@@ -4,7 +4,7 @@
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
-	import { showErrorDialog, showSuccessDialog } from '../../utils/loading-screen';
+	import { showErrorDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
@@ -73,7 +73,6 @@
 			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
 		}
 
-		showSuccessDialog('Submitting Transaction', 'Bounty creation was successful');
 		success = true;
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);

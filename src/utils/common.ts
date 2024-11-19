@@ -24,6 +24,9 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 			status = BountyStatus.Funded;
 			break;
 		case 'CuratorProposed':
+			status = BountyStatus.CuratorProposed;
+			curator = obj.status.value.curator;
+			break;
 		case 'Active':
 			status = BountyStatus.Active;
 			curator = obj.status.value.curator;
