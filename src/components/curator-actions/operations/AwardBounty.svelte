@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
 	import { convertPlanckToDot, isValidAddress } from '../../../utils/polkadot';
-	import { activeAccount, dotApi } from '../../../stores';
+	import { dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import Dialog from '../../common/Dialog.svelte';
@@ -38,10 +38,6 @@
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
 		try {
 			const transaction = $dotApi.tx.Bounties.award_bounty({
 				bounty_id: bounty.id,

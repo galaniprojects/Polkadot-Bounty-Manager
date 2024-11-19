@@ -1,18 +1,12 @@
 <script lang="ts">
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
 	import Dialog from '../../common/Dialog.svelte';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
+	import { showErrorDialog } from '../../../utils/loading-screen';
 	import { truncateString } from '../../../utils/common';
 	import type { Bounty } from '../../../types/bounty';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -25,41 +19,12 @@
 
 	async function claimBounty() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
 		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
+			const transaction = $dotApi.tx.Bounties.claim_bounty({
+				bounty_id: bounty.id
+			});
 
-			const api = await getApi();
-			let transaction = api.tx.bounties.claimBounty(bounty.id);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Bounty Claimed', 'Your bounty has been claimed');
+			await submitTransaction(transaction);
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`${e}`);
@@ -67,18 +32,11 @@
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
 		try {
-			const api = await getApi();
-
-			let transaction = api.tx.bounties.claimBounty(bounty.id);
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-
-			const paymentInfo = await firstValueFrom(observableFee);
-			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			const transaction = $dotApi.tx.Bounties.claim_bounty({
+				bounty_id: bounty.id
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
 		} catch (e) {
 			console.error(e);
 			fee = '--';
