@@ -32,8 +32,8 @@
 	} from 'polkadot-api/pjs-signer';
 	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
-	import { AccountId, getSs58AddressInfo } from 'polkadot-api';
 	import { walletConnect as wcConnection } from '../../stores';
+	import { convertToPolkadotAddress } from '../../utils/polkadot';
 
 	const APP_NAME = 'Bounty Manager';
 
@@ -128,20 +128,15 @@
 					showErrorDialog(
 						'Wallet connection failed. Make sure the Bounty Mananger has access to your wallet accounts.'
 					);
+					console.error(e);
 					return;
 				}
 				injectedAccounts = injectedExtension.getAccounts();
-				let codec = AccountId(0);
 				accounts = injectedAccounts.map((account) => {
-					const addressInfo = getSs58AddressInfo(account.address);
-					if (!addressInfo.isValid) {
-						showErrorDialog('Could not decode account address');
-						throw new Error('Could not decode account address');
-					}
 					return {
 						name: account.name || 'Account',
 						source: selectedSource,
-						address: codec.dec(addressInfo.publicKey)
+						address: convertToPolkadotAddress(account.address)
 					};
 				});
 			}

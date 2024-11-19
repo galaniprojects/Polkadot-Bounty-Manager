@@ -10,13 +10,13 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 	if (showProgress) {
 		showLoadingDialog('Loading...');
 	}
-	let api = get(dotApi);
+	const api = get(dotApi);
 	try {
 		const parsedBounties = await fetchBountiesAndDescription();
 		// Query child bounties.
 		const childBounties: ChildBounty[] = [];
 
-		let unparsedChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
+		const unparsedChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
 
 		for (const childBounty of unparsedChildBounties) {
 			const id = childBounty.keyArgs[1];
@@ -39,7 +39,7 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		}
 
 		// Query child bounty description.
-		let childBountiesDescriptions =
+		const childBountiesDescriptions =
 			await api.query.ChildBounties.ChildBountyDescriptions.getEntries();
 		for (const desc of childBountiesDescriptions) {
 			const index = desc.keyArgs[0];
@@ -67,7 +67,7 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 async function fetchBountiesAndDescription(): Promise<Bounty[]> {
 	const parsedBounties: Bounty[] = [];
 
-	let api = get(dotApi);
+	const api = get(dotApi);
 	const unparsedBounties = await api.query.Bounties.Bounties.getEntries();
 	for (const unparsedBounty of unparsedBounties) {
 		const index = unparsedBounty.keyArgs[0];

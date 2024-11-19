@@ -14,6 +14,7 @@
 		type InjectedPolkadotAccount
 	} from 'polkadot-api/pjs-signer';
 	import type { AccountInfo } from '../../types/account';
+	import { convertToPolkadotAddress } from '../../utils/polkadot';
 
 	let loginDialogOpen = false;
 
@@ -35,8 +36,9 @@
 			// Restore the injected account.
 			const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
 			let injectedAccounts = accounts.filter((acc) => {
-				return acc.address === parsedAccount.address;
+				return convertToPolkadotAddress(acc.address) === parsedAccount.address;
 			});
+			console.log(injectedAccounts);
 			if (injectedAccounts.length !== 1) {
 				activeAccount.set(undefined);
 				console.error('something went wrong while trying to restore session.');

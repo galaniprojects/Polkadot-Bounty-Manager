@@ -11,7 +11,7 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 	let status: BountyStatus;
 	let curator: string | undefined = undefined;
 	let expiryDate: Date | undefined = undefined;
-	let beneficiary: string;
+	let beneficiary: string | undefined = undefined;
 
 	switch (obj.status.type) {
 		case 'Proposed':
@@ -49,7 +49,8 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 		status,
 		curator,
 		expiryDate,
-		childBounties: []
+		childBounties: [],
+		beneficiary
 	};
 }
 
@@ -71,7 +72,7 @@ export async function parseChildBounty(obj: ChildBountyRaw, id: number): Promise
 			status = ChildBountyStatus.Active;
 			curator = obj.status.value.curator;
 			break;
-		case 'PendingPayout':
+		case 'PendingPayout': {
 			curator = obj.status.value.curator;
 			status = ChildBountyStatus.PendingPayout;
 			const unlockAt = obj.status.value.unlock_at;
@@ -80,6 +81,7 @@ export async function parseChildBounty(obj: ChildBountyRaw, id: number): Promise
 			dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
 			beneficiary = obj.status.value.beneficiary;
 			break;
+		}
 	}
 	return {
 		id,

@@ -1,12 +1,11 @@
 import type { ChildBounty } from './child-bounty';
-import { get } from 'svelte/store';
-import { dotApi } from '../stores';
-
-let api = get(dotApi);
+import { type createTypedApi } from '../utils/polkadot';
 
 export type BountyRaw = Awaited<
-	ReturnType<typeof api.query.Bounties.Bounties.getEntries>
->[0]['value'];
+	ReturnType<
+		Awaited<ReturnType<typeof createTypedApi>['query']['Bounties']['Bounties']['getEntries']>
+	>
+>[number]['value'];
 
 export interface Bounty {
 	id: number;
@@ -20,6 +19,7 @@ export interface Bounty {
 	childBounties: ChildBounty[];
 	curator: string | undefined;
 	expiryDate: Date | undefined;
+	beneficiary: string | undefined;
 }
 
 export type BountyStatusRaw =

@@ -7,22 +7,23 @@ import { convertPlanckToDot } from './polkadot';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 
 export async function submitTransaction(
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>,
 	sucessMessage?: string
 ): Promise<TxFinalizedPayload | undefined> {
 	showLoadingDialog('Submitting transaction');
-	let account = get(activeAccount);
+	const account = get(activeAccount);
 	if (account === undefined) {
 		showErrorDialog('Internal error, active account not found.');
 		return;
 	}
 	if (account.source === SupportedSources.WalletConnect) {
-		let signer = get(walletConnectPolkadotSigner);
+		const signer = get(walletConnectPolkadotSigner);
 		if (signer) {
 			try {
-				let result = await transaction.signAndSubmit(signer);
+				const result = await transaction.signAndSubmit(signer);
 				showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
-				await fetchBountiesAndChildBounties();
+				await fetchBountiesAndChildBounties(false);
 				return result;
 			} catch (e) {
 				showErrorDialog(
@@ -34,15 +35,15 @@ export async function submitTransaction(
 			showErrorDialog('Internal error, wallet connect polkadot signer not set!');
 		}
 	} else {
-		let injectedAccount = get(injectedPolkadotAccount);
+		const injectedAccount = get(injectedPolkadotAccount);
 		if (!injectedAccount) {
 			showErrorDialog('Internal Error, injected account is undefined.');
 			return;
 		}
 		try {
-			let result = await transaction.signAndSubmit(injectedAccount.polkadotSigner);
+			const result = await transaction.signAndSubmit(injectedAccount.polkadotSigner);
+			await fetchBountiesAndChildBounties(false);
 			showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
-			await fetchBountiesAndChildBounties();
 			return result;
 		} catch (e) {
 			showErrorDialog(`${e}`);
@@ -52,6 +53,7 @@ export async function submitTransaction(
 }
 
 export async function calculateTransactionFee(
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>
 ): Promise<string> {
 	const account = get(activeAccount);
@@ -60,9 +62,9 @@ export async function calculateTransactionFee(
 	}
 
 	if (account) {
-		let a = await transaction.getPaymentInfo(account.address);
+		const a = await transaction.getPaymentInfo(account.address);
 		console.log(a);
-		let x = String(convertPlanckToDot(a.partial_fee));
+		const x = String(convertPlanckToDot(a.partial_fee));
 
 		console.log(x);
 		return x;

@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { currentBlock, dotApi } from '../stores';
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
-import { createClient, getSs58AddressInfo } from 'polkadot-api';
+import { AccountId, createClient, getSs58AddressInfo } from 'polkadot-api';
 import { dot } from '@polkadot-api/descriptors';
 import { getWsProvider } from 'polkadot-api/ws-provider/web';
 
@@ -31,6 +31,18 @@ export function convertPlanckToDot(value: number | bigint): number {
 export function isValidAddress(address: string) {
 	const info = getSs58AddressInfo(address);
 	return info.isValid && info.ss58Format === 0;
+}
+
+/**
+ * converts an Ss58Address to a polkadot with prefix 0.
+ */
+export function convertToPolkadotAddress(address: string): string {
+	const codec = AccountId(0);
+	const addressInfo = getSs58AddressInfo(address);
+	if (!addressInfo.isValid) {
+		throw new Error('Could not decode account address');
+	}
+	return codec.dec(addressInfo.publicKey);
 }
 
 export type BlockInfo = {

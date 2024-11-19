@@ -11,16 +11,13 @@
 	let days: number = 1;
 	let hours = 1;
 	let mins = 1;
-	let blocks = 1;
 
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-		let api = get(dotApi);
-
 		const sdkProvider = getWsProvider(get(nodeEndpoint));
 		const sdkClient = createClient(sdkProvider);
-		let number = await api.query.System.Number.getValue();
+		let number = (await sdkClient.getBlockHeader()).number;
 		await sdkClient._request('dev_newBlock', [
 			{
 				count: 1,
@@ -42,7 +39,7 @@
 	}
 
 	async function fastForwardBlocks() {
-		fastForward(blocks);
+		fastForward(1);
 	}
 
 	async function changeEndpoint() {
@@ -72,8 +69,7 @@
 	</div>
 
 	<div class="flex m-5 gap-3 items-center">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={blocks} />
-		<button on:click={fastForwardBlocks} class="button-active min-w-40">BLOCKS </button>
+		<button on:click={fastForwardBlocks} class="button-active min-w-40">1 BLOCK </button>
 		<p>(*6 seconds)</p>
 	</div>
 

@@ -1,11 +1,12 @@
-import { get } from 'svelte/store';
-import { dotApi } from '../stores';
-
-let api = get(dotApi);
+import { type createTypedApi } from '../utils/polkadot';
 
 export type ChildBountyRaw = Awaited<
-	ReturnType<typeof api.query.ChildBounties.ChildBounties.getEntries>
->[0]['value'];
+	ReturnType<
+		Awaited<
+			ReturnType<typeof createTypedApi>['query']['ChildBounties']['ChildBounties']['getEntries']
+		>
+	>
+>[number]['value'];
 
 export interface ChildBounty {
 	id: number;
