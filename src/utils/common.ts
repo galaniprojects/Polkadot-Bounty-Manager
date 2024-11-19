@@ -12,7 +12,7 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 	let curator: string | undefined = undefined;
 	let expiryDate: Date | undefined = undefined;
 	let beneficiary: string | undefined = undefined;
-
+  
 	switch (obj.status.type) {
 		case 'Proposed':
 			status = BountyStatus.Proposed;
@@ -25,6 +25,7 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 			break;
 		case 'CuratorProposed':
 		case 'Active':
+
 			status = BountyStatus.Active;
 			curator = obj.status.value.curator;
 			if ('update_due' in obj.status.value) {

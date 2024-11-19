@@ -80,6 +80,6 @@
 	}
 
 	.title {
-		font-family: 'Overpass';
+		font-family: 'Overpass Light';
 	}
 </style>

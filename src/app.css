@@ -4,7 +4,7 @@
 
 @font-face {
 	font-family: 'Overpass Light';
-	src: url('/fonts/Overpass-Light.ttf') format('sans-serif');
+	src: url('/fonts/Overpass-Light.ttf') format('truetype');
 	font-weight: 300;
 	font-style: normal;
 }
