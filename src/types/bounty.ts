@@ -20,7 +20,6 @@ export interface Bounty {
 	childBounties: ChildBounty[];
 	curator: string | undefined;
 	expiryDate: Date | undefined;
-	beneficiary: string | undefined;
 }
 
 export type BountyStatusRaw =
