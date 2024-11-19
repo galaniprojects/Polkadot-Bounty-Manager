@@ -3,15 +3,7 @@
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import PolkadotIcon from '../../../common/PolkadotIcon.svelte';
-	import { truncateString } from '../../../../utils/common';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
