@@ -69,7 +69,6 @@ async function fetchBountiesAndDescription(): Promise<Bounty[]> {
 
 	let api = get(dotApi);
 	const unparsedBounties = await api.query.Bounties.Bounties.getEntries();
-	// const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
 	for (const unparsedBounty of unparsedBounties) {
 		const index = unparsedBounty.keyArgs[0];
 		parsedBounties.push(await parseBounty(unparsedBounty.value, index));

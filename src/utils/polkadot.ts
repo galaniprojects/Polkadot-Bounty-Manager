@@ -1,6 +1,15 @@
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 import { get } from 'svelte/store';
 import { currentBlock, dotApi } from '../stores';
+import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
+import { createClient, getSs58AddressInfo } from 'polkadot-api';
+import { dot } from '@polkadot-api/descriptors';
+import { getWsProvider } from 'polkadot-api/ws-provider/web';
+
+export function createTypedApi(nodeEndpoint: string) {
+	const sdkProvider = withPolkadotSdkCompat(getWsProvider(nodeEndpoint));
+	const sdkClient = createClient(sdkProvider);
+	return sdkClient.getTypedApi(dot);
+}
 
 export function convertDotToPlanck(value: bigint): bigint {
 	return value * BigInt(1e10);
@@ -20,14 +29,8 @@ export function convertPlanckToDot(value: number | bigint): number {
  * @returns if provided address ia a valid polkadot address.
  */
 export function isValidAddress(address: string) {
-	try {
-		const decoded = decodeAddress(address, false, 0);
-		const reEncoded = encodeAddress(decoded, 0);
-
-		return reEncoded === address;
-	} catch {
-		return false;
-	}
+	const info = getSs58AddressInfo(address);
+	return info.isValid && info.ss58Format === 0;
 }
 
 export type BlockInfo = {

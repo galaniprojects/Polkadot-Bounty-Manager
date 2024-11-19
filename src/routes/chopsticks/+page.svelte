@@ -1,10 +1,12 @@
 <script lang="ts">
 	import '../../app.css';
-	import {  dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { goto } from '$app/navigation';
-	import { firstValueFrom } from 'rxjs';
 	import TestBar from '../../components/TestBar.svelte';
 	import { get } from 'svelte/store';
+	import { createClient } from 'polkadot-api';
+	import { getWsProvider } from 'polkadot-api/ws-provider/web';
+	import { createTypedApi } from '../../utils/polkadot';
 
 	let days: number = 1;
 	let hours = 1;
@@ -14,14 +16,17 @@
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-	let api = get(dotApi);
+		let api = get(dotApi);
+
+		const sdkProvider = getWsProvider(get(nodeEndpoint));
+		const sdkClient = createClient(sdkProvider);
 		let number = await api.query.System.Number.getValue();
-		await firstValueFrom(
-			api.rpc('dev_newBlock', {
+		await sdkClient._request('dev_newBlock', [
+			{
 				count: 1,
 				unsafeBlockHeight: number + blocks
-			})
-		);
+			}
+		]);
 	}
 
 	async function fastForwardDays() {
@@ -40,10 +45,10 @@
 		fastForward(blocks);
 	}
 
-	// async function changeEndpoint() {
-	// 	nodeEndpoint.set(nodeEndpointInput);
-	// 	api.set(undefined);
-	// }
+	async function changeEndpoint() {
+		nodeEndpoint.set(nodeEndpointInput);
+		dotApi.set(createTypedApi(nodeEndpointInput));
+	}
 </script>
 
 <div class="bg-primary py-40 md:px-40">

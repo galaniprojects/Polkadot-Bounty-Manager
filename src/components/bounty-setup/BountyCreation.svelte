@@ -93,7 +93,7 @@
 					description: Binary.fromText(description)
 				});
 
-				fee = await calculateTransactionFee(transaction);
+				fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			} else {
 				fee = '-';
 			}

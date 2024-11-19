@@ -17,6 +17,7 @@
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { walletConnect } from './wallet-connect';
+
 	import {
 		activeAccount,
 		injectedPolkadotAccount,
@@ -31,6 +32,8 @@
 	} from 'polkadot-api/pjs-signer';
 	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
+	import { AccountId, getSs58AddressInfo } from 'polkadot-api';
+	import { walletConnect as wcConnection } from '../../stores';
 
 	const APP_NAME = 'Bounty Manager';
 
@@ -70,6 +73,12 @@
 				action: extensionNames.includes(SupportedSources.TalismanExtension) ? 'Connect' : 'Download'
 			}
 		];
+	});
+
+	onDestroy(async () => {
+		if ($wcConnection) {
+			await $wcConnection.disconnect();
+		}
 	});
 
 	async function selectWallet(wallet: WalletInfo) {
@@ -122,11 +131,17 @@
 					return;
 				}
 				injectedAccounts = injectedExtension.getAccounts();
+				let codec = AccountId(0);
 				accounts = injectedAccounts.map((account) => {
+					const addressInfo = getSs58AddressInfo(account.address);
+					if (!addressInfo.isValid) {
+						showErrorDialog('Could not decode account address');
+						throw new Error('Could not decode account address');
+					}
 					return {
 						name: account.name || 'Account',
 						source: selectedSource,
-						address: account.address
+						address: codec.dec(addressInfo.publicKey)
 					};
 				});
 			}

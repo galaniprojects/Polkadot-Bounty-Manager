@@ -1,13 +1,8 @@
 <script lang="ts">
-	import {
-		convertDotToPlanck,
-		isValidAddress
-	} from '../../../../utils/polkadot';
-	import {  dotApi } from '../../../../stores';
+	import { convertDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-	} from '../../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isInteger } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';

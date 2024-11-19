@@ -8,7 +8,6 @@ export type BountyRaw = Awaited<
 	ReturnType<typeof api.query.Bounties.Bounties.getEntries>
 >[0]['value'];
 
-
 export interface Bounty {
 	id: number;
 	description?: string;

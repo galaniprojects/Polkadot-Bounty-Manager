@@ -39,7 +39,6 @@ export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
 			break;
 	}
 
-
 	return {
 		id,
 		proposer: obj.proposer,

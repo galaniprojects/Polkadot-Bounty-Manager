@@ -4,6 +4,7 @@ import { activeAccount, injectedPolkadotAccount, walletConnectPolkadotSigner } f
 import { SupportedSources } from '../types/account';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
 import { convertPlanckToDot } from './polkadot';
+import { fetchBountiesAndChildBounties } from './fetch-bounties';
 
 export async function submitTransaction(
 	transaction: Transaction<any, any, any, any>,
@@ -21,6 +22,7 @@ export async function submitTransaction(
 			try {
 				let result = await transaction.signAndSubmit(signer);
 				showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
+				await fetchBountiesAndChildBounties();
 				return result;
 			} catch (e) {
 				showErrorDialog(
@@ -40,6 +42,7 @@ export async function submitTransaction(
 		try {
 			let result = await transaction.signAndSubmit(injectedAccount.polkadotSigner);
 			showSuccessDialog('Transaction', sucessMessage || 'Operation success.');
+			await fetchBountiesAndChildBounties();
 			return result;
 		} catch (e) {
 			showErrorDialog(`${e}`);
