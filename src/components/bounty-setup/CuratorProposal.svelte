@@ -245,9 +245,10 @@
 				has been created successfully!
 				<br /><br />
 
-				To ensure the referendum is valid, please update the description if necessary and place the
-				decision deposit within 7 days. The deposit, which can be submitted by any account, may be
-				made on a social platform such as Subsquare or through the polkadot.js explorer.
+				Please update the description if necessary on a social platform such as Subsquare. To ensure
+				the referendum is valid, place the decision deposit within 7 days. The deposit, which can be
+				submitted by any account, may be made on a social platform such as Subsquare or through the
+				polkadot.js explorer.
 			</p>
 
 			<div class="mt-7 sm:mt-24 mb-2 flex">
