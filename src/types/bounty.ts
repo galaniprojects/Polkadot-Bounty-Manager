@@ -1,13 +1,11 @@
 import type { ChildBounty } from './child-bounty';
+import { type createTypedApi } from '../utils/polkadot';
 
-export interface BountyRaw {
-	proposer: string;
-	value: string;
-	fee: string;
-	curatorDeposit: string;
-	bond: string;
-	status: BountyStatusRaw;
-}
+export type BountyRaw = Awaited<
+	ReturnType<
+		Awaited<ReturnType<typeof createTypedApi>['query']['Bounties']['Bounties']['getEntries']>
+	>
+>[number]['value'];
 
 export interface Bounty {
 	id: number;
@@ -18,7 +16,6 @@ export interface Bounty {
 	fee: bigint;
 	curatorDeposit: bigint;
 	bond: bigint;
-	statusRaw: BountyStatusRaw;
 	status: BountyStatus;
 	childBounties: ChildBounty[];
 	curator: string | undefined;

@@ -1,23 +1,14 @@
 <script lang="ts">
 	import type { Bounty } from '../../../../types/bounty';
-	import {
-		convertDotToPlanck,
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi
-	} from '../../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { convertDotToPlanck } from '../../../../utils/polkadot';
+	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { isInteger } from '../../../../utils/common';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
+	import { Binary } from 'polkadot-api';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -34,74 +25,35 @@
 
 	async function submit() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			const api = await getApi();
-			if (bountyTitle.length === 0) {
-				showErrorDialog('Bounty title is empty');
-				return;
-			}
-			if (!bountyValue) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-			if (!isInteger(bountyValue)) {
-				showErrorDialog('Bounty value is invalid');
-				return;
-			}
-
-			let value = convertDotToPlanck(BigInt(bountyValue));
-			let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error.');
-				return;
-			}
-
-			//TODO: refetch child bounties.
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
+		if (bountyTitle.length === 0) {
+			showErrorDialog('Bounty title is empty');
+			return;
 		}
+		if (!bountyValue || !isInteger(bountyValue)) {
+			showErrorDialog('Bounty value is invalid');
+			return;
+		}
+
+		let value = convertDotToPlanck(BigInt(bountyValue));
+		const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
+			parent_bounty_id: bounty.id,
+			value,
+			description: Binary.fromText(bountyTitle)
+		});
+
+		await submitTransaction(transaction);
 	}
 
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let api = await getApi();
 				let value = convertDotToPlanck(BigInt(bountyValue));
-				let transaction = api.tx.childBounties.addChildBounty(bounty.id, value, bountyTitle);
-
-				let observableFee = transaction.paymentInfo($activeAccount.address);
-
-				const paymentInfo = await firstValueFrom(observableFee);
-				fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+				const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
+					parent_bounty_id: bounty.id,
+					value,
+					description: Binary.fromText(bountyTitle)
+				});
+				fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			} else {
 				fee = '-';
 			}

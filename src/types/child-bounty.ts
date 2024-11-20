@@ -1,10 +1,12 @@
-export interface ChildBountyRaw {
-	value: string;
-	fee: string;
-	curatorDeposit: string;
-	parentBounty: string;
-	status: ChildBountyStatusRaw;
-}
+import { type createTypedApi } from '../utils/polkadot';
+
+export type ChildBountyRaw = Awaited<
+	ReturnType<
+		Awaited<
+			ReturnType<typeof createTypedApi>['query']['ChildBounties']['ChildBounties']['getEntries']
+		>
+	>
+>[number]['value'];
 
 export interface ChildBounty {
 	id: number;
@@ -12,7 +14,6 @@ export interface ChildBounty {
 	value: bigint;
 	fee: bigint;
 	curatorDeposit: bigint;
-	statusRaw: ChildBountyStatusRaw;
 	status: ChildBountyStatus;
 	description?: string;
 	curator?: string;

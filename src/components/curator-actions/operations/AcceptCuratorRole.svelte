@@ -17,18 +17,13 @@
 
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../stores';
+	import { convertPlanckToDot } from '../../../utils/polkadot';
+	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../utils/loading-screen';
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
-	import { WALLET_CONNECT_SOURCE } from '../../../utils/WcSigner';
 	import Dialog from '../../common/Dialog.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -43,45 +38,15 @@
 
 	async function acceptCuratorRole() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-			let api = await getApi();
+		const transaction = $dotApi.tx.Bounties.accept_curator({
+			bounty_id: bounty.id
+		});
+		const result = submitTransaction(transaction);
 
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
+		if (result == undefined) {
+			showErrorDialog('Internal error');
+			return;
 		}
-		open = false;
 	}
 
 	async function calculateFeeAndDeposit() {
@@ -90,13 +55,12 @@
 			return;
 		}
 		try {
-			let api = await getApi();
-			let transaction = api.tx.bounties.acceptCurator(bounty.id);
+			const transaction = $dotApi.tx.Bounties.accept_curator({
+				bounty_id: bounty.id
+			});
 
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
+
 			deposit = calculateDeposit(bounty.fee);
 		} catch (e) {
 			console.error(e);

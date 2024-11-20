@@ -1,24 +1,26 @@
 <script lang="ts" context="module">
 	export let treasuryTracks = [
-		{ origin: 'SmallSpender', display: 'Small Spender' },
-		{ origin: 'MediumSpender', display: 'Medium Spender' },
-		{ origin: 'BigSpender', display: 'Big Spender' }
+		{ origin: GovernanceOrigin.SmallSpender(), display: 'Small Spender' },
+		{ origin: GovernanceOrigin.MediumSpender(), display: 'Medium Spender' },
+		{ origin: GovernanceOrigin.BigSpender(), display: 'Big Spender' }
 	];
 </script>
 
 <script lang="ts">
-	import { ApiRx } from '@polkadot/api';
 	import type { BountyInfo } from './BountySetup.svelte';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../stores';
+	import { activeAccount, dotApi } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { convertPlanckToDot, dryRunAndSubmitTransaction, getApi } from '../../utils/polkadot';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../utils/loading-screen';
+	import { convertPlanckToDot } from '../../utils/polkadot';
+	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
+	import {
+		GovernanceOrigin,
+		PolkadotRuntimeOriginCaller,
+		PreimagesBounded,
+		TraitsScheduleDispatchTime
+	} from '@polkadot-api/descriptors';
+	import { Binary } from 'polkadot-api';
+	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 
 	export let bountyInfo: BountyInfo;
 
@@ -60,61 +62,58 @@
 				showErrorDialog('Wallet is not connected');
 				return;
 			}
-			const api = await getApi();
-			const transaction = createApprovalTransaction(api);
-
-			const { errorMessage } = await dryRunAndSubmitTransaction(api, transaction, $activeAccount);
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
+			const transaction = await createApprovalTransaction();
+			if (!transaction) {
+				showErrorDialog('Unexpected error, bounty id is not set.');
 				return;
 			}
 
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-			success = true;
+			let result = await submitTransaction(transaction);
+
+			if (result) {
+				success = true;
+			}
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`Something went wrong, ${e}`);
 		}
 	}
 
-	function createApprovalTransaction(api: ApiRx) {
-		let tx = api.tx.bounties.approveBounty(bountyInfo.id);
-		return api.tx.referenda.submit(
-			{
-				Origins: selectedTreasuryTrack
-			},
-			{ Inline: tx.method.toHex() },
-			{ After: 1 }
+	async function createApprovalTransaction() {
+		if (!bountyInfo.id) {
+			return;
+		}
+		let transaction = $dotApi.tx.Bounties.approve_bounty({ bounty_id: bountyInfo.id });
+		let proposal: PreimagesBounded = PreimagesBounded.Inline(
+			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
+		return $dotApi.tx.Referenda.submit({
+			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack),
+			proposal: proposal,
+			enactment_moment: TraitsScheduleDispatchTime.After(1)
+		});
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
-		if (bountyInfo.id) {
+		if ($activeAccount && bountyInfo.id) {
 			try {
-				const api = await getApi();
-				const transaction = createApprovalTransaction(api);
-
-				let observableFee = transaction.paymentInfo($activeAccount.address);
-				fee =
-					convertPlanckToDot(
-						(await firstValueFrom(observableFee)).partialFee.toNumber()
-					).toString() + ' DOT';
+				const transaction = await createApprovalTransaction();
+				if (!transaction) {
+					fee = '-';
+					return;
+				}
+				fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			} catch {
 				fee = '-';
 			}
+		} else {
+			fee = '-';
 		}
 	}
 
 	async function calculateDeposit() {
 		try {
-			const api = await getApi();
-			const base = Number(
-				(api.consts.referenda.submissionDeposit.toHuman() as string).replaceAll(',', '')
-			);
+			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
 			deposit = convertPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';

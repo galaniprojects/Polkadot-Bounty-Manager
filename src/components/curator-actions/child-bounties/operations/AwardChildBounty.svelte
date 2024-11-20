@@ -1,21 +1,12 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi,
-		isValidAddress
-	} from '../../../../utils/polkadot';
+	import { convertPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
+	import { MultiAddress } from '@polkadot-api/descriptors';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -29,75 +20,27 @@
 
 	async function submit() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-			if (!isValidAddress(beneficiary)) {
-				showErrorDialog('Beneficiary address is invalid');
-				return;
-			}
-
-			const api = await getApi();
-			let transaction = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				beneficiary
-			);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog(
-				'Bounty Awarded',
-				'Your child bounty has been awarded and can now be claimed'
-			);
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
+		if (!isValidAddress(beneficiary)) {
+			showErrorDialog('Beneficiary address is invalid');
+			return;
 		}
+
+		const transaction = $dotApi.tx.ChildBounties.award_child_bounty({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			beneficiary: MultiAddress.Id(beneficiary)
+		});
+		await submitTransaction(transaction, 'Child bounty has been awarded and can now be claimed');
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
 		try {
-			const api = await getApi();
-
-			let transaction = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address
-			);
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-
-			const paymentInfo = await firstValueFrom(observableFee);
-			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			const transaction = $dotApi.tx.ChildBounties.award_child_bounty({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id,
+				beneficiary: MultiAddress.Id(beneficiary)
+			});
+			fee = await calculateTransactionFee(transaction);
 		} catch (e) {
 			console.error(e);
 			fee = '--';

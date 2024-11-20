@@ -16,13 +16,12 @@
 	import BountyCreation from './BountyCreation.svelte';
 	import BountySetupTab from './BountySetupTab.svelte';
 	import CuratorProposal from './CuratorProposal.svelte';
-	import { firstValueFrom } from 'rxjs';
 	import {
 		hideLoadingDialog,
 		showErrorDialog,
 		showLoadingDialog
 	} from '../../utils/loading-screen';
-	import { getApi } from '../../utils/polkadot';
+	import { dotApi } from '../../stores';
 
 	let bountyInfo: BountyInfo = {};
 
@@ -67,10 +66,9 @@
 		if (bountyId) {
 			showLoadingDialog('Loading bounty info');
 			try {
-				const api = await getApi();
-				let bountyDescription = (
-					await firstValueFrom(api.query.bounties.bountyDescriptions(bountyId))
-				).toHuman() as string;
+				const bountyDescription = await $dotApi.query.Bounties.BountyDescriptions.getValue(
+					Number(bountyId)
+				);
 				if (!bountyDescription) {
 					showErrorDialog('Failed to load bounty info');
 					return;
@@ -78,7 +76,7 @@
 
 				bountyInfo = {
 					id: Number(bountyId),
-					description: bountyDescription,
+					description: bountyDescription.asText(),
 					value: undefined
 				};
 				hideLoadingDialog();

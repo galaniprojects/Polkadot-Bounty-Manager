@@ -1,27 +1,29 @@
 <script lang="ts">
 	import '../../app.css';
-	import { api, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { goto } from '$app/navigation';
-	import { getApi } from '../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
 	import TestBar from '../../components/TestBar.svelte';
+	import { get } from 'svelte/store';
+	import { createClient } from 'polkadot-api';
+	import { getWsProvider } from 'polkadot-api/ws-provider/web';
+	import { createTypedApi } from '../../utils/polkadot';
 
 	let days: number = 1;
 	let hours = 1;
 	let mins = 1;
-	let blocks = 1;
 
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-		const api = await getApi();
-		let number = (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber();
-		await firstValueFrom(
-			api.rpc('dev_newBlock', {
+		const sdkProvider = getWsProvider(get(nodeEndpoint));
+		const sdkClient = createClient(sdkProvider);
+		let number = (await sdkClient.getBlockHeader()).number;
+		await sdkClient._request('dev_newBlock', [
+			{
 				count: 1,
 				unsafeBlockHeight: number + blocks
-			})
-		);
+			}
+		]);
 	}
 
 	async function fastForwardDays() {
@@ -37,12 +39,12 @@
 	}
 
 	async function fastForwardBlocks() {
-		fastForward(blocks);
+		fastForward(1);
 	}
 
 	async function changeEndpoint() {
 		nodeEndpoint.set(nodeEndpointInput);
-		api.set(undefined);
+		dotApi.set(createTypedApi(nodeEndpointInput));
 	}
 </script>
 
@@ -67,8 +69,7 @@
 	</div>
 
 	<div class="flex m-5 gap-3 items-center">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={blocks} />
-		<button on:click={fastForwardBlocks} class="button-active min-w-40">BLOCKS </button>
+		<button on:click={fastForwardBlocks} class="button-active min-w-40">1 BLOCK </button>
 		<p>(*6 seconds)</p>
 	</div>
 
