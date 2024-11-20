@@ -42,7 +42,7 @@
 		class="flex justify-center fixed inset-0 w-screen h-screen z-20 py-10 md:py-40 overflow-y-auto"
 	>
 		<div
-			class={`w-[363px] md:w-[490px] min-h-52 h-fit p-3 pt-2 md:px-7 md:py-6 rounded-md text-${textColor} bg-${backgroundColor}`}
+			class={`w-full s:w-[400px] md:w-[490px] min-h-52 h-fit p-3 pt-2 md:px-7 md:py-6 rounded-md text-${textColor} bg-${backgroundColor}`}
 		>
 			<div class="flex justify-end">
 				{#if dismissable}
