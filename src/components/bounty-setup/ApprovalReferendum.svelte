@@ -26,6 +26,7 @@
 
 	let success = false;
 	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let selectedTreasuryTrackDisplay = treasuryTracks[0].display;
 	let fee = '-';
 	let deposit = '-';
 
@@ -119,6 +120,10 @@
 			deposit = '-';
 		}
 	}
+
+	$: selectedTreasuryTrack =
+		treasuryTracks.find((track) => track.display === selectedTreasuryTrackDisplay)?.origin ||
+		treasuryTracks[0].origin;
 </script>
 
 <div>
@@ -171,7 +176,7 @@
 					<p class="text-xs mb-1">Treasury track</p>
 					<div class="border">
 						<DropdownMenu
-							bind:selectedItem={selectedTreasuryTrack}
+							bind:selectedItem={selectedTreasuryTrackDisplay}
 							items={treasuryTracks.map((t) => t.display)}
 							width="w-56 lg:w-80"
 						/>
