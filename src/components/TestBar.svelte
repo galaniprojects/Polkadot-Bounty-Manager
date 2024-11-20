@@ -1,11 +1,13 @@
 <script>
 	import { onMount } from 'svelte';
 
-	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
+	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
+	import { createTypedApi } from '../utils/polkadot';
 	onMount(() => {
 		let node = sessionStorage.getItem('node');
 		if (node) {
 			nodeEndpoint.set(node);
+			dotApi.set(createTypedApi(node));
 		}
 	});
 </script>

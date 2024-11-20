@@ -1,153 +1,48 @@
-import { ApiRx, WsProvider } from '@polkadot/api';
-import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import type { ISubmittableResult } from '@polkadot/types/types';
-import { firstValueFrom, filter } from 'rxjs';
-import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
-import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { web3FromSource } from '@polkadot/extension-dapp';
-import { WALLET_CONNECT_SOURCE, WalletConnectSigner } from './WcSigner';
 import { get } from 'svelte/store';
-import {
-	currentBlock,
-	api,
-	nodeEndpoint,
-	walletConnectProvider,
-	walletConnectSession
-} from '../stores';
-import { fetchBountiesAndChildBounties } from './fetch-bounties';
+import { currentBlock, dotApi } from '../stores';
+import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
+import { AccountId, createClient, getSs58AddressInfo } from 'polkadot-api';
+import { dot } from '@polkadot-api/descriptors';
+import { getWsProvider } from 'polkadot-api/ws-provider/web';
+
+export function createTypedApi(nodeEndpoint: string) {
+	const sdkProvider = withPolkadotSdkCompat(getWsProvider(nodeEndpoint));
+	const sdkClient = createClient(sdkProvider);
+	return sdkClient.getTypedApi(dot);
+}
 
 export function convertDotToPlanck(value: bigint): bigint {
-	return value * 10000000000n;
+	return value * BigInt(1e10);
 }
 
 export function convertPlanckToDot(value: number | bigint): number {
-	//TODO: deal with case with decimals.
 	if (typeof value === 'bigint') {
-		return Number(value / BigInt(10000000000));
-	}
-	return value / 10000000000;
-}
-
-export async function getApi(): Promise<ApiRx> {
-	const apiFromStore = get(api) as unknown as ApiRx | undefined;
-
-	if (apiFromStore) {
-		return apiFromStore;
-	}
-	const wsProvider = new WsProvider(get(nodeEndpoint));
-	const apiNew = await firstValueFrom(ApiRx.create({ provider: wsProvider }));
-	api.set(apiNew);
-	return apiNew;
-}
-
-/**
- * Performs a dry run and submits the transaction if the dry run succeeds.
- *
- * In case of WalletConnect address, a blind signature request will be sent,
- * neither a `result` nor an `errorMessage` will be returned.
- */
-export async function dryRunAndSubmitTransaction(
-	api: ApiRx,
-	transaction: SubmittableExtrinsic<'rxjs', ISubmittableResult>,
-	account: InjectedAccountWithMeta
-): Promise<{
-	result?: ISubmittableResult;
-	errorMessage?: string;
-}> {
-	if (account.meta.source === WALLET_CONNECT_SOURCE) {
-		const provider = get(walletConnectProvider);
-		const session = get(walletConnectSession);
-		if (!provider || !session) {
-			return {
-				errorMessage: 'Failed to connect with WalletConnect'
-			};
+		if (value > BigInt(Number.MAX_SAFE_INTEGER)) {
+			throw new Error('Converting Planck to Dot failed, value is too big.');
 		}
-		const signer = new WalletConnectSigner(provider.client, session);
-		try {
-			// In case of wallet connect, only send a signature request since the transaction
-			// will be done through Multix.
-			// Throwing an error will be fine since no valid signature will be returned.
-			await firstValueFrom(transaction.signAsync(account.address, { signer }));
-			return {};
-		} catch {
-			return {};
-		}
-	} else {
-		const signer = (await web3FromSource(account.meta.source)).signer;
-
-		const signatureObservable = transaction.signAsync(account.address, { signer });
-		const signedTransaction = await firstValueFrom(signatureObservable);
-
-		try {
-			const dryRunObservable = api.rpc.system.dryRun(signedTransaction.toHex());
-			const dryRunSubmittableResult = await firstValueFrom(dryRunObservable);
-
-			if (dryRunSubmittableResult.isErr) {
-				const err = dryRunSubmittableResult.asErr;
-				return {
-					errorMessage: `DryRun Error: ${err.type} ${err.isInvalid ? err.asInvalid.toHuman() : err.asUnknown.toHuman()}`
-				};
-			} else {
-				if (dryRunSubmittableResult.asOk.isErr) {
-					if (dryRunSubmittableResult.asOk.asErr.isModule) {
-						const { docs, method, section } = api.registry.findMetaError(
-							dryRunSubmittableResult.asOk.asErr.asModule
-						);
-						const errorMsg = `DryRun Error: ${section}.${method}: ${docs}`;
-						return { errorMessage: errorMsg };
-					}
-				}
-			}
-		} catch (e) {
-			return { errorMessage: `DryRun failed, ${e}` };
-		}
+		return Number(value) / 1e10;
 	}
-
-	// Submit transaction after dry run passes.
-	const observable = transaction.send();
-	const submittableResult = await firstValueFrom(
-		observable.pipe(
-			filter((event) => {
-				return event.isFinalized || event.isError;
-			})
-		)
-	);
-
-	if (submittableResult.dispatchError || submittableResult.isError) {
-		if (submittableResult.dispatchError?.isModule) {
-			const { docs, method, section } = api.registry.findMetaError(
-				submittableResult.dispatchError.asModule
-			);
-			const errorMsg = `${section}.${method}: ${docs}`;
-			return { result: submittableResult, errorMessage: errorMsg };
-		} else {
-			console.error(submittableResult.toHuman());
-			return {
-				result: submittableResult,
-				errorMessage: `Something went wrong, ${submittableResult.dispatchError || ''}`
-			};
-		}
-	}
-	try {
-		await fetchBountiesAndChildBounties();
-	} catch (e) {
-		console.error(e);
-	}
-	return { result: submittableResult };
+	return value / 1e10;
 }
 
 /**
  * @returns if provided address ia a valid polkadot address.
  */
 export function isValidAddress(address: string) {
-	try {
-		const decoded = decodeAddress(address, false, 0);
-		const reEncoded = encodeAddress(decoded, 0);
+	const info = getSs58AddressInfo(address);
+	return info.isValid && info.ss58Format === 0;
+}
 
-		return reEncoded === address;
-	} catch {
-		return false;
+/**
+ * converts an Ss58Address to a polkadot with prefix 0.
+ */
+export function convertToPolkadotAddress(address: string): string {
+	const codec = AccountId(0);
+	const addressInfo = getSs58AddressInfo(address);
+	if (!addressInfo.isValid) {
+		throw new Error('Could not decode account address');
 	}
+	return codec.dec(addressInfo.publicKey);
 }
 
 export type BlockInfo = {
@@ -160,9 +55,10 @@ export async function getCurrentBlock(): Promise<BlockInfo> {
 	if (currentBlockFromStorage) {
 		return currentBlockFromStorage;
 	} else {
-		const api = await getApi();
+		const api = get(dotApi);
 		const info = {
-			blockNumber: (await firstValueFrom(api.rpc.chain.getHeader())).number.toNumber(),
+			//TODO: is this correct?
+			blockNumber: await api.query.System.Number.getValue(),
 			timestamp: Date.now()
 		};
 		currentBlock.set(info);

@@ -1,21 +1,10 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi
-	} from '../../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
 	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import Dialog from '../../../common/Dialog.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -27,68 +16,24 @@
 		await calculateFee();
 	});
 
-	async function acceptCuratorRule() {
+	async function submit() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
 
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
+		const transaction = $dotApi.tx.ChildBounties.close_child_bounty({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		});
 
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		await submitTransaction(transaction);
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
 		try {
-			const api = await getApi();
-			let transaction = api.tx.childBounties.closeChildBounty(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-			fee =
-				convertPlanckToDot((await firstValueFrom(observableFee)).partialFee.toNumber()).toString() +
-				' DOT';
+			const transaction = $dotApi.tx.ChildBounties.close_child_bounty({
+				child_bounty_id: childBounty.id,
+				parent_bounty_id: childBounty.parentBounty
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
 		} catch (e) {
 			console.error(e);
 			fee = '-';
@@ -128,7 +73,7 @@
 	</section>
 
 	<button
-		on:click={acceptCuratorRule}
+		on:click={submit}
 		disabled={!isToggled}
 		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {`${!isToggled ? 'button-popup' : 'cursor-allowed'}`}">SIGN</button

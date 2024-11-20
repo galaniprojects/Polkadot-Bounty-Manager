@@ -1,24 +1,14 @@
 <script lang="ts">
-	import {
-		convertDotToPlanck,
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi,
-		isValidAddress
-	} from '../../../../utils/polkadot';
+	import { convertDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
+	import { showErrorDialog, showLoadingDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isInteger } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
+	import { MultiAddress } from '@polkadot-api/descriptors';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -34,99 +24,83 @@
 	async function submit() {
 		open = false;
 		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			if (!isValidAddress(beneficiary)) {
-				showErrorDialog('Curator address is invalid');
-				return;
-			}
-
-			if (!isInteger(curatorFee)) {
-				showErrorDialog('Curator fee value is invalid');
-				return;
-			}
-
-			const api = await getApi();
-			let tx1 = api.tx.childBounties.proposeCurator(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address,
-				convertDotToPlanck(BigInt(curatorFee))
-			);
-
-			let tx2 = api.tx.childBounties.acceptCurator(childBounty.parentBounty, childBounty.id);
-
-			let tx3 = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				beneficiary
-			);
-
-			let tx4 = api.tx.childBounties.claimChildBounty(childBounty.parentBounty, childBounty.id);
-
-			let batch = api.tx.utility.batchAll([tx1, tx2, tx3, tx4]);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(api, batch, $activeAccount);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			// We don't get transaction result using Multix.
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				//todo show another success screen.
-
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
+		if (!$activeAccount) {
+			showErrorDialog('Wallet is not connected');
+			return;
 		}
-	}
+		if (!isValidAddress(beneficiary)) {
+			showErrorDialog('Curator address is invalid');
+			return;
+		}
 
+		if (!isInteger(curatorFee)) {
+			showErrorDialog('Curator fee value is invalid');
+			return;
+		}
+
+		const tx1 = $dotApi.tx.ChildBounties.propose_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			curator: MultiAddress.Id($activeAccount.address),
+			fee: convertDotToPlanck(BigInt(curatorFee))
+		});
+
+		const tx2 = $dotApi.tx.ChildBounties.accept_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id
+		});
+
+		const tx3 = $dotApi.tx.ChildBounties.award_child_bounty({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			beneficiary: MultiAddress.Id(beneficiary)
+		});
+
+		const tx4 = $dotApi.tx.ChildBounties.claim_child_bounty({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		});
+
+		const batch = $dotApi.tx.Utility.batch_all({
+			calls: [tx1.decodedCall, tx2.decodedCall, tx3.decodedCall, tx4.decodedCall]
+		});
+
+		await submitTransaction(batch);
+	}
+	//
 	async function calculateFee() {
 		if (!$activeAccount) {
 			fee = '-';
 			return;
 		}
 		try {
-			const api = await getApi();
+			const tx1 = $dotApi.tx.ChildBounties.propose_curator({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id,
+				curator: MultiAddress.Id($activeAccount.address),
+				fee: convertDotToPlanck(BigInt(curatorFee))
+			});
 
-			let tx1 = api.tx.childBounties.proposeCurator(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address,
-				convertDotToPlanck(BigInt(60))
-			);
+			const tx2 = $dotApi.tx.ChildBounties.accept_curator({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id
+			});
 
-			let tx2 = api.tx.childBounties.acceptCurator(childBounty.parentBounty, childBounty.id);
+			const tx3 = $dotApi.tx.ChildBounties.award_child_bounty({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id,
+				beneficiary: MultiAddress.Id($activeAccount.address)
+			});
 
-			let tx3 = api.tx.childBounties.awardChildBounty(
-				childBounty.parentBounty,
-				childBounty.id,
-				$activeAccount.address
-			);
+			const tx4 = $dotApi.tx.ChildBounties.claim_child_bounty({
+				child_bounty_id: childBounty.id,
+				parent_bounty_id: childBounty.parentBounty
+			});
 
-			let tx4 = api.tx.childBounties.claimChildBounty(childBounty.parentBounty, childBounty.id);
-
-			let batch = api.tx.utility.batchAll([tx1, tx2, tx3, tx4]);
-			let observableFee = batch.paymentInfo($activeAccount.address);
-
-			const paymentInfo = await firstValueFrom(observableFee);
-			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			const batch = $dotApi.tx.Utility.batch_all({
+				calls: [tx1.decodedCall, tx2.decodedCall, tx3.decodedCall, tx4.decodedCall]
+			});
+			fee = await calculateTransactionFee(batch);
 		} catch (e) {
 			console.error(e);
 			fee = '--';

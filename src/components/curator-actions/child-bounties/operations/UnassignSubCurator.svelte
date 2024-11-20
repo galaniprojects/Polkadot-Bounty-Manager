@@ -1,21 +1,10 @@
 <script lang="ts">
-	import {
-		convertPlanckToDot,
-		dryRunAndSubmitTransaction,
-		getApi
-	} from '../../../../utils/polkadot';
-	import { firstValueFrom } from 'rxjs';
-	import { activeAccount } from '../../../../stores';
+	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import {
-		showErrorDialog,
-		showLoadingDialog,
-		showSuccessDialog
-	} from '../../../../utils/loading-screen';
-	import { WALLET_CONNECT_SOURCE } from '../../../../utils/WcSigner';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
 	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
+	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -30,63 +19,20 @@
 
 	async function unassignSubCurator() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
-		try {
-			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
-				return;
-			}
-
-			const api = await getApi();
-
-			let transaction = api.tx.childBounties.unassignCurator(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-
-			const { errorMessage, result } = await dryRunAndSubmitTransaction(
-				api,
-				transaction,
-				$activeAccount
-			);
-
-			if (errorMessage) {
-				showErrorDialog(errorMessage);
-				return;
-			}
-
-			if ($activeAccount.meta.source === WALLET_CONNECT_SOURCE) {
-				showSuccessDialog('Continue on Multix', 'Transaction was created and sent to Multix');
-				return;
-			}
-
-			if (result == undefined) {
-				showErrorDialog('Internal error');
-				return;
-			}
-
-			showSuccessDialog('Submitting Transaction', 'Operation Success');
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`${e}`);
-		}
+		const transaction = $dotApi.tx.ChildBounties.unassign_curator({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		});
+		await submitTransaction(transaction);
 	}
 
 	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
 		try {
-			const api = await getApi();
-			let transaction = api.tx.childBounties.unassignCurator(
-				childBounty.parentBounty,
-				childBounty.id
-			);
-			let observableFee = transaction.paymentInfo($activeAccount.address);
-
-			const paymentInfo = await firstValueFrom(observableFee);
-			fee = convertPlanckToDot(paymentInfo.partialFee.toNumber()).toString() + ' DOT';
+			const transaction = $dotApi.tx.ChildBounties.unassign_curator({
+				child_bounty_id: childBounty.id,
+				parent_bounty_id: childBounty.parentBounty
+			});
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
 		} catch (e) {
 			console.error(e);
 			fee = '--';

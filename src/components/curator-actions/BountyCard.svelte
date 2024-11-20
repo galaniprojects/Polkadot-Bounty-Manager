@@ -34,7 +34,11 @@
 					return response.json();
 				})
 				.then(async (data) => {
-					description = await parse(data.content);
+					try {
+						description = await parse(data.content);
+					} catch {
+						console.error('no description found, skip.');
+					}
 				});
 		} catch {
 			description = undefined;
@@ -83,8 +87,8 @@
 							</div>
 						{/if}
 					</section>
-					<div class="flex justify-center space-x-2.5 lg:mr-12 2xl:mr-44">
-						<ExternalLinks bountyId={bounty.id} />
+					<div class="flex justify-center lg:mr-12 2xl:mr-44">
+						<ExternalLinks dimension={6} bountyId={bounty.id} />
 					</div>
 				</section>
 				<section class="flex-col lg:flex lg:flex-row lg:justify-between">
@@ -156,8 +160,8 @@
 							</section>
 						{/if}
 					</div>
-					<div class="flex justify-center items-center space-x-5">
-						<ExternalLinks bountyId={bounty.id} />
+					<div class="flex justify-center items-center">
+						<ExternalLinks dimension={10} bountyId={bounty.id} />
 					</div>
 				</div>
 				<div class="flex justify-center items-center">

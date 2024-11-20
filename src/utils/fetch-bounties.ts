@@ -1,32 +1,26 @@
-import { bounties } from '../stores';
+import { bounties, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
-import { getApi } from './polkadot';
-import type { Bounty, BountyRaw } from '../types/bounty';
-import { firstValueFrom } from 'rxjs';
+import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty } from './common';
-import type { ChildBounty, ChildBountyRaw } from '../types/child-bounty';
+import type { ChildBounty } from '../types/child-bounty';
 import { SetActiveAccountBounties } from './bounties';
+import { get } from 'svelte/store';
 
 export async function fetchBountiesAndChildBounties(showProgress = true) {
 	if (showProgress) {
 		showLoadingDialog('Loading...');
 	}
+	const api = get(dotApi);
 	try {
 		const parsedBounties = await fetchBountiesAndDescription();
-
-		const api = await getApi();
-
 		// Query child bounties.
 		const childBounties: ChildBounty[] = [];
-		const unparsedChildBounties = await firstValueFrom(
-			api.query.childBounties.childBounties.entries()
-		);
+
+		const unparsedChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
 
 		for (const childBounty of unparsedChildBounties) {
-			const id = Number((childBounty[0].toHuman()! as string[])[1].replaceAll(',', ''));
-			childBounties.push(
-				await parseChildBounty(childBounty[1].toHuman() as unknown as ChildBountyRaw, id)
-			);
+			const id = childBounty.keyArgs[1];
+			childBounties.push(await parseChildBounty(childBounty.value, id));
 		}
 
 		childBounties.sort((cb1, cb2) => {
@@ -45,12 +39,11 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		}
 
 		// Query child bounty description.
-		const childBountiesDescriptions = await firstValueFrom(
-			api.query.childBounties.childBountyDescriptions.entries()
-		);
+		const childBountiesDescriptions =
+			await api.query.ChildBounties.ChildBountyDescriptions.getEntries();
 		for (const desc of childBountiesDescriptions) {
-			const index = Number((desc[0].toHuman()! as string[])[0].replaceAll(',', ''));
-			const description = desc[1].toHuman() as string;
+			const index = desc.keyArgs[0];
+			const description = desc.value.asText();
 			const childBounty = childBounties.find((childBounty) => childBounty.id == index);
 			if (childBounty) {
 				childBounty.description = description;
@@ -72,15 +65,13 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 }
 
 async function fetchBountiesAndDescription(): Promise<Bounty[]> {
-	const api = await getApi();
 	const parsedBounties: Bounty[] = [];
 
-	const unparsedBounties = await firstValueFrom(api.query.bounties.bounties.entries());
+	const api = get(dotApi);
+	const unparsedBounties = await api.query.Bounties.Bounties.getEntries();
 	for (const unparsedBounty of unparsedBounties) {
-		const index = Number((unparsedBounty[0].toHuman()! as string[])[0].replaceAll(',', ''));
-		parsedBounties.push(
-			await parseBounty(unparsedBounty[1].toHuman() as unknown as BountyRaw, index)
-		);
+		const index = unparsedBounty.keyArgs[0];
+		parsedBounties.push(await parseBounty(unparsedBounty.value, index));
 	}
 
 	parsedBounties.sort((bounty1, bounty2) => {
@@ -92,12 +83,10 @@ async function fetchBountiesAndDescription(): Promise<Bounty[]> {
 	});
 
 	// Query bounty description.
-	const bountiesDescriptions = await firstValueFrom(
-		api.query.bounties.bountyDescriptions.entries()
-	);
+	const bountiesDescriptions = await api.query.Bounties.BountyDescriptions.getEntries();
 	for (const desc of bountiesDescriptions) {
-		const index = Number((desc[0].toHuman()! as string[])[0].replaceAll(',', ''));
-		const description = desc[1].toHuman() as string;
+		const index = desc.keyArgs[0];
+		const description = desc.value.asText();
 		const bounty = parsedBounties.find((bounty) => bounty.id == index);
 		if (bounty) {
 			bounty.description = description;

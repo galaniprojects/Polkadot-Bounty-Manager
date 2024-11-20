@@ -37,8 +37,12 @@
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
 				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && $activeAccount && bounty.curator === $activeAccount.address)}
+					<!-- {#if bounty.childBounties.length > 0} -->
 					<div
-						class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center lg:py-3"
+						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
+							.childBounties.length > 0
+							? 'lg:mr-0'
+							: '2xl:mr-36'}"
 					>
 						<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
 						<button

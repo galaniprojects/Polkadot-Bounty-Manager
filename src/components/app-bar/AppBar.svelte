@@ -1,14 +1,25 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { activeAccount, activeAccountBounties } from '../../stores';
+	import { onDestroy, onMount } from 'svelte';
+	import {
+		walletConnect as wcConnection,
+		activeAccount,
+		injectedPolkadotAccount,
+		activeAccountBounties
+	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svelte';
 	import LoginDialog from './LoginDialog.svelte';
 	import { SetActiveAccountBounties } from '../../utils/bounties';
-	import { web3Enable } from '@polkadot/extension-dapp';
+	import {
+		connectInjectedExtension,
+		type InjectedExtension,
+		type InjectedPolkadotAccount
+	} from 'polkadot-api/pjs-signer';
+	import type { AccountInfo } from '../../types/account';
+	import { convertToPolkadotAddress } from '../../utils/polkadot';
 
 	let loginDialogOpen = false;
 
@@ -16,13 +27,37 @@
 		loginDialogOpen = true;
 	}
 
+	onDestroy(async () => {
+		if ($wcConnection) {
+			await $wcConnection.disconnect();
+		}
+	});
+
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
 		let account = sessionStorage.getItem('account');
 
 		if (account) {
+			let parsedAccount: AccountInfo = JSON.parse(account);
 			activeAccount.set(JSON.parse(account));
-			await web3Enable('Bounty Manager');
+			const selectedExtension: InjectedExtension = await connectInjectedExtension(
+				parsedAccount.source
+			);
+
+			// Restore the injected account.
+			const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
+			let injectedAccounts = accounts.filter((acc) => {
+				return convertToPolkadotAddress(acc.address) === parsedAccount.address;
+			});
+			console.log(injectedAccounts);
+			if (injectedAccounts.length !== 1) {
+				activeAccount.set(undefined);
+				console.error('something went wrong while trying to restore session.');
+				return;
+			} else {
+				injectedPolkadotAccount.set(injectedAccounts[0]);
+			}
+			// Set the relevant bounties for the signed in account.
 			SetActiveAccountBounties();
 		}
 	});
@@ -57,7 +92,7 @@
 					<div class="w-6 h-6">
 						<PolkadotIcon address={$activeAccount.address} />
 					</div>
-					{$activeAccount.meta.name || 'Account'}
+					{$activeAccount.name || 'Account'}
 					<span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
 				</div>
 				<button on:click={() => logOut()} class="mt-2">
