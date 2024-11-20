@@ -72,7 +72,14 @@
 					<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 					<div class="flex justify-between">
 						<p class="mt-2 lg:hidden">by status</p>
-						<div><DropdownMenu bind:selectedItem={selectedFilter} items={filters} /></div>
+						<div>
+							<DropdownMenu
+								bind:selectedItem={selectedFilter}
+								items={filters}
+								width="w-44 lg:w-32 2xl:w-36"
+								truncate={true}
+							/>
+						</div>
 					</div>
 				</div>
 			{/if}

@@ -1,8 +1,25 @@
 <script lang="ts" context="module">
 	export let treasuryTracks = [
-		{ origin: GovernanceOrigin.SmallSpender(), display: 'Small Spender' },
-		{ origin: GovernanceOrigin.MediumSpender(), display: 'Medium Spender' },
-		{ origin: GovernanceOrigin.BigSpender(), display: 'Big Spender' }
+		{
+			origin: GovernanceOrigin.SmallSpender(),
+			toString: () => {
+				return 'Small Spender';
+			}
+		},
+		{
+			origin: GovernanceOrigin.MediumSpender(),
+			toString: () => {
+				return 'Medium Spender';
+			}
+		},
+		{
+			origin: GovernanceOrigin.BigSpender(),
+			display: 'Big Spender',
+
+			toString: () => {
+				return 'Big Spender';
+			}
+		}
 	];
 </script>
 
@@ -21,11 +38,12 @@
 	} from '@polkadot-api/descriptors';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
+	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let bountyInfo: BountyInfo;
 
 	let success = false;
-	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let selectedTreasuryTrack = treasuryTracks[0];
 	let fee = '-';
 	let deposit = '-';
 
@@ -41,11 +59,11 @@
 			return;
 		}
 		if (bountyInfo.value <= 10000n) {
-			selectedTreasuryTrack = treasuryTracks[0].origin;
+			selectedTreasuryTrack = treasuryTracks[0];
 		} else if (bountyInfo.value <= 100000n) {
-			selectedTreasuryTrack = treasuryTracks[1].origin;
+			selectedTreasuryTrack = treasuryTracks[1];
 		} else {
-			selectedTreasuryTrack = treasuryTracks[2].origin;
+			selectedTreasuryTrack = treasuryTracks[2];
 		}
 		await calculateFee();
 		await calculateDeposit();
@@ -88,7 +106,7 @@
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
 		return $dotApi.tx.Referenda.submit({
-			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack),
+			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
 			proposal: proposal,
 			enactment_moment: TraitsScheduleDispatchTime.After(1)
 		});
@@ -169,17 +187,14 @@
 			<div>
 				<div class="space-y-1 sm:space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
-					<select
-						class="border w-full md:w-1/3 rounded-md h-7 px-1 pt-1"
-						bind:value={selectedTreasuryTrack}
-						name="spenders"
-						id="spenders"
-					>
-						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
-						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
-						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
-					</select>
-					<p class="text-xs mt-1">(preselected based on Bounty value)</p>
+					<div class="border">
+						<DropdownMenu
+							bind:selectedItem={selectedTreasuryTrack}
+							items={treasuryTracks}
+							width="w-56 lg:w-80"
+						/>
+					</div>
+					<p class="text-xs">(preselected based on Bounty value)</p>
 				</div>
 
 				<hr class="border-white my-5 sm:my-10 w-full md:w-1/3" />
