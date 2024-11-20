@@ -1,8 +1,25 @@
 <script lang="ts" context="module">
 	export let treasuryTracks = [
-		{ origin: GovernanceOrigin.SmallSpender(), display: 'Small Spender' },
-		{ origin: GovernanceOrigin.MediumSpender(), display: 'Medium Spender' },
-		{ origin: GovernanceOrigin.BigSpender(), display: 'Big Spender' }
+		{
+			origin: GovernanceOrigin.SmallSpender(),
+			toString: () => {
+				return 'Small Spender';
+			}
+		},
+		{
+			origin: GovernanceOrigin.MediumSpender(),
+			toString: () => {
+				return 'Medium Spender';
+			}
+		},
+		{
+			origin: GovernanceOrigin.BigSpender(),
+			display: 'Big Spender',
+
+			toString: () => {
+				return 'Big Spender';
+			}
+		}
 	];
 </script>
 
@@ -21,12 +38,12 @@
 	} from '@polkadot-api/descriptors';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
+	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let bountyInfo: BountyInfo;
 
 	let success = false;
-	let selectedTreasuryTrack = treasuryTracks[0].origin;
-	let selectedTreasuryTrackDisplay = treasuryTracks[0].display;
+	let selectedTreasuryTrack = treasuryTracks[0];
 	let fee = '-';
 	let deposit = '-';
 
@@ -42,11 +59,11 @@
 			return;
 		}
 		if (bountyInfo.value <= 10000n) {
-			selectedTreasuryTrack = treasuryTracks[0].origin;
+			selectedTreasuryTrack = treasuryTracks[0];
 		} else if (bountyInfo.value <= 100000n) {
-			selectedTreasuryTrack = treasuryTracks[1].origin;
+			selectedTreasuryTrack = treasuryTracks[1];
 		} else {
-			selectedTreasuryTrack = treasuryTracks[2].origin;
+			selectedTreasuryTrack = treasuryTracks[2];
 		}
 		await calculateFee();
 		await calculateDeposit();
@@ -89,7 +106,7 @@
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
 		return $dotApi.tx.Referenda.submit({
-			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack),
+			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
 			proposal: proposal,
 			enactment_moment: TraitsScheduleDispatchTime.After(1)
 		});
@@ -120,10 +137,6 @@
 			deposit = '-';
 		}
 	}
-
-	$: selectedTreasuryTrack =
-		treasuryTracks.find((track) => track.display === selectedTreasuryTrackDisplay)?.origin ||
-		treasuryTracks[0].origin;
 </script>
 
 <div>
@@ -176,8 +189,8 @@
 					<p class="text-xs mb-1">Treasury track</p>
 					<div class="border">
 						<DropdownMenu
-							bind:selectedItem={selectedTreasuryTrackDisplay}
-							items={treasuryTracks.map((t) => t.display)}
+							bind:selectedItem={selectedTreasuryTrack}
+							items={treasuryTracks}
 							width="w-56 lg:w-80"
 						/>
 					</div>

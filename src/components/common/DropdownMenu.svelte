@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
 
-	export let items: string[];
-	export let selectedItem: string;
+	interface HasToString {
+		toString: () => string;
+	}
+
+	export let items: Array<HasToString>;
+	export let selectedItem: HasToString;
 	export let width: string;
 	export let truncate: boolean = false;
 
@@ -19,7 +23,7 @@
 		}
 	}
 
-	function selectItem(item: string) {
+	function selectItem(item: HasToString) {
 		selectedItem = item;
 		dropdownOpen = false;
 		window.removeEventListener('click', closeDropdownClickOutside);
@@ -47,7 +51,7 @@
 			aria-expanded="true"
 			aria-haspopup="true"
 		>
-			{truncate ? truncateString(selectedItem, 9) : selectedItem}
+			{truncate ? truncateString(selectedItem.toString(), 9) : selectedItem.toString()}
 
 			<button class="material-symbols-outlined text-accent">
 				{#if dropdownOpen}
