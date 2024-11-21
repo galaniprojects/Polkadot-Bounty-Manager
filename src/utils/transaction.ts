@@ -18,14 +18,14 @@ export async function submitTransaction(
 		return;
 	}
 	if (account.source === SupportedSources.WalletConnect) {
+
 		const signer = get(walletConnectPolkadotSigner);
 		if (signer) {
 			try {
 				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					`Submitting transaction failed. If you are using Multix, ignore this error and continue on Multix. \n See console for error details. \n` +
-						readableError(e)
+					readableError(e) + `\n If you are using Multix, ignore this error and continue on Multix`
 				);
 				console.error(e);
 			}
@@ -70,6 +70,9 @@ async function safeSignAndSubmit(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readableError(error: any): string {
+	if (error.message) {
+		error = JSON.parse(error.message);
+	}
 	if (error.type) {
 		let formatted = error.type;
 
@@ -100,10 +103,7 @@ export async function calculateTransactionFee(
 
 	if (account) {
 		const a = await transaction.getPaymentInfo(account.address);
-		console.log(a);
 		const x = String(convertPlanckToDot(a.partial_fee));
-
-		console.log(x);
 		return x;
 	}
 	throw new Error('No active account');
