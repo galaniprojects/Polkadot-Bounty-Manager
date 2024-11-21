@@ -44,6 +44,7 @@
 
 	async function changeEndpoint() {
 		nodeEndpoint.set(nodeEndpointInput);
+		sessionStorage.setItem('node', nodeEndpointInput);
 		dotApi.set(createTypedApi(nodeEndpointInput));
 	}
 </script>
