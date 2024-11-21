@@ -148,13 +148,14 @@
 
 	function selectAccount(account: AccountInfo) {
 		activeAccount.set(account);
+		sessionStorage.setItem('account', JSON.stringify(account));
 
-		if (account.source !== SupportedSources.WalletConnect) {
-			sessionStorage.setItem('account', JSON.stringify(account));
-		} else {
-			if ('signer' in account && account.signer) {
-				walletConnectPolkadotSigner.set(account.signer as PolkadotSigner);
-			}
+		if (
+			account.source === SupportedSources.WalletConnect &&
+			'signer' in account &&
+			account.signer
+		) {
+			walletConnectPolkadotSigner.set(account.signer as PolkadotSigner);
 		}
 
 		if (injectedAccounts) {

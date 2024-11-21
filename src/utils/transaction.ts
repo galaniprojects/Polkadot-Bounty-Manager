@@ -18,19 +18,19 @@ export async function submitTransaction(
 		return;
 	}
 	if (account.source === SupportedSources.WalletConnect) {
-
 		const signer = get(walletConnectPolkadotSigner);
 		if (signer) {
 			try {
 				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					readableError(e) + `\n If you are using Multix, ignore this error and continue on Multix`
+					readableError(e) +
+						`. Note: If you are using Multix, you may ignore this error and continue on Multix.`
 				);
 				console.error(e);
 			}
 		} else {
-			showErrorDialog('Internal error, wallet connect polkadot signer not set!');
+			showErrorDialog('Internal error, wallet connect polkadot signer not set.');
 		}
 	} else {
 		const injectedAccount = get(injectedPolkadotAccount);
@@ -102,9 +102,8 @@ export async function calculateTransactionFee(
 	}
 
 	if (account) {
-		const a = await transaction.getPaymentInfo(account.address);
-		const x = String(convertPlanckToDot(a.partial_fee));
-		return x;
+		const paymentInfo = await transaction.getPaymentInfo(account.address);
+		return String(convertPlanckToDot(paymentInfo.partial_fee));
 	}
 	throw new Error('No active account');
 }

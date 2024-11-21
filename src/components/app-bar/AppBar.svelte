@@ -5,7 +5,9 @@
 		walletConnect as wcConnection,
 		activeAccount,
 		injectedPolkadotAccount,
-		activeAccountBounties
+		activeAccountBounties,
+		walletConnectPolkadotSigner,
+		walletConnect
 	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
@@ -16,10 +18,12 @@
 	import {
 		connectInjectedExtension,
 		type InjectedExtension,
-		type InjectedPolkadotAccount
+		type InjectedPolkadotAccount,
+		type PolkadotSigner
 	} from 'polkadot-api/pjs-signer';
-	import type { AccountInfo } from '../../types/account';
+	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { convertToPolkadotAddress } from '../../utils/polkadot';
+	import { createWCConnection } from './wallet-connect';
 
 	let loginDialogOpen = false;
 
@@ -40,23 +44,43 @@
 		if (account) {
 			let parsedAccount: AccountInfo = JSON.parse(account);
 			activeAccount.set(JSON.parse(account));
-			const selectedExtension: InjectedExtension = await connectInjectedExtension(
-				parsedAccount.source
-			);
 
-			// Restore the injected account.
-			const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
-			let injectedAccounts = accounts.filter((acc) => {
-				return convertToPolkadotAddress(acc.address) === parsedAccount.address;
-			});
-			console.log(injectedAccounts);
-			if (injectedAccounts.length !== 1) {
-				activeAccount.set(undefined);
-				console.error('something went wrong while trying to restore session.');
-				return;
+			if (parsedAccount.source === SupportedSources.WalletConnect) {
+				// Handle WalletConnect case.
+				let connection = createWCConnection();
+				await connection.initialize();
+				walletConnect.set(connection);
+
+				let accounts = await connection.getAccounts();
+				let filteredAccounts = accounts.filter((acc) => {
+					const address = acc.id.split(':')[2];
+					return convertToPolkadotAddress(address) === parsedAccount.address;
+				});
+				if (filteredAccounts.length !== 1) {
+					activeAccount.set(undefined);
+					sessionStorage.clear();
+				} else {
+					walletConnectPolkadotSigner.set(filteredAccounts[0].polkadotSigner as PolkadotSigner);
+				}
 			} else {
-				injectedPolkadotAccount.set(injectedAccounts[0]);
+				// Handle extension case.
+				const selectedExtension: InjectedExtension = await connectInjectedExtension(
+					parsedAccount.source
+				);
+				const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
+				let injectedAccounts = accounts.filter((acc) => {
+					return convertToPolkadotAddress(acc.address) === parsedAccount.address;
+				});
+				console.log(injectedAccounts);
+				if (injectedAccounts.length !== 1) {
+					activeAccount.set(undefined);
+					console.error('something went wrong while trying to restore session.');
+					return;
+				} else {
+					injectedPolkadotAccount.set(injectedAccounts[0]);
+				}
 			}
+
 			// Set the relevant bounties for the signed in account.
 			SetActiveAccountBounties();
 		}
@@ -66,6 +90,7 @@
 		activeAccount.set(undefined);
 		sessionStorage.clear();
 		activeAccountBounties.set([]);
+		if ($wcConnection) $wcConnection.disconnect();
 	}
 </script>
 
