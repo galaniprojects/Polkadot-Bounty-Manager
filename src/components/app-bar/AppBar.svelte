@@ -71,7 +71,6 @@
 				let injectedAccounts = accounts.filter((acc) => {
 					return convertToPolkadotAddress(acc.address) === parsedAccount.address;
 				});
-				console.log(injectedAccounts);
 				if (injectedAccounts.length !== 1) {
 					activeAccount.set(undefined);
 					console.error('something went wrong while trying to restore session.');
