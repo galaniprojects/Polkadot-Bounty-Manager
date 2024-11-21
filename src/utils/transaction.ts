@@ -24,13 +24,13 @@ export async function submitTransaction(
 				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					`Submitting transaction failed. If you are using Multix, ignore this error and continue on Multix. \n See console for error details. \n` +
-						readableError(e)
+					readableError(e) +
+						`. Note: If you are using Multix, you may ignore this error and continue on Multix.`
 				);
 				console.error(e);
 			}
 		} else {
-			showErrorDialog('Internal error, wallet connect polkadot signer not set!');
+			showErrorDialog('Internal error, wallet connect polkadot signer not set.');
 		}
 	} else {
 		const injectedAccount = get(injectedPolkadotAccount);
@@ -70,6 +70,13 @@ async function safeSignAndSubmit(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readableError(error: any): string {
+	if (error.message) {
+		try {
+			error = JSON.parse(error.message);
+		} catch {
+			error = error.message;
+		}
+	}
 	if (error.type) {
 		let formatted = error.type;
 
@@ -99,12 +106,8 @@ export async function calculateTransactionFee(
 	}
 
 	if (account) {
-		const a = await transaction.getPaymentInfo(account.address);
-		console.log(a);
-		const x = String(convertPlanckToDot(a.partial_fee));
-
-		console.log(x);
-		return x;
+		const paymentInfo = await transaction.getPaymentInfo(account.address);
+		return String(convertPlanckToDot(paymentInfo.partial_fee));
 	}
 	throw new Error('No active account');
 }
