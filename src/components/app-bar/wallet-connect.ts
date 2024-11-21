@@ -40,8 +40,8 @@ export function createWCConnection() {
 			}
 		},
 		chainIds: [
-			// 'polkadot:91b171bb158e2d3848fa23a9f1c25182', //polkadot
-			'polkadot:77afd6190f1554ad45fd0d31aee62aac' // Paseo
+			'polkadot:91b171bb158e2d3848fa23a9f1c25182' //polkadot
+			// 'polkadot:77afd6190f1554ad45fd0d31aee62aac' // Paseo
 		]
 	});
 }
