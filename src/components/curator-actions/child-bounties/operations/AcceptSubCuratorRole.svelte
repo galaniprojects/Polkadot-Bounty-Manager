@@ -34,7 +34,7 @@
 				parent_bounty_id: childBounty.parentBounty,
 				child_bounty_id: childBounty.id
 			});
-			fee = (await calculateTransactionFee(transaction)) + ' Dot';
+			fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			if (parentCurator && parentCurator === childBounty.curator) {
 				deposit = '0';
 			} else {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { convertPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
-	import { dotApi } from '../../../../stores';
+	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
@@ -34,11 +34,15 @@
 	}
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '--';
+			return;
+		}
 		try {
 			const transaction = $dotApi.tx.ChildBounties.award_child_bounty({
 				parent_bounty_id: childBounty.parentBounty,
 				child_bounty_id: childBounty.id,
-				beneficiary: MultiAddress.Id(beneficiary)
+				beneficiary: MultiAddress.Id($activeAccount.address)
 			});
 			fee = await calculateTransactionFee(transaction);
 		} catch (e) {

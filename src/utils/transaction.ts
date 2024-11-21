@@ -24,8 +24,8 @@ export async function submitTransaction(
 				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					readableError(e) +
-						`. Note: If you are using Multix, you may ignore this error and continue on Multix.`
+					`Note: Please ignore this message if using Multix and proceed to Multix.` +
+						readableError(e)
 				);
 				console.error(e);
 			}

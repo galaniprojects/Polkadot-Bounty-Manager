@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { convertDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
-	import { dotApi } from '../../../../stores';
+	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
@@ -43,11 +43,15 @@
 	}
 
 	async function calculateFee() {
+		if (!$activeAccount) {
+			fee = '--';
+			return;
+		}
 		try {
 			const transaction = $dotApi.tx.ChildBounties.propose_curator({
 				parent_bounty_id: childBounty.parentBounty,
 				child_bounty_id: childBounty.id,
-				curator: MultiAddress.Id(curatorAddress),
+				curator: MultiAddress.Id($activeAccount.address),
 				fee: convertDotToPlanck(BigInt(curatorFee))
 			});
 			fee = (await calculateTransactionFee(transaction)) + ' DOT';
