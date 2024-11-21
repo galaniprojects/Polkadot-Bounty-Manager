@@ -71,7 +71,11 @@ async function safeSignAndSubmit(
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function readableError(error: any): string {
 	if (error.message) {
+try{
 		error = JSON.parse(error.message);
+} catch {
+error = error.message
+}
 	}
 	if (error.type) {
 		let formatted = error.type;
