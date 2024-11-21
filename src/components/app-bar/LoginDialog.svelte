@@ -163,9 +163,9 @@
 				return convertToPolkadotAddress(acc.address) === account.address;
 			});
 			injectedPolkadotAccount.set(injectedAccount[0]);
-
-			SetActiveAccountBounties();
 		}
+
+		SetActiveAccountBounties();
 		open = false;
 	}
 
