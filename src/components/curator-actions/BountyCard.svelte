@@ -8,10 +8,9 @@
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
-	import { activeAccount, showAllCuratorOptions } from '../../stores';
+	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
 	import AwardBounty from './operations/AwardBounty.svelte';
-	import { formatDate } from '../../utils/common';
-	import { formatPlanckToDot } from '../../utils/polkadot';
+	import { formatDate, isInteger } from '../../utils/common';
 
 	export let bounty: Bounty;
 
@@ -19,6 +18,7 @@
 	export let expanded: boolean;
 
 	let description: string | undefined;
+	let remainingBalance: string | undefined;
 	let awardBountyDialogOpen = false;
 
 	$: if (expanded) {
@@ -38,6 +38,19 @@
 						description = await parse(data.content);
 					} catch {
 						console.error('no description found, skip.');
+					}
+					try {
+						const fundsAddress = data.onchainData.address;
+						const account = await $dotApi.query.System.Account.getValue(fundsAddress);
+						const free = convertPlanckToDot(account.data.free);
+						if (isInteger(String(free))) {
+							remainingBalance = String(free);
+						} else {
+							remainingBalance = free.toFixed(4);
+						}
+						// remainingBalance = c.toFixed(4);
+					} catch {
+						console.error('remaining balance error');
 					}
 				});
 		} catch {
@@ -69,6 +82,12 @@
 							<p class="text-xs">Value</p>
 							<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 						</div>
+						{#if remainingBalance}
+							<div class="lg:w-[250px] xl:w-[490px]">
+								<p class="text-xs">Remaining Balance</p>
+								<p class="text-2xl"><span>{remainingBalance}</span> DOT</p>
+							</div>
+						{/if}
 
 						<div class="mt-4 lg:mt-0 lg:w-32 xl:w-40">
 							<p class="text-xs">Curator Fee</p>
