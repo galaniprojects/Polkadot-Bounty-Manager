@@ -48,7 +48,6 @@
 						} else {
 							remainingBalance = free.toFixed(4);
 						}
-						// remainingBalance = c.toFixed(4);
 					} catch {
 						console.error('remaining balance error');
 					}
