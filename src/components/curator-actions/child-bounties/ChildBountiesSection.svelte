@@ -10,7 +10,7 @@
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let createChildBountyOpen = false;
-	let selectedFilter: ChildBountyStatus | 'all' = 'all';
+	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
 
 	$: {
 		filteredChildBounties = bounty.childBounties.filter((childBounty) => {

@@ -22,7 +22,6 @@ export interface ChildBounty {
 	dateOfPayout?: string;
 }
 
-
 export enum ChildBountyStatus {
 	Added = 'added',
 	Active = 'active',
