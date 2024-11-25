@@ -5,6 +5,7 @@ import { SupportedSources } from '../types/account';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
 import { convertPlanckToDot } from './polkadot';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
+import { truncateString } from './common';
 
 export async function submitTransaction(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +26,7 @@ export async function submitTransaction(
 			} catch (e) {
 				showErrorDialog(
 					`Note: Please ignore this message if using Multix and proceed to Multix.` +
-						readableError(e)
+					readableError(e)
 				);
 				console.error(e);
 			}
@@ -90,12 +91,18 @@ function readableError(error: any): string {
 			}
 		}
 		return formatted;
-	} else {
+	} 
+		if (typeof error === 'string') {
+			return error;
+		}
 		console.error(error);
-		return 'Error was logged to the console.';
-	}
+		return 'Error was logged to the console. (' + truncateString(JSON.stringify(error), 150) + ')';
+
 }
 
+/**
+ * Calculates a transaction fee, returns an error if calculating fee fails.
+ **/
 export async function calculateTransactionFee(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>
@@ -104,10 +111,6 @@ export async function calculateTransactionFee(
 	if (!account) {
 		throw new Error('can not calculate fee, account is not set');
 	}
-
-	if (account) {
-		const paymentInfo = await transaction.getPaymentInfo(account.address);
-		return convertPlanckToDot(paymentInfo.partial_fee).toString();
-	}
-	throw new Error('No active account');
+	const paymentInfo = await transaction.getPaymentInfo(account.address);
+	return convertPlanckToDot(paymentInfo.partial_fee).toString();
 }
