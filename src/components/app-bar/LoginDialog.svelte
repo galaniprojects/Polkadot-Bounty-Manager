@@ -101,7 +101,7 @@
 					selectedSource = SupportedSources.WalletConnect;
 					break;
 				case 'Nova Wallet':
-					selectedSource = SupportedSources.PolkadotExtension; 
+					selectedSource = SupportedSources.PolkadotExtension;
 					break;
 				case 'Talisman':
 					selectedSource = SupportedSources.TalismanExtension;

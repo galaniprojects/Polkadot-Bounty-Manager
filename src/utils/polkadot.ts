@@ -19,7 +19,7 @@ export function convertPlanckToDot(value: bigint): bigint {
 	if (typeof value === 'number') {
 		value = BigInt(value);
 	}
-return value / BigInt(1e10);
+	return value / BigInt(1e10);
 }
 
 /**
