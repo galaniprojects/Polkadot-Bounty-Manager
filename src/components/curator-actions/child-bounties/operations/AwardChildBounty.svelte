@@ -62,7 +62,7 @@
 		</p>
 		<section>
 			<p class="text-xs">Child bounty value</p>
-			<p><span>{convertPlanckToDot(childBounty.value)}</span> DOT</p>
+			<p><span>{convertPlanckToDot(childBounty.value).toString()}</span> DOT</p>
 		</section>
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>

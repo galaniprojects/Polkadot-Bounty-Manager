@@ -5,12 +5,12 @@
 	 **/
 	export function calculateDeposit(fee: bigint): string {
 		let curatorFee = convertPlanckToDot(fee);
-		if (curatorFee < 20) {
+		if (curatorFee < BigInt(20)) {
 			return '10';
-		} else if (curatorFee > 400) {
+		} else if (curatorFee > BigInt(400)) {
 			return '200';
 		} else {
-			return String(convertPlanckToDot(fee / BigInt(2)));
+			return convertPlanckToDot(fee / BigInt(2)).toString();
 		}
 	}
 </script>

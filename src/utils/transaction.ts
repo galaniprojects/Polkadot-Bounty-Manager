@@ -107,7 +107,7 @@ export async function calculateTransactionFee(
 
 	if (account) {
 		const paymentInfo = await transaction.getPaymentInfo(account.address);
-		return String(convertPlanckToDot(paymentInfo.partial_fee));
+		return convertPlanckToDot(paymentInfo.partial_fee).toString();
 	}
 	throw new Error('No active account');
 }

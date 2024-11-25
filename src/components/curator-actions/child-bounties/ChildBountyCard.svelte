@@ -73,14 +73,14 @@
 				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
-						<p>{convertPlanckToDot(childBounty.value)} DOT</p>
+						<p>{convertPlanckToDot(childBounty.value).toString()} DOT</p>
 					</section>
 				</div>
 
 				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
-						<p>{convertPlanckToDot(childBounty.fee)} DOT</p>
+						<p>{convertPlanckToDot(childBounty.fee).toString()} DOT</p>
 					</section>
 					{#if childBounty.dateOfPayout}
 						<section class="lg:mt-3">
@@ -127,7 +127,7 @@
 			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
-					<p class="">{convertPlanckToDot(childBounty.fee)} DOT</p>
+					<p class="">{convertPlanckToDot(childBounty.fee).toString()} DOT</p>
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>

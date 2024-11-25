@@ -15,14 +15,11 @@ export function convertDotToPlanck(value: bigint): bigint {
 	return value * BigInt(1e10);
 }
 
-export function convertPlanckToDot(value: number | bigint): number {
-	if (typeof value === 'bigint') {
-		if (value > BigInt(Number.MAX_SAFE_INTEGER)) {
-			throw new Error('Converting Planck to Dot failed, value is too big.');
-		}
-		return Number(value) / 1e10;
+export function convertPlanckToDot(value: bigint): bigint {
+	if (typeof value === 'number') {
+		value = BigInt(value);
 	}
-	return value / 1e10;
+return value / BigInt(1e10);
 }
 
 /**

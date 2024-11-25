@@ -87,7 +87,7 @@
 	async function calculateDeposit() {
 		try {
 			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
-			deposit = convertPlanckToDot(base) + ' DOT';
+			deposit = convertPlanckToDot(base).toString() + ' DOT';
 		} catch {
 			deposit = '-';
 		}
