@@ -23,7 +23,7 @@
 	} from 'polkadot-api/pjs-signer';
 	import { SupportedSources, type AccountInfo } from '../../types/account';
 	import { convertToPolkadotAddress } from '../../utils/polkadot';
-	import { createWCConnection } from './wallet-connect';
+	import { createWCConnection } from '../../utils/wallet-connect';
 
 	let loginDialogOpen = false;
 

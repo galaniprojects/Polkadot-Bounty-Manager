@@ -1,7 +1,7 @@
 import { bounties, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
 import type { Bounty } from '../types/bounty';
-import { parseBounty, parseChildBounty } from './common';
+import { parseBounty, parseChildBounty } from './bounties';
 import type { ChildBounty } from '../types/child-bounty';
 import { SetActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';

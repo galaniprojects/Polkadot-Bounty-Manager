@@ -22,11 +22,6 @@ export interface ChildBounty {
 	dateOfPayout?: string;
 }
 
-export type ChildBountyStatusRaw =
-	| 'Added'
-	| { CuratorProposed: { curator: string } }
-	| { Active: { curator: string } }
-	| { PendingPayout: { curator: string; beneficiary: string; unlockAt: string } };
 
 export enum ChildBountyStatus {
 	Added = 'added',

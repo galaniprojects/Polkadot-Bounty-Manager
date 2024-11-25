@@ -57,7 +57,6 @@ export async function getCurrentBlock(): Promise<BlockInfo> {
 	} else {
 		const api = get(dotApi);
 		const info = {
-			//TODO: is this correct?
 			blockNumber: await api.query.System.Number.getValue(),
 			timestamp: Date.now()
 		};

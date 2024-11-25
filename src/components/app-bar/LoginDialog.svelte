@@ -16,7 +16,7 @@
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import { walletConnect } from './wallet-connect';
+	import { walletConnect } from '../../utils/wallet-connect';
 
 	import {
 		activeAccount,
@@ -101,7 +101,7 @@
 					selectedSource = SupportedSources.WalletConnect;
 					break;
 				case 'Nova Wallet':
-					selectedSource = SupportedSources.PolkadotExtension;
+					selectedSource = SupportedSources.PolkadotExtension; 
 					break;
 				case 'Talisman':
 					selectedSource = SupportedSources.TalismanExtension;
@@ -180,6 +180,7 @@
 	} else {
 		document.body.classList.remove('overflow-hidden');
 	}
+
 	onDestroy(() => {
 		document.body.classList.remove('overflow-hidden');
 	});
