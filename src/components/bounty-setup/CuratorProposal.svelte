@@ -15,11 +15,12 @@
 	} from '@polkadot-api/descriptors';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
+	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let bountyInfo: BountyInfo;
 	let curatorFee: string | undefined = undefined;
 	let curatorAddress: string | undefined;
-	let selectedTreasuryTrack = treasuryTracks[0].origin;
+	let selectedTreasuryTrack = treasuryTracks[0];
 	let step = 1;
 	let fee = '-';
 	let deposit = '-';
@@ -86,7 +87,7 @@
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
 		return $dotApi.tx.Referenda.submit({
-			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack),
+			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
 			proposal: proposal,
 			enactment_moment: TraitsScheduleDispatchTime.After(1)
 		});
@@ -200,17 +201,13 @@
 
 				<div class="mt-5 space-y-1 sm:space-y-3">
 					<p class="text-xs mb-1">Treasury track</p>
-					<select
-						class="border w-full md:w-1/4 rounded-md h-7 px-1 pt-1"
-						bind:value={selectedTreasuryTrack}
-						name="spenders"
-						id="spenders"
-						on:input={inputChange}
-					>
-						<option value={treasuryTracks[0].origin}>{treasuryTracks[0].display}</option>
-						<option value={treasuryTracks[1].origin}>{treasuryTracks[1].display}</option>
-						<option value={treasuryTracks[2].origin}>{treasuryTracks[2].display}</option>
-					</select>
+					<div class="border">
+						<DropdownMenu
+							bind:selectedItem={selectedTreasuryTrack}
+							items={treasuryTracks}
+							width="w-56 lg:w-80"
+						/>
+					</div>
 					<p class="text-xs mt-1">
 						(please select the same or higher treasury track that was used in the Bounty Approval
 						referendum)

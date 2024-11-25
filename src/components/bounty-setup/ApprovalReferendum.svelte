@@ -14,8 +14,6 @@
 		},
 		{
 			origin: GovernanceOrigin.BigSpender(),
-			display: 'Big Spender',
-
 			toString: () => {
 				return 'Big Spender';
 			}
