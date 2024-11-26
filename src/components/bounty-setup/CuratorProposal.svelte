@@ -2,7 +2,7 @@
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount, dotApi } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
-	import { convertDotToPlanck, convertPlanckToDot, isValidAddress } from '../../utils/polkadot';
+	import { convertDotToPlanck, formatPlanckToDot, isValidAddress } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
@@ -34,6 +34,7 @@
 			step = 2;
 		}
 	}
+
 	async function submit() {
 		if (!$activeAccount) {
 			showErrorDialog('Wallet is not connected');
@@ -51,20 +52,10 @@
 			return;
 		}
 
-		try {
-			if (!curatorFee) {
-				showErrorDialog('Invalid value of curator fee');
-				return;
-			}
-
-			const transaction = await createProposalTransaction();
-			const result = await submitTransaction(transaction);
-			if (result) {
-				step = 3;
-			}
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(`Something went wrong, ${e}`);
+		const transaction = await createProposalTransaction();
+		const result = await submitTransaction(transaction);
+		if (result) {
+			step = 3;
 		}
 	}
 
@@ -96,7 +87,7 @@
 	async function calculateDeposit() {
 		try {
 			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
-			deposit = convertPlanckToDot(base) + ' DOT';
+			deposit = formatPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';
 		}
@@ -146,10 +137,10 @@
 		{/if}
 	</div>
 
-	{#if step === 1}
-		<div
-			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
-		>
+	<div
+		class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+	>
+		{#if step === 1}
 			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				It is strongly recommended to create the Curator Proposal referendum, after the Bounty has
 				been funded and the Curator list has been informally accepted by the community in
@@ -170,11 +161,7 @@
 					>PROCEED</button
 				>
 			</div>
-		</div>
-	{:else if step === 2}
-		<div
-			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
-		>
+		{:else if step === 2}
 			<div>
 				<div class="space-y-2 sm:space-y-5">
 					<p class="w-full md:1/3 mb-2 text-sm sm:text-base">
@@ -231,11 +218,7 @@
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
-		</div>
-	{:else}
-		<div
-			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
-		>
+		{:else}
 			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				The Referendum for Curator Proposal of Bounty <br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
@@ -253,6 +236,6 @@
 					>RETURN HOME</button
 				>
 			</div>
-		</div>
-	{/if}
+		{/if}
+	</div>
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { convertPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
+	import { formatPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
@@ -62,7 +62,7 @@
 		</p>
 		<section>
 			<p class="text-xs">Child bounty value</p>
-			<p><span>{convertPlanckToDot(childBounty.value)}</span> DOT</p>
+			<p><span>{formatPlanckToDot(childBounty.value)}</span> DOT</p>
 		</section>
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>

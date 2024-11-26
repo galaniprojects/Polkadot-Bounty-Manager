@@ -25,7 +25,7 @@
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount, dotApi } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { convertPlanckToDot } from '../../utils/polkadot';
+	import { formatPlanckToDot } from '../../utils/polkadot';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import {
@@ -130,7 +130,7 @@
 	async function calculateDeposit() {
 		try {
 			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
-			deposit = convertPlanckToDot(base) + ' DOT';
+			deposit = formatPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';
 		}

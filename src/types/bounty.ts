@@ -22,14 +22,6 @@ export interface Bounty {
 	expiryDate: Date | undefined;
 }
 
-export type BountyStatusRaw =
-	| 'Proposed'
-	| 'Approved'
-	| 'Funded'
-	| { CuratorProposed: { curator: string } }
-	| { Active: { curator: string; updateDue: string } }
-	| { PendingPayout: { curator: string; beneficiary: string; unlockAt: string } };
-
 export enum BountyStatus {
 	Proposed = 'proposed',
 	Approved = 'approved',

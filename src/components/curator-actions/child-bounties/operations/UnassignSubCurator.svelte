@@ -5,13 +5,13 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
 	let fee = '-';
 	let isToggled = false;
-	let curatorAddress = '';
 
 	onMount(async () => {
 		await calculateFee();
@@ -59,7 +59,7 @@
 
 		<div class="my-4">
 			<p class="text-xs">Unassign sub-curator</p>
-			{curatorAddress}
+			<CopyableAddress address={childBounty.curator} />
 		</div>
 
 		<div class="my-4">

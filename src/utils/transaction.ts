@@ -3,9 +3,17 @@ import { get } from 'svelte/store';
 import { activeAccount, injectedPolkadotAccount, walletConnectPolkadotSigner } from '../stores';
 import { SupportedSources } from '../types/account';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
-import { convertPlanckToDot } from './polkadot';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
+import { truncateString } from './common';
+import { formatPlanckToDot } from './polkadot';
 
+/**
+ * Signs and submits a transaction using an extension or Wallet Connect.
+ *
+ * The active account and the signer are retrieved from the store. This function does
+ * not throw, but rather shows an error dialog if the transaction fails or shows a success
+ * dialog with `successMessage` if the transaction goes through.
+ **/
 export async function submitTransaction(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>,
@@ -24,8 +32,9 @@ export async function submitTransaction(
 				return await safeSignAndSubmit(transaction, signer, successMessage);
 			} catch (e) {
 				showErrorDialog(
-					`Note: Please ignore this message if using Multix and proceed to Multix.` +
-						readableError(e)
+					`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
+						readableError(e) +
+						')'
 				);
 				console.error(e);
 			}
@@ -47,6 +56,9 @@ export async function submitTransaction(
 	}
 }
 
+/**
+ * Checks for dispatch errors after submitting.
+ **/
 async function safeSignAndSubmit(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>,
@@ -90,12 +102,17 @@ function readableError(error: any): string {
 			}
 		}
 		return formatted;
-	} else {
-		console.error(error);
-		return 'Error was logged to the console.';
 	}
+	if (typeof error === 'string') {
+		return error;
+	}
+	console.error(error);
+	return 'Error was logged to the console. (' + truncateString(JSON.stringify(error), 150) + ')';
 }
 
+/**
+ * Calculates a transaction fee, returns an error if calculating fee fails.
+ **/
 export async function calculateTransactionFee(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	transaction: Transaction<any, any, any, any>
@@ -104,10 +121,6 @@ export async function calculateTransactionFee(
 	if (!account) {
 		throw new Error('can not calculate fee, account is not set');
 	}
-
-	if (account) {
-		const paymentInfo = await transaction.getPaymentInfo(account.address);
-		return String(convertPlanckToDot(paymentInfo.partial_fee));
-	}
-	throw new Error('No active account');
+	const paymentInfo = await transaction.getPaymentInfo(account.address);
+	return formatPlanckToDot(paymentInfo.partial_fee);
 }

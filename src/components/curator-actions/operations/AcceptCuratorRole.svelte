@@ -4,26 +4,25 @@
 	 * @returns deposit as a string in dots.
 	 **/
 	export function calculateDeposit(fee: bigint): string {
-		let curatorFee = convertPlanckToDot(fee);
-		if (curatorFee < 20) {
+		if (fee < convertDotToPlanck(20n)) {
 			return '10';
-		} else if (curatorFee > 400) {
+		} else if (fee > convertDotToPlanck(400n)) {
 			return '200';
 		} else {
-			return String(convertPlanckToDot(fee / BigInt(2)));
+			return formatPlanckToDot(fee / BigInt(2));
 		}
 	}
 </script>
 
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { convertPlanckToDot } from '../../../utils/polkadot';
 	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import { convertDotToPlanck, formatPlanckToDot } from '../../../utils/polkadot';
 
 	export let open = false;
 	export let bounty: Bounty;

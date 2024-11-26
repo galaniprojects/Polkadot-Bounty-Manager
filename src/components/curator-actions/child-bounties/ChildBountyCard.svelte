@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ChildBountyStatus, type ChildBounty } from '../../../types/child-bounty';
-	import { convertPlanckToDot } from '../../../utils/polkadot';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
@@ -12,6 +11,7 @@
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
+	import { formatPlanckToDot } from '../../../utils/polkadot';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -73,14 +73,14 @@
 				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
-						<p>{convertPlanckToDot(childBounty.value)} DOT</p>
+						<p>{formatPlanckToDot(childBounty.value)} DOT</p>
 					</section>
 				</div>
 
 				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
-						<p>{convertPlanckToDot(childBounty.fee)} DOT</p>
+						<p>{formatPlanckToDot(childBounty.fee)} DOT</p>
 					</section>
 					{#if childBounty.dateOfPayout}
 						<section class="lg:mt-3">
@@ -127,7 +127,7 @@
 			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
-					<p class="">{convertPlanckToDot(childBounty.fee)} DOT</p>
+					<p class="">{formatPlanckToDot(childBounty.fee)} DOT</p>
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>
