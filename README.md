@@ -1,15 +1,5 @@
-<style>
-    .logo{
-        background-color: #431B5E;
-        display: flex;
-        justify-content: center;
-        padding: 20px;
-    }
-</style>
 
-<div class="logo">
-    <img src="./static/LogoBountyManagerMobile.svg">
-</div>
+![bounty manager logo](./static/Logo.svg)
 
 # Bounty Manager
 

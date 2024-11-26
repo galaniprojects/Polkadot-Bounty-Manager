@@ -1,5 +1,10 @@
+<svg width="500px" height="100px" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Rectangle -->
+  <rect width="100%" height="62px" fill="#431B5E" />
+  
 <svg
-	width="307px"
+	width="50%"
+    x="25%"
 	height="62px"
 	viewBox="0 0 307 62"
 	version="1.1"
@@ -145,4 +150,6 @@
 			</g>
 		</g>
 	</g>
+</svg>
+
 </svg>
