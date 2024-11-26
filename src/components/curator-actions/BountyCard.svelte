@@ -6,7 +6,6 @@
 	import { parse } from 'marked';
 	import { dotApi } from '../../stores';
 	import BountyCardDetails from './BountyCardDetails.svelte';
-	import { isInteger } from '../../utils/common';
 	import { formatPlanckToDot } from '../../utils/polkadot';
 
 	export let bounty: Bounty;
