@@ -1,51 +1,45 @@
-# create-svelte
+<style>
+    .logo{
+        background-color: #431B5E;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+</style>
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+<div class="logo">
+    <img src="./static/LogoBountyManagerMobile.svg">
+</div>
 
-## Creating a project
+# Bounty Manager
 
-If you're seeing this, you've probably already done this step. Congrats!
+### A UI to streamline Polkadot Bounties
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+Bounty Manager is a front-end dApp, built to simplify interaction with bounties for curators, by providing a simple to use interface, with one click buttons for each action.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+#### Visit the deployed version at [bountymanager.io](http://www.bountymanager.io)
 
-## Developing
+## Developing and Building
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+1. Make a copy of `.env.example` and rename it to `.env`. Edit the file to set the public Polkadot API Endpoint.
+1. Install the dependencies.
 
-```bash
-npm run dev
+   ```bash
+   npm install
+   ```
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+1. Build the project
 
-## Building
+   ```bash
+   npm run build
+   ```
 
-To create a production version of your app:
+   Note: running the build command once is necessary for running the development server, as it executes a required papi command.
+1. Start the development server.
 
-```bash
-npm run build
-```
+   ```bash
+   npm run dev
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## Deployment
-
-Since we are using Amplify for deployment, each environment is linked to a specific branch, as outlined below:
-
-    | Branch        | Environment |
-    |---------------|-------------|
-    | develop       | dev         |
-    | test          | test        |
-    | staging       | staging     |
-    | main          | prod        |
-
-A GitHub Action automatically creates a pull request and merges it into the corresponding branch.
+   # or start the server and open the app in a new browser tab
+   npm run dev -- --open
+   ```
