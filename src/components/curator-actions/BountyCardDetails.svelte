@@ -82,8 +82,7 @@
 					<p class="text-xs">Remaining Balance</p>
 					<p class="text-2xl"><span>{remainingBalance}</span> DOT</p>
 				</div>
-			{/if}
-			{#if !remainingBalance}
+			{:else}
 				<div>
 					<p class="text-xs">Value</p>
 					<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
@@ -142,19 +141,17 @@
 				</div>
 			</div>
 			<div class="flex justify-center items-center">
-				{#if detailsExpanded}
-					<div class="text-white bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
-						<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
-							less details
-						</button>
-						<button
-							class="material-symbols-outlined align-top w-6 h-6"
-							on:click={handleMoreDetailsToggleClick}
-						>
-							keyboard_arrow_up
-						</button>
-					</div>
-				{/if}
+				<div class="text-white bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
+					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
+						less details
+					</button>
+					<button
+						class="material-symbols-outlined align-top w-6 h-6"
+						on:click={handleMoreDetailsToggleClick}
+					>
+						keyboard_arrow_up
+					</button>
+				</div>
 			</div>
 		{/if}
 	</div>
