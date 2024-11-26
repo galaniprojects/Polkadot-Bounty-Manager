@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { type Bounty } from '../../types/bounty';
-	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ExternalLinks from './ExternalLinks.svelte';
 	import DOMPurify from 'dompurify';
 	import BountyDescription from './BountyDescription.svelte';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { formatDate } from '../../utils/common';
+	import { formatPlanckToDot } from '../../utils/polkadot';
 
 	export let bounty: Bounty;
 	export let description: string | undefined;
@@ -31,12 +31,12 @@
 				{/if}
 				<div class="lg:w-[180px] xl:w-40">
 					<p class="text-xs">Value</p>
-					<p class="text-md"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+					<p class="text-md"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 				</div>
 
 				<div class="mt-4 lg:mt-0 lg:w-32 xl:w-40">
 					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
+					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 				</div>
 				{#if bounty.beneficiary}
 					<div class="mt-4 lg:mt-0">
@@ -86,7 +86,7 @@
 			{#if !remainingBalance}
 				<div>
 					<p class="text-xs">Value</p>
-					<p class="text-2xl"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+					<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 				</div>
 			{/if}
 		</div>
@@ -111,12 +111,12 @@
 				{#if remainingBalance}
 					<div>
 						<p class="text-xs">Value</p>
-						<p class="text-md"><span>{convertPlanckToDot(bounty.value)}</span> DOT</p>
+						<p class="text-md"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 					</div>
 				{/if}
 				<div class="space-y-1">
 					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><span>{convertPlanckToDot(bounty.fee)}</span> DOT</p>
+					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 				</div>
 				{#if bounty.curator}
 					<div class="space-y-1">

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { BountyStatus, type Bounty } from '../../types/bounty';
-	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import BountyOperations from './BountyOperations.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
@@ -8,6 +7,7 @@
 	import { dotApi } from '../../stores';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import { isInteger } from '../../utils/common';
+	import { formatPlanckToDot } from '../../utils/polkadot';
 
 	export let bounty: Bounty;
 	export let expanded: boolean;
@@ -36,8 +36,7 @@
 				try {
 					const fundsAddress = data.onchainData.address;
 					const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-					const free = convertPlanckToDot(account.data.free);
-					remainingBalance = isInteger(String(free)) ? String(free) : free.toFixed(4);
+					remainingBalance = formatPlanckToDot(account.data.free);
 				} catch {
 					console.error('Error fetching remaining balance.');
 					remainingBalance = undefined;
