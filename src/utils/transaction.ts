@@ -33,8 +33,8 @@ export async function submitTransaction(
 			} catch (e) {
 				showErrorDialog(
 					`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
-					readableError(e) +
-					')'
+						readableError(e) +
+						')'
 				);
 				console.error(e);
 			}

@@ -25,13 +25,13 @@ export function formatPlanckToDot(value: bigint, nDecimals = 5, precision = 10):
 		value = value / 10n + rounding;
 		value *= 10n ** BigInt(precision - nDecimals);
 	}
-	let intPartStr = (value / precisionMultiplier).toString();
+	const intPartStr = (value / precisionMultiplier).toString();
 	const decimalPart = value % precisionMultiplier;
 	if (decimalPart === 0n) {
 		return intPartStr;
 	}
 
-	let newDecimalPart = decimalPart.toString().padStart(precision, '0').replace(/00*$/, '');
+	const newDecimalPart = decimalPart.toString().padStart(precision, '0').replace(/00*$/, '');
 	return intPartStr + '.' + newDecimalPart;
 }
 
