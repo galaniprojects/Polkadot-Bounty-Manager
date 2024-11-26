@@ -70,14 +70,14 @@
 	<div class="flex flex-col lg:flex-row justify-between lg:pr-6 lg:pt-1 lg:pl-4">
 		<div class="bg-childBountyHeaderBackground lg:bg-white">
 			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
-				<div class="mt-3 flex flex-col lg:w-[270px] xl:w-[490px] pr-3">
+				<div class="mt-3 flex flex-col lg:w-[250px] xl:w-[490px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
 						<p>{formatPlanckToDot(childBounty.value)} DOT</p>
 					</section>
 				</div>
 
-				<div class="hidden lg:flex flex-col lg:w-32 xl:w-40 lg:mt-0">
+				<div class="hidden lg:flex flex-col lg:w-[180px] xl:w-40 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
 						<p>{formatPlanckToDot(childBounty.fee)} DOT</p>
