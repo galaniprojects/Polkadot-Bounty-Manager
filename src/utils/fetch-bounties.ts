@@ -6,6 +6,11 @@ import type { ChildBounty } from '../types/child-bounty';
 import { SetActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
 
+/**
+ * Fetches all bounties, child bounties and their descriptions, sorts them,
+ * and sets them in the store under `bounties`.
+ * Also updates the ActiveAccountBounties.
+ */
 export async function fetchBountiesAndChildBounties(showProgress = true) {
 	if (showProgress) {
 		showLoadingDialog('Loading...');

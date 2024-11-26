@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { BountyStatus, type Bounty } from '../../types/bounty';
-	import { convertPlanckToDot } from '../../utils/polkadot';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import BountyOperations from './BountyOperations.svelte';
@@ -12,6 +11,7 @@
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { formatDate } from '../../utils/common';
+	import { formatPlanckToDot } from '../../utils/polkadot';
 
 	export let bounty: Bounty;
 
@@ -67,12 +67,12 @@
 					<section class="flex flex-col lg:flex-row">
 						<div class="lg:w-[250px] xl:w-[490px]">
 							<p class="text-xs">Value</p>
-							<p class="text-2xl"><span>{convertPlanckToDot(bounty.value).toString()}</span> DOT</p>
+							<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 						</div>
 
 						<div class="mt-4 lg:mt-0 lg:w-32 xl:w-40">
 							<p class="text-xs">Curator Fee</p>
-							<p class="text-md"><span>{convertPlanckToDot(bounty.fee).toString()}</span> DOT</p>
+							<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 						</div>
 						{#if bounty.curator}
 							<div class="mt-4 lg:mt-0">
@@ -116,7 +116,7 @@
 			<div class="grid space-y-5 bg-curatorCarousel px-[10px] py-5 text-white">
 				<div>
 					<p class="text-xs">Value</p>
-					<p class="text-2xl"><span>{convertPlanckToDot(bounty.value).toString()}</span> DOT</p>
+					<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 				</div>
 			</div>
 			<div class="flex justify-center items-center text-white">
@@ -139,7 +139,7 @@
 				<div class="bg-curatorCarousel text-white px-[10px] pb-6 space-y-5">
 					<div class="space-y-1">
 						<p class="text-xs">Curator Fee</p>
-						<p class="text-md"><span>{convertPlanckToDot(bounty.fee).toString()}</span> DOT</p>
+						<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 					</div>
 					{#if bounty.curator}
 						<div class="space-y-1">

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { convertPlanckToDot, isValidAddress } from '../../../utils/polkadot';
+	import { formatPlanckToDot, isValidAddress } from '../../../utils/polkadot';
 	import { dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
@@ -71,7 +71,7 @@
 		</section>
 		<section class="mt-10">
 			<p class="text-xs">Bounty value</p>
-			<p><span>{convertPlanckToDot(bounty.value).toString()}</span> DOT</p>
+			<p><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 		</section>
 		<div class="my-4">
 			<p class="text-xs">Beneficiary account address</p>

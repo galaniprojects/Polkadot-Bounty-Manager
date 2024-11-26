@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount, dotApi } from '../../stores';
-	import { convertDotToPlanck, convertPlanckToDot } from '../../utils/polkadot';
+	import { convertDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
@@ -113,7 +113,7 @@
 				const base = await $dotApi.constants.Bounties.BountyDepositBase();
 				let bytesLen = BigInt(transaction.getEncodedData.length);
 				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
-				bondValue = String(convertPlanckToDot(base + (bytesLen - 1n) * perByte)) + ' DOT';
+				bondValue = formatPlanckToDot(base + (bytesLen - 1n) * perByte) + ' DOT';
 			} else {
 				bondValue = '-';
 			}
