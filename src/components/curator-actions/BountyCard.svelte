@@ -3,7 +3,6 @@
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import BountyOperations from './BountyOperations.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { parse } from 'marked';
 	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import { formatPlanckToDot } from '../../utils/polkadot';
@@ -27,12 +26,14 @@
 				if (!response.ok) throw new Error('Failed to fetch bounty details.');
 
 				const data = await response.json();
-				try {
-					description = await parse(data.content);
-				} catch {
-					description = undefined;
-					console.error('No description found.');
-				}
+				// TODO: don't show description for now.
+				// import { parse } from 'marked';
+				// try {
+				// 	description = await parse(data.content);
+				// } catch {
+				// 	description = undefined;
+				// 	console.error('No description found.');
+				// }
 
 				try {
 					const fundsAddress = data.onchainData.address;
