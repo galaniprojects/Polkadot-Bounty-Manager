@@ -1,4 +1,3 @@
-
 ![bounty manager logo](./static/Logo.svg)
 
 # Bounty Manager
@@ -25,6 +24,7 @@ Bounty Manager is a front-end dApp, built to simplify interaction with bounties 
    ```
 
    Note: running the build command once is necessary for running the development server, as it executes a required papi command.
+
 1. Start the development server.
 
    ```bash
