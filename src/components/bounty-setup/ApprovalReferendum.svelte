@@ -203,7 +203,7 @@
 						<p>{deposit}</p>
 					</section>
 					<section class="space-y-1 sm:space-y-3">
-						<p class="label text-xs">Estimated Basic Fee</p>
+						<p class="label text-xs">Estimated basic fee</p>
 						<p>{fee}</p>
 					</section>
 				</div>

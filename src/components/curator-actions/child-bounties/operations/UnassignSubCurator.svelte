@@ -70,7 +70,7 @@
 			</div>
 		</div>
 		<section class="mt-10">
-			<p class="text-xs">Estimated Basic Fee:</p>
+			<p class="text-xs">Estimated basic fee:</p>
 			<p>{fee}</p>
 		</section>
 	</div>
