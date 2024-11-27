@@ -79,7 +79,7 @@
 		</div>
 
 		<div>
-			<p class="text-xs">Accept Curator role</p>
+			<p class="text-xs">Accept curator role</p>
 			<div class="flex justify-between items-start">
 				<p>I agree</p>
 				<ToggleIcon bind:checked={isToggled} />

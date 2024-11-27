@@ -194,7 +194,7 @@
 
 				<div class="my-5 sm:my-10 h-24 space-y-2 sm:space-y-5">
 					<section class="space-y-1 sm:space-y-3">
-						<p class="label text-xs">Bounty Bond</p>
+						<p class="label text-xs">Bounty bond</p>
 						<p class="value">{bondValue}</p>
 					</section>
 					<section class="space-y-1 sm:space-y-3">
