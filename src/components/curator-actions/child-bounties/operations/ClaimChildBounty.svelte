@@ -60,7 +60,7 @@
 			</div>
 		{/if}
 		<div class="space-y-2">
-			<p class="text-xs">Calculated Fee:</p>
+			<p class="text-xs">Estimated Basic Fee:</p>
 			<p>{fee}</p>
 		</div>
 	</div>

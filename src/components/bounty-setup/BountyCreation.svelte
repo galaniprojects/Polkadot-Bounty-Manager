@@ -198,7 +198,7 @@
 						<p class="value">{bondValue}</p>
 					</section>
 					<section class="space-y-1 sm:space-y-3">
-						<p class="label text-xs">Transaction fee</p>
+						<p class="label text-xs">Estimated Basic Fee</p>
 						<p class="value">{fee}</p>
 					</section>
 				</div>

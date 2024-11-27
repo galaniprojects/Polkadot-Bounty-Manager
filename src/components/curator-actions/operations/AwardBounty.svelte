@@ -81,7 +81,7 @@
 			/>
 		</div>
 		<section class="mt-10">
-			<p class="text-xs">Calculated Fee</p>
+			<p class="text-xs">Estimated Basic Fee</p>
 			<p>{fee}</p>
 		</section>
 
