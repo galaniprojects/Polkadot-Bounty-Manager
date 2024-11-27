@@ -7,7 +7,7 @@ import globals from 'globals';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
 	js.configs.recommended,
-	...ts.configs.recommended,
+	...ts.configs.strictTypeChecked,
 	...svelte.configs['flat/recommended'],
 	prettier,
 	...svelte.configs['flat/prettier'],
@@ -16,6 +16,10 @@ export default [
 			globals: {
 				...globals.browser,
 				...globals.node
+			},
+			parserOptions: {
+				project: './tsconfig.json',
+				extraFileExtensions: ['.svelte']
 			}
 		}
 	},
@@ -28,6 +32,31 @@ export default [
 		}
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/', '.papi']
+		ignores: [
+			'build/',
+			'.svelte-kit/',
+			'dist/',
+			'.papi',
+			'eslint.config.js',
+			'playwright.config.ts',
+			'postcss.config.js',
+			'svelte.config.js',
+			'tailwind.config.js'
+		]
+	},
+	{
+		rules: {
+			'@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
+			'@typescript-eslint/restrict-template-expressions': [
+				'error',
+				{
+					allowAny: false,
+					allowBoolean: false,
+					allowNever: false,
+					allowNullish: false,
+					allowRegExp: false
+				}
+			]
+		}
 	}
 ];

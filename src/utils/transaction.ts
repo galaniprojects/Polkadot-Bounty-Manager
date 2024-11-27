@@ -70,42 +70,53 @@ async function safeSignAndSubmit(
 		const dispatchError = readableError(result.dispatchError);
 		showErrorDialog(dispatchError);
 		return;
-	} else if (result.ok) {
+	} else {
 		showSuccessDialog('Transaction', successMessage || 'Operation success.');
 		await fetchBountiesAndChildBounties(false);
 		return result;
-	} else {
-		showErrorDialog('Unknown error happened.');
-		return;
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function readableError(error: any): string {
-	if (error.message) {
+function readableError(error: unknown): string {
+	if (typeof error === 'string') {
+		return error;
+	}
+
+	if (typeof error !== 'object' || error === null) return '';
+
+	if ('message' in error) {
+		const message = error.message as string;
 		try {
-			error = JSON.parse(error.message);
+			error = JSON.parse(message);
 		} catch {
-			error = error.message;
+			error = message;
 		}
 	}
-	if (error.type) {
-		let formatted = error.type;
 
-		if (error.value) {
-			formatted = formatted + ', ' + error.value.type;
-			if (error.value.value) {
-				formatted = formatted + ', ' + error.value.value.type;
-				if (error.value.value.value) {
-					formatted = formatted + ', ' + error.value.value.value.type;
+	if (typeof error === 'object' && error !== null && 'type' in error) {
+		let formatted = error.type as string;
+
+		if ('value' in error) {
+			const value = error.value as {
+				type: string;
+				value?: {
+					type: string;
+					value?: {
+						type: string;
+					};
+				};
+			};
+			formatted = formatted + ', ' + value.type;
+			if (value.value) {
+				formatted = formatted + ', ' + value.value.type;
+				if (value.value.value) {
+					formatted = formatted + ', ' + value.value.value.type;
 				}
 			}
 		}
 		return formatted;
 	}
-	if (typeof error === 'string') {
-		return error;
-	}
+
 	console.error(error);
 	return 'Error was logged to the console. (' + truncateString(JSON.stringify(error), 150) + ')';
 }

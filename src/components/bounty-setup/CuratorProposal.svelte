@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { BountyInfo } from './BountySetup.svelte';
+	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
-	import { treasuryTracks } from './ApprovalReferendum.svelte';
+	import { treasuryTracks } from './treasuryTracks';
 	import { convertDotToPlanck, formatPlanckToDot, isValidAddress } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
@@ -98,10 +98,6 @@
 		if (bountyInfo.id && curatorAddress && curatorFee && $activeAccount) {
 			try {
 				const transaction = await createProposalTransaction();
-				if (!transaction) {
-					fee = '-';
-					return;
-				}
 				fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			} catch {
 				fee = '-';
@@ -115,7 +111,7 @@
 		if (curatorAddress && curatorFee && $activeAccount) {
 			fee = 'Calculating...';
 			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(calculateFee, 2000);
+			inputTimeout = setTimeout(() => void calculateFee(), 2000);
 		} else {
 			fee = '-';
 		}
@@ -157,7 +153,7 @@
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>
-				<button disabled={!bountyInfo.id} on:click={() => proceed()} class="button-active"
+				<button disabled={!bountyInfo.id} on:click={() => { proceed() }} class="button-active"
 					>PROCEED</button
 				>
 			</div>

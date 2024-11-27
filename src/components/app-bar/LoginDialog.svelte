@@ -1,14 +1,5 @@
-<script lang="ts" context="module">
-	export type SupportedWallets = 'Polkadot.js' | 'WalletConnect' | 'Nova Wallet' | 'Talisman';
-	export type WalletInfo = {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		icon: any;
-		name: SupportedWallets;
-		action: 'Download' | 'Connect';
-	};
-</script>
-
 <script lang="ts">
+	import type { WalletInfo } from './walletInfo';
 	import WalletItem from './WalletItem.svelte';
 	import AccountItem from './AccountItem.svelte';
 	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
@@ -45,10 +36,10 @@
 	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
 	let selectedWallet: WalletInfo | undefined;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const novaWalletAvailable = (window as any).ethereum && (window as any).ethereum.isNovaWallet;
+	const ethereum = (window as unknown as { ethereum?: { isNovaWallet: boolean } }).ethereum;
+	const novaWalletAvailable = ethereum?.isNovaWallet;
 
-	onMount(async () => {
+	onMount(() => {
 		const extensionNames: string[] = getInjectedExtensions();
 		wallets = [
 			{
@@ -79,15 +70,15 @@
 		if (wallet.action === 'Download') {
 			switch (wallet.name) {
 				case 'Polkadot.js':
-					window.open('https://polkadot.js.org/extension/', '_blank')!.focus();
+					window.open('https://polkadot.js.org/extension/', '_blank');
 					return;
 				case 'WalletConnect':
 					return;
 				case 'Nova Wallet':
-					window.open('https://novawallet.io/', '_blank')!.focus();
+					window.open('https://novawallet.io/', '_blank');
 					return;
 				case 'Talisman':
-					window.open('https://www.talisman.xyz/', '_blank')!.focus();
+					window.open('https://www.talisman.xyz/', '_blank');
 					return;
 			}
 		} else {
@@ -119,7 +110,7 @@
 				} catch (e) {
 					open = false;
 					showErrorDialog(
-						'Wallet connection failed. Make sure the Bounty Mananger has access to your wallet accounts.'
+						'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
 					);
 					console.error(e);
 					return;
@@ -138,7 +129,7 @@
 		if (accounts.length === 0) {
 			open = false;
 			showErrorDialog(
-				'No accounts found. Make sure the Bounty Mananger has access to your wallet accounts.'
+				'No accounts found. Make sure the Bounty Manager has access to your wallet accounts.'
 			);
 			return;
 		}
@@ -253,7 +244,7 @@
 					<hr class="border-white opacity-35 mt-4 w-full" />
 					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 						{#each accounts as account}
-							<button class="w-full" on:click={() => selectAccount(account)}>
+							<button class="w-full" on:click={() => { selectAccount(account); }}>
 								<AccountItem name={account.name} address={account.address} />
 							</button>
 						{/each}

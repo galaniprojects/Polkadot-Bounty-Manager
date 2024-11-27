@@ -27,7 +27,7 @@
 			await submitTransaction(transaction);
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`${e}`);
+			showErrorDialog(String(e));
 		}
 	}
 

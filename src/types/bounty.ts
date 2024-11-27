@@ -30,3 +30,9 @@ export enum BountyStatus {
 	Active = 'active',
 	PendingPayout = 'pending payout'
 }
+
+export type BountyInfo = {
+	id?: number;
+	description?: string;
+	value?: bigint;
+};

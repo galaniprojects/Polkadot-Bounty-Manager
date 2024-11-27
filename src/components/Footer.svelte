@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import LogoBountyManagerDesktop from './svg/header-footer-logos/LogoBountyManagerDesktop.svelte';
 	import { page } from '$app/stores';
@@ -7,8 +7,8 @@
 	$: text = isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions';
 	$: link = isOnImprintPage ? '/curator-actions' : '/imprint';
 
-	function handleClick() {
-		goto(link);
+	async function handleClick() {
+		await goto(link);
 	}
 </script>
 

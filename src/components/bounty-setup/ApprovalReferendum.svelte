@@ -1,35 +1,12 @@
-<script lang="ts" context="module">
-	export let treasuryTracks = [
-		{
-			origin: GovernanceOrigin.SmallSpender(),
-			toString: () => {
-				return 'Small Spender';
-			}
-		},
-		{
-			origin: GovernanceOrigin.MediumSpender(),
-			toString: () => {
-				return 'Medium Spender';
-			}
-		},
-		{
-			origin: GovernanceOrigin.BigSpender(),
-			toString: () => {
-				return 'Big Spender';
-			}
-		}
-	];
-</script>
-
 <script lang="ts">
-	import type { BountyInfo } from './BountySetup.svelte';
+	import { treasuryTracks } from './treasuryTracks';
+	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { formatPlanckToDot } from '../../utils/polkadot';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import {
-		GovernanceOrigin,
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
 		TraitsScheduleDispatchTime
@@ -91,7 +68,7 @@
 			}
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`Something went wrong, ${e}`);
+			showErrorDialog(`Something went wrong, ${String(e)}`);
 		}
 	}
 

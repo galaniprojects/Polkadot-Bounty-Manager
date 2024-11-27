@@ -1,19 +1,3 @@
-<script lang="ts" context="module">
-	/**
-	 * @param fee fee in planck.
-	 * @returns deposit as a string in dots.
-	 **/
-	export function calculateDeposit(fee: bigint): string {
-		if (fee < convertDotToPlanck(20n)) {
-			return '10';
-		} else if (fee > convertDotToPlanck(400n)) {
-			return '200';
-		} else {
-			return formatPlanckToDot(fee / BigInt(2));
-		}
-	}
-</script>
-
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
 	import { activeAccount, dotApi } from '../../../stores';
@@ -22,7 +6,7 @@
 	import ToggleIcon from '../../svg/ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
-	import { convertDotToPlanck, formatPlanckToDot } from '../../../utils/polkadot';
+	import { calculateDeposit } from './calculateDeposit';
 
 	export let open = false;
 	export let bounty: Bounty;
@@ -40,9 +24,9 @@
 		const transaction = $dotApi.tx.Bounties.accept_curator({
 			bounty_id: bounty.id
 		});
-		const result = submitTransaction(transaction);
+		const result = await submitTransaction(transaction);
 
-		if (result == undefined) {
+		if (result === undefined) {
 			showErrorDialog('Internal error');
 			return;
 		}
