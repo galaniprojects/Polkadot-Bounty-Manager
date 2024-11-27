@@ -24,17 +24,17 @@
 		<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
 			<section class="flex flex-col lg:flex-row">
 				{#if remainingBalance}
-					<div class="lg:w-[250px] xl:w-[490px]">
+					<div class="lg:w-[250px]">
 						<p class="text-xs">Remaining Balance</p>
 						<p class="text-2xl"><span>{remainingBalance}</span> DOT</p>
 					</div>
 				{/if}
-				<div class="lg:w-[180px] xl:w-40">
+				<div class="lg:w-40 xl:w-44">
 					<p class="text-xs">Value</p>
 					<p class="text-md"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
 				</div>
 
-				<div class="mt-4 lg:mt-0 lg:w-32 xl:w-40">
+				<div class="mt-4 lg:mt-0 lg:w-40 xl:w-44">
 					<p class="text-xs">Curator Fee</p>
 					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 				</div>
@@ -56,20 +56,21 @@
 						<BountyDescription description={DOMPurify.sanitize(description)} />
 					</div>
 				{/if}
-				<div class="flex justify-between lg:space-x-8 xl:space-x-16 lg:w-[180px] xl:w-[160px]">
+				<div class="flex justify-between lg:space-x-[160px] xl:space-x-40">
 					{#if bounty.expiryDate != undefined}
 						<section class="flex-col text-start">
 							<p class="text-xs">Expiration date</p>
 							<p>{formatDate(bounty.expiryDate)}</p>
 						</section>
 					{/if}
+					{#if bounty.curator}
+						<div class="mt-4 lg:mt-0">
+							<p class="text-xs">Curator</p>
+							<CopyableAddress address={bounty.curator} />
+						</div>
+					{/if}
 				</div>
-				{#if bounty.curator}
-					<div class="mt-4 lg:mt-0">
-						<p class="text-xs">Curator</p>
-						<CopyableAddress address={bounty.curator} />
-					</div>
-				{/if}
+				<!--  -->
 			</section>
 		</section>
 	</div>
