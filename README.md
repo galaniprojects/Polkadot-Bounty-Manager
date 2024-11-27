@@ -1,51 +1,35 @@
-# create-svelte
+![bounty manager logo](./static/Logo.svg)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+# Bounty Manager
 
-## Creating a project
+### A UI to streamline Polkadot Bounties
 
-If you're seeing this, you've probably already done this step. Congrats!
+Bounty Manager is a front-end dApp, built to simplify interaction with bounties for curators, by providing a simple to use interface, with one click buttons for each action.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+#### Visit the deployed version at [bountymanager.io](http://www.bountymanager.io)
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Developing and Building
 
-## Developing
+1. Make a copy of `.env.example` and rename it to `.env`. Edit the file to set the public Polkadot API Endpoint.
+1. Install the dependencies.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
+1. Build the project
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+   ```bash
+   npm run build
+   ```
 
-## Building
+   Note: running the build command once is necessary for running the development server, as it executes a required papi command.
 
-To create a production version of your app:
+1. Start the development server.
 
-```bash
-npm run build
-```
+   ```bash
+   npm run dev
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
-
-## Deployment
-
-Since we are using Amplify for deployment, each environment is linked to a specific branch, as outlined below:
-
-    | Branch        | Environment |
-    |---------------|-------------|
-    | develop       | dev         |
-    | test          | test        |
-    | staging       | staging     |
-    | main          | prod        |
-
-A GitHub Action automatically creates a pull request and merges it into the corresponding branch.
+   # or start the server and open the app in a new browser tab
+   npm run dev -- --open
+   ```
