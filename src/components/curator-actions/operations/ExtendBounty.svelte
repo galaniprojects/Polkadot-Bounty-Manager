@@ -67,20 +67,21 @@
 			</div>
 
 			<div>
-				<p class="text-xs">New expected expiration date</p>
+				<p class="text-xs">Expiry Date after Extension</p>
 				<span>
 					{(() => {
+						// TODO: Maybe get date from chain.
 						var today = new Date();
-						var tomorrow = new Date();
-						tomorrow.setDate(today.getDate() + 90);
-						return formatDate(tomorrow);
+						var afterNintyDays = new Date();
+						afterNintyDays.setDate(today.getDate() + 90);
+						return formatDate(afterNintyDays);
 					})()}
 				</span>
 			</div>
 		</div>
 
 		<div>
-			<p class="text-xs">Calculated Fee</p>
+			<p class="text-xs">Estimated basic fee</p>
 			<p>{fee}</p>
 		</div>
 	</section>

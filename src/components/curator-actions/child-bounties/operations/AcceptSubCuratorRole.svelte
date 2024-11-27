@@ -67,7 +67,7 @@
 
 		<div class="flex space-x-24">
 			<div>
-				<p class="text-xs">Calculated Fee</p>
+				<p class="text-xs">Estimated basic fee</p>
 				<p>{fee}</p>
 			</div>
 			<div>

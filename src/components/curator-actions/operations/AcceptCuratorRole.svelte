@@ -79,7 +79,7 @@
 		</div>
 
 		<div>
-			<p class="text-xs">Accept Curator role</p>
+			<p class="text-xs">Accept curator role</p>
 			<div class="flex justify-between items-start">
 				<p>I agree</p>
 				<ToggleIcon bind:checked={isToggled} />
@@ -88,7 +88,7 @@
 
 		<div class="flex space-x-24">
 			<div>
-				<p class="text-xs">Calculated Fee</p>
+				<p class="text-xs">Estimated basic fee</p>
 				<p>{fee}</p>
 			</div>
 			<div>
