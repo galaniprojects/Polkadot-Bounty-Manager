@@ -3,6 +3,7 @@
 	"version": "0.0.6",
 	"private": true,
 	"scripts": {
+		"papi": "papi",
 		"dev": "vite dev",
 		"build": "papi && vite build",
 		"preview": "vite preview",

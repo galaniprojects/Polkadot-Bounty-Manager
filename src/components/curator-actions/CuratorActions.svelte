@@ -20,8 +20,8 @@
 				<span class="material-symbols-outlined text-white text-xl"> arrow_forward_ios </span>
 			</div>
 			<button
-				on:click={() => {
-					goto('/bounty-setup');
+				on:click={async () => {
+					await goto('/bounty-setup');
 				}}
 				class="border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
 				>NEW BOUNTY</button

@@ -33,7 +33,7 @@
 			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`${e}`);
+			showErrorDialog(String(e));
 		}
 	}
 

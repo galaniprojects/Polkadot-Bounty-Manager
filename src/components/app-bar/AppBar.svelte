@@ -27,7 +27,7 @@
 
 	let loginDialogOpen = false;
 
-	async function showLoginDialog() {
+	function showLoginDialog() {
 		loginDialogOpen = true;
 	}
 
@@ -42,8 +42,8 @@
 		let account = sessionStorage.getItem('account');
 
 		if (account) {
-			let parsedAccount: AccountInfo = JSON.parse(account);
-			activeAccount.set(JSON.parse(account));
+			let parsedAccount = JSON.parse(account) as AccountInfo;
+			activeAccount.set(parsedAccount);
 
 			if (parsedAccount.source === SupportedSources.WalletConnect) {
 				// Handle WalletConnect case.
@@ -89,7 +89,9 @@
 		activeAccount.set(undefined);
 		sessionStorage.clear();
 		activeAccountBounties.set([]);
-		if ($wcConnection) $wcConnection.disconnect();
+		if ($wcConnection) {
+			await $wcConnection.disconnect();
+		}
 	}
 </script>
 
@@ -107,7 +109,7 @@
 
 	<div class="ml-auto">
 		{#if !$activeAccount}
-			<button class=" text-white" on:click={() => showLoginDialog()}>Connect Wallet</button>
+			<button class=" text-white" on:click={showLoginDialog}>Connect Wallet</button>
 
 			<w3m-button></w3m-button>
 		{:else}

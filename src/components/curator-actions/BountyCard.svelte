@@ -25,7 +25,7 @@
 				const response = await fetch(url);
 				if (!response.ok) throw new Error('Failed to fetch bounty details.');
 
-				const data = await response.json();
+				const data = (await response.json()) as { onchainData: { address: string } };
 				// TODO: don't show description for now.
 				// import { parse } from 'marked';
 				// try {

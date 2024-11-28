@@ -1,6 +1,6 @@
-<script>
-	export let index;
-	export let curator;
+<script lang="ts">
+	export let index: number;
+	export let curator: { name: string };
 </script>
 
 <div class="flex items-center justify-between py-1">

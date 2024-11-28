@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import ForwardIcon from '../svg/ForwardIcon.svelte';
 
 	export let name;
-	export let address;
+	export let address: string;
 </script>
 
 <div

@@ -28,7 +28,7 @@
 			bounty_id: bounty.id,
 			remark: new Binary(new Uint8Array())
 		});
-		submitTransaction(transaction, 'Your bounty has been extended');
+		await submitTransaction(transaction, 'Your bounty has been extended');
 	}
 
 	async function calculateFee() {

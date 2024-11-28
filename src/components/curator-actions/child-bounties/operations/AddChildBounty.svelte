@@ -67,7 +67,7 @@
 		if (bountyValue && bountyTitle && $activeAccount) {
 			fee = 'Calculating...';
 			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(calculateFee, 2000);
+			inputTimeout = setTimeout(() => void calculateFee(), 2000);
 		} else {
 			fee = '-';
 		}
@@ -134,7 +134,7 @@
 		<button
 			on:click={submit}
 			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'cursor-not-allowed'}`}
-		{`${!isFormValid ? 'button-active' : 'cursor-allowed'}`}"
+		{!isFormValid ? 'button-active' : 'cursor-allowed'}"
 			disabled={!isFormValid}>SIGN</button
 		>
 	</div>

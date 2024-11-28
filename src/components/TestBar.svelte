@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 
 	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
 	import { createTypedApi } from '../utils/polkadot';
+
 	onMount(() => {
 		let node = sessionStorage.getItem('node');
 		if (node) {
@@ -10,16 +11,18 @@
 			dotApi.set(createTypedApi(node));
 		}
 	});
+
+	function onChange(this: HTMLSelectElement) {
+		sessionStorage.setItem('node', this.value);
+		window.location.reload();
+	}
 </script>
 
 <div class="w-100">
 	<select
 		class="border full rounded-md h-7 px-1 pt-1"
 		bind:value={$nodeEndpoint}
-		on:change={() => {
-			sessionStorage.setItem('node', $nodeEndpoint);
-			window.location.reload();
-		}}
+		on:change={onChange}
 		name="spenders"
 		id="spenders"
 	>

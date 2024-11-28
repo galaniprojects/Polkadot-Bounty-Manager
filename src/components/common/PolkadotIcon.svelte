@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { polkadotIcon } from '@polkadot/ui-shared';
 
-	export let address;
+	export let address: string;
 </script>
 
 <svg

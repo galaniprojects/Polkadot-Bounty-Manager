@@ -1,35 +1,12 @@
-<script lang="ts" context="module">
-	export let treasuryTracks = [
-		{
-			origin: GovernanceOrigin.SmallSpender(),
-			toString: () => {
-				return 'Small Spender';
-			}
-		},
-		{
-			origin: GovernanceOrigin.MediumSpender(),
-			toString: () => {
-				return 'Medium Spender';
-			}
-		},
-		{
-			origin: GovernanceOrigin.BigSpender(),
-			toString: () => {
-				return 'Big Spender';
-			}
-		}
-	];
-</script>
-
 <script lang="ts">
-	import type { BountyInfo } from './BountySetup.svelte';
+	import { treasuryTracks } from './treasuryTracks';
+	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { formatPlanckToDot } from '../../utils/polkadot';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import {
-		GovernanceOrigin,
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
 		TraitsScheduleDispatchTime
@@ -38,7 +15,7 @@
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
-	export let bountyInfo: BountyInfo;
+	export let bountyInfo: BountyInfo | undefined;
 
 	let success = false;
 	let selectedTreasuryTrack = treasuryTracks[0];
@@ -53,7 +30,7 @@
 	}
 
 	onMount(async () => {
-		if (!bountyInfo.value) {
+		if (!bountyInfo || !bountyInfo.value) {
 			return;
 		}
 		if (bountyInfo.value <= 10000n) {
@@ -91,12 +68,12 @@
 			}
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`Something went wrong, ${e}`);
+			showErrorDialog(`Something went wrong, ${String(e)}`);
 		}
 	}
 
 	async function createApprovalTransaction() {
-		if (!bountyInfo.id) {
+		if (!bountyInfo || !bountyInfo.id) {
 			return;
 		}
 		let transaction = $dotApi.tx.Bounties.approve_bounty({ bounty_id: bountyInfo.id });
@@ -111,7 +88,7 @@
 	}
 
 	async function calculateFee() {
-		if ($activeAccount && bountyInfo.id) {
+		if ($activeAccount && bountyInfo && bountyInfo.id) {
 			try {
 				const transaction = await createApprovalTransaction();
 				if (!transaction) {
@@ -140,7 +117,7 @@
 <div>
 	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
-			{#if bountyInfo.id && bountyInfo.description}
+			{#if bountyInfo && bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 			{/if}
 		</p>
@@ -152,7 +129,7 @@
 		{/if}
 	</div>
 
-	{#if success}
+	{#if success && bountyInfo}
 		<div
 			class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
 		>
@@ -210,7 +187,9 @@
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
-				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">SUBMIT</button>
+				<button on:click={submit} disabled={!bountyInfo || !bountyInfo.id} class="button-active"
+					>SUBMIT</button
+				>
 			</div>
 		</div>
 	{/if}

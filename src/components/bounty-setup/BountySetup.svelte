@@ -2,11 +2,6 @@
 	export const TABS = ['Creation', 'Approval', 'Curator Proposal'];
 	export const TABS_QUERY_PARAMS = ['creation', 'approval', 'curator-proposal'];
 	export type BountyTab = (typeof TABS)[number];
-	export type BountyInfo = {
-		id?: number;
-		description?: string;
-		value?: bigint;
-	};
 </script>
 
 <script lang="ts">
@@ -22,12 +17,12 @@
 		showLoadingDialog
 	} from '../../utils/loading-screen';
 	import { dotApi } from '../../stores';
+	import type { BountyInfo } from '../../types/bounty';
 
-	let bountyInfo: BountyInfo = {};
+	let bountyInfo: BountyInfo | undefined = undefined;
 
 	let activeTab = TABS[0];
-	// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-	function changeTabEvent(event: any) {
+	function changeTabEvent(event: { detail: { tab: BountyTab } }) {
 		changeTab(event.detail.tab);
 	}
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type { BountyInfo } from './BountySetup.svelte';
+	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
@@ -16,7 +16,7 @@
 		});
 	}
 
-	export let bountyInfo: BountyInfo;
+	export let bountyInfo: BountyInfo | undefined;
 	let success = false;
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
@@ -58,10 +58,11 @@
 			return;
 		}
 
-		if ('index' in bountyEvent.value.value) {
-			let bountyIndex: number = bountyEvent.value.value.index as number;
+		const innerValue = bountyEvent.value.value as { index: number };
+		if ('index' in innerValue) {
+			let bountyIndex = innerValue.index;
 			bountyInfo = {
-				id: bountyIndex as number,
+				id: bountyIndex,
 				description: bountyTitle,
 				value: BigInt(bountyValue)
 			};
@@ -78,8 +79,8 @@
 	let inputTimeout = setTimeout(() => {}, 4000);
 
 	async function calculateBondAndFee() {
-		calculateBond();
-		calculateFee();
+		await calculateBond();
+		await calculateFee();
 	}
 
 	async function calculateFee() {
@@ -127,7 +128,7 @@
 			fee = 'Calculating...';
 			bondValue = 'Calculating...';
 			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(calculateBondAndFee, 2000);
+			inputTimeout = setTimeout(() => void calculateBondAndFee(), 2000);
 		} else {
 			fee = '-';
 			bondValue = '-';
@@ -150,12 +151,12 @@
 					<a href="#moreinfo">Tap here</a>
 				</p>
 			{/if}
-		{:else}
+		{:else if bountyInfo !== undefined}
 			<p class="text-white">{`#${bountyInfo.id} ${bountyInfo.description}`}</p>
 		{/if}
 	</div>
 
-	{#if success}
+	{#if success && bountyInfo !== undefined}
 		<div
 			class="bg-backgroundContent p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden"
 		>

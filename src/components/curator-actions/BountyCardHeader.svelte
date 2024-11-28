@@ -9,8 +9,8 @@
 	<div class="flex justify-between">
 		<div class="flex flex-col lg:flex-row lg:justify-start">
 			<span class="text-xl lg:text-2xl">
-				#{`${bounty.id}`}
-				{`${bounty.description}`}
+				#{bounty.id}
+				{bounty.description}
 			</span>
 		</div>
 

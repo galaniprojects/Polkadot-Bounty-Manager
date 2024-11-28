@@ -15,7 +15,7 @@
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-		const sdkProvider = getWsProvider(get(nodeEndpoint));
+		const sdkProvider = getWsProvider(get(nodeEndpoint) as string);
 		const sdkClient = createClient(sdkProvider);
 		let number = (await sdkClient.getBlockHeader()).number;
 		await sdkClient._request('dev_newBlock', [
@@ -27,22 +27,22 @@
 	}
 
 	async function fastForwardDays() {
-		fastForward((days * 24 * 60 * 60) / 6 - 3);
+		await fastForward((days * 24 * 60 * 60) / 6 - 3);
 	}
 
 	async function fastForwardHours() {
-		fastForward((hours * 60 * 60) / 6 - 3);
+		await fastForward((hours * 60 * 60) / 6 - 3);
 	}
 
 	async function fastForwardMinutes() {
-		fastForward((mins * 60) / 6 - 3);
+		await fastForward((mins * 60) / 6 - 3);
 	}
 
 	async function fastForwardBlocks() {
-		fastForward(1);
+		await fastForward(1);
 	}
 
-	async function changeEndpoint() {
+	function changeEndpoint() {
 		nodeEndpoint.set(nodeEndpointInput);
 		sessionStorage.setItem('node', nodeEndpointInput);
 		dotApi.set(createTypedApi(nodeEndpointInput));
