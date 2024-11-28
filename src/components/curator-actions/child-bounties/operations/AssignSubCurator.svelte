@@ -89,7 +89,9 @@
 				placeholder="0"
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]"><img src={PolkaCoin} width="20" height="20" /></div>
+			<div class="absolute right-2 top-[26px]">
+				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
+			</div>
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>

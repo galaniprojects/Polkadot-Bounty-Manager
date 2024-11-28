@@ -39,5 +39,5 @@
 />
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
-	<img src={icon} />
+	<img src={icon} alt="" />
 </button>
