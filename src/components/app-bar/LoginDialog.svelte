@@ -150,7 +150,7 @@
 		}
 
 		if (injectedAccounts) {
-			let injectedAccount = injectedAccounts.filter((acc) => {
+			const injectedAccount = injectedAccounts.filter((acc) => {
 				return convertToPolkadotAddress(acc.address) === account.address;
 			});
 			injectedPolkadotAccount.set(injectedAccount[0]);

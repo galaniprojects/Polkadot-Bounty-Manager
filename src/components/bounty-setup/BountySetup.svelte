@@ -46,7 +46,7 @@
 	onMount(async () => {
 		const urlParams = new URLSearchParams(window.location.search);
 
-		let step = urlParams.get('step');
+		const step = urlParams.get('step');
 		if (step) {
 			if (step === TABS_QUERY_PARAMS[0]) {
 				activeTab = TABS[0];
@@ -57,7 +57,7 @@
 			}
 		}
 
-		let bountyId = urlParams.get('bounty-id');
+		const bountyId = urlParams.get('bounty-id');
 		if (bountyId) {
 			showLoadingDialog('Loading bounty info');
 			try {

@@ -2,7 +2,7 @@
 	import type { WalletInfo } from './walletInfo';
 
 	export let wallet: WalletInfo;
-	let bgClass = wallet.action === 'Connect' ? 'bg-white bg-opacity-20' : 'bg-white bg-opacity-10';
+	const bgClass = wallet.action === 'Connect' ? 'bg-white bg-opacity-20' : 'bg-white bg-opacity-10';
 </script>
 
 <div

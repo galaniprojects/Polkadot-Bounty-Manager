@@ -33,20 +33,20 @@
 
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
-		let account = sessionStorage.getItem('account');
+		const account = sessionStorage.getItem('account');
 
 		if (account) {
-			let parsedAccount = JSON.parse(account) as AccountInfo;
+			const parsedAccount = JSON.parse(account) as AccountInfo;
 			activeAccount.set(parsedAccount);
 
 			if (parsedAccount.source === SupportedSources.WalletConnect) {
 				// Handle WalletConnect case.
-				let connection = createWCConnection();
+				const connection = createWCConnection();
 				await connection.initialize();
 				walletConnect.set(connection);
 
-				let accounts = await connection.getAccounts();
-				let filteredAccounts = accounts.filter((acc) => {
+				const accounts = await connection.getAccounts();
+				const filteredAccounts = accounts.filter((acc) => {
 					const address = acc.id.split(':')[2];
 					return convertToPolkadotAddress(address) === parsedAccount.address;
 				});
@@ -62,7 +62,7 @@
 					parsedAccount.source
 				);
 				const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
-				let injectedAccounts = accounts.filter((acc) => {
+				const injectedAccounts = accounts.filter((acc) => {
 					return convertToPolkadotAddress(acc.address) === parsedAccount.address;
 				});
 				if (injectedAccounts.length !== 1) {

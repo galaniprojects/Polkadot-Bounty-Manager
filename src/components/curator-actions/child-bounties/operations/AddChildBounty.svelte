@@ -34,7 +34,7 @@
 			return;
 		}
 
-		let value = convertDotToPlanck(BigInt(bountyValue));
+		const value = convertDotToPlanck(BigInt(bountyValue));
 		const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
 			parent_bounty_id: bounty.id,
 			value,
@@ -47,7 +47,7 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let value = convertDotToPlanck(BigInt(bountyValue));
+				const value = convertDotToPlanck(BigInt(bountyValue));
 				const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
 					parent_bounty_id: bounty.id,
 					value,

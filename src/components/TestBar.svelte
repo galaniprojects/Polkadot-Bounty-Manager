@@ -5,7 +5,7 @@
 	import { createTypedApi } from '../utils/polkadot';
 
 	onMount(() => {
-		let node = sessionStorage.getItem('node');
+		const node = sessionStorage.getItem('node');
 		if (node) {
 			nodeEndpoint.set(node);
 			dotApi.set(createTypedApi(node));
