@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import {  onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import {
 		walletConnect as wcConnection,
 		activeAccount,
