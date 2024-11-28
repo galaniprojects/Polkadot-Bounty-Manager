@@ -2,10 +2,10 @@
 	import type { WalletInfo } from './walletInfo';
 	import WalletItem from './WalletItem.svelte';
 	import AccountItem from './AccountItem.svelte';
-	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svelte';
-	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svelte';
-	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svelte';
-	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svelte';
+	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svg';
+	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svg';
+	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
+	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
 	import { onDestroy, onMount } from 'svelte';
 	import { walletConnect } from '../../utils/wallet-connect';
 
@@ -221,7 +221,7 @@
 							<div class="relative">
 								<div class="w-6 h-6 ml-4 mt-4">
 									{#if selectedWallet?.icon}
-										<svelte:component this={selectedWallet.icon} />
+										<img src={selectedWallet.icon} alt="Logo" />
 									{/if}
 								</div>
 								<div
@@ -264,7 +264,7 @@
 					<div class="flex justify-end items-center">
 						<div class="w-6 h-6">
 							{#if selectedWallet?.icon}
-								<svelte:component this={selectedWallet.icon} />
+								<img src={selectedWallet.icon} alt="Logo" />
 							{/if}
 						</div>
 						<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button

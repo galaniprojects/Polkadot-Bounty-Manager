@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
-	import ForwardIcon from '../svg/ForwardIcon.svelte';
+	import ForwardIcon from '../svg/ForwardIcon.svg';
 
 	export let name;
 	export let address: string;
@@ -24,6 +24,6 @@
 	<!-- Action Button -->
 	<div class="flex items-center space-x-1">
 		<span class="text-white text-base">Select</span>
-		<span class="mb-1"><ForwardIcon /></span>
+		<span class="mb-1"><img src={ForwardIcon} alt="Forward" /></span>
 	</div>
 </div>

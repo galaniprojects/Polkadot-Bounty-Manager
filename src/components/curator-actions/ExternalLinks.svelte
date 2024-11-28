@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LogoTreasuryWhite from '../svg/curator-actions-logos/LogoTreasuryWhite.svelte';
-	import LogoSubscanWhite from '../svg/curator-actions-logos/LogoSubscanWhite.svelte';
-	import LogoSubsquareWhite from '../svg/curator-actions-logos/LogoSubsquareWhite.svelte';
+	import LogoTreasuryWhite from '../svg/curator-actions-logos/LogoTreasuryWhite.svg';
+	import LogoSubscanWhite from '../svg/curator-actions-logos/LogoSubscanWhite.svg';
+	import LogoSubsquareWhite from '../svg/curator-actions-logos/LogoSubsquareWhite.svg';
 	import ExternalLinksButton from '../ExternalLinksButton.svelte';
 
 	export let bountyId: number;

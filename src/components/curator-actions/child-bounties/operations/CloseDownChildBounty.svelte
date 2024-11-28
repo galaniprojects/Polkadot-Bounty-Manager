@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
-	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';

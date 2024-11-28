@@ -11,7 +11,7 @@
 	<!-- Wallet Icon and Name -->
 	<div class="flex items-center space-x-1 sm:space-x-2">
 		<span class="w-10 h-10">
-			<svelte:component this={wallet.icon} />
+			<img src={wallet.icon} alt="Logo" />
 		</span>
 		<span class="text-white text-2xl">{wallet.name}</span>
 	</div>

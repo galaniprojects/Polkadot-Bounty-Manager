@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
-	import ToggleIcon from '../../../svg/ToggleIcon.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 

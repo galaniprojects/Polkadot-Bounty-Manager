@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { isInteger } from '../../../../utils/common';
-	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
+	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
@@ -104,7 +104,7 @@
 				on:input={inputChange}
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]"><PolkaCoin /></div>
+			<div class="absolute right-2 top-[26px]"><img src={PolkaCoin} width="20" height="20" /></div>
 		</section>
 		<section>
 			<p class="text-xs">Title</p>
