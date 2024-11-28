@@ -61,7 +61,7 @@
 				return;
 			}
 
-			let result = await submitTransaction(transaction);
+			const result = await submitTransaction(transaction);
 
 			if (result) {
 				success = true;
@@ -76,8 +76,8 @@
 		if (!bountyInfo || !bountyInfo.id) {
 			return;
 		}
-		let transaction = $dotApi.tx.Bounties.approve_bounty({ bounty_id: bountyInfo.id });
-		let proposal: PreimagesBounded = PreimagesBounded.Inline(
+		const transaction = $dotApi.tx.Bounties.approve_bounty({ bounty_id: bountyInfo.id });
+		const proposal: PreimagesBounded = PreimagesBounded.Inline(
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
 		return $dotApi.tx.Referenda.submit({
@@ -106,7 +106,7 @@
 
 	async function calculateDeposit() {
 		try {
-			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
+			const base = await $dotApi.constants.Referenda.SubmissionDeposit();
 			deposit = formatPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';

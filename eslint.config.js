@@ -46,6 +46,7 @@ export default [
 	},
 	{
 		rules: {
+			'prefer-const': 'error',
 			'@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }],
 			'@typescript-eslint/restrict-template-expressions': [
 				'error',

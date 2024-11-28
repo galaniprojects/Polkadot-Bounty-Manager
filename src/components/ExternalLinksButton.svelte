@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	export function openLinkNewTab(link: string) {
-		let newTab = window.open(link, '_blank');
+		const newTab = window.open(link, '_blank');
 		if (newTab) {
 			newTab.focus();
 		}

@@ -69,12 +69,12 @@
 		if (!bountyInfo || !bountyInfo.id) {
 			throw new Error('Unexpected error, bounty id is not set');
 		}
-		let transaction = $dotApi.tx.Bounties.propose_curator({
+		const transaction = $dotApi.tx.Bounties.propose_curator({
 			bounty_id: bountyInfo.id,
 			curator: MultiAddress.Id(curatorAddress),
 			fee: convertDotToPlanck(BigInt(curatorFee))
 		});
-		let proposal: PreimagesBounded = PreimagesBounded.Inline(
+		const proposal: PreimagesBounded = PreimagesBounded.Inline(
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
 		);
 		return $dotApi.tx.Referenda.submit({
@@ -86,7 +86,7 @@
 
 	async function calculateDeposit() {
 		try {
-			let base = await $dotApi.constants.Referenda.SubmissionDeposit();
+			const base = await $dotApi.constants.Referenda.SubmissionDeposit();
 			deposit = formatPlanckToDot(base) + ' DOT';
 		} catch {
 			deposit = '-';

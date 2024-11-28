@@ -42,25 +42,25 @@
 			return;
 		}
 
-		let value = convertDotToPlanck(BigInt(bountyValue));
-		let description = bountyTitle;
-		let transaction = $dotApi.tx.Bounties.propose_bounty({
+		const value = convertDotToPlanck(BigInt(bountyValue));
+		const description = bountyTitle;
+		const transaction = $dotApi.tx.Bounties.propose_bounty({
 			value,
 			description: Binary.fromText(description)
 		});
-		let result = await submitTransaction(transaction, 'Bounty creation success.');
+		const result = await submitTransaction(transaction, 'Bounty creation success.');
 		if (!result) {
 			return;
 		}
 
-		let bountyEvent = result.events.find((event) => event.type === 'Bounties');
+		const bountyEvent = result.events.find((event) => event.type === 'Bounties');
 		if (!bountyEvent || bountyEvent.value.type !== 'BountyProposed') {
 			return;
 		}
 
 		const innerValue = bountyEvent.value.value as { index: number };
 		if ('index' in innerValue) {
-			let bountyIndex = innerValue.index;
+			const bountyIndex = innerValue.index;
 			bountyInfo = {
 				id: bountyIndex,
 				description: bountyTitle,
@@ -86,9 +86,9 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let value = convertDotToPlanck(BigInt(bountyValue));
-				let description = bountyTitle;
-				let transaction = $dotApi.tx.Bounties.propose_bounty({
+				const value = convertDotToPlanck(BigInt(bountyValue));
+				const description = bountyTitle;
+				const transaction = $dotApi.tx.Bounties.propose_bounty({
 					value,
 					description: Binary.fromText(description)
 				});
@@ -105,14 +105,14 @@
 	async function calculateBond() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let value = convertDotToPlanck(BigInt(bountyValue));
-				let description = bountyTitle;
-				let transaction = $dotApi.tx.Bounties.propose_bounty({
+				const value = convertDotToPlanck(BigInt(bountyValue));
+				const description = bountyTitle;
+				const transaction = $dotApi.tx.Bounties.propose_bounty({
 					value,
 					description: Binary.fromText(description)
 				});
 				const base = await $dotApi.constants.Bounties.BountyDepositBase();
-				let bytesLen = BigInt(transaction.getEncodedData.length);
+				const bytesLen = BigInt(transaction.getEncodedData.length);
 				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
 				bondValue = formatPlanckToDot(base + (bytesLen - 1n) * perByte) + ' DOT';
 			} else {
