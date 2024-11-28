@@ -22,6 +22,9 @@ jobs:
       - name: Move .env.example to .env
         run: mv .env.example .env
 
+      - name: Fetch PAPI metadata
+        run: npm run lint
+
       - name: Lint code
         run: npm run lint
 
