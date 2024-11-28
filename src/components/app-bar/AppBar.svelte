@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import {
 		walletConnect as wcConnection,
 		activeAccount,
@@ -30,12 +30,6 @@
 	function showLoginDialog() {
 		loginDialogOpen = true;
 	}
-
-	onDestroy(async () => {
-		if ($wcConnection) {
-			await $wcConnection.disconnect();
-		}
-	});
 
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
