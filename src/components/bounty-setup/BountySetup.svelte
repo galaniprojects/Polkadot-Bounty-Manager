@@ -2,7 +2,7 @@
 	export const TABS = ['Creation', 'Approval', 'Curator Proposal'];
 	export const TABS_QUERY_PARAMS = ['creation', 'approval', 'curator-proposal'];
 	export type BountyTab = (typeof TABS)[number];
-	</script>
+</script>
 
 <script lang="ts">
 	import { onMount } from 'svelte';
@@ -19,7 +19,7 @@
 	import { dotApi } from '../../stores';
 	import type { BountyInfo } from '../../types/bounty';
 
-	let bountyInfo: BountyInfo = {};
+	let bountyInfo: BountyInfo | undefined = undefined;
 
 	let activeTab = TABS[0];
 	function changeTabEvent(event: { detail: { tab: BountyTab } }) {

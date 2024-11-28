@@ -153,8 +153,12 @@
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
 					>RETURN HOME</button
 				>
-				<button disabled={!bountyInfo.id} on:click={() => { proceed() }} class="button-active"
-					>PROCEED</button
+				<button
+					disabled={!bountyInfo.id}
+					on:click={() => {
+						proceed();
+					}}
+					class="button-active">PROCEED</button
 				>
 			</div>
 		{:else if step === 2}

@@ -32,7 +32,7 @@ export enum BountyStatus {
 }
 
 export type BountyInfo = {
-	id?: number;
-	description?: string;
+	id: number;
+	description: string;
 	value?: bigint;
 };

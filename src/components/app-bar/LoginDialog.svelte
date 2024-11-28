@@ -244,7 +244,12 @@
 					<hr class="border-white opacity-35 mt-4 w-full" />
 					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 						{#each accounts as account}
-							<button class="w-full" on:click={() => { selectAccount(account); }}>
+							<button
+								class="w-full"
+								on:click={() => {
+									selectAccount(account);
+								}}
+							>
 								<AccountItem name={account.name} address={account.address} />
 							</button>
 						{/each}

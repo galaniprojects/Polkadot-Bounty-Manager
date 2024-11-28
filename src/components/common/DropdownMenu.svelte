@@ -78,7 +78,9 @@
 							hover:bg-curatorMainBackground focus:bg-curatorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
 						role="menuitem"
 						tabindex="-1"
-						on:click={() => { selectItem(item); }}
+						on:click={() => {
+							selectItem(item);
+						}}
 					>
 						{item}
 					</button>

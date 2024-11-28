@@ -16,7 +16,7 @@
 		});
 	}
 
-	export let bountyInfo: BountyInfo;
+	export let bountyInfo: BountyInfo | undefined;
 	let success = false;
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
@@ -151,12 +151,12 @@
 					<a href="#moreinfo">Tap here</a>
 				</p>
 			{/if}
-		{:else}
+		{:else if bountyInfo !== undefined}
 			<p class="text-white">{`#${bountyInfo.id} ${bountyInfo.description}`}</p>
 		{/if}
 	</div>
 
-	{#if success}
+	{#if success && bountyInfo !== undefined}
 		<div
 			class="bg-backgroundContent p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden"
 		>
