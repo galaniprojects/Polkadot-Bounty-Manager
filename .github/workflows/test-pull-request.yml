@@ -23,7 +23,7 @@ jobs:
         run: mv .env.example .env
 
       - name: Fetch PAPI metadata
-        run: npm run lint
+        run: npm run papi
 
       - name: Lint code
         run: npm run lint
