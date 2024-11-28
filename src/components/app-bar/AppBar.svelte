@@ -31,12 +31,6 @@
 		loginDialogOpen = true;
 	}
 
-	onDestroy(async () => {
-		if ($wcConnection) {
-			await $wcConnection.disconnect();
-		}
-	});
-
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
 		let account = sessionStorage.getItem('account');
