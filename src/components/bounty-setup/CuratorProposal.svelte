@@ -17,7 +17,7 @@
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
-	export let bountyInfo: BountyInfo;
+	export let bountyInfo: BountyInfo | undefined;
 	let curatorFee: string | undefined = undefined;
 	let curatorAddress: string | undefined;
 	let selectedTreasuryTrack = treasuryTracks[0];
@@ -66,7 +66,7 @@
 		if (!curatorAddress) {
 			throw new Error('Curator address is not set');
 		}
-		if (!bountyInfo.id) {
+		if (!bountyInfo || !bountyInfo.id) {
 			throw new Error('Unexpected error, bounty id is not set');
 		}
 		let transaction = $dotApi.tx.Bounties.propose_curator({
@@ -95,7 +95,7 @@
 
 	let inputTimeout = setTimeout(() => {}, 2000);
 	async function calculateFee() {
-		if (bountyInfo.id && curatorAddress && curatorFee && $activeAccount) {
+		if (bountyInfo && bountyInfo.id && curatorAddress && curatorFee && $activeAccount) {
 			try {
 				const transaction = await createProposalTransaction();
 				fee = (await calculateTransactionFee(transaction)) + ' DOT';
@@ -121,7 +121,7 @@
 <div>
 	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
-			{#if bountyInfo.id && bountyInfo.description}
+			{#if bountyInfo && bountyInfo.id && bountyInfo.description}
 				{`#${bountyInfo.id} ${bountyInfo.description}`}
 			{/if}
 		</p>
@@ -154,7 +154,7 @@
 					>RETURN HOME</button
 				>
 				<button
-					disabled={!bountyInfo.id}
+					disabled={!bountyInfo || !bountyInfo.id}
 					on:click={() => {
 						proceed();
 					}}
@@ -218,7 +218,7 @@
 				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
-		{:else}
+		{:else if bountyInfo !== undefined}
 			<p class="w-full md:w-2/3 text-sm sm:text-base">
 				The Referendum for Curator Proposal of Bounty <br />
 				{`"#${bountyInfo.id} ${bountyInfo.description}"`} <br />
