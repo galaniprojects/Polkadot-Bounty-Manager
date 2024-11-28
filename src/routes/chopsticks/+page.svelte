@@ -85,8 +85,8 @@
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
 	</div>
 	<button class="button-active mx-5" on:click={() => goto('/curator-actions')}>
-		=> Curator Actions</button
-	>
+		=> Curator Actions
+	</button>
 
 	<div class="mt-5 sm:flex flex-col sm:flex-row">
 		<label class="flex gap-3 mx-4">

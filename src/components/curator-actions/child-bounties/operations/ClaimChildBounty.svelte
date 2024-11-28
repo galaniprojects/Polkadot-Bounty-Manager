@@ -65,7 +65,10 @@
 		</div>
 	</div>
 
-	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
-		>SIGN</button
+	<button
+		on:click={submit}
+		class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
 	>
+		SIGN
+	</button>
 </Dialog>

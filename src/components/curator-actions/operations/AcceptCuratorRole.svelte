@@ -87,6 +87,8 @@
 		disabled={!isToggled}
 		class="w-full md:w-fit mt-10 h-12 button-popup {isToggled
 			? 'button-popup'
-			: 'opacity-50 cursor-not-allowed'}">SIGN</button
+			: 'opacity-50 cursor-not-allowed'}"
 	>
+		SIGN
+	</button>
 </Dialog>

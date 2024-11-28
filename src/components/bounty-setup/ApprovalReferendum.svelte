@@ -149,9 +149,9 @@
 				platforms.
 			</p>
 			<div class="mt-5 flex-col space-y-2 sm:flex-row max-w-fit">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel sm:mr-5"
-					>RETURN HOME</button
-				>
+				<button on:click={() => goto('/curator-actions')} class="button-cancel sm:mr-5">
+					RETURN HOME
+				</button>
 				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">PROCEED</button>
 			</div>
 		</div>
@@ -187,9 +187,9 @@
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
-				<button on:click={submit} disabled={!bountyInfo || !bountyInfo.id} class="button-active"
-					>SUBMIT</button
-				>
+				<button on:click={submit} disabled={!bountyInfo || !bountyInfo.id} class="button-active">
+					SUBMIT
+				</button>
 			</div>
 		</div>
 	{/if}

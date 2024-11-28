@@ -81,8 +81,10 @@
 		on:click={acceptCuratorRole}
 		disabled={!isToggled}
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
+		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}"
 	>
+		SIGN
+	</button>
 </Dialog>
 
 <style>

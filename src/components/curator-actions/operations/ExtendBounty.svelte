@@ -89,6 +89,7 @@
 	<button
 		on:click={submit}
 		class="w-full md:w-fit mt-10 h-12 px-10 rounded-md text-white bg-extendButtonBackground"
-		>SIGN</button
 	>
+		SIGN
+	</button>
 </Dialog>

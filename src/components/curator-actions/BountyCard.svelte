@@ -83,8 +83,10 @@
 						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-5"
 						on:click={() => {
 							awardBountyDialogOpen = true;
-						}}>READ FIRST</button
+						}}
 					>
+						READ FIRST
+					</button>
 				</div>
 			{/if}
 		</div>

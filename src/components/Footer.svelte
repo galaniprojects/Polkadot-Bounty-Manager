@@ -17,7 +17,7 @@
 	<p>
 		<img width="307" height="62" src={LogoBountyManagerDesktop} alt="Logo" />
 	</p>
-	<button on:click={handleClick} class="text-sm text-white underline underline-offset-2 pr-5"
-		>{text}</button
-	>
+	<button on:click={handleClick} class="text-sm text-white underline underline-offset-2 pr-5">
+		{text}
+	</button>
 </footer>

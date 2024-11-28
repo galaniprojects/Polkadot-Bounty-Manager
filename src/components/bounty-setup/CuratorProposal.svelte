@@ -150,16 +150,18 @@
 			</p>
 
 			<div class="flex-col space-y-2 sm:flex-row my-5 sm:mt-20">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
-					>RETURN HOME</button
-				>
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
+					RETURN HOME
+				</button>
 				<button
 					disabled={!bountyInfo || !bountyInfo.id}
 					on:click={() => {
 						proceed();
 					}}
-					class="button-active">PROCEED</button
+					class="button-active"
 				>
+					PROCEED
+				</button>
 			</div>
 		{:else if step === 2}
 			<div>
@@ -232,9 +234,9 @@
 			</p>
 
 			<div class="mt-7 sm:mt-24 mb-2 flex">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
-					>RETURN HOME</button
-				>
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
+					RETURN HOME
+				</button>
 			</div>
 		{/if}
 	</div>

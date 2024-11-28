@@ -21,8 +21,8 @@
 			<p>URL</p>
 			<p class="w-full break-words whitespace-normal">{url}</p>
 		</div>
-		<button on:click={proceed} class="w-full md:w-fit mt-10 h-12 px-10 rounded-md {buttonStyle}"
-			>PROCEED</button
-		>
+		<button on:click={proceed} class="w-full md:w-fit mt-10 h-12 px-10 rounded-md {buttonStyle}">
+			PROCEED
+		</button>
 	</div>
 </Dialog>

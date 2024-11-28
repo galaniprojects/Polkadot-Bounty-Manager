@@ -61,9 +61,9 @@
 			</div>
 		</div>
 
-		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5"
-			>{childBounty.status}</span
-		>
+		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">
+			{childBounty.status}
+		</span>
 	</div>
 
 	<!-- Child Bounty Card Content -->

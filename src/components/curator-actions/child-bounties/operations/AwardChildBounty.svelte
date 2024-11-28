@@ -82,7 +82,9 @@
 			disabled={beneficiary.length === 0}
 			class="w-full md:w-fit mt-10 h-12 bg-childBountyGreen basic-button {beneficiary.length === 0
 				? 'opacity-50 cursor-not-allowed'
-				: ''}">SIGN</button
+				: ''}"
 		>
+			SIGN
+		</button>
 	</div>
 </Dialog>
