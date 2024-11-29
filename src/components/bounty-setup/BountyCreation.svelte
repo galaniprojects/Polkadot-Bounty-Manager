@@ -5,7 +5,6 @@
 	import { convertDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
 	import { isInteger } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
-	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
 
@@ -171,9 +170,7 @@
 			</p>
 
 			<div class="flex-col space-y-2 sm:flex-row mt-10 sm:mt-40">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
-					RETURN HOME
-				</button>
+				<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
 				<button on:click={changeTab} class="button-active">PROCEED</button>
 			</div>
 		</div>
@@ -205,7 +202,7 @@
 				</div>
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
+				<a href="/curator-actions" class="button-cancel">CANCEL</a>
 				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active">
 					SUBMIT
 				</button>

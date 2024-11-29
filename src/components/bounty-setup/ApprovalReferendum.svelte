@@ -5,7 +5,6 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { formatPlanckToDot } from '../../utils/polkadot';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
-	import { goto } from '$app/navigation';
 	import {
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
@@ -149,9 +148,7 @@
 				platforms.
 			</p>
 			<div class="mt-5 flex-col space-y-2 sm:flex-row max-w-fit">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel sm:mr-5">
-					RETURN HOME
-				</button>
+				<a href="/curator-actions" class="button-cancel sm:mr-5">RETURN HOME</a>
 				<button on:click={submit} disabled={!bountyInfo.id} class="button-active">PROCEED</button>
 			</div>
 		</div>
@@ -186,7 +183,7 @@
 				</div>
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
+				<a href="/curator-actions" class="button-cancel">CANCEL</a>
 				<button on:click={submit} disabled={!bountyInfo || !bountyInfo.id} class="button-active">
 					SUBMIT
 				</button>

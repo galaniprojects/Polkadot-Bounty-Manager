@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import { BountyStatus, type Bounty } from '../../types/bounty';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
@@ -32,14 +31,12 @@
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 
-			<button
-				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
-				on:click={async () => {
-					await goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
-				}}
+			<a
+				class="link-button w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
+				href={`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`}
 			>
 				PROPOSE
-			</button>
+			</a>
 		</div>
 	{/if}
 

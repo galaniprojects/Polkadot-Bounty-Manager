@@ -1,7 +1,3 @@
-<script>
-	const email = 'info@galaniprojects.de';
-</script>
-
 <div
 	class="bg-curatorMainBackground rounded-lg m-0 mb-3 sm:my-5 sm:mx-12 px-5 py-5 flex-col space-y-5 text-white"
 >
@@ -41,9 +37,9 @@
 		Telephone: +49 (0) 30 2123 2827 <br />
 		Telefax: +49 (0) 30 2191 3767 <br />
 		Email:
-		<a href={`mailto:${email}`} target="_self" class="underline underline-offset-2"
-			>info@galaniprojects.de</a
-		>
+		<a href="mailto:info@galaniprojects.de" class="underline underline-offset-2">
+			info@galaniprojects.de
+		</a>
 	</p>
 
 	<h2 class="text-xl">Terms and Conditions for Bounty Manager</h2>

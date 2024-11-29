@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
-	import { goto } from '$app/navigation';
 	import BountyCard from './BountyCard.svelte';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 
@@ -19,14 +18,12 @@
 				<h2 class="title mt-1 text-3xl text-white">Create new bounty here</h2>
 				<span class="material-symbols-outlined text-white text-xl"> arrow_forward_ios </span>
 			</div>
-			<button
-				on:click={async () => {
-					await goto('/bounty-setup');
-				}}
-				class="border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
+			<a
+				href="/bounty-setup"
+				class="link-button border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
 			>
 				NEW BOUNTY
-			</button>
+			</a>
 		</div>
 
 		<div class="min-h-[70vh]">
