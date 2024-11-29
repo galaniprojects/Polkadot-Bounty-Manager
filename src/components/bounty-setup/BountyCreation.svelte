@@ -171,9 +171,9 @@
 			</p>
 
 			<div class="flex-col space-y-2 sm:flex-row mt-10 sm:mt-40">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5"
-					>RETURN HOME</button
-				>
+				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
+					RETURN HOME
+				</button>
 				<button on:click={changeTab} class="button-active">PROCEED</button>
 			</div>
 		</div>
@@ -206,9 +206,9 @@
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
 				<button on:click={() => goto('/curator-actions')} class="button-cancel">CANCEL</button>
-				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active"
-					>SUBMIT</button
-				>
+				<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active">
+					SUBMIT
+				</button>
 			</div>
 		</div>
 	{/if}

@@ -24,8 +24,9 @@
 					await goto('/bounty-setup');
 				}}
 				class="border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
-				>NEW BOUNTY</button
 			>
+				NEW BOUNTY
+			</button>
 		</div>
 
 		<div class="min-h-[70vh]">

@@ -48,8 +48,9 @@
 						<button
 							on:click={() => (createChildBountyOpen = true)}
 							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-							>ADD</button
 						>
+							ADD
+						</button>
 					</div>
 				{/if}
 				<!-- TODO: salary child bounties -->
@@ -60,8 +61,9 @@
 						<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
 						<button
 							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-							>ADD</button
 						>
+							ADD
+						</button>
 					</div>
 				{/if}
 			</div>

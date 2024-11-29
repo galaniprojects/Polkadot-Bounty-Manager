@@ -76,6 +76,8 @@
 		on:click={submit}
 		disabled={!isToggled}
 		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
-  {!isToggled ? 'button-popup' : 'cursor-allowed'}">SIGN</button
+  {!isToggled ? 'button-popup' : 'cursor-allowed'}"
 	>
+		SIGN
+	</button>
 </Dialog>

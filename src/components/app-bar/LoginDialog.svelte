@@ -267,10 +267,11 @@
 								<img src={selectedWallet.icon} alt="Logo" />
 							{/if}
 						</div>
-						<button class="flex items-center text-white px-4">{selectedWallet?.name} &nbsp |</button
-						>
-						<button on:click={backToWalletSelection} class="text-white flex items-center"
-							>Switch
+						<button class="flex items-center text-white px-4">
+							{selectedWallet?.name} &nbsp |
+						</button>
+						<button on:click={backToWalletSelection} class="text-white flex items-center">
+							Switch
 						</button>
 					</div>
 				</div>

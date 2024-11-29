@@ -37,7 +37,8 @@
 				on:click={async () => {
 					await goto(`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`);
 				}}
-				>PROPOSE
+			>
+				PROPOSE
 			</button>
 		</div>
 	{/if}
@@ -49,8 +50,10 @@
 				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 				on:click={() => {
 					acceptCuratorRoleDialogOpen = true;
-				}}>ACCEPT</button
+				}}
 			>
+				ACCEPT
+			</button>
 		</div>
 	{/if}
 
@@ -61,8 +64,10 @@
 				class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 				on:click={() => {
 					extendBountyDialogOpen = true;
-				}}>EXTEND</button
+				}}
 			>
+				EXTEND
+			</button>
 		</div>
 	{/if}
 

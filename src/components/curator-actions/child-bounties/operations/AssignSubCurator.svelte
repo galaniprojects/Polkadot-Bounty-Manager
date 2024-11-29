@@ -103,6 +103,8 @@
 		on:click={submit}
 		disabled={!curatorAddress.length}
 		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}">SIGN</button
+		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}"
 	>
+		SIGN
+	</button>
 </Dialog>
