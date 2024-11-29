@@ -3,7 +3,7 @@
 	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
-	import ToggleIcon from '../../svg/ToggleIcon.svelte';
+	import ToggleIcon from '../../ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
 	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
 	import { calculateDeposit } from './calculateDeposit';

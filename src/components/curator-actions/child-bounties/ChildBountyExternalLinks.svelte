@@ -1,6 +1,6 @@
 <script lang="ts">
-	import LogoSubsquarePink from '../../svg/curator-actions-logos/LogoSubsquarePink.svelte';
-	import LogoTreasuryPink from '../../svg/curator-actions-logos/LogoTreasuryPink.svelte';
+	import LogoSubsquarePink from '../../svg/curator-actions-logos/LogoSubsquarePink.svg';
+	import LogoTreasuryPink from '../../svg/curator-actions-logos/LogoTreasuryPink.svg';
 	import ExternalLinksButton from '../../ExternalLinksButton.svelte';
 
 	export let dimension = 5;

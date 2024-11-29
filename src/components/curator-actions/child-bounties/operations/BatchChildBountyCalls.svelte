@@ -6,7 +6,7 @@
 	import { showErrorDialog, showLoadingDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isInteger } from '../../../../utils/common';
-	import PolkaCoin from '../../../svg/PolkaCoin.svelte';
+	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
 
@@ -130,7 +130,9 @@
 				placeholder="0"
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]"><PolkaCoin /></div>
+			<div class="absolute right-2 top-[26px]">
+				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
+			</div>
 		</div>
 
 		<div class="mt-5">

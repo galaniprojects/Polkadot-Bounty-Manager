@@ -10,8 +10,7 @@
 <script lang="ts">
 	import ExternalLinksDialog from './ExternalLinksDialog.svelte';
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	export let icon: any;
+	export let icon: string;
 	export let url: string;
 	export let dimension: number = 10;
 	export let backgroundColor: string = 'curatorMainBackground';
@@ -40,5 +39,5 @@
 />
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
-	<svelte:component this={icon} />
+	<img src={icon} alt="" />
 </button>

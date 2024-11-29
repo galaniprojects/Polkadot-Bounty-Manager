@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CloseIcon from '../svg/CloseIcon.svelte';
+	import CloseIcon from '../svg/CloseIcon.svg';
 	import { onDestroy } from 'svelte';
 
 	export let open = false;
@@ -47,7 +47,7 @@
 			<div class="flex justify-end">
 				{#if dismissable}
 					<button class={getColorClass(textColor)} on:click={() => (open = false)}>
-						<CloseIcon />
+						<img src={CloseIcon} alt="Close icon" height="30" width="30" />
 					</button>
 				{/if}
 			</div>
