@@ -176,6 +176,6 @@
 
 <style>
 	.bold {
-		font-family: 'Overpass Bold';
+    font-weight: 700;
 	}
 </style>

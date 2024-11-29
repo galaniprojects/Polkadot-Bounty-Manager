@@ -290,7 +290,7 @@
 
 <style>
 	.status {
-		font-family: 'Overpass Italic';
+		font-style: italic;
 	}
 
 	.active {

@@ -1,34 +1,8 @@
+@import './components/Typography/Typography.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@font-face {
-	font-family: 'Overpass Light';
-	src: url('/fonts/Overpass-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass';
-	src: url('/fonts/Overpass-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass Bold';
-	src: url('/fonts/Overpass-Bold.ttf') format('truetype');
-	font-weight: 700;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass Italic';
-	src: url('/fonts/Overpass-Italic.ttf') format('truetype');
-	font-weight: 400;
-	font-style: italic;
-}
 
 @font-face {
 	font-family: 'Material Symbols Rounded';
@@ -44,15 +18,7 @@
 	font-style: normal;
 }
 
-@font-face {
-	font-family: 'PT Mono';
-	src: url('fonts/PTMono-Regular.ttf') format('truetype');
-	font-style: normal;
-	font-weight: 400;
-}
-
 body {
-	font-family: 'Overpass';
 	color: theme('colors.primary');
 }
 
