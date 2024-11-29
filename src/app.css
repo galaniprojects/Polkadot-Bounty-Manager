@@ -87,12 +87,3 @@ body {
 	font-family: 'Material Symbols Outlined';
 	line-height: 0px;
 }
-
-.material-symbols-rounded {
-	font-family: 'Material Symbols Rounded';
-	font-variation-settings:
-		'FILL' 0,
-		'wght' 400,
-		'GRAD' 0,
-		'opsz' 24;
-}
