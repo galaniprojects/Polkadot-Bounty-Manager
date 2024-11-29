@@ -4,20 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: 'Material Symbols Rounded';
-	src: url('/fonts/MaterialSymbolsRounded.ttf');
-	font-style: normal;
-	font-weight: 400;
-}
-
-@font-face {
-	font-family: 'Material Symbols Outlined';
-	src: url('/fonts/MaterialSymbolsOutlined.ttf');
-	font-weight: 400;
-	font-style: normal;
-}
-
 body {
 	color: theme('colors.primary');
 }
@@ -47,9 +33,4 @@ body {
 
 .button-popup {
 	@apply px-10 rounded-md bg-white text-accent;
-}
-
-.material-symbols-outlined {
-	font-family: 'Material Symbols Outlined';
-	line-height: 0px;
 }
