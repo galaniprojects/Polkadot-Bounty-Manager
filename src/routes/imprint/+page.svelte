@@ -176,6 +176,6 @@
 
 <style>
 	.bold {
-    font-weight: 700;
+		font-weight: 700;
 	}
 </style>
