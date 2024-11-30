@@ -10,7 +10,7 @@ import type { WalletConnect } from '@reactive-dot/wallet-walletconnect';
 
 export const nodeEndpoint = writable(PUBLIC_NODE_ENDPOINT);
 
-export const dotApi = writable(createTypedApi(PUBLIC_NODE_ENDPOINT));
+export const dotApi = writable(createTypedApi("wss://polkadot-rpc.publicnode.com"));
 
 // Session.
 export const activeAccount = writable<AccountInfo | undefined>(undefined);
