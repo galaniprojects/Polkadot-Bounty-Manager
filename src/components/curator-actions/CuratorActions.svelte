@@ -81,6 +81,6 @@
 	}
 
 	.title {
-		font-family: 'Overpass Light';
+		font-weight: 300;
 	}
 </style>

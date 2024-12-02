@@ -1,65 +1,10 @@
+@import './components/Typography/Typography.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-	font-family: 'Overpass Light';
-	src: url('/fonts/Overpass-Light.ttf') format('truetype');
-	font-weight: 300;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass';
-	src: url('/fonts/Overpass-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass Bold';
-	src: url('/fonts/Overpass-Bold.ttf') format('truetype');
-	font-weight: 700;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Overpass Italic';
-	src: url('/fonts/Overpass-Italic.ttf') format('truetype');
-	font-weight: 400;
-	font-style: italic;
-}
-
-@font-face {
-	font-family: 'Material Symbols Rounded';
-	src: url('/fonts/MaterialSymbolsRounded.ttf');
-	font-style: normal;
-	font-weight: 400;
-}
-
-@font-face {
-	font-family: 'Material Symbols Outlined';
-	src: url('/fonts/MaterialSymbolsOutlined.ttf');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'Secular One';
-	src: url('/fonts/SecularOne-Regular.ttf') format('truetype');
-	font-weight: 400;
-	font-style: normal;
-}
-
-@font-face {
-	font-family: 'PT Mono';
-	src: url('fonts/PTMono-Regular.ttf') format('truetype');
-	font-style: normal;
-	font-weight: 400;
-}
-
 body {
-	font-family: 'Overpass';
 	color: theme('colors.primary');
 }
 
@@ -88,18 +33,4 @@ body {
 
 .button-popup {
 	@apply px-10 rounded-md bg-white text-accent;
-}
-
-.material-symbols-outlined {
-	font-family: 'Material Symbols Outlined';
-	line-height: 0px;
-}
-
-.material-symbols-rounded {
-	font-family: 'Material Symbols Rounded';
-	font-variation-settings:
-		'FILL' 0,
-		'wght' 400,
-		'GRAD' 0,
-		'opsz' 24;
 }
