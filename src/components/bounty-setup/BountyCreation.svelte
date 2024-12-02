@@ -2,8 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount, dotApi } from '../../stores';
-	import { convertDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
-	import { isInteger } from '../../utils/common';
+	import { convertFormattedDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
+	import { isPositiveNumber } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
@@ -37,12 +37,12 @@
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
-		if (!isInteger(bountyValue)) {
+		if (!isPositiveNumber(bountyValue)) {
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
 
-		let value = convertDotToPlanck(BigInt(bountyValue));
+		let value = convertFormattedDotToPlanck(bountyValue);
 		let description = bountyTitle;
 		let transaction = $dotApi.tx.Bounties.propose_bounty({
 			value,
@@ -85,7 +85,7 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let value = convertDotToPlanck(BigInt(bountyValue));
+				let value = convertFormattedDotToPlanck(bountyValue);
 				let description = bountyTitle;
 				let transaction = $dotApi.tx.Bounties.propose_bounty({
 					value,
@@ -104,7 +104,7 @@
 	async function calculateBond() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				let value = convertDotToPlanck(BigInt(bountyValue));
+				let value = convertFormattedDotToPlanck(bountyValue);
 				let description = bountyTitle;
 				let transaction = $dotApi.tx.Bounties.propose_bounty({
 					value,
@@ -186,7 +186,7 @@
 					<input
 						bind:value={bountyValue}
 						class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
-						placeholder="1000"
+						placeholder="1000.00"
 						on:input={inputChange}
 					/>
 				</section>

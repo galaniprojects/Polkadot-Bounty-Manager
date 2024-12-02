@@ -2,8 +2,12 @@
 	import type { BountyInfo } from './BountySetup.svelte';
 	import { activeAccount, dotApi } from '../../stores';
 	import { treasuryTracks } from './ApprovalReferendum.svelte';
-	import { convertDotToPlanck, formatPlanckToDot, isValidAddress } from '../../utils/polkadot';
-	import { isInteger } from '../../utils/common';
+	import {
+		convertFormattedDotToPlanck,
+		formatPlanckToDot,
+		isValidAddress
+	} from '../../utils/polkadot';
+	import { isPositiveNumber } from '../../utils/common';
 	import { onMount } from 'svelte';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { goto } from '$app/navigation';
@@ -47,7 +51,7 @@
 			return;
 		}
 
-		if (!curatorFee || !isInteger(curatorFee)) {
+		if (!curatorFee || !isPositiveNumber(curatorFee)) {
 			showErrorDialog('Invalid value of curator fee');
 			return;
 		}
@@ -72,7 +76,7 @@
 		let transaction = $dotApi.tx.Bounties.propose_curator({
 			bounty_id: bountyInfo.id,
 			curator: MultiAddress.Id(curatorAddress),
-			fee: convertDotToPlanck(BigInt(curatorFee))
+			fee: convertFormattedDotToPlanck(curatorFee)
 		});
 		let proposal: PreimagesBounded = PreimagesBounded.Inline(
 			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
@@ -179,7 +183,7 @@
 						<p class="text-xs my-1">Curator Fee</p>
 						<input
 							bind:value={curatorFee}
-							placeholder="0"
+							placeholder="00.00"
 							on:input={inputChange}
 							class="pt-1 pl-2 rounded-md bg-white mr-2 w-full md:w-1/3"
 						/>

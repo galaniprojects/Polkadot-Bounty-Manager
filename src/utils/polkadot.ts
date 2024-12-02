@@ -4,11 +4,34 @@ import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
 import { AccountId, createClient, getSs58AddressInfo } from 'polkadot-api';
 import { dot } from '@polkadot-api/descriptors';
 import { getWsProvider } from 'polkadot-api/ws-provider/web';
+import { isPositiveNumber } from './common';
 
 export function createTypedApi(nodeEndpoint: string) {
 	const sdkProvider = withPolkadotSdkCompat(getWsProvider(nodeEndpoint));
 	const sdkClient = createClient(sdkProvider);
 	return sdkClient.getTypedApi(dot);
+}
+
+export function convertFormattedDotToPlanck(value: string): bigint {
+	if (!isPositiveNumber(value)) {
+		throw new Error('Provided value is invalid');
+	}
+
+	const parts = value.split('.');
+	const integerPartInPlanck: bigint = convertDotToPlanck(BigInt(parts[0]));
+	let decimalPart = parts[1] || '';
+
+	if (decimalPart === '') {
+		return integerPartInPlanck;
+	}
+
+	if (decimalPart.length > 10) {
+		throw new Error('Provided value is invalid');
+	}
+	decimalPart = decimalPart.padEnd(10, '0');
+	const decimalPartInPlack = BigInt(decimalPart);
+
+	return integerPartInPlanck + decimalPartInPlack;
 }
 
 export function convertDotToPlanck(value: bigint): bigint {

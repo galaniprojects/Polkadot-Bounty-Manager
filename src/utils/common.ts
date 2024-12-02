@@ -1,5 +1,13 @@
 import { getCurrentBlock } from './polkadot';
 
+/**
+ * @returns `true` if `input` represents a positive integer or decimal number.
+ */
+export function isPositiveNumber(input: string): boolean {
+	const positiveNumberRegex = /^\d+(\.\d+)?$/;
+	return positiveNumberRegex.test(input);
+}
+
 export function isInteger(input: string): boolean {
 	const num = parseInt(input, 10);
 	return Number.isInteger(num) && num.toString() === input;
