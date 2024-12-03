@@ -1,11 +1,17 @@
 import { getCurrentBlock } from './polkadot';
 
 /**
- * @returns `true` if `input` represents a positive integer or decimal number.
+ * @returns `true` if `input` represents a positive integer or decimal number
+ * and the number of decimal places does not exceed `maxPrecision`.
  */
-export function isPositiveNumber(input: string): boolean {
+export function isPositiveNumber(input: string, maxPrecision = 10): boolean {
 	const positiveNumberRegex = /^\d+(\.\d+)?$/;
-	return positiveNumberRegex.test(input);
+	if (!positiveNumberRegex.test(input)) {
+		return false;
+	}
+
+	const decimalPart = input.split('.')[1] || '';
+	return decimalPart.length <= maxPrecision;
 }
 
 export function isInteger(input: string): boolean {

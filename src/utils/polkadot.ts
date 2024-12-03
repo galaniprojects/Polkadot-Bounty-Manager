@@ -24,10 +24,6 @@ export function convertFormattedDotToPlanck(value: string): bigint {
 	if (decimalPart === '') {
 		return integerPartInPlanck;
 	}
-
-	if (decimalPart.length > 10) {
-		throw new Error('Provided value is invalid');
-	}
 	decimalPart = decimalPart.padEnd(10, '0');
 	const decimalPartInPlack = BigInt(decimalPart);
 
