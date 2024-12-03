@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Bounty } from '../../../../types/bounty';
-	import { convertDotToPlanck } from '../../../../utils/polkadot';
+	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
-	import { isInteger } from '../../../../utils/common';
+	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
@@ -29,12 +29,12 @@
 			showErrorDialog('Bounty title is empty');
 			return;
 		}
-		if (!bountyValue || !isInteger(bountyValue)) {
+		if (!bountyValue || !isPositiveNumber(bountyValue)) {
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
 
-		const value = convertDotToPlanck(BigInt(bountyValue));
+		const value = convertFormattedDotToPlanck(bountyValue);
 		const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
 			parent_bounty_id: bounty.id,
 			value,
@@ -47,7 +47,7 @@
 	async function calculateFee() {
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
-				const value = convertDotToPlanck(BigInt(bountyValue));
+				const value = convertFormattedDotToPlanck(bountyValue);
 				const transaction = $dotApi.tx.ChildBounties.add_child_bounty({
 					parent_bounty_id: bounty.id,
 					value,
@@ -100,7 +100,7 @@
 			<input
 				bind:value={bountyValue}
 				class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
-				placeholder="0"
+				placeholder="00.00"
 				on:input={inputChange}
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>

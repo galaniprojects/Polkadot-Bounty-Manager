@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { convertDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
+	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
-	import { isInteger } from '../../../../utils/common';
+	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
@@ -28,7 +28,7 @@
 			return;
 		}
 
-		if (!isInteger(curatorFee)) {
+		if (!isPositiveNumber(curatorFee)) {
 			showErrorDialog('Curator fee value is invalid');
 			return;
 		}
@@ -37,7 +37,7 @@
 			parent_bounty_id: childBounty.parentBounty,
 			child_bounty_id: childBounty.id,
 			curator: MultiAddress.Id(curatorAddress),
-			fee: convertDotToPlanck(BigInt(curatorFee))
+			fee: convertFormattedDotToPlanck(curatorFee)
 		});
 		await submitTransaction(transaction);
 	}
@@ -52,7 +52,7 @@
 				parent_bounty_id: childBounty.parentBounty,
 				child_bounty_id: childBounty.id,
 				curator: MultiAddress.Id($activeAccount.address),
-				fee: convertDotToPlanck(BigInt(curatorFee))
+				fee: convertFormattedDotToPlanck(curatorFee)
 			});
 			fee = (await calculateTransactionFee(transaction)) + ' DOT';
 		} catch (e) {
@@ -86,7 +86,7 @@
 			<input
 				bind:value={curatorFee}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-				placeholder="0"
+				placeholder="00.00"
 			/>
 			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
 			<div class="absolute right-2 top-[26px]">
