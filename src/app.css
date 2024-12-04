@@ -34,3 +34,8 @@ body {
 .button-popup {
 	@apply px-10 rounded-md bg-white text-accent;
 }
+
+.link-button {
+	display: inline-grid;
+	place-content: center;
+}

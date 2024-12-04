@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import {
 		walletConnect as wcConnection,
@@ -93,12 +92,12 @@
 	class="relative flex items-center justify-between h-20 bg-primary px-4 sm:px-12 overflow-clip"
 >
 	<div class="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 pt-2">
-		<button on:click={() => goto('/curator-actions')} class="hidden md:inline-flex">
+		<a href="/curator-actions" class="hidden md:inline-flex">
 			<img width="307" height="62" src={LogoBountyManagerDesktop} alt="Logo" />
-		</button>
-		<button on:click={() => goto('/curator-actions')} class="md:hidden">
+		</a>
+		<a href="/curator-actions" class="md:hidden">
 			<img width="71" height="54" src={LogoBountyManagerMobile} alt="Logo" />
-		</button>
+		</a>
 	</div>
 
 	<div class="ml-auto">

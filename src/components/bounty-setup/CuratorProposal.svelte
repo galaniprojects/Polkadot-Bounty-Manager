@@ -6,7 +6,6 @@
 	import { isInteger } from '../../utils/common';
 	import { onMount } from 'svelte';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
-	import { goto } from '$app/navigation';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
@@ -150,9 +149,7 @@
 			</p>
 
 			<div class="flex-col space-y-2 sm:flex-row my-5 sm:mt-20">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
-					RETURN HOME
-				</button>
+				<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
 				<button
 					disabled={!bountyInfo || !bountyInfo.id}
 					on:click={() => {
@@ -217,7 +214,7 @@
 				</div>
 			</div>
 			<div class="flex-col space-y-2 sm:flex-row my-3 sm:mt-10 sm:mb-5">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">CANCEL</button>
+				<a href="/curator-actions" class="button-cancel mr-5">CANCEL</a>
 				<button on:click={() => submit()} class="button-active">SUBMIT</button>
 			</div>
 		{:else if bountyInfo !== undefined}
@@ -234,9 +231,7 @@
 			</p>
 
 			<div class="mt-7 sm:mt-24 mb-2 flex">
-				<button on:click={() => goto('/curator-actions')} class="button-cancel mr-5">
-					RETURN HOME
-				</button>
+				<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
 			</div>
 		{/if}
 	</div>
