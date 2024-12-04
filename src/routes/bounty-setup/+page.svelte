@@ -1,5 +1,6 @@
 <script lang="ts">
-	import BountySetup from '../../components/bounty-setup/BountySetup.svelte';
+	import BountyCreation from '../../components/bounty-setup/BountyCreation.svelte';
+	import { bountyInfo } from './_bountyInfo';
 </script>
 
-<BountySetup />
+<BountyCreation bind:bountyInfo={$bountyInfo} />

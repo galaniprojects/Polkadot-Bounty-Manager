@@ -33,7 +33,7 @@
 
 			<a
 				class="link-button w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
-				href={`/bounty-setup?step=curator-proposal&bounty-id=${bounty.id}`}
+				href={`/bounty-setup/curator-proposal?bounty-id=${bounty.id}`}
 			>
 				PROPOSE
 			</a>

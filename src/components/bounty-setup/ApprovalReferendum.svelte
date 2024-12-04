@@ -2,7 +2,8 @@
 	import { treasuryTracks } from './treasuryTracks';
 	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { formatPlanckToDot } from '../../utils/polkadot';
 	import { showErrorDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import {
@@ -21,13 +22,6 @@
 	let fee = '-';
 	let deposit = '-';
 
-	const dispatch = createEventDispatcher();
-	function changeTab() {
-		dispatch('changeTab', {
-			tab: 'Curator Proposal'
-		});
-	}
-
 	onMount(async () => {
 		if (!bountyInfo || !bountyInfo.value) {
 			return;
@@ -45,7 +39,7 @@
 
 	async function submit() {
 		if (success) {
-			changeTab();
+			await goto('/bounty-setup/curator-proposal');
 			return;
 		}
 		showLoadingDialog('Submitting transaction');

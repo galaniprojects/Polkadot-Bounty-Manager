@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import type { BountyInfo } from '../../types/bounty';
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertFormattedDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
@@ -7,13 +8,6 @@
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { Binary } from 'polkadot-api';
 	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
-
-	const dispatch = createEventDispatcher();
-	function changeTab() {
-		dispatch('changeTab', {
-			tab: 'Approval'
-		});
-	}
 
 	export let bountyInfo: BountyInfo | undefined;
 	let success = false;
@@ -66,11 +60,9 @@
 				value: BigInt(bountyValue)
 			};
 
-			// Set bounty-id in query parameters.
-			const urlParams = new URLSearchParams(window.location.search);
-			urlParams.set('bounty-id', String(bountyIndex));
-			const url = new URL(window.location.toString());
-			history.pushState({}, '', `${url.pathname}?${urlParams.toString()}`);
+			const url = new URL($page.url);
+			url.searchParams.set('bounty-id', String(bountyIndex));
+			await goto(url);
 		}
 
 		success = true;
@@ -171,7 +163,7 @@
 
 			<div class="flex-col space-y-2 sm:flex-row mt-10 sm:mt-40">
 				<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
-				<button on:click={changeTab} class="button-active">PROCEED</button>
+				<a href="/bounty-setup/approval" class="button-active">PROCEED</a>
 			</div>
 		</div>
 	{:else}
