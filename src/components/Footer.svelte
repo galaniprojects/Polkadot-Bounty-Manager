@@ -10,7 +10,10 @@
 	<p>
 		<img width="307" height="62" src={LogoBountyManagerDesktop} alt="Logo" />
 	</p>
-	<a href={isOnImprintPage ? '/curator-actions' : '/imprint'} class="text-sm text-white underline underline-offset-2 pr-5">
+	<a
+		href={isOnImprintPage ? '/curator-actions' : '/imprint'}
+		class="text-sm text-white underline underline-offset-2 pr-5"
+	>
 		{isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions'}
 	</a>
 </footer>
