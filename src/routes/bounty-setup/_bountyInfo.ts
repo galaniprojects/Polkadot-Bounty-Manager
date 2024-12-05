@@ -1,4 +1,9 @@
 import { writable } from 'svelte/store';
-import type { BountyInfo } from '../../types/bounty';
+
+export interface BountyInfo {
+	id: number;
+	description: string;
+	value?: bigint;
+}
 
 export const bountyInfo = writable<BountyInfo | undefined>();
