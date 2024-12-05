@@ -1,0 +1,37 @@
+.basic-button {
+	padding-inline: 2.5rem;
+	padding-top: 0.25rem;
+	border-radius: 0.375rem;
+	color: var(--color-white);
+}
+
+.button-active {
+  composes: basic-button;
+	background-color: var(--color-accent);
+}
+
+.button-active:disabled {
+	background-color: rgba(230, 0, 122, 0.5);
+}
+
+.button-cancel {
+  composes: basic-button;
+	background-color: var(--color-darkgray);
+}
+
+.button-cancel:disabled {
+  composes: basic-button;
+	background-color: rgba(138, 124, 151, 0.5);
+}
+
+.button-popup {
+  padding-inline: 2.5rem;
+  border-radius: 0.375rem;
+  background-color: var(--color-white);
+  color: var(--color-accent);
+}
+
+.link-button {
+	display: inline-grid;
+	place-content: center;
+}

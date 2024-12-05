@@ -27,7 +27,7 @@
 	}
 
 	:global(.switch::before) {
-		background-color: var(--switch-background, theme('colors.curatorMainBackground'));
+		background-color: var(--switch-background, var(--color-curatorMainBackground));
 		content: '';
 		width: 22px;
 		height: 22px;
@@ -41,7 +41,7 @@
 	}
 
 	:global(.checked::before) {
-		background-color: var(--switch-checked-background, theme('colors.accent'));
+		background-color: var(--switch-checked-background, var(--color-accent));
 		transform: translateX(25px);
 	}
 </style>

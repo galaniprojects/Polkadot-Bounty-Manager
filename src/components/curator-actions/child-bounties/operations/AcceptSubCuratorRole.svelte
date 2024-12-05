@@ -90,7 +90,7 @@
 <style>
 	.custom-toggle {
 		--toggle-background: rgba(101, 112, 139, 0.5);
-		--switch-background: theme('colors.white');
-		--switch-checked-background: theme('colors.childBountyGray');
+		--switch-background: white;
+		--switch-checked-background: var(--color-childBountyGray);
 	}
 </style>

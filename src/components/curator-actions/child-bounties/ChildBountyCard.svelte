@@ -294,39 +294,39 @@
 	}
 
 	.active {
-		background-color: theme('colors.childBountyGreen');
+		background-color: var(--color-childBountyGreen);
 	}
 	#close.active {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGreen');
-		color: theme('colors.childBountyGreen');
+		background-color: transparent;
+		border-color: var(--color-childBountyGreen);
+		color: var(--color-childBountyGreen);
 	}
 
 	.pending-payout {
-		background-color: theme('colors.curatorMainBackground');
+		background-color: var(--color-curatorMainBackground);
 	}
 	#close.pending-payout {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.curatorMainBackground');
-		color: theme('colors.curatorMainBackground');
+		background-color: transparent;
+		border-color: var(--color-curatorMainBackground);
+		color: var(--color-curatorMainBackground);
 	}
 
 	.sub-curator-proposed {
-		background-color: theme('colors.childBountyGray');
+		background-color: var(--color-childBountyGray);
 	}
 	#close.sub-curator-proposed {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGray');
-		color: theme('colors.childBountyGray');
+		background-color: transparent;
+		border-color: var(--color-childBountyGray);
+		color: var(--color-childBountyGray);
 	}
 
 	.added {
-		background-color: theme('colors.childBountyGray');
+		background-color: var(--color-childBountyGray);
 	}
 	#close.added {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGray');
-		color: theme('colors.childBountyGray');
+		background-color: transparent;
+		border-color: var(--color-childBountyGray);
+		color: var(--color-childBountyGray);
 	}
 
 	.childContainer {

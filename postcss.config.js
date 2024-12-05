@@ -1,6 +1,11 @@
 export default {
 	plugins: {
 		tailwindcss: {},
-		autoprefixer: {}
+		'@csstools/postcss-global-data': { files: ['./src/components/Breakpoints.css'] },
+		'postcss-preset-env': {
+			features: {
+				'custom-media-queries': true
+			}
+		}
 	}
 };

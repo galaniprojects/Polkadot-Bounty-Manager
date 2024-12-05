@@ -4,16 +4,44 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--color-white: white;
+	--color-primary: #28123e;
+	--color-secondary: #431b5e;
+	--color-accent: #e6007a;
+	--color-backgroundContent: #e5e3ee;
+	--color-backgroundContentWrapper: #bfacbf;
+	--color-borderColor: #695592;
+	--color-childBountyOrange: #dd700d;
+	--color-childBountyGray: #65708b;
+	--color-childBountyGreen: #087c2b;
+	--color-childBountyBackground: #d7d5e2;
+	--color-childBountyHeaderBackground: #f4f4f4;
+	--color-curatorMainBackground: #836fac;
+	--color-curatorCarousel: #6b598c;
+	--color-darkgray: #94889f;
+	--color-extendButtonBackground: #660000;
+	--color-gray-100: #f3f4f6;
+	--color-gray-400: #9ca3af;
+	--color-gray-500: #6b7280;
+	--color-notifications: #ffaa35;
+	--color-red: #e6003d;
+}
+
 body {
-	color: theme('colors.primary');
+	color: var(--color-primary);
 }
 
 .basic-button {
-	@apply px-10 pt-1 rounded-md text-white;
+	padding-inline: 2.5rem;
+	padding-top: 0.25rem;
+	border-radius: 0.375rem;
+	color: var(--color-white);
 }
 
 .button-active {
 	@apply basic-button bg-accent;
+	background-color: var(--color-accent);
 }
 
 .button-active:disabled {
@@ -23,7 +51,7 @@ body {
 
 .button-cancel {
 	@apply basic-button;
-	background-color: theme('colors.darkgray');
+	background-color: var(--color-darkgray);
 }
 
 .button-cancel:disabled {

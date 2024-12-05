@@ -1,0 +1,8 @@
+@custom-media --screen-xs (width > 20rem); /* 320px */
+@custom-media --screen-s (width > 375px); /* 375px */
+@custom-media --screen-sm (width > 40rem); /* 640px */
+@custom-media --screen-md (width > 48rem); /* 768px */
+@custom-media --screen-lg (width > 67.5rem); /* 1080px */
+@custom-media --screen-xl (width > 80rem); /* 1280px */
+@custom-media --screen-2xl (width > 90rem); /* 1440px */
+@custom-media --screen-3xl (width > 120rem); /* 1920px */
