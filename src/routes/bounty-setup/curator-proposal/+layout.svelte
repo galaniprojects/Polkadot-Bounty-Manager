@@ -5,12 +5,10 @@
 	import { bountyInfo } from '../_bountyInfo';
 
 	onMount(async () => {
-		const start = '/bounty-setup/curator-proposal';
+		// on page load reset to wizard start while persisting the query string
 		const url = new URL($page.url);
-		if (url.pathname !== start) {
-			url.pathname = start;
-			await goto(url.toString()); // persist the query string
-		}
+		url.pathname = '/bounty-setup/curator-proposal';
+		await goto(url.toString());
 	});
 </script>
 

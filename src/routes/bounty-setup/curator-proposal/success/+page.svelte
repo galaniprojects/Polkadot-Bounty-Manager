@@ -5,7 +5,8 @@
 {#if $bountyInfo}
 	<p class="w-full md:w-2/3 text-sm sm:text-base">
 		The Referendum for Curator Proposal of Bounty <br />
-		"#{$bountyInfo.id} {$bountyInfo.description}" <br />
+		"#{$bountyInfo.id}
+		{$bountyInfo.description}" <br />
 		has been created successfully!
 		<br /><br />
 
