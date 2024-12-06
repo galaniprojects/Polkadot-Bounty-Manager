@@ -42,7 +42,7 @@
 	<div class="space-y-8">
 		<p class="p-1 text-white bg-curatorMainBackground">
 			#{childBounty.id}
-			{#if childBounty.description !== undefined}
+			{#if childBounty.description}
 				{childBounty.description}
 			{/if}
 		</p>

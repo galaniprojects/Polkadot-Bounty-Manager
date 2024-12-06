@@ -15,7 +15,7 @@ export async function walletConnect(): Promise<(AccountInfo & { signer: Polkadot
 		await wc.connect();
 	}
 	accounts = await wc.getAccounts();
-	const accountsInfo = accounts.map((wcAccount) => {
+	return accounts.map((wcAccount) => {
 		const address = wcAccount.id.split(':')[2];
 		const account: AccountInfo & { signer: PolkadotSigner } = {
 			name: 'Account',
@@ -25,7 +25,6 @@ export async function walletConnect(): Promise<(AccountInfo & { signer: Polkadot
 		};
 		return account;
 	});
-	return accountsInfo;
 }
 
 export function createWCConnection() {
@@ -35,7 +34,7 @@ export function createWCConnection() {
 			metadata: {
 				name: 'Bounty Manager',
 				description: 'DAPP for managing polkadot bounties',
-				url: 'http://bountymanager.io',
+				url: 'https://bountymanager.io',
 				icons: []
 			}
 		},

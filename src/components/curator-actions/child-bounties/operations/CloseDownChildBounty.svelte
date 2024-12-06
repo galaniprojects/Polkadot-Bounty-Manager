@@ -45,7 +45,7 @@
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{childBounty.id}</span>
-			{#if childBounty.description !== undefined}
+			{#if childBounty.description}
 				<span>{childBounty.description}</span>
 			{/if}
 		</div>

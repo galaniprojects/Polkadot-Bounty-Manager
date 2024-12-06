@@ -28,19 +28,13 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 			childBounties.push(await parseChildBounty(childBounty.value, id));
 		}
 
-		childBounties.sort((cb1, cb2) => {
-			if (cb1.id > cb2.id) {
-				return -1;
-			} else {
-				return 1;
-			}
-		});
+		childBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 
 		// Set parent bounty.
 		for (let i = 0; i < parsedBounties.length; i++) {
-			parsedBounties[i].childBounties = childBounties.filter((childBounty) => {
-				return childBounty.parentBounty === parsedBounties[i].id;
-			});
+			parsedBounties[i].childBounties = childBounties.filter(
+				({ parentBounty }) => parentBounty === parsedBounties[i].id
+			);
 		}
 
 		// Query child bounty description.
@@ -49,7 +43,7 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		for (const desc of childBountiesDescriptions) {
 			const index = desc.keyArgs[0];
 			const description = desc.value.asText();
-			const childBounty = childBounties.find((childBounty) => childBounty.id == index);
+			const childBounty = childBounties.find(({ id }) => id === index);
 			if (childBounty) {
 				childBounty.description = description;
 			}
@@ -79,20 +73,14 @@ async function fetchBountiesAndDescription(): Promise<Bounty[]> {
 		parsedBounties.push(await parseBounty(unparsedBounty.value, index));
 	}
 
-	parsedBounties.sort((bounty1, bounty2) => {
-		if (bounty1.id > bounty2.id) {
-			return -1;
-		} else {
-			return 1;
-		}
-	});
+	parsedBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 
 	// Query bounty description.
 	const bountiesDescriptions = await api.query.Bounties.BountyDescriptions.getEntries();
 	for (const desc of bountiesDescriptions) {
 		const index = desc.keyArgs[0];
 		const description = desc.value.asText();
-		const bounty = parsedBounties.find((bounty) => bounty.id == index);
+		const bounty = parsedBounties.find(({ id }) => id === index);
 		if (bounty) {
 			bounty.description = description;
 		}

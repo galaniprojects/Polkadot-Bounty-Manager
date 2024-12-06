@@ -53,7 +53,7 @@
 	<section class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
+			{#if bounty.description}
 				<span>{bounty.description}</span>
 			{/if}
 		</div>
@@ -71,10 +71,9 @@
 				<span>
 					{(() => {
 						// TODO: Maybe get date from chain.
-						var today = new Date();
-						var afterNintyDays = new Date();
-						afterNintyDays.setDate(today.getDate() + 90);
-						return formatDate(afterNintyDays);
+						const afterNinetyDays = new Date();
+						afterNinetyDays.setDate(afterNinetyDays.getDate() + 90);
+						return formatDate(afterNinetyDays);
 					})()}
 				</span>
 			</div>

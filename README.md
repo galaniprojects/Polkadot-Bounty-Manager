@@ -6,7 +6,7 @@
 
 Bounty Manager is a front-end dApp, built to simplify interaction with bounties for curators, by providing a simple to use interface, with one click buttons for each action.
 
-#### Visit the deployed version at [bountymanager.io](http://www.bountymanager.io)
+#### Visit the deployed version at [bountymanager.io](https://www.bountymanager.io)
 
 ## Developing and Building
 

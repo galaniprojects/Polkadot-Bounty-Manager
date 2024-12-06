@@ -45,10 +45,9 @@
 				walletConnect.set(connection);
 
 				const accounts = await connection.getAccounts();
-				const filteredAccounts = accounts.filter((acc) => {
-					const address = acc.id.split(':')[2];
-					return convertToPolkadotAddress(address) === parsedAccount.address;
-				});
+				const filteredAccounts = accounts.filter(
+					({ id }) => convertToPolkadotAddress(id.split(':')[2]) === parsedAccount.address
+				);
 				if (filteredAccounts.length !== 1) {
 					activeAccount.set(undefined);
 					sessionStorage.clear();
@@ -61,9 +60,9 @@
 					parsedAccount.source
 				);
 				const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
-				const injectedAccounts = accounts.filter((acc) => {
-					return convertToPolkadotAddress(acc.address) === parsedAccount.address;
-				});
+				const injectedAccounts = accounts.filter(
+					({ address }) => convertToPolkadotAddress(address) === parsedAccount.address
+				);
 				if (injectedAccounts.length !== 1) {
 					activeAccount.set(undefined);
 					console.error('something went wrong while trying to restore session.');

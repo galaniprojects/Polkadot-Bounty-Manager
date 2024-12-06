@@ -31,14 +31,8 @@ export function SetActiveAccountBounties() {
 	activeAccountBounties.set(filteredBounties);
 }
 
-function filterChildBounties(childBounties: ChildBounty[], address: string): ChildBounty[] {
-	const filteredChildBounties: ChildBounty[] = [];
-	for (const childBounty of childBounties) {
-		if (childBounty.curator === address) {
-			filteredChildBounties.push(childBounty);
-		}
-	}
-	return filteredChildBounties;
+function filterChildBounties(bounties: ChildBounty[], address: string): ChildBounty[] {
+	return bounties.filter(({ curator }) => curator === address);
 }
 
 export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {

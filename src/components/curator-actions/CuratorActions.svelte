@@ -58,7 +58,7 @@
 			{:else}
 				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
 					<div>
-						<BountyCard {bounty} expanded={index === 0 ? true : false} />
+						<BountyCard {bounty} expanded={index === 0} />
 					</div>
 				{/each}
 

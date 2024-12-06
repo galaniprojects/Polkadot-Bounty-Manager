@@ -13,9 +13,9 @@
 	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
 
 	$: {
-		filteredChildBounties = bounty.childBounties.filter((childBounty) => {
-			return childBounty.status === selectedFilter || selectedFilter === 'all';
-		});
+		filteredChildBounties = bounty.childBounties.filter(
+			({ status }) => status === selectedFilter || selectedFilter === 'all'
+		);
 	}
 
 	const filters: Array<`${ChildBountyStatus}` | 'all'> = [

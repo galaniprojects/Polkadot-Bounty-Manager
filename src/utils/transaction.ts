@@ -21,7 +21,7 @@ export async function submitTransaction(
 ): Promise<TxFinalizedPayload | undefined> {
 	showLoadingDialog('Submitting transaction');
 	const account = get(activeAccount);
-	if (account === undefined) {
+	if (!account) {
 		showErrorDialog('Internal error, active account not found.');
 		return;
 	}

@@ -48,7 +48,7 @@
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
+			{#if bounty.description}
 				<span>{bounty.description}</span>
 			{/if}
 		</div>
