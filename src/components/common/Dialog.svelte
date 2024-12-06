@@ -24,13 +24,14 @@
 		return colorVariants['white'];
 	}
 
+	const classList = typeof document === 'undefined' ? undefined : document.body.classList;
 	$: if (open) {
-		document.body.classList.add('overflow-hidden');
+		classList?.add('overflow-hidden');
 	} else {
-		document.body.classList.remove('overflow-hidden');
+		classList?.remove('overflow-hidden');
 	}
 	onDestroy(() => {
-		document.body.classList.remove('overflow-hidden');
+		classList?.remove('overflow-hidden');
 	});
 </script>
 
