@@ -29,7 +29,7 @@
 			return;
 		}
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Curator address is invalid');
+			showErrorDialog('Beneficiary address is invalid');
 			return;
 		}
 
