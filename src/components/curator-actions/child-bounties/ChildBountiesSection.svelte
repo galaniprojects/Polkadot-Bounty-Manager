@@ -5,18 +5,19 @@
 	import AddChildBounty from './operations/AddChildBounty.svelte';
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
+	import Pagination from '../Pagination.svelte';
 
 	export let bounty: Bounty;
 
-	let filteredChildBounties: ChildBounty[] = [];
+	let currentPage = 1;
+	let itemsPerPage = 5;
 	let createChildBountyOpen = false;
 	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
+	const itemsPerPageOptions = [5, 10, 20, 25];
 
-	$: {
-		filteredChildBounties = bounty.childBounties.filter((childBounty) => {
-			return childBounty.status === selectedFilter || selectedFilter === 'all';
-		});
-	}
+	let filteredChildBounties: ChildBounty[] = [];
+	let paginatedChildBounties: ChildBounty[] = [];
+	let totalPages = 1;
 
 	const filters: Array<`${ChildBountyStatus}` | 'all'> = [
 		'all',
@@ -25,9 +26,36 @@
 		'sub-curator proposed',
 		'pending payout'
 	];
+
+	$: {
+		filteredChildBounties = bounty.childBounties.filter((childBounty) => {
+			return childBounty.status === selectedFilter || selectedFilter === 'all';
+		});
+
+		totalPages = Math.ceil(filteredChildBounties.length / itemsPerPage);
+		currentPage = Math.min(currentPage, totalPages);
+
+		//itemsPerPage = selectedItemsPerPage;
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const endIndex = startIndex + itemsPerPage;
+		paginatedChildBounties = filteredChildBounties.slice(startIndex, endIndex);
+	}
+
+	let listContainer: HTMLDivElement;
+
+	const handlePageChange = (event: CustomEvent) => {
+		currentPage = event.detail.page;
+		listContainer.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	const handleItemsPerPageChange = (items: number) => {
+		itemsPerPage = items;
+		currentPage = 1;
+	};
 </script>
 
-<div class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
+<div bind:this={listContainer} class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
+	<!-- Header section -->
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
@@ -37,7 +65,6 @@
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
 				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && $activeAccount && bounty.curator === $activeAccount.address)}
-					<!-- {#if bounty.childBounties.length > 0} -->
 					<div
 						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
 							.childBounties.length > 0
@@ -88,8 +115,9 @@
 		</div>
 	</section>
 
+	<!-- Child bounty list section -->
 	<div>
-		{#each filteredChildBounties as childBounty}
+		{#each paginatedChildBounties as childBounty}
 			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}
 
@@ -109,6 +137,21 @@
 		{:else if filteredChildBounties.length === 0}
 			<p>No Child bounties for the selected filter</p>
 		{/if}
+
+		<div class="py-[18px]">
+			<Pagination
+				{currentPage}
+				{totalPages}
+				{itemsPerPage}
+				perPageOptions={itemsPerPageOptions}
+				arrowColor="#E6007A"
+				activeButtonColor="text-primary border border-primary bg-transparent"
+				on:pageChange={handlePageChange}
+				on:itemsPerPageChange={(event) => {
+					handleItemsPerPageChange(event.detail.itemsPerPage);
+				}}
+			/>
+		</div>
 	</div>
 </div>
 <AddChildBounty {bounty} bind:open={createChildBountyOpen} />

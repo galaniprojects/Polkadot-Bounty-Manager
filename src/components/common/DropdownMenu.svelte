@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { truncateString } from '../../utils/common';
 
 	interface HasToString {
@@ -13,6 +14,8 @@
 	let dropdownOpen = false;
 	let dropdownContainer: HTMLDivElement | null = null;
 
+	const dispatch = createEventDispatcher();
+
 	function dropdownOnClick() {
 		dropdownOpen = !dropdownOpen;
 
@@ -26,6 +29,7 @@
 	function selectItem(item: HasToString) {
 		selectedItem = item;
 		dropdownOpen = false;
+		dispatch('change', item);
 		window.removeEventListener('click', closeDropdownClickOutside);
 	}
 
@@ -64,7 +68,7 @@
 	</div>
 	{#if dropdownOpen}
 		<div
-			class="absolute {width} rounded-md overflow-hidden -mt-10 z-10 bg-white shadow-lg ring-1 ring-black ring-opacity-20"
+			class="absolute {width} rounded-md overflow-hidden -mt-12 z-10 bg-white shadow-lg ring-1 ring-black ring-opacity-20"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="menu-button"
@@ -73,7 +77,7 @@
 			<div role="none">
 				{#each items as item, index}
 					<button
-						class="block w-full px-4 py-2.5 text-sm text-primary cursor-pointer
+						class="block {width} px-4 py-2.5 text-sm text-primary cursor-pointer
 							{selectedItem === item ? 'bg-curatorMainBackground text-white' : 'bg-white'}
 							hover:bg-curatorMainBackground focus:bg-curatorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
 						role="menuitem"

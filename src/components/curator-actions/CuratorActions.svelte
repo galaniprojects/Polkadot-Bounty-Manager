@@ -1,8 +1,38 @@
 <script lang="ts">
+	import type { Bounty } from '../../types/bounty';
 	import { onMount } from 'svelte';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
-	import BountyCard from './BountyCard.svelte';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
+	import BountyCard from './BountyCard.svelte';
+	import Pagination from './Pagination.svelte';
+
+	let currentPage = 1;
+	let itemsPerPage = 5;
+	let totalPages = 1;
+	let paginatedBounties: Bounty[] = [];
+	let listContainer: HTMLDivElement;
+
+	const perPageOptions = [5, 10, 15, 20, 50];
+
+	$: activeBounties = $showAllBounties ? $bounties : $activeAccountBounties;
+
+	$: {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		const endIndex = currentPage * itemsPerPage;
+		paginatedBounties = activeBounties.slice(startIndex, endIndex);
+	}
+
+	$: totalPages = Math.ceil(activeBounties.length / itemsPerPage);
+
+	const handlePageChange = (event: CustomEvent) => {
+		currentPage = event.detail.page;
+		listContainer.scrollIntoView({ behavior: 'smooth' });
+	};
+
+	const handleItemsPerPageChange = (selected: number) => {
+		itemsPerPage = selected;
+		currentPage = 1;
+	};
 
 	onMount(async () => {
 		if ($bounties.length === 0) {
@@ -11,7 +41,10 @@
 	});
 </script>
 
-<div class="main bg-primary flex justify-center items-center overflow-x-hidden">
+<div
+	bind:this={listContainer}
+	class="main bg-primary flex justify-center items-center overflow-x-hidden"
+>
 	<div class="w-full rounded-md px-3 py-6 sm:px-12 sm:pt-2 sm:pb-2">
 		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
 			<div class="hidden space-x-5 items-center lg:inline-flex">
@@ -56,12 +89,21 @@
 					</div>
 				</div>
 			{:else}
-				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
+				{#each paginatedBounties as bounty, index}
 					<div>
 						<BountyCard {bounty} expanded={index === 0 ? true : false} />
 					</div>
 				{/each}
-
+				{#if activeBounties.length !== 0}
+					<Pagination
+						{currentPage}
+						{totalPages}
+						{itemsPerPage}
+						{perPageOptions}
+						on:pageChange={handlePageChange}
+						on:itemsPerPageChange={(event) => handleItemsPerPageChange(event.detail.itemsPerPage)}
+					/>
+				{/if}
 				{#if $activeAccountBounties.length === 0}
 					<div class="lg:mt-40 mt-10 flex justify-center text-white">
 						Connected Address does not have any bounties or child bounties
