@@ -20,17 +20,16 @@
 		const startIndex = (currentPage - 1) * itemsPerPage;
 		const endIndex = currentPage * itemsPerPage;
 		paginatedBounties = activeBounties.slice(startIndex, endIndex);
+		totalPages = Math.ceil(activeBounties.length / itemsPerPage);
 	}
 
-	$: totalPages = Math.ceil(activeBounties.length / itemsPerPage);
-
-	const handlePageChange = (event: CustomEvent) => {
+	const handlePageChange = (event: CustomEvent<{ page: number }>) => {
 		currentPage = event.detail.page;
 		listContainer.scrollIntoView({ behavior: 'smooth' });
 	};
 
-	const handleItemsPerPageChange = (selected: number) => {
-		itemsPerPage = selected;
+	const handleItemsPerPageChange = (event: CustomEvent<{ itemsPerPage: number }>) => {
+		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
 	};
 
@@ -101,7 +100,7 @@
 						{itemsPerPage}
 						{perPageOptions}
 						on:pageChange={handlePageChange}
-						on:itemsPerPageChange={(event) => handleItemsPerPageChange(event.detail.itemsPerPage)}
+						on:itemsPerPageChange={handleItemsPerPageChange}
 					/>
 				{/if}
 				{#if $activeAccountBounties.length === 0}

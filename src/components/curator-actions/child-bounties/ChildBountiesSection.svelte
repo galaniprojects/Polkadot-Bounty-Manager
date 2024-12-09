@@ -35,7 +35,6 @@
 		totalPages = Math.ceil(filteredChildBounties.length / itemsPerPage);
 		currentPage = Math.min(currentPage, totalPages);
 
-		//itemsPerPage = selectedItemsPerPage;
 		const startIndex = (currentPage - 1) * itemsPerPage;
 		const endIndex = startIndex + itemsPerPage;
 		paginatedChildBounties = filteredChildBounties.slice(startIndex, endIndex);
@@ -43,13 +42,13 @@
 
 	let listContainer: HTMLDivElement;
 
-	const handlePageChange = (event: CustomEvent) => {
+	const handlePageChange = (event: CustomEvent<{ page: number }>) => {
 		currentPage = event.detail.page;
 		listContainer.scrollIntoView({ behavior: 'smooth' });
 	};
 
-	const handleItemsPerPageChange = (items: number) => {
-		itemsPerPage = items;
+	const handleItemsPerPageChange = (event: CustomEvent<{ itemsPerPage: number }>) => {
+		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
 	};
 </script>
@@ -147,9 +146,7 @@
 				arrowColor="#E6007A"
 				activeButtonColor="text-primary border border-primary bg-transparent"
 				on:pageChange={handlePageChange}
-				on:itemsPerPageChange={(event) => {
-					handleItemsPerPageChange(event.detail.itemsPerPage);
-				}}
+				on:itemsPerPageChange={handleItemsPerPageChange}
 			/>
 		</div>
 	</div>
