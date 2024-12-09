@@ -1,10 +1,10 @@
+import { PUBLIC_WALLET_CONNECT_PROJECT_ID as projectId } from '$env/static/public';
 import { SupportedSources, type AccountInfo } from '../types/account';
 import { WalletConnect } from '@reactive-dot/wallet-walletconnect';
 import { type PolkadotSigner } from 'polkadot-api';
 import { walletConnect as wcConnection } from '../stores';
 import { convertToPolkadotAddress } from './polkadot';
 
-const PROJECT_ID = '75706f3e77002695ab0d89128b3e35bc';
 export async function walletConnect(): Promise<(AccountInfo & { signer: PolkadotSigner })[]> {
 	const wc = createWCConnection();
 	wcConnection.set(wc);
@@ -30,7 +30,7 @@ export async function walletConnect(): Promise<(AccountInfo & { signer: Polkadot
 
 export function createWCConnection() {
 	return new WalletConnect({
-		projectId: PROJECT_ID,
+		projectId,
 		providerOptions: {
 			metadata: {
 				name: 'Bounty Manager',
