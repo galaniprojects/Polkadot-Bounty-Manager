@@ -91,7 +91,7 @@
 
 	let inputTimeout = setTimeout(() => {}, 2000);
 	async function calculateFee() {
-		if ($bountyInfo && $bountyInfo.id && curatorAddress && curatorFee && $activeAccount) {
+		if ($bountyInfo?.id && curatorAddress && curatorFee && $activeAccount) {
 			try {
 				const transaction = await createProposalTransaction();
 				fee = (await calculateTransactionFee(transaction)) + ' DOT';
