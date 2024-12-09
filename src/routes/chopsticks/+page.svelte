@@ -14,7 +14,7 @@
 	let nodeEndpointInput = '';
 
 	async function fastForward(blocks: number) {
-		const sdkProvider = getWsProvider(get(nodeEndpoint) as string);
+		const sdkProvider = getWsProvider(get(nodeEndpoint));
 		const sdkClient = createClient(sdkProvider);
 		const { number } = await sdkClient.getBlockHeader();
 		await sdkClient._request('dev_newBlock', [
