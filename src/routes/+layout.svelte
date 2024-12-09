@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
 	import '../app.css';
+	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import LoadingScreen from '../components/LoadingScreen.svelte';
 	import { loadingDialogState } from '../stores';
