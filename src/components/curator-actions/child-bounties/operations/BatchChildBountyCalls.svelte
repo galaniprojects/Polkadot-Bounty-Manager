@@ -112,9 +112,7 @@
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
-			{#if childBounty.description}
-				{childBounty.description}
-			{/if}
+			{childBounty.description ?? ''}
 		</p>
 		<ol class="text-xs mt-6 ml-4 list-decimal">
 			<li>Assign the connected account as sub-curator.</li>
