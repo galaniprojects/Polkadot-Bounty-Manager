@@ -8,14 +8,16 @@ import { getWsProvider } from 'polkadot-api/ws-provider/web';
 import { isPositiveNumber } from './common';
 
 export function createTypedApi(endpoints: string[]) {
-	const sdkProvider = withPolkadotSdkCompat(getWsProvider({
-		endpoints,
-		timeout: 5000,
-		onStatusChanged(event) {
-			if (event.type !== WsEvent.CONNECTED) return;
-			console.log(`Connected to ${event.uri}`);
-		}
-	}));
+	const sdkProvider = withPolkadotSdkCompat(
+		getWsProvider({
+			endpoints,
+			timeout: 5000,
+			onStatusChanged(event) {
+				if (event.type !== WsEvent.CONNECTED) return;
+				console.log(`Connected to ${event.uri}`);
+			}
+		})
+	);
 	const sdkClient = createClient(sdkProvider);
 	return sdkClient.getTypedApi(dot);
 }
