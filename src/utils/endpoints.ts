@@ -1,6 +1,6 @@
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 
-const overrideEndpoints = PUBLIC_NODE_ENDPOINT && PUBLIC_NODE_ENDPOINT.length > 0;
+const overrideEndpoints = PUBLIC_NODE_ENDPOINT !== 'RANDOM';
 
 export const endpoints = overrideEndpoints
 	? [PUBLIC_NODE_ENDPOINT]
