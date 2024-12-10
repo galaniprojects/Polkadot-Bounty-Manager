@@ -8,7 +8,7 @@
 		const node = sessionStorage.getItem('node');
 		if (node) {
 			nodeEndpoint.set(node);
-			dotApi.set(createTypedApi(node));
+			dotApi.set(createTypedApi([node]));
 		}
 	});
 </script>

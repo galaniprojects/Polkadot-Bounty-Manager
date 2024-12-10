@@ -3,11 +3,19 @@ import { currentBlock, dotApi } from '../stores';
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
 import { AccountId, createClient, getSs58AddressInfo } from 'polkadot-api';
 import { dot } from '@polkadot-api/descriptors';
+import { WsEvent } from '@polkadot-api/ws-provider/web';
 import { getWsProvider } from 'polkadot-api/ws-provider/web';
 import { isPositiveNumber } from './common';
 
-export function createTypedApi(nodeEndpoint: string) {
-	const sdkProvider = withPolkadotSdkCompat(getWsProvider(nodeEndpoint));
+export function createTypedApi(endpoints: string[]) {
+	const sdkProvider = withPolkadotSdkCompat(getWsProvider({
+		endpoints,
+		timeout: 5000,
+		onStatusChanged(event) {
+			if (event.type !== WsEvent.CONNECTED) return;
+			console.log(`Connected to ${event.uri}`);
+		}
+	}));
 	const sdkClient = createClient(sdkProvider);
 	return sdkClient.getTypedApi(dot);
 }
