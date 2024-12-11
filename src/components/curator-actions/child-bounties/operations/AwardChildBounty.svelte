@@ -56,9 +56,7 @@
 	<div class="grid">
 		<p class="space-x-1 mb-7 p-1 text-white bg-childBountyGreen">
 			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
-			{/if}
+			{childBounty.description ?? ''}
 		</p>
 		<section>
 			<p class="text-xs">Child bounty value</p>

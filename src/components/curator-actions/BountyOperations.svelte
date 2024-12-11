@@ -40,7 +40,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.CuratorProposed && $activeAccount && bounty.curator === $activeAccount.address)}
+	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.CuratorProposed && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 			<button
@@ -54,7 +54,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && $activeAccount && bounty.curator === $activeAccount.address)}
+	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Extend Bounty</p>
 			<button

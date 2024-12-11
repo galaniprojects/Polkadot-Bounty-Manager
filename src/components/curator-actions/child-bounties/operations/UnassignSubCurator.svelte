@@ -44,9 +44,7 @@
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
-			{/if}
+			{childBounty.description ?? ''}
 		</p>
 		<section class="mt-10 space-y-1">
 			<p class="text-xs">Please note</p>

@@ -34,17 +34,14 @@
 		}
 
 		const value = convertFormattedDotToPlanck(bountyValue);
-		const description = bountyTitle;
-		const transaction = $dotApi.tx.Bounties.propose_bounty({
-			value,
-			description: Binary.fromText(description)
-		});
+		const description = Binary.fromText(bountyTitle);
+		const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
 		const result = await submitTransaction(transaction, 'Bounty creation success.');
 		if (!result) {
 			return;
 		}
 
-		const bountyEvent = result.events.find((event) => event.type === 'Bounties');
+		const bountyEvent = result.events.find(({ type }) => type === 'Bounties');
 		if (!bountyEvent || bountyEvent.value.type !== 'BountyProposed') {
 			return;
 		}
@@ -76,11 +73,8 @@
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
 				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = bountyTitle;
-				const transaction = $dotApi.tx.Bounties.propose_bounty({
-					value,
-					description: Binary.fromText(description)
-				});
+				const description = Binary.fromText(bountyTitle);
+				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
 
 				fee = (await calculateTransactionFee(transaction)) + ' DOT';
 			} else {
@@ -95,11 +89,8 @@
 		try {
 			if (bountyValue && bountyTitle && $activeAccount) {
 				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = bountyTitle;
-				const transaction = $dotApi.tx.Bounties.propose_bounty({
-					value,
-					description: Binary.fromText(description)
-				});
+				const description = Binary.fromText(bountyTitle);
+				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
 				const base = await $dotApi.constants.Bounties.BountyDepositBase();
 				const bytesLen = BigInt(transaction.getEncodedData.length);
 				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();

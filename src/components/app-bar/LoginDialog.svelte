@@ -101,7 +101,7 @@
 					throw new Error('Internal error, unsupported extension');
 			}
 
-			if (selectedSource == SupportedSources.WalletConnect) {
+			if (selectedSource === SupportedSources.WalletConnect) {
 				accounts = await walletConnect();
 			} else {
 				let injectedExtension;
@@ -116,13 +116,11 @@
 					return;
 				}
 				injectedAccounts = injectedExtension.getAccounts();
-				accounts = injectedAccounts.map((account) => {
-					return {
-						name: account.name || 'Account',
-						source: selectedSource,
-						address: convertToPolkadotAddress(account.address)
-					};
-				});
+				accounts = injectedAccounts.map(({ address, name = 'Account' }) => ({
+					name,
+					source: selectedSource,
+					address: convertToPolkadotAddress(address)
+				}));
 			}
 		}
 
@@ -150,9 +148,9 @@
 		}
 
 		if (injectedAccounts) {
-			const injectedAccount = injectedAccounts.filter((acc) => {
-				return convertToPolkadotAddress(acc.address) === account.address;
-			});
+			const injectedAccount = injectedAccounts.filter(
+				({ address }) => convertToPolkadotAddress(address) === account.address
+			);
 			injectedPolkadotAccount.set(injectedAccount[0]);
 		}
 

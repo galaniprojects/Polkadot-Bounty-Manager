@@ -48,9 +48,7 @@
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
-				<span>{bounty.description}</span>
-			{/if}
+			<span>{bounty.description ?? ''}</span>
 		</div>
 		<div class="space-y-2">
 			<p class="text-xs">What is this action?</p>
