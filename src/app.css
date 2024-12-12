@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 body {
-	color: theme('colors.white');
+	color: theme('colors.primary');
 }
 
 .basic-button {
