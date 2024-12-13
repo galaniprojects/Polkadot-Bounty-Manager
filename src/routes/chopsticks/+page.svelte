@@ -2,7 +2,7 @@
 	import '../../app.css';
 	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
 	import TestBar from '../../components/TestBar.svelte';
-	import { get } from 'svelte/store';
+	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
 	import { createTypedApi } from '../../utils/polkadot';
@@ -10,34 +10,67 @@
 	let days: number = 1;
 	let hours = 1;
 	let mins = 1;
+	let current = 0;
+	$: target = String(current + ((days * 24 + hours) * 60 + mins) * 60);
+	$: client = createClient(getWsProvider($nodeEndpoint));
 
 	let nodeEndpointInput = '';
 
+	function updateCurrentBlock() {
+		(async () => {
+			current = (await client.getBlockHeader()).number;
+		})();
+	}
+
+	onMount(() => {
+		updateCurrentBlock();
+		const interval = setInterval(updateCurrentBlock, 6000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
+
+	async function sleep() {
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+	}
+
+	async function goToBlock(unsafeBlockHeight: number) {
+		await client._request('dev_newBlock', [{ count: 1, unsafeBlockHeight }]);
+		updateCurrentBlock();
+	}
+
 	async function fastForward(blocks: number) {
-		const sdkProvider = getWsProvider(get(nodeEndpoint));
-		const sdkClient = createClient(sdkProvider);
-		const { number } = await sdkClient.getBlockHeader();
-		await sdkClient._request('dev_newBlock', [
-			{
-				count: 1,
-				unsafeBlockHeight: number + blocks
-			}
-		]);
+		const { number } = await client.getBlockHeader();
+		await goToBlock(number + blocks);
 	}
 
 	async function fastForwardDays() {
-		await fastForward((days * 24 * 60 * 60) / 6 - 3);
+		await fastForward((days * 24 * 60 * 60) / 6 - 1);
+		await sleep();
+		await fastForward(1);
 	}
 
 	async function fastForwardHours() {
-		await fastForward((hours * 60 * 60) / 6 - 3);
+		await fastForward((hours * 60 * 60) / 6 - 1);
+		await sleep();
+		await fastForward(1);
 	}
 
 	async function fastForwardMinutes() {
-		await fastForward((mins * 60) / 6 - 3);
+		await fastForward((mins * 60) / 6 - 1);
+		await sleep();
+		await fastForward(1);
 	}
 
 	async function fastForwardBlocks() {
+		await fastForward(1);
+	}
+
+	async function handleGoToBlock() {
+		const targetNumber = Number(target.replace(/\D/g, ''));
+		await goToBlock(targetNumber - 1);
+		await sleep();
 		await fastForward(1);
 	}
 
@@ -73,12 +106,18 @@
 		<p>(*6 seconds)</p>
 	</div>
 
+	<div class="m-5 gap-3">
+		<p class="text-sm text-white block">{current} is the current block</p>
+		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={target} />
+		<button on:click={handleGoToBlock} class="button-active min-w-40">TO BLOCK</button>
+	</div>
+
 	<hr class="border-gray mt-5 mb-1 w-1/2" />
 
 	<div class="m-5 gap-5 text-white">
 		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
 		<input
-			class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40"
+			class="border pt-1 pl-2 w-1/4 rounded-md bg-white text-black min-w-40"
 			bind:value={nodeEndpointInput}
 		/>
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
