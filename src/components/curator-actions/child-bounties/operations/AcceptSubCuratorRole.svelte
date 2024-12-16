@@ -6,6 +6,7 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
 	import Fee from '../../../Fee.svelte';
+	import Deposit from '../../../Deposit.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
@@ -16,7 +17,6 @@
 		child_bounty_id: childBounty.id
 	});
 
-	let deposit = '-';
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
@@ -24,16 +24,11 @@
 		await submitTransaction(transaction);
 	}
 
-	$: {
-		try {
-			if (parentCurator && parentCurator === childBounty.curator) {
-				deposit = '0';
-			} else {
-				deposit = calculateDeposit(childBounty.fee);
-			}
-		} catch (e) {
-			console.error(e);
+	function calculateChildBountyDeposit(parent: string | undefined, child: ChildBounty) {
+		if (parent && parent === child.curator) {
+			return 0n;
 		}
+		return calculateDeposit(child.fee);
 	}
 </script>
 
@@ -59,7 +54,9 @@
 			</div>
 			<div>
 				<p class="text-xs">Estimated deposit</p>
-				<p>{deposit} DOT</p>
+				<p>
+					<Deposit getter={() => calculateChildBountyDeposit(parentCurator, childBounty)} />
+				</p>
 			</div>
 		</div>
 	</section>

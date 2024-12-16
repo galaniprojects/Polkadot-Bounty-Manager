@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
 	import { dotApi } from '../../../stores';
-	import { onMount } from 'svelte';
+	import Deposit from '../../Deposit.svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import ToggleIcon from '../../ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
@@ -16,12 +16,7 @@
 		bounty_id: bounty.id
 	});
 
-	let deposit = '=';
 	let isToggled = false;
-
-	onMount(() => {
-		calculateDepositString();
-	});
 
 	async function acceptCuratorRole() {
 		open = false;
@@ -29,15 +24,6 @@
 
 		if (result === undefined) {
 			showErrorDialog('Internal error'); // TODO: is it needed here as well?
-		}
-	}
-
-	function calculateDepositString() {
-		try {
-			deposit = calculateDeposit(bounty.fee);
-		} catch (e) {
-			console.error(e);
-			deposit = '-';
 		}
 	}
 </script>
@@ -64,7 +50,7 @@
 			</div>
 			<div>
 				<p class="text-xs">Estimated deposit</p>
-				<p>{deposit} DOT</p>
+				<p><Deposit getter={() => calculateDeposit(bounty.fee)} /></p>
 			</div>
 		</div>
 	</section>

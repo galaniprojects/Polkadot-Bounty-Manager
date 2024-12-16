@@ -2,9 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { treasuryTracks } from '../../../../components/bounty-setup/treasuryTracks';
-	import { convertFormattedDotToPlanck, formatPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
+	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
-	import { onMount } from 'svelte';
+	import Deposit from '../../../../components/Deposit.svelte';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import {
 		MultiAddress,
@@ -20,11 +20,6 @@
 	let curatorFee = '';
 	let curatorAddress = '';
 	let selectedTreasuryTrack = treasuryTracks[0];
-	let deposit = '-';
-
-	onMount(async () => {
-		await calculateDeposit();
-	});
 
 	let transaction: AnyTransaction | undefined;
 	$: {
@@ -74,15 +69,6 @@
 			await goto('/bounty-setup/curator-proposal/success');
 		}
 	}
-
-	async function calculateDeposit() {
-		try {
-			const base = await $dotApi.constants.Referenda.SubmissionDeposit();
-			deposit = formatPlanckToDot(base) + ' DOT';
-		} catch {
-			deposit = '-';
-		}
-	}
 </script>
 
 <form on:submit={submit}>
@@ -128,7 +114,9 @@
 		<div class="my-5 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Deposit</p>
-				<p class="value">{deposit}</p>
+				<p class="value">
+					<Deposit getter={$dotApi.constants.Referenda.SubmissionDeposit} />
+				</p>
 			</section>
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Estimated basic fee</p>

@@ -3,18 +3,21 @@
 	import { activeAccount, dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { formatPlanckToDot } from '../../../utils/polkadot';
+	import Deposit from '../../../components/Deposit.svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
-	import { PolkadotRuntimeOriginCaller, PreimagesBounded, TraitsScheduleDispatchTime } from '@polkadot-api/descriptors';
+	import {
+		PolkadotRuntimeOriginCaller,
+		PreimagesBounded,
+		TraitsScheduleDispatchTime
+	} from '@polkadot-api/descriptors';
 	import Fee from '../../../components/Fee.svelte';
 	import { type AnyTransaction, submitTransaction } from '../../../utils/transaction';
 	import DropdownMenu from '../../../components/common/DropdownMenu.svelte';
 	import { bountyInfo } from '../_bountyInfo';
 
 	let selectedTreasuryTrack = treasuryTracks[0];
-	let deposit = '-';
 
-	onMount(async () => {
+	onMount(() => {
 		if (!$bountyInfo || !$bountyInfo.value) {
 			return;
 		}
@@ -25,7 +28,6 @@
 		} else {
 			selectedTreasuryTrack = treasuryTracks[2];
 		}
-		await calculateDeposit();
 	});
 
 	let transaction: AnyTransaction | undefined;
@@ -62,15 +64,6 @@
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`Something went wrong, ${String(e)}`);
-		}
-	}
-
-	async function calculateDeposit() {
-		try {
-			const base = await $dotApi.constants.Referenda.SubmissionDeposit();
-			deposit = formatPlanckToDot(base) + ' DOT';
-		} catch {
-			deposit = '-';
 		}
 	}
 </script>
@@ -111,7 +104,9 @@
 			<div class="my-5 sm:my-10 sm:mb-14 h-24 space-y-2 sm:space-y-5">
 				<section class="space-y-1 sm:space-y-3">
 					<p class="label text-xs">Deposit</p>
-					<p>{deposit}</p>
+					<p>
+						<Deposit getter={$dotApi.constants.Referenda.SubmissionDeposit} />
+					</p>
 				</section>
 				<section class="space-y-1 sm:space-y-3">
 					<p class="label text-xs">Estimated basic fee</p>
