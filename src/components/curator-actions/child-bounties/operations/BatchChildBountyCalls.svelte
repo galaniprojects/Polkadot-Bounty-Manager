@@ -2,28 +2,53 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { onMount } from 'svelte';
-	import { showErrorDialog, showLoadingDialog } from '../../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import { MultiAddress } from '@polkadot-api/descriptors';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
 	let curatorFee = '';
-	let fee = '-';
 	let beneficiary: string = '';
 
-	onMount(async () => {
-		await calculateFee();
+	$: transaction = maybeTransaction(() => {
+		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
+
+		const propose = $dotApi.tx.ChildBounties.propose_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			curator: MultiAddress.Id($activeAccount.address),
+			fee: convertFormattedDotToPlanck(curatorFee)
+		});
+
+		const accept = $dotApi.tx.ChildBounties.accept_curator({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id
+		});
+
+		const award = $dotApi.tx.ChildBounties.award_child_bounty({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id,
+			beneficiary: MultiAddress.Id(beneficiary)
+		});
+
+		const claim = $dotApi.tx.ChildBounties.claim_child_bounty({
+			parent_bounty_id: childBounty.parentBounty,
+			child_bounty_id: childBounty.id
+		});
+
+		return $dotApi.tx.Utility.batch_all({
+			calls: [propose.decodedCall, accept.decodedCall, award.decodedCall, claim.decodedCall]
+		});
 	});
 
 	async function submit() {
 		open = false;
-		showLoadingDialog('Submitting transaction');
 		if (!$activeAccount) {
 			showErrorDialog('Wallet is not connected');
 			return;
@@ -38,73 +63,12 @@
 			return;
 		}
 
-		const tx1 = $dotApi.tx.ChildBounties.propose_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id,
-			curator: MultiAddress.Id($activeAccount.address),
-			fee: convertFormattedDotToPlanck(curatorFee)
-		});
-
-		const tx2 = $dotApi.tx.ChildBounties.accept_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id
-		});
-
-		const tx3 = $dotApi.tx.ChildBounties.award_child_bounty({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id,
-			beneficiary: MultiAddress.Id(beneficiary)
-		});
-
-		const tx4 = $dotApi.tx.ChildBounties.claim_child_bounty({
-			child_bounty_id: childBounty.id,
-			parent_bounty_id: childBounty.parentBounty
-		});
-
-		const batch = $dotApi.tx.Utility.batch_all({
-			calls: [tx1.decodedCall, tx2.decodedCall, tx3.decodedCall, tx4.decodedCall]
-		});
-
-		await submitTransaction(batch);
-	}
-	//
-	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
 			return;
 		}
-		try {
-			const tx1 = $dotApi.tx.ChildBounties.propose_curator({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id,
-				curator: MultiAddress.Id($activeAccount.address),
-				fee: convertFormattedDotToPlanck(curatorFee)
-			});
 
-			const tx2 = $dotApi.tx.ChildBounties.accept_curator({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id
-			});
-
-			const tx3 = $dotApi.tx.ChildBounties.award_child_bounty({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id,
-				beneficiary: MultiAddress.Id($activeAccount.address)
-			});
-
-			const tx4 = $dotApi.tx.ChildBounties.claim_child_bounty({
-				child_bounty_id: childBounty.id,
-				parent_bounty_id: childBounty.parentBounty
-			});
-
-			const batch = $dotApi.tx.Utility.batch_all({
-				calls: [tx1.decodedCall, tx2.decodedCall, tx3.decodedCall, tx4.decodedCall]
-			});
-			fee = await calculateTransactionFee(batch);
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
+		await submitTransaction(transaction);
 	}
 </script>
 
@@ -143,7 +107,7 @@
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</section>
 	</div>
 

@@ -6,13 +6,24 @@
 	import { isPositiveNumber } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { Binary } from 'polkadot-api';
-	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
+	import Fee from '../../components/Fee.svelte';
+	import { maybeTransaction, submitTransaction } from '../../utils/transaction';
 	import { bountyInfo } from './_bountyInfo';
 
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
-	let fee = '-';
 	let bondValue = '-';
+
+	$: transaction = maybeTransaction(
+		() =>
+			bountyValue &&
+			isPositiveNumber(bountyValue) &&
+			bountyTitle &&
+			$dotApi.tx.Bounties.propose_bounty({
+				value: convertFormattedDotToPlanck(bountyValue),
+				description: Binary.fromText(bountyTitle)
+			})
+	);
 
 	async function submit() {
 		if (!$activeAccount) {
@@ -32,10 +43,11 @@
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
+			return;
+		}
 
-		const value = convertFormattedDotToPlanck(bountyValue);
-		const description = Binary.fromText(bountyTitle);
-		const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
 		const result = await submitTransaction(transaction, 'Bounty creation success.');
 		if (!result) {
 			return;
@@ -64,35 +76,11 @@
 	}
 	let inputTimeout = setTimeout(() => {}, 4000);
 
-	async function calculateBondAndFee() {
-		await calculateBond();
-		await calculateFee();
-	}
-
-	async function calculateFee() {
-		try {
-			if (bountyValue && bountyTitle && $activeAccount) {
-				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = Binary.fromText(bountyTitle);
-				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
-
-				fee = (await calculateTransactionFee(transaction)) + ' DOT';
-			} else {
-				fee = '-';
-			}
-		} catch {
-			fee = '-';
-		}
-	}
-
 	async function calculateBond() {
 		try {
-			if (bountyValue && bountyTitle && $activeAccount) {
-				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = Binary.fromText(bountyTitle);
-				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
+			if (transaction) {
 				const base = await $dotApi.constants.Bounties.BountyDepositBase();
-				const bytesLen = BigInt(transaction.getEncodedData.length);
+				const bytesLen = BigInt((await transaction.getEncodedData()).asBytes().length);
 				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
 				bondValue = formatPlanckToDot(base + (bytesLen - 1n) * perByte) + ' DOT';
 			} else {
@@ -104,13 +92,11 @@
 	}
 
 	function inputChange() {
-		if (bountyValue && bountyTitle && $activeAccount) {
-			fee = 'Calculating...';
+		if (transaction) {
 			bondValue = 'Calculating...';
 			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(() => void calculateBondAndFee(), 2000);
+			inputTimeout = setTimeout(() => void calculateBond(), 2000);
 		} else {
-			fee = '-';
 			bondValue = '-';
 		}
 	}
@@ -153,7 +139,7 @@
 			</section>
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Estimated basic fee</p>
-				<p class="value">{fee}</p>
+				<p class="value"><Fee {transaction} /></p>
 			</section>
 		</div>
 	</div>

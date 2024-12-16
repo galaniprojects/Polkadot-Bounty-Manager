@@ -1,52 +1,42 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { activeAccount, dotApi } from '../../../stores';
+	import { dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import ToggleIcon from '../../ToggleIcon.svelte';
 	import Dialog from '../../common/Dialog.svelte';
-	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import { submitTransaction } from '../../../utils/transaction';
+	import Fee from '../../Fee.svelte';
 	import { calculateDeposit } from './calculateDeposit';
 
 	export let open = false;
 	export let bounty: Bounty;
 
-	let fee = '-';
+	$: transaction = $dotApi.tx.Bounties.accept_curator({
+		bounty_id: bounty.id
+	});
+
 	let deposit = '=';
 	let isToggled = false;
 
-	onMount(async () => {
-		await calculateFeeAndDeposit();
+	onMount(() => {
+		calculateDepositString();
 	});
 
 	async function acceptCuratorRole() {
 		open = false;
-		const transaction = $dotApi.tx.Bounties.accept_curator({
-			bounty_id: bounty.id
-		});
 		const result = await submitTransaction(transaction);
 
 		if (result === undefined) {
-			showErrorDialog('Internal error');
+			showErrorDialog('Internal error'); // TODO: is it needed here as well?
 		}
 	}
 
-	async function calculateFeeAndDeposit() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
+	function calculateDepositString() {
 		try {
-			const transaction = $dotApi.tx.Bounties.accept_curator({
-				bounty_id: bounty.id
-			});
-
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-
 			deposit = calculateDeposit(bounty.fee);
 		} catch (e) {
 			console.error(e);
-			fee = '-';
 			deposit = '-';
 		}
 	}
@@ -70,7 +60,7 @@
 		<div class="flex space-x-24">
 			<div>
 				<p class="text-xs">Estimated basic fee</p>
-				<p>{fee}</p>
+				<p><Fee {transaction} /></p>
 			</div>
 			<div>
 				<p class="text-xs">Estimated deposit</p>

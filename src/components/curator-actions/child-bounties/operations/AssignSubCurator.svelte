@@ -1,25 +1,32 @@
 <script lang="ts">
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
-	import { activeAccount, dotApi } from '../../../../stores';
-	import { onMount } from 'svelte';
+	import { dotApi } from '../../../../stores';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
 	let curatorAddress = '';
 	let curatorFee = '';
-	let fee = '-';
 
-	onMount(async () => {
-		await calculateFee();
-	});
+	$: transaction = maybeTransaction(
+		() =>
+			isValidAddress(curatorAddress) &&
+			isPositiveNumber(curatorFee) &&
+			$dotApi.tx.ChildBounties.propose_curator({
+				parent_bounty_id: childBounty.parentBounty,
+				child_bounty_id: childBounty.id,
+				curator: MultiAddress.Id(curatorAddress),
+				fee: convertFormattedDotToPlanck(curatorFee)
+			})
+	);
 
 	async function submit() {
 		open = false;
@@ -33,32 +40,12 @@
 			return;
 		}
 
-		const transaction = $dotApi.tx.ChildBounties.propose_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id,
-			curator: MultiAddress.Id(curatorAddress),
-			fee: convertFormattedDotToPlanck(curatorFee)
-		});
-		await submitTransaction(transaction);
-	}
-
-	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '--';
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
 			return;
 		}
-		try {
-			const transaction = $dotApi.tx.ChildBounties.propose_curator({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id,
-				curator: MultiAddress.Id($activeAccount.address),
-				fee: convertFormattedDotToPlanck(curatorFee)
-			});
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
+
+		await submitTransaction(transaction);
 	}
 </script>
 
@@ -93,7 +80,7 @@
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</section>
 	</div>
 

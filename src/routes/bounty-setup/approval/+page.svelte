@@ -4,19 +4,15 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { formatPlanckToDot } from '../../../utils/polkadot';
-	import { showErrorDialog, showLoadingDialog } from '../../../utils/loading-screen';
-	import {
-		PolkadotRuntimeOriginCaller,
-		PreimagesBounded,
-		TraitsScheduleDispatchTime
-	} from '@polkadot-api/descriptors';
+	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { PolkadotRuntimeOriginCaller, PreimagesBounded, TraitsScheduleDispatchTime } from '@polkadot-api/descriptors';
 	import { Binary } from 'polkadot-api';
-	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import Fee from '../../../components/Fee.svelte';
+	import { type AnyTransaction, submitTransaction } from '../../../utils/transaction';
 	import DropdownMenu from '../../../components/common/DropdownMenu.svelte';
 	import { bountyInfo } from '../_bountyInfo';
 
 	let selectedTreasuryTrack = treasuryTracks[0];
-	let fee = '-';
 	let deposit = '-';
 
 	onMount(async () => {
@@ -30,18 +26,35 @@
 		} else {
 			selectedTreasuryTrack = treasuryTracks[2];
 		}
-		await calculateFee();
 		await calculateDeposit();
 	});
 
+	let transaction: AnyTransaction | undefined;
+	$: {
+		(async () => {
+			transaction = undefined;
+			if (!$bountyInfo?.id) {
+				return;
+			}
+			const approve = $dotApi.tx.Bounties.approve_bounty({ bounty_id: $bountyInfo.id });
+			const proposal = PreimagesBounded.Inline(
+				Binary.fromBytes((await approve.getEncodedData()).asBytes())
+				// TODO: test await approve.getEncodedData()
+			);
+			transaction = $dotApi.tx.Referenda.submit({
+				proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
+				proposal,
+				enactment_moment: TraitsScheduleDispatchTime.After(1)
+			});
+		})();
+	}
+
 	async function submit() {
-		showLoadingDialog('Submitting transaction');
 		try {
 			if (!$activeAccount) {
 				showErrorDialog('Wallet is not connected');
 				return;
 			}
-			const transaction = await createApprovalTransaction();
 			if (!transaction) {
 				showErrorDialog('Unexpected error, bounty id is not set.');
 				return;
@@ -54,38 +67,6 @@
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(`Something went wrong, ${String(e)}`);
-		}
-	}
-
-	async function createApprovalTransaction() {
-		if (!$bountyInfo || !$bountyInfo.id) {
-			return;
-		}
-		const transaction = $dotApi.tx.Bounties.approve_bounty({ bounty_id: $bountyInfo.id });
-		const proposal: PreimagesBounded = PreimagesBounded.Inline(
-			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
-		);
-		return $dotApi.tx.Referenda.submit({
-			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
-			proposal: proposal,
-			enactment_moment: TraitsScheduleDispatchTime.After(1)
-		});
-	}
-
-	async function calculateFee() {
-		if ($activeAccount && $bountyInfo?.id) {
-			try {
-				const transaction = await createApprovalTransaction();
-				if (!transaction) {
-					fee = '-';
-					return;
-				}
-				fee = (await calculateTransactionFee(transaction)) + ' DOT';
-			} catch {
-				fee = '-';
-			}
-		} else {
-			fee = '-';
 		}
 	}
 
@@ -139,7 +120,7 @@
 				</section>
 				<section class="space-y-1 sm:space-y-3">
 					<p class="label text-xs">Estimated basic fee</p>
-					<p>{fee}</p>
+					<p><Fee {transaction} /></p>
 				</section>
 			</div>
 		</div>

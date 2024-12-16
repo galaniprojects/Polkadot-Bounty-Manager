@@ -7,6 +7,9 @@ import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
 import { formatPlanckToDot } from './polkadot';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyTransaction = Transaction<any, string, string, unknown>;
+
 /**
  * Signs and submits a transaction using an extension or Wallet Connect.
  *
@@ -15,8 +18,7 @@ import { formatPlanckToDot } from './polkadot';
  * dialog with `successMessage` if the transaction goes through.
  **/
 export async function submitTransaction(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	transaction: Transaction<any, any, any, any>,
+	transaction: AnyTransaction,
 	successMessage?: string
 ): Promise<TxFinalizedPayload | undefined> {
 	showLoadingDialog('Submitting transaction');
@@ -60,8 +62,7 @@ export async function submitTransaction(
  * Checks for dispatch errors after submitting.
  **/
 async function safeSignAndSubmit(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	transaction: Transaction<any, any, any, any>,
+	transaction: AnyTransaction,
 	signer: PolkadotSigner,
 	successMessage?: string
 ) {
@@ -124,14 +125,20 @@ function readableError(error: unknown): string {
 /**
  * Calculates a transaction fee, returns an error if calculating fee fails.
  **/
-export async function calculateTransactionFee(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	transaction: Transaction<any, any, any, any>
-): Promise<string> {
+export async function calculateTransactionFee(transaction: AnyTransaction): Promise<string> {
 	const account = get(activeAccount);
 	if (!account) {
 		throw new Error('can not calculate fee, account is not set');
 	}
 	const paymentInfo = await transaction.getPaymentInfo(account.address);
 	return formatPlanckToDot(paymentInfo.partial_fee);
+}
+
+export function maybeTransaction(getter: () => AnyTransaction | '' | false | undefined) {
+	try {
+		return getter() || undefined;
+	} catch (exception) {
+		console.debug(exception);
+		return undefined;
+	}
 }

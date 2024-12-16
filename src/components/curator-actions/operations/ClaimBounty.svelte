@@ -1,46 +1,22 @@
 <script lang="ts">
 	import Dialog from '../../common/Dialog.svelte';
 	import { dotApi } from '../../../stores';
-	import { onMount } from 'svelte';
-	import { showErrorDialog } from '../../../utils/loading-screen';
 	import { truncateString } from '../../../utils/common';
 	import type { Bounty } from '../../../types/bounty';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
-	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import { submitTransaction } from '../../../utils/transaction';
+	import Fee from '../../Fee.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
 
-	let fee = '-';
-
-	onMount(async () => {
-		await calculateFee();
+	$: transaction = $dotApi.tx.Bounties.claim_bounty({
+		bounty_id: bounty.id
 	});
 
 	async function claimBounty() {
 		open = false;
-		try {
-			const transaction = $dotApi.tx.Bounties.claim_bounty({
-				bounty_id: bounty.id
-			});
-
-			await submitTransaction(transaction);
-		} catch (e) {
-			console.error(e);
-			showErrorDialog(String(e));
-		}
-	}
-
-	async function calculateFee() {
-		try {
-			const transaction = $dotApi.tx.Bounties.claim_bounty({
-				bounty_id: bounty.id
-			});
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
+		await submitTransaction(transaction);
 	}
 </script>
 
@@ -65,7 +41,7 @@
 		{/if}
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</div>
 	</div>
 

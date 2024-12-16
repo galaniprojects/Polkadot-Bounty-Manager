@@ -2,14 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { treasuryTracks } from '../../../../components/bounty-setup/treasuryTracks';
-	import {
-		convertFormattedDotToPlanck,
-		formatPlanckToDot,
-		isValidAddress
-	} from '../../../../utils/polkadot';
+	import { convertFormattedDotToPlanck, formatPlanckToDot, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { onMount } from 'svelte';
-	import { showErrorDialog, showLoadingDialog } from '../../../../utils/loading-screen';
+	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
@@ -17,26 +13,51 @@
 		TraitsScheduleDispatchTime
 	} from '@polkadot-api/descriptors';
 	import { Binary } from 'polkadot-api';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import { type AnyTransaction, submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../../components/Fee.svelte';
 	import DropdownMenu from '../../../../components/common/DropdownMenu.svelte';
 	import { bountyInfo } from '../../_bountyInfo';
 
-	let curatorFee: string | undefined = undefined;
-	let curatorAddress: string | undefined;
+	let curatorFee = '';
+	let curatorAddress = '';
 	let selectedTreasuryTrack = treasuryTracks[0];
-	let fee = '-';
 	let deposit = '-';
 
 	onMount(async () => {
 		await calculateDeposit();
 	});
 
+	let transaction: AnyTransaction | undefined;
+	$: {
+		(async () => {
+			transaction = undefined;
+
+			if (!isPositiveNumber(curatorFee) || !isValidAddress(curatorAddress) || !$bountyInfo?.id) {
+				return;
+			}
+
+			const propose = $dotApi.tx.Bounties.propose_curator({
+				bounty_id: $bountyInfo.id,
+				curator: MultiAddress.Id(curatorAddress),
+				fee: convertFormattedDotToPlanck(curatorFee)
+			});
+			const proposal: PreimagesBounded = PreimagesBounded.Inline(
+				Binary.fromBytes((await propose.getEncodedData()).asBytes())
+				// TODO: test await approve.getEncodedData()
+			);
+			transaction = $dotApi.tx.Referenda.submit({
+				proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
+				proposal: proposal,
+				enactment_moment: TraitsScheduleDispatchTime.After(1)
+			});
+		})();
+	}
+
 	async function submit() {
 		if (!$activeAccount) {
 			showErrorDialog('Wallet is not connected');
 			return;
 		}
-		showLoadingDialog('Submitting Transaction');
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
 			showErrorDialog('Curator address is invalid');
@@ -48,36 +69,15 @@
 			return;
 		}
 
-		const transaction = await createProposalTransaction();
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
+			return;
+		}
+
 		const result = await submitTransaction(transaction);
 		if (result) {
 			await goto('/bounty-setup/curator-proposal/success');
 		}
-	}
-
-	async function createProposalTransaction() {
-		if (!curatorFee) {
-			throw new Error('Curator fee is not set');
-		}
-		if (!curatorAddress) {
-			throw new Error('Curator address is not set');
-		}
-		if (!$bountyInfo || !$bountyInfo.id) {
-			throw new Error('Unexpected error, bounty id is not set');
-		}
-		const transaction = $dotApi.tx.Bounties.propose_curator({
-			bounty_id: $bountyInfo.id,
-			curator: MultiAddress.Id(curatorAddress),
-			fee: convertFormattedDotToPlanck(curatorFee)
-		});
-		const proposal: PreimagesBounded = PreimagesBounded.Inline(
-			Binary.fromBytes((await transaction.getEncodedData()).asBytes())
-		);
-		return $dotApi.tx.Referenda.submit({
-			proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
-			proposal: proposal,
-			enactment_moment: TraitsScheduleDispatchTime.After(1)
-		});
 	}
 
 	async function calculateDeposit() {
@@ -88,33 +88,9 @@
 			deposit = '-';
 		}
 	}
-
-	let inputTimeout = setTimeout(() => {}, 2000);
-	async function calculateFee() {
-		if ($bountyInfo?.id && curatorAddress && curatorFee && $activeAccount) {
-			try {
-				const transaction = await createProposalTransaction();
-				fee = (await calculateTransactionFee(transaction)) + ' DOT';
-			} catch {
-				fee = '-';
-			}
-		} else {
-			fee = '-';
-		}
-	}
-
-	function inputChange() {
-		if (curatorAddress && curatorFee && $activeAccount) {
-			fee = 'Calculating...';
-			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(() => void calculateFee(), 2000);
-		} else {
-			fee = '-';
-		}
-	}
 </script>
 
-<form on:submit={submit} on:input={inputChange}>
+<form on:submit={submit}>
 	<div>
 		<div class="space-y-2 sm:space-y-5">
 			<p class="w-full md:1/3 mb-2 text-sm sm:text-base">
@@ -161,7 +137,7 @@
 			</section>
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Estimated basic fee</p>
-				<p class="value">{fee}</p>
+				<p class="value"><Fee {transaction} /></p>
 			</section>
 		</div>
 	</div>
