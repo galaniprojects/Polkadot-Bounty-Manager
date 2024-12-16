@@ -9,15 +9,14 @@
 
 	export let bounty: Bounty;
 
-	let currentPage = 1;
-	let itemsPerPage = 5;
-	let createChildBountyOpen = false;
+	let currentPage: number = 1;
+	let itemsPerPage: number = 10;
+	let createChildBountyOpen: boolean = false;
 	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
-	const itemsPerPageOptions = [5, 10, 20, 25];
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let paginatedChildBounties: ChildBounty[] = [];
-	let totalPages = 1;
+	let totalPages: number = 1;
 
 	const filters: Array<`${ChildBountyStatus}` | 'all'> = [
 		'all',
@@ -40,20 +39,20 @@
 		paginatedChildBounties = filteredChildBounties.slice(startIndex, endIndex);
 	}
 
-	let listContainer: HTMLDivElement;
-
-	const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+	function handlePageChange(event: CustomEvent<{ page: number }>): void {
 		currentPage = event.detail.page;
-		listContainer.scrollIntoView({ behavior: 'smooth' });
-	};
+	}
 
-	const handleItemsPerPageChange = (event: CustomEvent<{ itemsPerPage: number }>) => {
+	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>): void {
 		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
-	};
+	}
 </script>
 
-<div bind:this={listContainer} class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md">
+<div
+	data-pagination-scroll="bounty-{bounty.id}"
+	class="bg-childBountyBackground p-3 m-3 w-full lg:w-full rounded-md"
+>
 	<!-- Header section -->
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
@@ -137,14 +136,13 @@
 			<p>No Child bounties for the selected filter</p>
 		{/if}
 
-		<div class="py-[18px]">
+		<div class="pagination py-[18px]">
 			<Pagination
 				{currentPage}
 				{totalPages}
 				{itemsPerPage}
-				perPageOptions={itemsPerPageOptions}
-				arrowColor="#E6007A"
-				activeButtonColor="text-primary border border-primary bg-transparent"
+				scrollTarget={`bounty-${bounty.id}`}
+				activeButtonColor="text-primary border border-primary"
 				on:pageChange={handlePageChange}
 				on:itemsPerPageChange={handleItemsPerPageChange}
 			/>
@@ -156,5 +154,9 @@
 <style>
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+	}
+
+	.pagination {
+		--pagination-arrow-color: theme('colors.accent');
 	}
 </style>

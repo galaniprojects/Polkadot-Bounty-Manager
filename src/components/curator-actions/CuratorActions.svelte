@@ -6,13 +6,10 @@
 	import BountyCard from './BountyCard.svelte';
 	import Pagination from './Pagination.svelte';
 
-	let currentPage = 1;
-	let itemsPerPage = 5;
-	let totalPages = 1;
+	let currentPage: number = 1;
+	let itemsPerPage: number = 10;
+	let totalPages: number = 1;
 	let paginatedBounties: Bounty[] = [];
-	let listContainer: HTMLDivElement;
-
-	const perPageOptions = [5, 10, 15, 20, 50];
 
 	$: activeBounties = $showAllBounties ? $bounties : $activeAccountBounties;
 
@@ -23,15 +20,14 @@
 		totalPages = Math.ceil(activeBounties.length / itemsPerPage);
 	}
 
-	const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+	function handlePageChange(event: CustomEvent<{ page: number }>): void {
 		currentPage = event.detail.page;
-		listContainer.scrollIntoView({ behavior: 'smooth' });
-	};
+	}
 
-	const handleItemsPerPageChange = (event: CustomEvent<{ itemsPerPage: number }>) => {
+	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>): void {
 		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
-	};
+	}
 
 	onMount(async () => {
 		if ($bounties.length === 0) {
@@ -41,8 +37,8 @@
 </script>
 
 <div
-	bind:this={listContainer}
 	class="main bg-primary flex justify-center items-center overflow-x-hidden"
+	data-pagination-scroll="parent-bounty-list"
 >
 	<div class="w-full rounded-md px-3 py-6 sm:px-12 sm:pt-2 sm:pb-2">
 		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
@@ -89,7 +85,7 @@
 				</div>
 			{:else}
 				{#each paginatedBounties as bounty, index}
-					<div>
+					<div data-pagination-scroll={`bounty-${bounty.id}`}>
 						<BountyCard {bounty} expanded={index === 0 ? true : false} />
 					</div>
 				{/each}
@@ -98,7 +94,7 @@
 						{currentPage}
 						{totalPages}
 						{itemsPerPage}
-						{perPageOptions}
+						scrollTarget="parent-bounty-list"
 						on:pageChange={handlePageChange}
 						on:itemsPerPageChange={handleItemsPerPageChange}
 					/>

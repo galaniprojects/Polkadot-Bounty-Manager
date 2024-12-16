@@ -2,31 +2,44 @@
 	import { createEventDispatcher } from 'svelte';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
-	export let currentPage = 1;
-	export let totalPages = 5;
-	export let arrowColor = 'white';
-	export let activeButtonColor = 'bg-transparent text-white border border-white';
-
-	export let itemsPerPage = 5;
-	export let perPageOptions = [5, 10, 15, 20];
+	export let currentPage: number = 1;
+	export let totalPages: number = 5;
+	export let activeButtonColor: string = 'text-white border border-white';
+	export let itemsPerPage: number = 10;
+	export let perPageOptions: number[] = [3, 5, 10, 15, 20];
+	export let scrollTarget: string;
 
 	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
 	const dispatch = createEventDispatcher();
 
-	const changePage = (page: number) => {
+	function changePage(page: number): void {
 		if (page > 0 && page <= totalPages && page !== currentPage) {
 			dispatch('pageChange', { page });
 		}
-	};
 
-	const handleItemsPerPageChange = (selected: number) => {
+		const scrollToContainer = findScrollContainer();
+		if (scrollToContainer) {
+			scrollToContainer.scrollIntoView({ behavior: 'smooth' });
+		}
+	}
+
+	function handleItemsPerPageChange(selected: number): void {
 		dispatch('itemsPerPageChange', { itemsPerPage: selected });
 		currentPage = 1;
-	};
+	}
 
-	function handleDropdownChange(event: CustomEvent<number>) {
+	function handleDropdownChange(event: CustomEvent<number>): void {
 		handleItemsPerPageChange(event.detail);
+	}
+
+	function findScrollContainer(): HTMLElement | null {
+		const container = document.querySelector(`[data-pagination-scroll="${scrollTarget}"]`);
+		if (container instanceof HTMLElement) {
+			return container;
+		}
+
+		return null;
 	}
 </script>
 
@@ -39,10 +52,9 @@
 			on:change={handleDropdownChange}
 		/>
 	</div>
-	<div class="flex justify-center">
+	<div class="flex justify-center space-x-2">
 		<button
-			class="pagination-arrows material-symbols-outlined ml-2"
-			style="color: {arrowColor};"
+			class="pagination-arrows material-symbols-outlined"
 			disabled={currentPage === 1}
 			on:click={() => {
 				changePage(currentPage - 1);
@@ -53,9 +65,7 @@
 
 		{#each pageNumbers as page}
 			<button
-				class={`page-number 
-        ${page === currentPage ? activeButtonColor : 'bg-accent text-white'} 
-        ml-2`}
+				class={`page-number ${page === currentPage ? activeButtonColor : 'bg-accent text-white '}`}
 				on:click={() => {
 					changePage(page);
 				}}
@@ -65,8 +75,7 @@
 		{/each}
 
 		<button
-			class="pagination-arrows material-symbols-outlined ml-2"
-			style="color: {arrowColor};"
+			class="pagination-arrows material-symbols-outlined"
 			on:click={() => {
 				changePage(currentPage + 1);
 			}}
@@ -88,9 +97,12 @@
 		border-radius: 0.375rem;
 	}
 
+	.pagination-arrows {
+		color: var(--pagination-arrow-color, theme('colors.white'));
+	}
+
 	.pagination-arrows:disabled,
 	.page-number:disabled {
-		pointer-events: none;
 		opacity: 0.5;
 	}
 </style>
