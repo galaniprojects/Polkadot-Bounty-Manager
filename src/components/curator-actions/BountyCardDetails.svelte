@@ -57,7 +57,7 @@
 					</div>
 				{/if}
 				<div class="flex justify-between lg:space-x-[160px] xl:space-x-40">
-					{#if bounty.expiryDate != undefined}
+					{#if bounty.expiryDate}
 						<section class="flex-col text-start">
 							<p class="text-xs">Expiration date</p>
 							<p>{formatDate(bounty.expiryDate)}</p>

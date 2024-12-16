@@ -27,9 +27,9 @@
 	];
 
 	$: {
-		filteredChildBounties = bounty.childBounties.filter((childBounty) => {
-			return childBounty.status === selectedFilter || selectedFilter === 'all';
-		});
+		filteredChildBounties = bounty.childBounties.filter(
+			({ status }) => status === selectedFilter || selectedFilter === 'all'
+		);
 
 		totalPages = Math.ceil(filteredChildBounties.length / itemsPerPage);
 		currentPage = Math.min(currentPage, totalPages);
@@ -62,7 +62,9 @@
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
-				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && $activeAccount && bounty.curator === $activeAccount.address)}
+
+				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.curator === $activeAccount?.address)}
+
 					<div
 						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
 							.childBounties.length > 0

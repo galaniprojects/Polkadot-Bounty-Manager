@@ -42,9 +42,7 @@
 	<div class="space-y-8">
 		<p class="p-1 text-white bg-curatorMainBackground">
 			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
-			{/if}
+			{childBounty.description ?? ''}
 		</p>
 		<div class="space-y-2">
 			<p class="text-xs">What is this action?</p>

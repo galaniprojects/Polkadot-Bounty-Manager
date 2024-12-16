@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
-import { createTypedApi, type BlockInfo } from './utils/polkadot';
+import { type BlockInfo, createTypedApi } from './utils/polkadot';
+import { endpoints } from './utils/endpoints';
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import type { AccountInfo } from './types/account';
 import { type InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
@@ -10,7 +11,7 @@ import type { WalletConnect } from '@reactive-dot/wallet-walletconnect';
 
 export const nodeEndpoint = writable(PUBLIC_NODE_ENDPOINT);
 
-export const dotApi = writable(createTypedApi(PUBLIC_NODE_ENDPOINT as string));
+export const dotApi = writable(createTypedApi(endpoints));
 
 // Session.
 export const activeAccount = writable<AccountInfo | undefined>(undefined);

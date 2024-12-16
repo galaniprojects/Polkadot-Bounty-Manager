@@ -68,9 +68,7 @@
 	<div>
 		<p class="p-1 text-white bg-childBountyGray">
 			#{childBounty.id}
-			{#if childBounty.description !== undefined}
-				{childBounty.description}
-			{/if}
+			{childBounty.description ?? ''}
 		</p>
 
 		<div class="my-4">

@@ -84,9 +84,11 @@
 					</div>
 				</div>
 			{:else}
-				{#each paginatedBounties as bounty, index}
+
+				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
 					<div data-pagination-scroll={`bounty-${bounty.id}`}>
-						<BountyCard {bounty} expanded={index === 0 ? true : false} />
+						<BountyCard {bounty} expanded={index === 0} />
+
 					</div>
 				{/each}
 				{#if activeBounties.length !== 0}

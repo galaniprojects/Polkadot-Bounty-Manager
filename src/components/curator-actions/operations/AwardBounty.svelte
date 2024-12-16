@@ -56,9 +56,7 @@
 	<div class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description !== undefined}
-				<span>{bounty.description}</span>
-			{/if}
+			<span>{bounty.description ?? ''}</span>
 		</div>
 
 		<section class="mt-10 space-y-1">

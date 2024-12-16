@@ -15,7 +15,7 @@
 <div>
 	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
-			{#if $bountyInfo && $bountyInfo.id && $bountyInfo.description}
+			{#if $bountyInfo?.id && $bountyInfo.description}
 				#{$bountyInfo.id} {$bountyInfo.description}
 			{/if}
 		</p>
