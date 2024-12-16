@@ -6,7 +6,6 @@
 	import { formatPlanckToDot } from '../../../utils/polkadot';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import { PolkadotRuntimeOriginCaller, PreimagesBounded, TraitsScheduleDispatchTime } from '@polkadot-api/descriptors';
-	import { Binary } from 'polkadot-api';
 	import Fee from '../../../components/Fee.svelte';
 	import { type AnyTransaction, submitTransaction } from '../../../utils/transaction';
 	import DropdownMenu from '../../../components/common/DropdownMenu.svelte';
@@ -37,13 +36,9 @@
 				return;
 			}
 			const approve = $dotApi.tx.Bounties.approve_bounty({ bounty_id: $bountyInfo.id });
-			const proposal = PreimagesBounded.Inline(
-				Binary.fromBytes((await approve.getEncodedData()).asBytes())
-				// TODO: test await approve.getEncodedData()
-			);
 			transaction = $dotApi.tx.Referenda.submit({
 				proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
-				proposal,
+				proposal: PreimagesBounded.Inline(await approve.getEncodedData()),
 				enactment_moment: TraitsScheduleDispatchTime.After(1)
 			});
 		})();

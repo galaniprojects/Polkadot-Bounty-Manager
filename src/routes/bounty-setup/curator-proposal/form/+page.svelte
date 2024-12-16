@@ -12,7 +12,6 @@
 		PreimagesBounded,
 		TraitsScheduleDispatchTime
 	} from '@polkadot-api/descriptors';
-	import { Binary } from 'polkadot-api';
 	import { type AnyTransaction, submitTransaction } from '../../../../utils/transaction';
 	import Fee from '../../../../components/Fee.svelte';
 	import DropdownMenu from '../../../../components/common/DropdownMenu.svelte';
@@ -41,13 +40,9 @@
 				curator: MultiAddress.Id(curatorAddress),
 				fee: convertFormattedDotToPlanck(curatorFee)
 			});
-			const proposal: PreimagesBounded = PreimagesBounded.Inline(
-				Binary.fromBytes((await propose.getEncodedData()).asBytes())
-				// TODO: test await approve.getEncodedData()
-			);
 			transaction = $dotApi.tx.Referenda.submit({
 				proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
-				proposal: proposal,
+				proposal: PreimagesBounded.Inline(await propose.getEncodedData()),
 				enactment_moment: TraitsScheduleDispatchTime.After(1)
 			});
 		})();
