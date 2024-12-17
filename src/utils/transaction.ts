@@ -5,7 +5,6 @@ import { SupportedSources } from '../types/account';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
-import { formatPlanckToDot } from './polkadot';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTransaction = Transaction<any, string, string, unknown>;
@@ -120,18 +119,6 @@ function readableError(error: unknown): string {
 
 	console.error(error);
 	return 'Error was logged to the console. (' + truncateString(JSON.stringify(error), 150) + ')';
-}
-
-/**
- * Calculates a transaction fee, returns an error if calculating fee fails.
- **/
-export async function calculateTransactionFee(transaction: AnyTransaction): Promise<string> {
-	const account = get(activeAccount);
-	if (!account) {
-		throw new Error('can not calculate fee, account is not set');
-	}
-	const paymentInfo = await transaction.getPaymentInfo(account.address);
-	return formatPlanckToDot(paymentInfo.partial_fee);
 }
 
 export function maybeTransaction(getter: () => AnyTransaction | '' | false | undefined) {

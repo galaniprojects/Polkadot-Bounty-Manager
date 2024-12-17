@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { type AnyTransaction, calculateTransactionFee } from '../utils/transaction';
+	import { type AnyTransaction } from '../utils/transaction';
 	import { activeAccount } from '../stores';
+	import { formatPlanckToDot } from '../utils/polkadot';
 
 	export let transaction: AnyTransaction | undefined;
 	let fee = '-';
@@ -11,12 +12,12 @@
 			if (!$activeAccount || !oldTransaction) return;
 
 			fee = 'Calculating…';
-			const value = await calculateTransactionFee(oldTransaction);
+			const value = await oldTransaction.getPaymentInfo($activeAccount.address);
 
 			const transactionHasChangedMeanwhile = oldTransaction !== transaction;
 			if (transactionHasChangedMeanwhile) return;
 
-			fee = `${value} DOT`;
+			fee = `${formatPlanckToDot(value.partial_fee)} DOT`;
 		})(transaction);
 	}
 </script>
