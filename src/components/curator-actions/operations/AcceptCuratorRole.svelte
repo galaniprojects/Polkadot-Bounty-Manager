@@ -23,7 +23,7 @@
 		const result = await submitTransaction(transaction);
 
 		if (result === undefined) {
-			showErrorDialog('Internal error'); // TODO: is it needed here as well?
+			showErrorDialog('Internal error');
 		}
 	}
 </script>
