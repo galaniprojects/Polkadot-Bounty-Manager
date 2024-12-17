@@ -9,14 +9,14 @@
 
 	export let bounty: Bounty;
 
-	let currentPage: number = 1;
-	let itemsPerPage: number = 10;
-	let createChildBountyOpen: boolean = false;
+	let currentPage = 1;
+	let itemsPerPage = 10;
+	let createChildBountyOpen = false;
 	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let paginatedChildBounties: ChildBounty[] = [];
-	let totalPages: number = 1;
+	let totalPages = 1;
 
 	const filters: Array<`${ChildBountyStatus}` | 'all'> = [
 		'all',
@@ -39,11 +39,11 @@
 		paginatedChildBounties = filteredChildBounties.slice(startIndex, endIndex);
 	}
 
-	function handlePageChange(event: CustomEvent<{ page: number }>): void {
+	function handlePageChange(event: CustomEvent<{ page: number }>) {
 		currentPage = event.detail.page;
 	}
 
-	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>): void {
+	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>) {
 		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
 	}
@@ -62,9 +62,7 @@
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
-
 				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.curator === $activeAccount?.address)}
-
 					<div
 						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
 							.childBounties.length > 0

@@ -6,9 +6,9 @@
 	import BountyCard from './BountyCard.svelte';
 	import Pagination from './Pagination.svelte';
 
-	let currentPage: number = 1;
-	let itemsPerPage: number = 10;
-	let totalPages: number = 1;
+	let currentPage = 1;
+	let itemsPerPage = 10;
+	let totalPages = 1;
 	let paginatedBounties: Bounty[] = [];
 
 	$: activeBounties = $showAllBounties ? $bounties : $activeAccountBounties;
@@ -20,11 +20,11 @@
 		totalPages = Math.ceil(activeBounties.length / itemsPerPage);
 	}
 
-	function handlePageChange(event: CustomEvent<{ page: number }>): void {
+	function handlePageChange(event: CustomEvent<{ page: number }>) {
 		currentPage = event.detail.page;
 	}
 
-	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>): void {
+	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>) {
 		itemsPerPage = event.detail.itemsPerPage;
 		currentPage = 1;
 	}
@@ -84,11 +84,9 @@
 					</div>
 				</div>
 			{:else}
-
-				{#each $showAllBounties ? $bounties : $activeAccountBounties as bounty, index}
+				{#each paginatedBounties as bounty, index}
 					<div data-pagination-scroll={`bounty-${bounty.id}`}>
 						<BountyCard {bounty} expanded={index === 0} />
-
 					</div>
 				{/each}
 				{#if activeBounties.length !== 0}
