@@ -11,7 +11,7 @@
 	let hours = 1;
 	let mins = 1;
 	let current = 0;
-	$: target = String(current + ((days * 24 + hours) * 60 + mins) * 60 / 6);
+	$: target = String(current + (((days * 24 + hours) * 60 + mins) * 60) / 6);
 	$: client = createClient(getWsProvider($nodeEndpoint));
 
 	let nodeEndpointInput = '';
