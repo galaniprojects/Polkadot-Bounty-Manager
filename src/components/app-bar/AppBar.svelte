@@ -13,7 +13,7 @@
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svg';
 	import LoginDialog from './LoginDialog.svelte';
-	import { SetActiveAccountBounties } from '../../utils/bounties';
+	import { setActiveAccountBounties } from '../../utils/bounties';
 	import {
 		connectInjectedExtension,
 		type InjectedExtension,
@@ -73,7 +73,7 @@
 			}
 
 			// Set the relevant bounties for the signed in account.
-			SetActiveAccountBounties();
+			setActiveAccountBounties();
 		}
 	});
 

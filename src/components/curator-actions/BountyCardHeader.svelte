@@ -3,6 +3,15 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	export let bounty: Bounty;
 	export let isParentExpanded: boolean;
+
+	const statusLabels = {
+		Proposed: 'proposed',
+		Approved: 'approved',
+		Funded: 'funded',
+		CuratorProposed: 'curator proposed',
+		Active: 'active',
+		PendingPayout: 'pending payout'
+	};
 </script>
 
 <div class="text-white max-h-fit p-5 lg:px-10 w-full">
@@ -36,7 +45,7 @@
 			</div>
 			<section class="flex space-x-1">
 				<p>Status:</p>
-				<p>{bounty.status}</p>
+				<p>{statusLabels[bounty.status]}</p>
 			</section>
 		</div>
 	</div>

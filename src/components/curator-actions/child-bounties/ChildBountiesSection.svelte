@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
-	import { BountyStatus, type Bounty } from '../../../types/bounty';
-	import type { ChildBounty, ChildBountyStatus } from '../../../types/child-bounty';
+	import { type Bounty } from '../../../types/bounty';
+	import { type ChildBounty, childBountyStatuses } from '../../../types/child-bounty';
 	import AddChildBounty from './operations/AddChildBounty.svelte';
+	import BatchAllChildBountyCalls from './operations/BatchAllChildBountyCalls.svelte';
+
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
 	import Pagination from '../Pagination.svelte';
@@ -12,24 +14,22 @@
 	let currentPage = 1;
 	let itemsPerPage = 10;
 	let createChildBountyOpen = false;
-	let selectedFilter: `${ChildBountyStatus}` | 'all' = 'all';
+	let createChildBatchOpen = false;
+
+	type Filter = ChildBounty['status'] | 'all';
+	let selectedFilter: Filter = 'all';
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let paginatedChildBounties: ChildBounty[] = [];
 	let totalPages = 1;
 
-	const filters: Array<`${ChildBountyStatus}` | 'all'> = [
-		'all',
-		'added',
-		'active',
-		'sub-curator proposed',
-		'pending payout'
-	];
+	const filters: Array<Filter> = ['all', ...childBountyStatuses];
 
 	$: {
-		filteredChildBounties = bounty.childBounties.filter(
-			({ status }) => status === selectedFilter || selectedFilter === 'all'
-		);
+		filteredChildBounties =
+			selectedFilter === 'all'
+				? bounty.childBounties
+				: bounty.childBounties.filter(({ status }) => status === selectedFilter);
 
 		totalPages = Math.ceil(filteredChildBounties.length / itemsPerPage);
 		currentPage = Math.min(currentPage, totalPages);
@@ -62,9 +62,9 @@
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
 			<div class="space-y-3 lg:space-y-1">
-				{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.curator === $activeAccount?.address)}
+				{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
 					<div
-						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
+						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:pt-3 {bounty
 							.childBounties.length > 0
 							? 'lg:mr-0'
 							: '2xl:mr-36'}"
@@ -75,6 +75,20 @@
 							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
 						>
 							ADD
+						</button>
+					</div>
+					<div
+						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
+							.childBounties.length > 0
+							? 'lg:mr-0'
+							: '2xl:mr-36'}"
+					>
+						<p class="lg:mr-3 text-xs lg:text-base">All operations</p>
+						<button
+							on:click={() => (createChildBatchOpen = true)}
+							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+						>
+							BATCH
 						</button>
 					</div>
 				{/if}
@@ -94,7 +108,7 @@
 			</div>
 			{#if bounty.childBounties.length > 0}
 				<div
-					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center lg:pb-3 lg:mr-6 2xl:mr-0"
+					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-start lg:pb-3 lg:mr-6 2xl:mr-0"
 				>
 					<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 					<div class="flex justify-between">
@@ -148,7 +162,10 @@
 		</div>
 	</div>
 </div>
+
 <AddChildBounty {bounty} bind:open={createChildBountyOpen} />
+
+<BatchAllChildBountyCalls {bounty} bind:open={createChildBatchOpen} />
 
 <style>
 	.childContainer {

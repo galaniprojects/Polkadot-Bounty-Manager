@@ -1,15 +1,14 @@
 import { get } from 'svelte/store';
-import { bounties, activeAccount, activeAccountBounties } from '../stores';
-import { BountyStatus, type Bounty, type BountyRaw } from '../types/bounty';
-import { ChildBountyStatus, type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
+import { activeAccount, activeAccountBounties, bounties } from '../stores';
+import { type Bounty, type BountyRaw } from '../types/bounty';
+import { type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
 import { calculateExpirationDate, formatDate } from './common';
-import { getCurrentBlock } from './polkadot';
 
 /**
  * Sets the store's `activeAccountBounties` value to filtered bounties
  * that are related to the `activeAccount` account only.
  */
-export function SetActiveAccountBounties() {
+export function setActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
 	const address = get(activeAccount)?.address;
 	if (!address) {
@@ -35,92 +34,66 @@ function filterChildBounties(bounties: ChildBounty[], address: string): ChildBou
 	return bounties.filter(({ curator }) => curator === address);
 }
 
-export async function parseBounty(obj: BountyRaw, id: number): Promise<Bounty> {
-	let status: BountyStatus;
-	let curator: string | undefined = undefined;
-	let expiryDate: Date | undefined = undefined;
-	let beneficiary: string | undefined = undefined;
+export function parseBounty(raw: BountyRaw, id: number, currentBlock: number) {
+	const { bond, curator_deposit: curatorDeposit, fee, proposer, value } = raw;
+	const { type } = raw.status;
 
-	switch (obj.status.type) {
-		case 'Proposed':
-			status = BountyStatus.Proposed;
-			break;
-		case 'Approved':
-			status = BountyStatus.Approved;
-			break;
-		case 'Funded':
-			status = BountyStatus.Funded;
-			break;
-		case 'CuratorProposed':
-			status = BountyStatus.CuratorProposed;
-			curator = obj.status.value.curator;
-			break;
-		case 'Active':
-			status = BountyStatus.Active;
-			curator = obj.status.value.curator;
-			if ('update_due' in obj.status.value) {
-				expiryDate = await calculateExpirationDate(obj.status.value.update_due);
-			}
-			break;
-		case 'PendingPayout':
-			curator = obj.status.value.curator;
-			status = BountyStatus.PendingPayout;
-			beneficiary = obj.status.value.beneficiary;
-			break;
+	const curator = ['CuratorProposed', 'Active', 'PendingPayout'].includes(type)
+		? raw.status.value?.curator
+		: undefined;
+
+	const result: Bounty = {
+		id,
+		proposer,
+		value,
+		fee,
+		curatorDeposit,
+		bond,
+		status: type,
+		curator,
+		childBounties: []
+	};
+
+	if (type === 'PendingPayout') {
+		const { beneficiary } = raw.status.value;
+		return { beneficiary, ...result };
 	}
 
-	return {
-		id,
-		proposer: obj.proposer,
-		value: obj.value,
-		fee: obj.fee,
-		curatorDeposit: obj.curator_deposit,
-		bond: obj.bond,
-		status,
-		curator,
-		expiryDate,
-		childBounties: [],
-		beneficiary
-	};
+	if (type === 'Active' && 'update_due' in raw.status.value) {
+		const expiryDate = calculateExpirationDate(raw.status.value.update_due, currentBlock);
+		return { expiryDate, ...result };
+	}
+
+	return result;
 }
 
-export async function parseChildBounty(obj: ChildBountyRaw, id: number): Promise<ChildBounty> {
-	let status: ChildBountyStatus;
-	let curator: string | undefined;
-	let dateOfPayout: string | undefined;
-	let beneficiary: string | undefined;
+export function parseChildBounty(raw: ChildBountyRaw, id: number, currentBlock: number) {
+	const { fee, value, parent_bounty: parentBounty, curator_deposit: curatorDeposit } = raw;
+	const { type } = raw.status;
 
-	switch (obj.status.type) {
-		case 'Added':
-			status = ChildBountyStatus.Added;
-			break;
-		case 'CuratorProposed':
-			status = ChildBountyStatus.SubCuratorProposed;
-			curator = obj.status.value.curator;
-			break;
-		case 'Active':
-			status = ChildBountyStatus.Active;
-			curator = obj.status.value.curator;
-			break;
-		case 'PendingPayout': {
-			curator = obj.status.value.curator;
-			status = ChildBountyStatus.PendingPayout;
-			const unlockAt = obj.status.value.unlock_at;
-			const currentBlockInfo = await getCurrentBlock();
-			const blocksToExpire = unlockAt - currentBlockInfo.blockNumber;
-			dateOfPayout = formatDate(new Date(currentBlockInfo.timestamp + blocksToExpire * 6000));
-			beneficiary = obj.status.value.beneficiary;
-			break;
-		}
-	}
-	return {
+	const curator = ['CuratorProposed', 'Active', 'PendingPayout'].includes(type)
+		? raw.status.value?.curator
+		: undefined;
+
+	const result: ChildBounty = {
 		id,
-		parentBounty: obj.parent_bounty,
-		value: obj.value,
-		fee: obj.fee,
-		curatorDeposit: obj.curator_deposit,
-		status,
-		curator,
+		value,
+		fee,
+		parentBounty,
+		curatorDeposit,
+		status: type,
+		curator
+	};
+
+	if (type !== 'PendingPayout') {
+		return result;
+	}
+
+	const { beneficiary, unlock_at: unlockAt } = raw.status.value;
+	const dateOfPayout = formatDate(calculateExpirationDate(unlockAt, currentBlock));
+
+	return {
+		...result,
 		dateOfPayout,
 		beneficiary
 	};

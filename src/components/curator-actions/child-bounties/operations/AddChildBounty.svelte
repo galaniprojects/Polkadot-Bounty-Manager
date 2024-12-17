@@ -13,13 +13,12 @@
 	export let open = true;
 	export let bounty: Bounty;
 
-	let bountyValue: string | undefined;
+	let bountyValue = '';
 	let bountyTitle = '';
 
 	$: transaction = maybeTransaction(
 		() =>
 			bountyTitle &&
-			bountyValue &&
 			isPositiveNumber(bountyValue) &&
 			$dotApi.tx.ChildBounties.add_child_bounty({
 				parent_bounty_id: bounty.id,
@@ -34,7 +33,7 @@
 			showErrorDialog('Bounty title is empty');
 			return;
 		}
-		if (!bountyValue || !isPositiveNumber(bountyValue)) {
+		if (!isPositiveNumber(bountyValue)) {
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
@@ -58,9 +57,7 @@
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
-			{#if bounty.description}
-				<span>{bounty.description}</span>
-			{/if}
+			<span>{bounty.description ?? ''}</span>
 		</div>
 		<p>
 			Please use a descriptive title and add info about the task and beneficiary in the description.
