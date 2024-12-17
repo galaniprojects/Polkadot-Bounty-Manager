@@ -1,20 +1,24 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { activeAccount, dotApi } from '../../../stores';
+	import { dotApi } from '../../../stores';
 	import { onMount } from 'svelte';
 	import { formatDate } from '../../../utils/common';
 	import Dialog from '../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
-	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import { submitTransaction } from '../../../utils/transaction';
+	import Fee from '../../Fee.svelte';
 
 	export let open = false;
 	export let bounty: Bounty;
 
-	let fee = '-';
+	$: transaction = $dotApi.tx.Bounties.extend_bounty_expiry({
+		bounty_id: bounty.id,
+		remark: new Binary(new Uint8Array())
+	});
+
 	let expiryDate: string;
 
-	onMount(async () => {
-		await calculateFee();
+	onMount(() => {
 		if (bounty.expiryDate) {
 			expiryDate = formatDate(bounty.expiryDate);
 		} else {
@@ -24,28 +28,7 @@
 
 	async function submit() {
 		open = false;
-		const transaction = $dotApi.tx.Bounties.extend_bounty_expiry({
-			bounty_id: bounty.id,
-			remark: new Binary(new Uint8Array())
-		});
 		await submitTransaction(transaction, 'Your bounty has been extended');
-	}
-
-	async function calculateFee() {
-		if (!$activeAccount) {
-			fee = '-';
-			return;
-		}
-		try {
-			const transaction = $dotApi.tx.Bounties.extend_bounty_expiry({
-				bounty_id: bounty.id,
-				remark: new Binary(new Uint8Array())
-			});
-			fee = await calculateTransactionFee(transaction);
-		} catch (e) {
-			console.error(e);
-			fee = '-';
-		}
 	}
 </script>
 
@@ -79,7 +62,7 @@
 
 		<div>
 			<p class="text-xs">Estimated basic fee</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</div>
 	</section>
 

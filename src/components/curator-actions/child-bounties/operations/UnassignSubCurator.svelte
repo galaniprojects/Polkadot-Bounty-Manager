@@ -1,42 +1,25 @@
 <script lang="ts">
 	import { dotApi } from '../../../../stores';
-	import { onMount } from 'svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import { submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../Fee.svelte';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
-	let fee = '-';
-	let isToggled = false;
-
-	onMount(async () => {
-		await calculateFee();
+	$: transaction = $dotApi.tx.ChildBounties.unassign_curator({
+		child_bounty_id: childBounty.id,
+		parent_bounty_id: childBounty.parentBounty
 	});
+
+	let isToggled = false;
 
 	async function unassignSubCurator() {
 		open = false;
-		const transaction = $dotApi.tx.ChildBounties.unassign_curator({
-			child_bounty_id: childBounty.id,
-			parent_bounty_id: childBounty.parentBounty
-		});
 		await submitTransaction(transaction);
-	}
-
-	async function calculateFee() {
-		try {
-			const transaction = $dotApi.tx.ChildBounties.unassign_curator({
-				child_bounty_id: childBounty.id,
-				parent_bounty_id: childBounty.parentBounty
-			});
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
 	}
 </script>
 
@@ -69,7 +52,7 @@
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</section>
 	</div>
 

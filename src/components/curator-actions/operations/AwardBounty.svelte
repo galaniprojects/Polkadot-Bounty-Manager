@@ -2,21 +2,25 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { formatPlanckToDot, isValidAddress } from '../../../utils/polkadot';
 	import { dotApi } from '../../../stores';
-	import { onMount } from 'svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import Dialog from '../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
-	import { calculateTransactionFee, submitTransaction } from '../../../utils/transaction';
+	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
+	import Fee from '../../Fee.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
 
 	let beneficiary = '';
-	let fee = '-';
 
-	onMount(async () => {
-		await calculateFee();
-	});
+	const transaction = maybeTransaction(
+		() =>
+			isValidAddress(beneficiary) &&
+			$dotApi.tx.Bounties.award_bounty({
+				bounty_id: bounty.id,
+				beneficiary: MultiAddress.Id(beneficiary)
+			})
+	);
 
 	async function submit() {
 		open = false;
@@ -25,29 +29,15 @@
 				showErrorDialog('Beneficiary address is invalid');
 				return;
 			}
+			if (!transaction) {
+				showErrorDialog('An internal error has happened');
+				return;
+			}
 
-			const transaction = $dotApi.tx.Bounties.award_bounty({
-				bounty_id: bounty.id,
-				beneficiary: MultiAddress.Id(beneficiary)
-			});
 			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(String(e));
-		}
-	}
-
-	async function calculateFee() {
-		try {
-			const transaction = $dotApi.tx.Bounties.award_bounty({
-				bounty_id: bounty.id,
-				beneficiary: MultiAddress.Id(beneficiary)
-			});
-
-			fee = (await calculateTransactionFee(transaction)) + ' Dot';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
 		}
 	}
 </script>
@@ -80,7 +70,7 @@
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</section>
 
 		<button

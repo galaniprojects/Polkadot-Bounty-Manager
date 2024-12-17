@@ -2,39 +2,21 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { dotApi } from '../../../../stores';
-	import { onMount } from 'svelte';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../Fee.svelte';
+	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
-	let fee = '-';
-
-	onMount(async () => {
-		await calculateFee();
+	$: transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
+		child_bounty_id: childBounty.id,
+		parent_bounty_id: childBounty.parentBounty
 	});
 
 	async function submit() {
 		open = false;
-		const transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
-			child_bounty_id: childBounty.id,
-			parent_bounty_id: childBounty.parentBounty
-		});
 		await submitTransaction(transaction, 'Child bounty successfully claimed');
-	}
-
-	async function calculateFee() {
-		try {
-			const transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
-				child_bounty_id: childBounty.id,
-				parent_bounty_id: childBounty.parentBounty
-			});
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-		} catch (e) {
-			console.error(e);
-			fee = '--';
-		}
 	}
 </script>
 
@@ -59,7 +41,7 @@
 		{/if}
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>
-			<p>{fee}</p>
+			<p><Fee {transaction} /></p>
 		</div>
 	</div>
 

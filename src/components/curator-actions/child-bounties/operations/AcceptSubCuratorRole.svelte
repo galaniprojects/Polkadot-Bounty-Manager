@@ -1,50 +1,34 @@
 <script lang="ts">
 	import { dotApi } from '../../../../stores';
-	import { onMount } from 'svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { calculateDeposit } from '../../operations/calculateDeposit';
 	import Dialog from '../../../common/Dialog.svelte';
-	import { calculateTransactionFee, submitTransaction } from '../../../../utils/transaction';
+	import { submitTransaction } from '../../../../utils/transaction';
+	import Fee from '../../../Fee.svelte';
+	import Deposit from '../../../Deposit.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
 	export let parentCurator: string | undefined;
 
-	let fee = '-';
-	let deposit = '-';
-	let isToggled = false;
-
-	onMount(async () => {
-		await calculateFeeAndDeposit();
+	$: transaction = $dotApi.tx.ChildBounties.accept_curator({
+		parent_bounty_id: childBounty.parentBounty,
+		child_bounty_id: childBounty.id
 	});
+
+	let isToggled = false;
 
 	async function acceptCuratorRole() {
 		open = false;
-		const transaction = $dotApi.tx.ChildBounties.accept_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id
-		});
 		await submitTransaction(transaction);
 	}
 
-	async function calculateFeeAndDeposit() {
-		try {
-			const transaction = $dotApi.tx.ChildBounties.accept_curator({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id
-			});
-			fee = (await calculateTransactionFee(transaction)) + ' DOT';
-			if (parentCurator && parentCurator === childBounty.curator) {
-				deposit = '0';
-			} else {
-				deposit = calculateDeposit(childBounty.fee);
-			}
-		} catch (e) {
-			console.error(e);
-			fee = '-';
-			deposit = '-';
+	function calculateChildBountyDeposit(parent: string | undefined, child: ChildBounty) {
+		if (parent && parent === child.curator) {
+			return 0n;
 		}
+		return calculateDeposit(child.fee);
 	}
 </script>
 
@@ -66,11 +50,13 @@
 		<div class="flex space-x-24">
 			<div>
 				<p class="text-xs">Estimated basic fee</p>
-				<p>{fee}</p>
+				<p><Fee {transaction} /></p>
 			</div>
 			<div>
 				<p class="text-xs">Estimated deposit</p>
-				<p>{deposit} DOT</p>
+				<p>
+					<Deposit getter={() => calculateChildBountyDeposit(parentCurator, childBounty)} />
+				</p>
 			</div>
 		</div>
 	</section>

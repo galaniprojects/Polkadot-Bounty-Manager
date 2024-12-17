@@ -6,13 +6,24 @@
 	import { isPositiveNumber } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { Binary } from 'polkadot-api';
-	import { calculateTransactionFee, submitTransaction } from '../../utils/transaction';
+	import Fee from '../../components/Fee.svelte';
+	import { maybeTransaction, submitTransaction } from '../../utils/transaction';
 	import { bountyInfo } from './_bountyInfo';
 
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
-	let fee = '-';
 	let bondValue = '-';
+
+	$: transaction = maybeTransaction(
+		() =>
+			bountyValue &&
+			isPositiveNumber(bountyValue) &&
+			bountyTitle &&
+			$dotApi.tx.Bounties.propose_bounty({
+				value: convertFormattedDotToPlanck(bountyValue),
+				description: Binary.fromText(bountyTitle)
+			})
+	);
 
 	async function submit() {
 		if (!$activeAccount) {
@@ -32,10 +43,11 @@
 			showErrorDialog('Bounty value is invalid');
 			return;
 		}
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
+			return;
+		}
 
-		const value = convertFormattedDotToPlanck(bountyValue);
-		const description = Binary.fromText(bountyTitle);
-		const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
 		const result = await submitTransaction(transaction, 'Bounty creation success.');
 		if (!result) {
 			return;
@@ -62,64 +74,27 @@
 
 		await goto('/bounty-setup/success');
 	}
-	let inputTimeout = setTimeout(() => {}, 4000);
 
-	async function calculateBondAndFee() {
-		await calculateBond();
-		await calculateFee();
-	}
-
-	async function calculateFee() {
+	$: (async () => {
 		try {
-			if (bountyValue && bountyTitle && $activeAccount) {
-				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = Binary.fromText(bountyTitle);
-				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
+			bondValue = '-';
+			if (!transaction) return;
 
-				fee = (await calculateTransactionFee(transaction)) + ' DOT';
-			} else {
-				fee = '-';
-			}
-		} catch {
-			fee = '-';
-		}
-	}
-
-	async function calculateBond() {
-		try {
-			if (bountyValue && bountyTitle && $activeAccount) {
-				const value = convertFormattedDotToPlanck(bountyValue);
-				const description = Binary.fromText(bountyTitle);
-				const transaction = $dotApi.tx.Bounties.propose_bounty({ value, description });
-				const base = await $dotApi.constants.Bounties.BountyDepositBase();
-				const bytesLen = BigInt(transaction.getEncodedData.length);
-				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
-				bondValue = formatPlanckToDot(base + (bytesLen - 1n) * perByte) + ' DOT';
-			} else {
-				bondValue = '-';
-			}
+			bondValue = 'Calculating…';
+			const base = await $dotApi.constants.Bounties.BountyDepositBase();
+			const bytesLen = BigInt((await transaction.getEncodedData()).asBytes().length);
+			const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
+			const bond = base + (bytesLen - 1n) * perByte;
+			bondValue = `${formatPlanckToDot(bond)} DOT`;
 		} catch {
 			bondValue = '-';
 		}
-	}
-
-	function inputChange() {
-		if (bountyValue && bountyTitle && $activeAccount) {
-			fee = 'Calculating...';
-			bondValue = 'Calculating...';
-			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(() => void calculateBondAndFee(), 2000);
-		} else {
-			fee = '-';
-			bondValue = '-';
-		}
-	}
+	})();
 </script>
 
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 	<input
 		bind:value={bountyTitle}
-		on:input={inputChange}
 		class="rounded-md bg-gray-100 w-full md:w-1/2 pl-3 pt-1"
 		placeholder="Give your Bounty a title"
 	/>
@@ -141,7 +116,6 @@
 				bind:value={bountyValue}
 				class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
 				placeholder="1000.00"
-				on:input={inputChange}
 			/>
 		</section>
 		<hr class="border-white my-5 sm:my-10 w-full md:w-1/2" />
@@ -153,7 +127,7 @@
 			</section>
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Estimated basic fee</p>
-				<p class="value">{fee}</p>
+				<p class="value"><Fee {transaction} /></p>
 			</section>
 		</div>
 	</div>
