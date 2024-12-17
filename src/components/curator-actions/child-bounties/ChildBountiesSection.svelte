@@ -141,7 +141,6 @@
 				{currentPage}
 				{totalPages}
 				{itemsPerPage}
-				scrollTarget={`bounty-${bounty.id}`}
 				activeButtonColor="text-primary border border-primary"
 				on:pageChange={handlePageChange}
 				on:itemsPerPageChange={handleItemsPerPageChange}

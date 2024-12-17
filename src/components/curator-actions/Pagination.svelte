@@ -6,20 +6,19 @@
 	export let totalPages = 5;
 	export let activeButtonColor = 'text-white border border-white';
 	export let itemsPerPage = 10;
-	export let perPageOptions = [3, 5, 10, 15, 20];
-	export let scrollTarget: string;
+	export let perPageOptions = [5, 10, 15, 20];
 
 	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
 	const dispatch = createEventDispatcher();
 
-	function changePage(page: number, event: Event) {
+	let paginationContainer: HTMLElement | null = null;
+
+	function changePage(page: number) {
 		if (page > 0 && page <= totalPages && page !== currentPage) {
 			dispatch('pageChange', { page });
 
-			const scrollToContainer = (event.currentTarget as HTMLElement).closest(
-				`[data-pagination-scroll="${scrollTarget}"]`
-			);
+			const scrollToContainer = paginationContainer?.closest('[data-pagination-scroll]');
 			scrollToContainer?.scrollIntoView({ behavior: 'smooth' });
 		}
 	}
@@ -29,7 +28,7 @@
 	}
 </script>
 
-<div class="flex-col items-center space-y-[18px]">
+<div bind:this={paginationContainer} class="flex-col items-center space-y-[18px]">
 	<div class="flex justify-center">
 		<DropdownMenu
 			items={perPageOptions}
@@ -42,8 +41,8 @@
 		<button
 			class="pagination-arrows material-symbols-outlined"
 			disabled={currentPage === 1}
-			on:click={(e) => {
-				changePage(currentPage - 1, e);
+			on:click={() => {
+				changePage(currentPage - 1);
 			}}
 		>
 			arrow_back_ios
@@ -52,8 +51,8 @@
 		{#each pageNumbers as page}
 			<button
 				class={`page-number ${page === currentPage ? activeButtonColor : 'bg-accent text-white '}`}
-				on:click={(e) => {
-					changePage(page, e);
+				on:click={() => {
+					changePage(page);
 				}}
 			>
 				{page}
@@ -62,8 +61,8 @@
 
 		<button
 			class="pagination-arrows material-symbols-outlined"
-			on:click={(e) => {
-				changePage(currentPage + 1, e);
+			on:click={() => {
+				changePage(currentPage + 1);
 			}}
 			disabled={currentPage === totalPages}
 		>

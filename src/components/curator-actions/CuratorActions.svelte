@@ -94,7 +94,6 @@
 						{currentPage}
 						{totalPages}
 						{itemsPerPage}
-						scrollTarget="parent-bounty-list"
 						on:pageChange={handlePageChange}
 						on:itemsPerPageChange={handleItemsPerPageChange}
 					/>
