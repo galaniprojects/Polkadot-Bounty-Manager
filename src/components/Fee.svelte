@@ -3,31 +3,22 @@
 	import { activeAccount } from '../stores';
 
 	export let transaction: AnyTransaction | undefined;
-	let pending: boolean;
-	let fee: string | undefined;
+	let fee = '-';
 
 	$: {
-		pending = Boolean(transaction);
-		if (!$activeAccount || !transaction) {
-			fee = undefined;
-		} else {
-			(async (oldTransaction) => {
-				const value = await calculateTransactionFee(oldTransaction);
-				pending = false;
+		(async (oldTransaction) => {
+			fee = '-';
+			if (!$activeAccount || !oldTransaction) return;
 
-				const transactionHasChangedMeanwhile = oldTransaction !== transaction;
-				if (transactionHasChangedMeanwhile) return;
+			fee = 'Calculating…';
+			const value = await calculateTransactionFee(oldTransaction);
 
-				fee = value;
-			})(transaction);
-		}
+			const transactionHasChangedMeanwhile = oldTransaction !== transaction;
+			if (transactionHasChangedMeanwhile) return;
+
+			fee = `${value} DOT`;
+		})(transaction);
 	}
 </script>
 
-{#if fee === undefined}
-	–
-{:else if pending}
-	Calculating…
-{:else if fee}
-	{fee} DOT
-{/if}
+{fee}
