@@ -74,38 +74,27 @@
 
 		await goto('/bounty-setup/success');
 	}
-	let inputTimeout = setTimeout(() => {}, 4000);
 
-	async function calculateBond() {
+	$: (async () => {
 		try {
-			if (transaction) {
-				const base = await $dotApi.constants.Bounties.BountyDepositBase();
-				const bytesLen = BigInt((await transaction.getEncodedData()).asBytes().length);
-				const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
-				bondValue = formatPlanckToDot(base + (bytesLen - 1n) * perByte) + ' DOT';
-			} else {
-				bondValue = '-';
-			}
+			bondValue = '-';
+			if (!transaction) return;
+
+			bondValue = 'Calculating…';
+			const base = await $dotApi.constants.Bounties.BountyDepositBase();
+			const bytesLen = BigInt((await transaction.getEncodedData()).asBytes().length);
+			const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
+			const bond = base + (bytesLen - 1n) * perByte;
+			bondValue = `${formatPlanckToDot(bond)} DOT`;
 		} catch {
 			bondValue = '-';
 		}
-	}
-
-	function inputChange() {
-		if (transaction) {
-			bondValue = 'Calculating...';
-			clearTimeout(inputTimeout);
-			inputTimeout = setTimeout(() => void calculateBond(), 2000);
-		} else {
-			bondValue = '-';
-		}
-	}
+	})();
 </script>
 
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 	<input
 		bind:value={bountyTitle}
-		on:input={inputChange}
 		class="rounded-md bg-gray-100 w-full md:w-1/2 pl-3 pt-1"
 		placeholder="Give your Bounty a title"
 	/>
@@ -127,7 +116,6 @@
 				bind:value={bountyValue}
 				class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
 				placeholder="1000.00"
-				on:input={inputChange}
 			/>
 		</section>
 		<hr class="border-white my-5 sm:my-10 w-full md:w-1/2" />
