@@ -1,19 +1,42 @@
 <script lang="ts">
 	import LogoBountyManagerDesktop from './svg/header-footer-logos/LogoBountyManagerDesktop.svg';
+	import LogoTelegram from './svg/header-footer-logos/LogoTelegram.svg';
+	import LogoEmail from './svg/header-footer-logos/LogoEmail.svg';
+	import LogoPolkadot from './svg/header-footer-logos/LogoPolkadot.svg';
 	import { page } from '$app/stores';
 
 	$: isOnImprintPage = $page.url.pathname === '/imprint';
 </script>
 
 <hr class="dotted-line border border-accent border-dotted bg-primary" />
+
 <footer class="bg-primary flex flex-col justify-center items-center pt-5 pb-6 space-y-6">
+	<!-- Bounty Manager Logo -->
 	<p>
-		<img width="307" height="62" src={LogoBountyManagerDesktop} alt="Logo" />
+		<img width="225" height="47" src={LogoBountyManagerDesktop} alt="Logo" />
 	</p>
+
+	<!-- Telecommunication links-->
+	<div class="flex space-x-6">
+		<a href="https://t.me/bounty_manager_feedback" target="_blank" rel="noopener noreferrer">
+			<img width="40" height="40" src={LogoTelegram} alt="Telegram Logo" />
+		</a>
+		<a href="mailto:bountymanager@galaniprojects.com">
+			<img width="40" height="40" src={LogoEmail} alt="Email Logo" />
+		</a>
+	</div>
+
+	<!-- Terms and Conditions -->
 	<a
 		href={isOnImprintPage ? '/curator-actions' : '/imprint'}
-		class="text-sm text-white underline underline-offset-2 pr-5"
+		class="text-xs text-white underline underline-offset-2 pr-5"
 	>
 		{isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions'}
 	</a>
+
+	<!-- Polkadot Logo -->
+	<div class="flex space-x-1">
+		<p class="text-white text-xs">powered by</p>
+		<img width="49" height="11" src={LogoPolkadot} alt="Polkadot Logo" />
+	</div>
 </footer>
