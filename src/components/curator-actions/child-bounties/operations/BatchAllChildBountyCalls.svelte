@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
-	import { activeAccount, childBounties, dotApi } from '../../../../stores';
+	import { activeAccount, dotApi } from '../../../../stores';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
@@ -19,6 +19,11 @@
 	let curatorFee = '';
 	let beneficiary = '';
 
+	let childBountyId: number;
+	(async () => {
+		childBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+	})();
+
 	$: transaction = maybeTransaction(() => {
 		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
 
@@ -28,7 +33,6 @@
 			description: Binary.fromText(bountyTitle)
 		});
 
-		const childBountyId = $childBounties[0].id + 1;
 		const propose = $dotApi.tx.ChildBounties.propose_curator({
 			parent_bounty_id: bounty.id,
 			child_bounty_id: childBountyId,
@@ -149,6 +153,11 @@
 			<p><Fee {transaction} /></p>
 		</section>
 	</div>
+
+	<p class="text-xs mt-6">
+		This operation might fail because we have to guess the ID of the created child bounty. In this
+		case, please reload the page and try again.
+	</p>
 
 	<button
 		on:click={submit}

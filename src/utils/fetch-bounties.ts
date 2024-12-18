@@ -1,4 +1,4 @@
-import { bounties as bountiesStore, childBounties as childBountiesStore, dotApi } from '../stores';
+import { bounties as bountiesStore, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
 import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty, setActiveAccountBounties } from './bounties';
@@ -54,7 +54,6 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		});
 
 		bountiesStore.set(bounties);
-		childBountiesStore.set(childBounties);
 		setActiveAccountBounties();
 
 		if (showProgress) {
