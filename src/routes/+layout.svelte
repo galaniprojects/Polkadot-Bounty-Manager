@@ -5,7 +5,7 @@
 	import LoadingScreen from '../components/LoadingScreen.svelte';
 	import { loadingDialogState } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
-	import Footer from '../components/Footer/Footer.svelte';
+	import Footer from '../components/footer/Footer.svelte';
 </script>
 
 {#if !PUBLIC_HIDE_TEST_BAR}
