@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
-	import { BountyStatus, type Bounty } from '../../types/bounty';
+	import { type Bounty } from '../../types/bounty';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
 	import ClaimBounty from './operations/ClaimBounty.svelte';
 	import ExtendBounty from './operations/ExtendBounty.svelte';
@@ -27,7 +27,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || bounty.status === BountyStatus.Proposed || bounty.status === BountyStatus.Approved || bounty.status === BountyStatus.Funded}
+	{#if $showAllCuratorOptions || ['Proposed', 'Approved', 'Funded'].includes(bounty.status)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 
@@ -40,7 +40,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.CuratorProposed && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Curator Role</p>
 			<button
@@ -54,7 +54,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === BountyStatus.Active && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="pt-2 text-sm text-white">Extend Bounty</p>
 			<button
@@ -68,7 +68,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || bounty.status === BountyStatus.PendingPayout}
+	{#if $showAllCuratorOptions || bounty.status === 'PendingPayout'}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<button
 				on:click={() => (claimBountyDialogOpen = true)}

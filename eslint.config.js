@@ -37,6 +37,7 @@ export default [
 			'.svelte-kit/',
 			'dist/',
 			'.papi',
+			'vite.config.*.mjs',
 			'eslint.config.js',
 			'playwright.config.ts',
 			'postcss.config.js',

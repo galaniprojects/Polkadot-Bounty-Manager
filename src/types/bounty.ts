@@ -16,17 +16,8 @@ export interface Bounty {
 	fee: bigint;
 	curatorDeposit: bigint;
 	bond: bigint;
-	status: BountyStatus;
+	status: 'Proposed' | 'Approved' | 'Funded' | 'CuratorProposed' | 'Active' | 'PendingPayout';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
-	expiryDate: Date | undefined;
-}
-
-export enum BountyStatus {
-	Proposed = 'proposed',
-	Approved = 'approved',
-	Funded = 'funded',
-	CuratorProposed = 'curator proposed',
-	Active = 'active',
-	PendingPayout = 'pending payout'
+	expiryDate?: Date | undefined;
 }

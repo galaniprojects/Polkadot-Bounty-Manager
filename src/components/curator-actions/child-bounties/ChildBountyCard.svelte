@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChildBountyStatus, type ChildBounty } from '../../../types/child-bounty';
+	import { type ChildBounty } from '../../../types/child-bounty';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
@@ -26,24 +26,12 @@
 
 	let detailsExpended = false;
 
-	let statusColorClass = '';
-
-	$: switch (childBounty.status) {
-		case ChildBountyStatus.Added:
-			statusColorClass = 'added';
-			break;
-		case ChildBountyStatus.SubCuratorProposed:
-			statusColorClass = 'sub-curator-proposed';
-			break;
-		case ChildBountyStatus.Active:
-			statusColorClass = 'active';
-			break;
-		case ChildBountyStatus.PendingPayout:
-			statusColorClass = 'pending-payout';
-			break;
-		default:
-			statusColorClass = 'added';
-	}
+	const statusLabels = {
+		Added: 'added',
+		CuratorProposed: 'sub-curator proposed',
+		Active: 'active',
+		PendingPayout: 'pending payout'
+	};
 
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
@@ -53,7 +41,8 @@
 <div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex justify-between gap-4 text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 {statusColorClass}"
+		class="flex justify-between gap-4 text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6"
+		data-status={childBounty.status}
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
@@ -62,7 +51,7 @@
 		</div>
 
 		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">
-			{childBounty.status}
+			{statusLabels[childBounty.status]}
 		</span>
 	</div>
 
@@ -162,13 +151,14 @@
 		</div>
 
 		<div class="space-y-3 p-2 2xl:mr-[140px]">
-			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Added && $activeAccount?.address === parentBounty.curator)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
 					<button
 						on:click={() => (assignSubCuratorOpen = true)}
-						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
+						data-status={childBounty.status}
 					>
 						ASSIGN
 					</button>
@@ -178,7 +168,8 @@
 
 					<button
 						on:click={() => (batchOpen = true)}
-						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
+						data-status={childBounty.status}
 					>
 						BATCH
 					</button>
@@ -191,40 +182,43 @@
 				</div>
 			</div>
 
-			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.SubCuratorProposed && childBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 					<button
 						on:click={() => (acceptSubCuratorRuleOpen = true)}
-						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+						data-status={childBounty.status}
+						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						ACCEPT
 					</button>
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== ChildBountyStatus.PendingPayout)}
+			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
 					<button
 						id="close"
+						data-status={childBounty.status}
 						on:click={() => (closeDownChildBountyOpen = true)}
-						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32`}
+						class="bg-transparent border rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
 					>
 						CLOSE DOWN
 					</button>
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || ((childBounty.status === ChildBountyStatus.Active || childBounty.status === ChildBountyStatus.SubCuratorProposed) && parentBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
 					<button
 						id="close"
+						data-status={childBounty.status}
 						on:click={() => (unassignSubCuratorOpen = true)}
-						class={`bg-transparent border ${statusColorClass} rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32`}
+						class="bg-transparent border rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
 					>
 						UNASSIGN
 					</button>
@@ -232,22 +226,24 @@
 			{/if}
 
 			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (childBounty.status === ChildBountyStatus.Active && childBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}
-						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+						data-status={childBounty.status}
+						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						AWARD
 					</button>
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || childBounty.status === ChildBountyStatus.PendingPayout}
+			{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (claimChildBountyOpen = true)}
-						class={`${statusColorClass} text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32`}
+						data-status={childBounty.status}
+						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						CLAIM
 					</button>
@@ -293,37 +289,37 @@
 		font-style: italic;
 	}
 
-	.active {
+	[data-status='Active'] {
 		background-color: theme('colors.childBountyGreen');
 	}
-	#close.active {
+	#close[data-status='Active'] {
 		background-color: theme('colors.transparent');
 		border-color: theme('colors.childBountyGreen');
 		color: theme('colors.childBountyGreen');
 	}
 
-	.pending-payout {
+	[data-status='PendingPayout'] {
 		background-color: theme('colors.curatorMainBackground');
 	}
-	#close.pending-payout {
+	#close[data-status='PendingPayout'] {
 		background-color: theme('colors.transparent');
 		border-color: theme('colors.curatorMainBackground');
 		color: theme('colors.curatorMainBackground');
 	}
 
-	.sub-curator-proposed {
+	[data-status='CuratorProposed'] {
 		background-color: theme('colors.childBountyGray');
 	}
-	#close.sub-curator-proposed {
+	#close[data-status='CuratorProposed'] {
 		background-color: theme('colors.transparent');
 		border-color: theme('colors.childBountyGray');
 		color: theme('colors.childBountyGray');
 	}
 
-	.added {
+	[data-status='Added'] {
 		background-color: theme('colors.childBountyGray');
 	}
-	#close.added {
+	#close[data-status='Added'] {
 		background-color: theme('colors.transparent');
 		border-color: theme('colors.childBountyGray');
 		color: theme('colors.childBountyGray');
@@ -331,13 +327,5 @@
 
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-	}
-
-	.tooltip {
-		opacity: 0;
-		transition: opacity 0.2s ease-in-out;
-	}
-	.tooltip.show {
-		opacity: 1;
 	}
 </style>

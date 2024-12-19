@@ -1,5 +1,3 @@
-import { getCurrentBlock } from './polkadot';
-
 /**
  * @returns `true` if `input` represents a positive integer or decimal number
  * and the number of decimal places does not exceed `maxPrecision`.
@@ -39,8 +37,7 @@ export function formatDate(date: Date): string {
  * Given a block number, calculates the estimated time when this block number will
  * be finalized.
  */
-export async function calculateExpirationDate(updateDue: number): Promise<Date> {
-	const currentBlockInfo = await getCurrentBlock();
-	const blocksToExpire = updateDue - currentBlockInfo.blockNumber;
-	return new Date(currentBlockInfo.timestamp + blocksToExpire * 6000);
+export function calculateExpirationDate(updateDue: number, currentBlock: number) {
+	const blocksToExpire = updateDue - currentBlock;
+	return new Date(Date.now() + blocksToExpire * 6000);
 }

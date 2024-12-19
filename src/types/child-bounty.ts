@@ -8,23 +8,18 @@ export type ChildBountyRaw = Awaited<
 	>
 >[number]['value'];
 
+export const childBountyStatuses = ['Added', 'Active', 'CuratorProposed', 'PendingPayout'] as const;
+
 export interface ChildBounty {
 	id: number;
 	parentBounty: number;
 	value: bigint;
 	fee: bigint;
 	curatorDeposit: bigint;
-	status: ChildBountyStatus;
+	status: (typeof childBountyStatuses)[number];
 	description?: string;
 	curator?: string;
 	beneficiary?: string;
 	unlockAt?: string;
 	dateOfPayout?: string;
-}
-
-export enum ChildBountyStatus {
-	Added = 'added',
-	Active = 'active',
-	SubCuratorProposed = 'sub-curator proposed',
-	PendingPayout = 'pending payout'
 }

@@ -14,7 +14,7 @@
 		injectedPolkadotAccount,
 		walletConnectPolkadotSigner
 	} from '../../stores';
-	import { SetActiveAccountBounties } from '../../utils/bounties';
+	import { setActiveAccountBounties } from '../../utils/bounties';
 	import {
 		connectInjectedExtension,
 		getInjectedExtensions,
@@ -154,7 +154,7 @@
 			injectedPolkadotAccount.set(injectedAccount[0]);
 		}
 
-		SetActiveAccountBounties();
+		setActiveAccountBounties();
 		open = false;
 	}
 
