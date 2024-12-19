@@ -5,7 +5,6 @@ import { type BlockInfo, createTypedApi } from './utils/polkadot';
 import { endpoints } from './utils/endpoints';
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import type { AccountInfo } from './types/account';
-import { type InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
 import { type PolkadotSigner } from 'polkadot-api';
 import type { WalletConnect } from '@reactive-dot/wallet-walletconnect';
 
@@ -14,12 +13,12 @@ export const nodeEndpoint = writable(PUBLIC_NODE_ENDPOINT);
 export const dotApi = writable(createTypedApi(endpoints));
 
 // Session.
-export const activeAccount = writable<AccountInfo | undefined>(undefined);
-export const injectedPolkadotAccount = writable<InjectedPolkadotAccount | undefined>(undefined);
+export const activeAccount = writable<AccountInfo | undefined>();
 
 // WalletConnect.
 export const walletConnect = writable<WalletConnect | undefined>();
-export const walletConnectPolkadotSigner = writable<PolkadotSigner | undefined>(undefined);
+
+export const polkadotSigner = writable<PolkadotSigner | undefined>();
 
 // Loading Dialog.
 const state: LoadingDialogState = {
@@ -38,7 +37,7 @@ export const bounties = writable<Bounty[]>([]);
 export const activeAccountBounties = writable<Bounty[]>([]);
 
 // Misc.
-export const currentBlock = writable<BlockInfo | undefined>(undefined);
+export const currentBlock = writable<BlockInfo | undefined>();
 
 // For testing.
 export const showAllBounties = writable<boolean>(false);

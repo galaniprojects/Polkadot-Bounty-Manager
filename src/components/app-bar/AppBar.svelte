@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {
-		walletConnect as wcConnection,
 		activeAccount,
-		injectedPolkadotAccount,
 		activeAccountBounties,
-		walletConnectPolkadotSigner,
-		walletConnect
+		polkadotSigner,
+		walletConnect,
+		walletConnect as wcConnection
 	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
@@ -14,13 +13,8 @@
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svg';
 	import LoginDialog from './LoginDialog.svelte';
 	import { setActiveAccountBounties } from '../../utils/bounties';
-	import {
-		connectInjectedExtension,
-		type InjectedExtension,
-		type InjectedPolkadotAccount,
-		type PolkadotSigner
-	} from 'polkadot-api/pjs-signer';
-	import { SupportedSources, type AccountInfo } from '../../types/account';
+	import { connectInjectedExtension, type PolkadotSigner } from 'polkadot-api/pjs-signer';
+	import { type AccountInfo } from '../../types/account';
 	import { convertToPolkadotAddress } from '../../utils/polkadot';
 	import { createWCConnection } from '../../utils/wallet-connect';
 
@@ -33,48 +27,43 @@
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
 		const account = sessionStorage.getItem('account');
+		if (!account) return;
 
-		if (account) {
-			const parsedAccount = JSON.parse(account) as AccountInfo;
-			activeAccount.set(parsedAccount);
+		const parsedAccount = JSON.parse(account) as AccountInfo;
+		activeAccount.set(parsedAccount);
 
-			if (parsedAccount.source === SupportedSources.WalletConnect) {
-				// Handle WalletConnect case.
-				const connection = createWCConnection();
-				await connection.initialize();
-				walletConnect.set(connection);
+		const { address, source } = parsedAccount;
+		if (source === 'WalletConnect') {
+			const connection = createWCConnection();
+			await connection.initialize();
+			walletConnect.set(connection);
 
-				const accounts = await connection.getAccounts();
-				const filteredAccounts = accounts.filter(
-					({ id }) => convertToPolkadotAddress(id.split(':')[2]) === parsedAccount.address
-				);
-				if (filteredAccounts.length !== 1) {
-					activeAccount.set(undefined);
-					sessionStorage.clear();
-				} else {
-					walletConnectPolkadotSigner.set(filteredAccounts[0].polkadotSigner as PolkadotSigner);
-				}
+			const accounts = await connection.getAccounts();
+			const filteredAccounts = accounts.filter(
+				({ id }) => convertToPolkadotAddress(id.split(':')[2]) === address
+			);
+			if (filteredAccounts.length !== 1) {
+				activeAccount.set(undefined);
+				sessionStorage.clear();
 			} else {
-				// Handle extension case.
-				const selectedExtension: InjectedExtension = await connectInjectedExtension(
-					parsedAccount.source
-				);
-				const accounts: InjectedPolkadotAccount[] = selectedExtension.getAccounts();
-				const injectedAccounts = accounts.filter(
-					({ address }) => convertToPolkadotAddress(address) === parsedAccount.address
-				);
-				if (injectedAccounts.length !== 1) {
-					activeAccount.set(undefined);
-					console.error('something went wrong while trying to restore session.');
-					return;
-				} else {
-					injectedPolkadotAccount.set(injectedAccounts[0]);
-				}
+				polkadotSigner.set(filteredAccounts[0].polkadotSigner as PolkadotSigner);
 			}
-
-			// Set the relevant bounties for the signed in account.
-			setActiveAccountBounties();
+		} else {
+			const selectedExtension = await connectInjectedExtension(source);
+			const accounts = selectedExtension.getAccounts();
+			const injectedAccounts = accounts.filter(
+				(account) => convertToPolkadotAddress(account.address) === address
+			);
+			if (injectedAccounts.length !== 1) {
+				activeAccount.set(undefined);
+				console.error('something went wrong while trying to restore session.');
+				return;
+			} else {
+				polkadotSigner.set(injectedAccounts[0].polkadotSigner);
+			}
 		}
+
+		setActiveAccountBounties();
 	});
 
 	async function logOut() {

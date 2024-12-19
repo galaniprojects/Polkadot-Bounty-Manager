@@ -1,7 +1,6 @@
-import type { PolkadotSigner, Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
-import { activeAccount, injectedPolkadotAccount, walletConnectPolkadotSigner } from '../stores';
-import { SupportedSources } from '../types/account';
+import { activeAccount, polkadotSigner } from '../stores';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
@@ -20,60 +19,41 @@ export async function submitTransaction(
 	transaction: AnyTransaction,
 	successMessage?: string
 ): Promise<TxFinalizedPayload | undefined> {
-	showLoadingDialog('Submitting transaction');
-	const account = get(activeAccount);
-	if (!account) {
-		showErrorDialog('Internal error, active account not found.');
-		return;
-	}
-	if (account.source === SupportedSources.WalletConnect) {
-		const signer = get(walletConnectPolkadotSigner);
-		if (signer) {
-			try {
-				return await safeSignAndSubmit(transaction, signer, successMessage);
-			} catch (e) {
-				showErrorDialog(
-					`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
-						readableError(e) +
-						')'
-				);
-				console.error(e);
-			}
-		} else {
-			showErrorDialog('Internal error, wallet connect polkadot signer not set.');
-		}
-	} else {
-		const injectedAccount = get(injectedPolkadotAccount);
-		if (!injectedAccount) {
-			showErrorDialog('Internal Error, injected account is undefined.');
+	try {
+		const signer = get(polkadotSigner);
+		if (!signer) {
+			showErrorDialog('Internal Error, signer is undefined.');
 			return;
 		}
-		try {
-			return await safeSignAndSubmit(transaction, injectedAccount.polkadotSigner, successMessage);
-		} catch (e) {
+
+		showLoadingDialog('Submitting transaction');
+
+		const result = await transaction.signAndSubmit(signer);
+		if (!result.dispatchError) {
+			showSuccessDialog('Transaction', successMessage || 'Operation success.');
+			await fetchBountiesAndChildBounties(false);
+			return result;
+		}
+
+		showErrorDialog(readableError(result.dispatchError));
+	} catch (e) {
+		const account = get(activeAccount);
+		if (!account) {
+			showErrorDialog('Internal error, active account not found.');
+			return;
+		}
+
+		if (account.source !== 'WalletConnect') {
 			showErrorDialog(readableError(e));
 			return;
 		}
-	}
-}
 
-/**
- * Checks for dispatch errors after submitting.
- **/
-async function safeSignAndSubmit(
-	transaction: AnyTransaction,
-	signer: PolkadotSigner,
-	successMessage?: string
-) {
-	const result = await transaction.signAndSubmit(signer);
-	if (result.dispatchError) {
-		const dispatchError = readableError(result.dispatchError);
-		showErrorDialog(dispatchError);
-		return;
-	} else {
-		showSuccessDialog('Transaction', successMessage || 'Operation success.');
-		await fetchBountiesAndChildBounties(false);
-		return result;
+		console.error(e);
+		showErrorDialog(
+			`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
+				readableError(e) +
+				')'
+		);
 	}
 }
 
