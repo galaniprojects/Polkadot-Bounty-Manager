@@ -1,8 +1,8 @@
 <script lang="ts">
-	import LogoBountyManagerDesktop from './svg/header-footer-logos/LogoBountyManagerDesktop.svg';
-	import LogoTelegram from './svg/header-footer-logos/LogoTelegram.svg';
-	import LogoEmail from './svg/header-footer-logos/LogoEmail.svg';
-	import LogoPolkadot from './svg/header-footer-logos/LogoPolkadot.svg';
+	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
+	import LogoTelegram from './svg/LogoTelegram.svg';
+	import LogoEmail from './svg/LogoEmail.svg';
+	import LogoPolkadot from './svg/LogoPolkadot.svg';
 	import { page } from '$app/stores';
 
 	$: isOnImprintPage = $page.url.pathname === '/imprint';
@@ -35,7 +35,7 @@
 	</a>
 
 	<!-- Polkadot Logo -->
-	<div class="flex space-x-1">
+	<div class="flex items-baseline space-x-1">
 		<p class="text-white text-xs">powered by</p>
 		<img width="49" height="11" src={LogoPolkadot} alt="Polkadot Logo" />
 	</div>
