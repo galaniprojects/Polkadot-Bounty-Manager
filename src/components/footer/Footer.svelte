@@ -1,8 +1,8 @@
 <script lang="ts">
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
-	import LogoTelegram from './svg/LogoTelegram.svg';
-	import LogoEmail from './svg/LogoEmail.svg';
-	import LogoPolkadot from './svg/LogoPolkadot.svg';
+	import LogoTelegram from './LogoTelegram.svg';
+	import LogoEmail from './LogoEmail.svg';
+	import LogoPolkadot from './LogoPolkadot.svg';
 	import { page } from '$app/stores';
 
 	$: isOnImprintPage = $page.url.pathname === '/imprint';
