@@ -2,12 +2,12 @@
 	import { createEventDispatcher } from 'svelte';
 	import { truncateString } from '../../utils/common';
 
-	interface HasToString {
-		toString: () => string;
+	interface Labeled {
+		label: string;
 	}
 
-	export let items: Array<HasToString>;
-	export let selectedItem: HasToString;
+	export let items: Array<Labeled>;
+	export let selectedItem: Labeled;
 	export let width: string;
 	export let truncate: boolean = false;
 
@@ -26,7 +26,7 @@
 		}
 	}
 
-	function selectItem(item: HasToString) {
+	function selectItem(item: Labeled) {
 		selectedItem = item;
 		dropdownOpen = false;
 		dispatch('change', item);
@@ -55,7 +55,7 @@
 			aria-expanded="true"
 			aria-haspopup="true"
 		>
-			{truncate ? truncateString(selectedItem.toString(), 9) : selectedItem.toString()}
+			{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 
 			<button class="material-symbols-outlined text-accent">
 				{#if dropdownOpen}
@@ -86,7 +86,7 @@
 							selectItem(item);
 						}}
 					>
-						{item}
+						{item.label}
 					</button>
 
 					{#if index < items.length - 1}
