@@ -7,7 +7,7 @@
 	export let activeButtonColor = 'text-white border border-white';
 	export let itemsPerPage = 10;
 	export let perPageOptions = [5, 10, 15, 20].map((value) => ({ value, label: value.toString() }));
-	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0]
+	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0];
 
 	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
