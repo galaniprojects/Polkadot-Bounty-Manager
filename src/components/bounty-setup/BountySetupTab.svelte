@@ -1,9 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { type Snippet } from 'svelte';
+	import { page } from '$app/state';
 
-	export let href: string;
+	interface Props {
+		href: string;
+		children: Snippet;
+	}
 
-	$: pathname = $page.url.pathname;
+	const { href, children }: Props = $props();
+
+	const pathname = $derived(page.url.pathname);
 	const isRoot = href.split('/').length <= 2;
 </script>
 
@@ -15,6 +21,6 @@
 			: 'text-gray-400 border-b-transparent border-b-4'}"
 		{href}
 	>
-		<slot />
+		{@render children()}
 	</a>
 </div>

@@ -1,8 +1,7 @@
 <script>
-	import { page } from '$app/stores';
-	import { get } from 'svelte/store';
+	import { page } from '$app/state';
 
-	const { status } = get(page);
+	const { status } = page;
 	const message = status === 404 ? 'Page not found' : 'Internal server error';
 </script>
 

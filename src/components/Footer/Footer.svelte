@@ -3,9 +3,9 @@
 	import LogoTelegram from './LogoTelegram.svg';
 	import LogoEmail from './LogoEmail.svg';
 	import LogoPolkadot from './LogoPolkadot.svg';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	$: isOnImprintPage = $page.url.pathname === '/imprint';
+	const isOnImprintPage = $derived(page.url.pathname === '/imprint');
 </script>
 
 <hr class="dotted-line border border-accent border-dotted bg-primary" />

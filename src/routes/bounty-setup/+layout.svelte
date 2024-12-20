@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { afterNavigate, disableScrollHandling, replaceState } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	import BountySetupTab from '../../components/bounty-setup/BountySetupTab.svelte';
 	import {
@@ -16,14 +16,14 @@
 		disableScrollHandling(); // when switching tabs
 
 		if ($bountyInfo?.id) {
-			const fullUrl = new URL($page.url);
+			const fullUrl = new URL(page.url);
 			fullUrl.searchParams.set('bounty-id', String($bountyInfo.id));
 			replaceState(fullUrl, {});
 		}
 	});
 
 	onMount(async () => {
-		const bountyId = $page.url.searchParams.get('bounty-id');
+		const bountyId = page.url.searchParams.get('bounty-id');
 		if (!bountyId) return;
 
 		showLoadingDialog('Loading bounty info');
