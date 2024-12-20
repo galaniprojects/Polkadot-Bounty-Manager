@@ -57,13 +57,13 @@
 		>
 			{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 
-			<button class="material-symbols-outlined text-accent">
+			<span class="material-symbols-outlined text-accent">
 				{#if dropdownOpen}
 					keyboard_arrow_up
 				{:else}
 					keyboard_arrow_down
 				{/if}
-			</button>
+			</span>
 		</button>
 	</div>
 	{#if dropdownOpen}
