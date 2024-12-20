@@ -34,7 +34,7 @@
 	<div class="flex justify-center">
 		<DropdownMenu
 			items={perPageOptions}
-			bind:selectedItem={selectedItem}
+			bind:selectedItem
 			width="w-48"
 			on:change={handleDropdownChange}
 		/>
