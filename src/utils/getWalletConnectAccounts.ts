@@ -2,12 +2,12 @@ import { PUBLIC_WALLET_CONNECT_PROJECT_ID as projectId } from '$env/static/publi
 import { type AccountWithSigner } from '../types/account';
 import { WalletConnect } from '@reactive-dot/wallet-walletconnect';
 import { type PolkadotSigner } from 'polkadot-api';
-import { walletConnect as wcConnection } from '../stores';
+import { walletConnect } from '../stores';
 import { convertToPolkadotAddress } from './polkadot';
 
 export async function getWalletConnectAccounts(): Promise<AccountWithSigner[]> {
 	const connection = createConnection();
-	wcConnection.set(connection);
+	walletConnect.set(connection);
 	await connection.initialize();
 
 	let accounts = await connection.getAccounts();

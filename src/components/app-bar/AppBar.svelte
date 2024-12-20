@@ -4,7 +4,7 @@
 		activeAccount,
 		activeAccountBounties,
 		polkadotSigner,
-		walletConnect as wcConnection
+		walletConnect
 	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
@@ -48,9 +48,7 @@
 		activeAccount.set(undefined);
 		sessionStorage.clear();
 		activeAccountBounties.set([]);
-		if ($wcConnection) {
-			await $wcConnection.disconnect();
-		}
+		await $walletConnect?.disconnect();
 	}
 </script>
 
