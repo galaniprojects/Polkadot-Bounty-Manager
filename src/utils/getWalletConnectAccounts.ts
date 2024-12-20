@@ -5,21 +5,21 @@ import { type PolkadotSigner } from 'polkadot-api';
 import { walletConnect as wcConnection } from '../stores';
 import { convertToPolkadotAddress } from './polkadot';
 
-export async function walletConnect(): Promise<AccountWithSigner[]> {
-	const wc = createWCConnection();
-	wcConnection.set(wc);
-	await wc.initialize();
+export async function getWalletConnectAccounts(): Promise<AccountWithSigner[]> {
+	const connection = createConnection();
+	wcConnection.set(connection);
+	await connection.initialize();
 
-	let accounts = await wc.getAccounts();
+	let accounts = await connection.getAccounts();
 	if (accounts.length === 0) {
-		await wc.connect();
+		await connection.connect();
 	}
-	accounts = await wc.getAccounts();
+	accounts = await connection.getAccounts();
 
 	return accounts.map(
-		({ id, polkadotSigner }) =>
+		({ id, name = 'Account', polkadotSigner }) =>
 			<AccountWithSigner>{
-				name: 'Account',
+				name,
 				address: convertToPolkadotAddress(id.split(':')[2]),
 				source: 'WalletConnect',
 				polkadotSigner: polkadotSigner as PolkadotSigner
@@ -27,7 +27,7 @@ export async function walletConnect(): Promise<AccountWithSigner[]> {
 	);
 }
 
-export function createWCConnection() {
+function createConnection() {
 	return new WalletConnect({
 		projectId,
 		providerOptions: {

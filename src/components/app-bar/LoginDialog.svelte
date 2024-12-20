@@ -7,16 +7,12 @@
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
 	import { onDestroy, onMount } from 'svelte';
-	import { walletConnect } from '../../utils/wallet-connect';
-
 	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
-	import { connectInjectedExtension, getInjectedExtensions } from 'polkadot-api/pjs-signer';
+	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
 	import { type AccountWithSigner } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
-	import { convertToPolkadotAddress } from '../../utils/polkadot';
-
-	const APP_NAME = 'Bounty Manager';
+	import { getAccounts } from './getAccounts';
 
 	export let title = '';
 	export let open;
@@ -68,27 +64,15 @@
 		selectedWallet = wallet;
 		currentPhase = 'waiting';
 
-		const { source } = wallet;
-		if (source === 'WalletConnect') {
-			accounts = await walletConnect();
-		} else {
-			try {
-				const injectedExtension = await connectInjectedExtension(source, APP_NAME);
-				const injectedAccounts = injectedExtension.getAccounts();
-				accounts = injectedAccounts.map(({ address, name = 'Account', polkadotSigner }) => ({
-					name,
-					source,
-					polkadotSigner,
-					address: convertToPolkadotAddress(address)
-				}));
-			} catch (e) {
-				open = false;
-				showErrorDialog(
-					'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
-				);
-				console.error(e);
-				return;
-			}
+		try {
+			accounts = await getAccounts(wallet.source);
+		} catch (e) {
+			open = false;
+			showErrorDialog(
+				'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
+			);
+			console.error(e);
+			return;
 		}
 
 		if (accounts.length === 0) {

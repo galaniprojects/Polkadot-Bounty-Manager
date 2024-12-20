@@ -1,22 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {
-		activeAccount,
-		activeAccountBounties,
-		polkadotSigner,
-		walletConnect,
-		walletConnect as wcConnection
-	} from '../../stores';
+	import { activeAccount, activeAccountBounties, polkadotSigner, walletConnect as wcConnection } from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
 	import LogoBountyManagerMobile from '../svg/header-footer-logos/LogoBountyManagerMobile.svg';
 	import LoginDialog from './LoginDialog.svelte';
 	import { setActiveAccountBounties } from '../../utils/bounties';
-	import { connectInjectedExtension, type PolkadotSigner } from 'polkadot-api/pjs-signer';
+	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
-	import { convertToPolkadotAddress } from '../../utils/polkadot';
-	import { createWCConnection } from '../../utils/wallet-connect';
 
 	let loginDialogOpen = false;
 
@@ -26,43 +18,24 @@
 
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
-		const account = sessionStorage.getItem('account');
-		if (!account) return;
+		const storedAccount = sessionStorage.getItem('account');
+		if (!storedAccount) return;
 
-		const parsedAccount = JSON.parse(account) as AccountInfo;
+		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
 		activeAccount.set(parsedAccount);
 
 		const { address, source } = parsedAccount;
-		if (source === 'WalletConnect') {
-			const connection = createWCConnection();
-			await connection.initialize();
-			walletConnect.set(connection);
 
-			const accounts = await connection.getAccounts();
-			const filteredAccounts = accounts.filter(
-				({ id }) => convertToPolkadotAddress(id.split(':')[2]) === address
-			);
-			if (filteredAccounts.length !== 1) {
-				activeAccount.set(undefined);
-				sessionStorage.clear();
-			} else {
-				polkadotSigner.set(filteredAccounts[0].polkadotSigner as PolkadotSigner);
-			}
-		} else {
-			const selectedExtension = await connectInjectedExtension(source);
-			const accounts = selectedExtension.getAccounts();
-			const injectedAccounts = accounts.filter(
-				(account) => convertToPolkadotAddress(account.address) === address
-			);
-			if (injectedAccounts.length !== 1) {
-				activeAccount.set(undefined);
-				console.error('something went wrong while trying to restore session.');
-				return;
-			} else {
-				polkadotSigner.set(injectedAccounts[0].polkadotSigner);
-			}
+		const accounts = await getAccounts(source);
+		const account = accounts.find((account) => account.address === address);
+		if (!account) {
+			activeAccount.set(undefined);
+			sessionStorage.clear();
+			console.error('something went wrong while trying to restore session.');
+			return;
 		}
 
+		polkadotSigner.set(account.polkadotSigner);
 		setActiveAccountBounties();
 	});
 
