@@ -20,12 +20,12 @@
 		totalPages = Math.ceil(activeBounties.length / itemsPerPage);
 	}
 
-	function handlePageChange(event: CustomEvent<{ page: number }>) {
-		currentPage = event.detail.page;
+	function handlePageChange(page: number) {
+		currentPage = page;
 	}
 
-	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>) {
-		itemsPerPage = event.detail.itemsPerPage;
+	function handleItemsPerPageChange(value: number) {
+		itemsPerPage = value;
 		currentPage = 1;
 	}
 
@@ -94,8 +94,8 @@
 						{currentPage}
 						{totalPages}
 						{itemsPerPage}
-						on:pageChange={handlePageChange}
-						on:itemsPerPageChange={handleItemsPerPageChange}
+						pageChange={handlePageChange}
+						itemsPerPageChange={handleItemsPerPageChange}
 					/>
 				{/if}
 				{#if $activeAccountBounties.length === 0}

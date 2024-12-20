@@ -1,17 +1,12 @@
 <script lang="ts">
 	import Dialog from './common/Dialog.svelte';
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
 
 	export let open = false;
 	export let url: string;
 	export let backgroundColor: string = 'curatorMainBackground';
 	export let textColor: string = 'white';
 	export let buttonStyle: string = 'bg-white text-accent';
-
-	function proceed() {
-		dispatch('proceed');
-	}
+	export let proceed: () => void;
 </script>
 
 <Dialog bind:open title="EXTERNAL LINK" {backgroundColor} {textColor}>

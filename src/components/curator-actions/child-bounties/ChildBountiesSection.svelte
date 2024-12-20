@@ -42,12 +42,12 @@
 		paginatedChildBounties = filteredChildBounties.slice(startIndex, endIndex);
 	}
 
-	function handlePageChange(event: CustomEvent<{ page: number }>) {
-		currentPage = event.detail.page;
+	function handlePageChange(page: number) {
+		currentPage = page;
 	}
 
-	function handleItemsPerPageChange(event: CustomEvent<{ itemsPerPage: number }>) {
-		itemsPerPage = event.detail.itemsPerPage;
+	function handleItemsPerPageChange(value: number) {
+		itemsPerPage = value;
 		currentPage = 1;
 	}
 </script>
@@ -159,8 +159,8 @@
 				{totalPages}
 				{itemsPerPage}
 				activeButtonColor="text-primary border border-primary"
-				on:pageChange={handlePageChange}
-				on:itemsPerPageChange={handleItemsPerPageChange}
+				pageChange={handlePageChange}
+				itemsPerPageChange={handleItemsPerPageChange}
 			/>
 		</div>
 	</div>
