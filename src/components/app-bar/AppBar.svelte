@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { activeAccount, activeAccountBounties, polkadotSigner, walletConnect as wcConnection } from '../../stores';
+	import {
+		activeAccount,
+		activeAccountBounties,
+		polkadotSigner,
+		walletConnect as wcConnection
+	} from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
