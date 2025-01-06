@@ -23,3 +23,10 @@ export interface ChildBounty {
 	unlockAt?: string;
 	dateOfPayout?: string;
 }
+
+export const statusLabels = {
+	Added: 'added',
+	CuratorProposed: 'sub-curator proposed',
+	Active: 'active',
+	PendingPayout: 'pending payout'
+};

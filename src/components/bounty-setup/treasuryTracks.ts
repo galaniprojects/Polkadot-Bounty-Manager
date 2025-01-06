@@ -3,14 +3,14 @@ import { GovernanceOrigin } from '@polkadot-api/descriptors';
 export const treasuryTracks = [
 	{
 		origin: GovernanceOrigin.SmallSpender(),
-		toString: () => 'Small Spender'
+		label: 'Small Spender'
 	},
 	{
 		origin: GovernanceOrigin.MediumSpender(),
-		toString: () => 'Medium Spender'
+		label: 'Medium Spender'
 	},
 	{
 		origin: GovernanceOrigin.BigSpender(),
-		toString: () => 'Big Spender'
+		label: 'Big Spender'
 	}
 ];

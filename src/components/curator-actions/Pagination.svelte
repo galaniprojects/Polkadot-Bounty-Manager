@@ -6,7 +6,8 @@
 	export let totalPages = 5;
 	export let activeButtonColor = 'text-white border border-white';
 	export let itemsPerPage = 10;
-	export let perPageOptions = [5, 10, 15, 20];
+	export let perPageOptions = [5, 10, 15, 20].map((value) => ({ value, label: value.toString() }));
+	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0];
 
 	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
@@ -25,6 +26,7 @@
 
 	function handleDropdownChange(event: CustomEvent<number>) {
 		dispatch('itemsPerPageChange', { itemsPerPage: event.detail });
+		itemsPerPage = event.detail;
 	}
 </script>
 
@@ -32,7 +34,7 @@
 	<div class="flex justify-center">
 		<DropdownMenu
 			items={perPageOptions}
-			bind:selectedItem={itemsPerPage}
+			bind:selectedItem
 			width="w-48"
 			on:change={handleDropdownChange}
 		/>

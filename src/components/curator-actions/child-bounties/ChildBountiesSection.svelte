@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import { type Bounty } from '../../../types/bounty';
-	import { type ChildBounty, childBountyStatuses } from '../../../types/child-bounty';
+	import { type ChildBounty, childBountyStatuses, statusLabels } from '../../../types/child-bounty';
 	import AddChildBounty from './operations/AddChildBounty.svelte';
 	import BatchAllChildBountyCalls from './operations/BatchAllChildBountyCalls.svelte';
 
@@ -17,19 +17,22 @@
 	let createChildBatchOpen = false;
 
 	type Filter = ChildBounty['status'] | 'all';
-	let selectedFilter: Filter = 'all';
 
 	let filteredChildBounties: ChildBounty[] = [];
 	let paginatedChildBounties: ChildBounty[] = [];
 	let totalPages = 1;
 
-	const filters: Array<Filter> = ['all', ...childBountyStatuses];
+	const filters: Array<{ value: Filter; label: string }> = [
+		{ value: 'all', label: 'all' },
+		...childBountyStatuses.map((value) => ({ value, label: statusLabels[value] }))
+	];
+	let selectedFilter = filters[0];
 
 	$: {
 		filteredChildBounties =
-			selectedFilter === 'all'
+			selectedFilter.value === 'all'
 				? bounty.childBounties
-				: bounty.childBounties.filter(({ status }) => status === selectedFilter);
+				: bounty.childBounties.filter(({ status }) => status === selectedFilter.value);
 
 		totalPages = Math.max(Math.ceil(filteredChildBounties.length / itemsPerPage), 1);
 		currentPage = Math.min(currentPage, totalPages);
@@ -108,9 +111,9 @@
 			</div>
 			{#if bounty.childBounties.length > 0}
 				<div
-					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-start lg:pb-3 lg:mr-6 2xl:mr-0"
+					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center 2xl:items-start lg:pb-3 lg:mr-6 2xl:mr-0"
 				>
-					<p class="text-xs xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
+					<p class="text-xs 2xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
 					<div class="flex justify-between">
 						<p class="mt-2 lg:hidden">by status</p>
 						<div>

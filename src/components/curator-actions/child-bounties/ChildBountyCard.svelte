@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type ChildBounty } from '../../../types/child-bounty';
+	import { type ChildBounty, statusLabels } from '../../../types/child-bounty';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
@@ -25,13 +25,6 @@
 	let batchOpen = false;
 
 	let detailsExpended = false;
-
-	const statusLabels = {
-		Added: 'added',
-		CuratorProposed: 'sub-curator proposed',
-		Active: 'active',
-		PendingPayout: 'pending payout'
-	};
 
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
