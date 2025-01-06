@@ -1,7 +1,9 @@
-export type SupportedWallets = 'Polkadot.js' | 'WalletConnect' | 'Nova Wallet' | 'Talisman';
+import type { AccountInfo } from '../../types/account';
 
 export type WalletInfo = {
 	icon: string;
-	name: SupportedWallets;
-	action: 'Download' | 'Connect';
+	name: string;
+	available: boolean;
+	source: AccountInfo['source'];
+	url?: string;
 };

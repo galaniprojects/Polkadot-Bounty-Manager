@@ -7,121 +7,72 @@
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
 	import { onDestroy, onMount } from 'svelte';
-	import { walletConnect } from '../../utils/wallet-connect';
-
-	import {
-		activeAccount,
-		injectedPolkadotAccount,
-		walletConnectPolkadotSigner
-	} from '../../stores';
+	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
-	import {
-		connectInjectedExtension,
-		getInjectedExtensions,
-		type InjectedPolkadotAccount,
-		type PolkadotSigner
-	} from 'polkadot-api/pjs-signer';
-	import { SupportedSources, type AccountInfo } from '../../types/account';
+	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
+	import { type AccountWithSigner } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
-	import { convertToPolkadotAddress } from '../../utils/polkadot';
-
-	const APP_NAME = 'Bounty Manager';
+	import { getAccounts } from './getAccounts';
 
 	export let title = '';
 	export let open;
 
 	let wallets: WalletInfo[] = [];
-	let injectedAccounts: InjectedPolkadotAccount[] | undefined;
-	let accounts: AccountInfo[] = [];
+	let accounts: AccountWithSigner[] = [];
 	let currentPhase: 'walletSelection' | 'waiting' | 'accountSelection' = 'walletSelection';
 	let selectedWallet: WalletInfo | undefined;
 
 	const ethereum = (window as unknown as { ethereum?: { isNovaWallet: boolean } }).ethereum;
-	const novaWalletAvailable = ethereum?.isNovaWallet;
+	const novaWalletAvailable = Boolean(ethereum?.isNovaWallet);
 
 	onMount(() => {
-		const extensionNames: string[] = getInjectedExtensions();
+		const extensionNames = getInjectedExtensions();
 		wallets = [
 			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
-				action:
+				source: 'polkadot-js',
+				url: 'https://polkadot.js.org/extension/',
+				available:
 					// !novaWalletAvailable to prevent polkadot button from being enabled on Nova.
-					extensionNames.includes(SupportedSources.PolkadotExtension) && !novaWalletAvailable
-						? 'Connect'
-						: 'Download'
+					extensionNames.includes('polkadot-js') && !novaWalletAvailable
 			},
-			{ icon: LogoWalletConnect, name: 'WalletConnect', action: 'Connect' },
+			{
+				icon: LogoWalletConnect,
+				name: 'WalletConnect',
+				source: 'WalletConnect',
+				available: true
+			},
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				action: novaWalletAvailable ? 'Connect' : 'Download'
+				source: 'nova',
+				url: 'https://novawallet.io/',
+				available: novaWalletAvailable
 			},
 			{
 				icon: LogoTalisman,
 				name: 'Talisman',
-				action: extensionNames.includes(SupportedSources.TalismanExtension) ? 'Connect' : 'Download'
+				source: 'talisman',
+				url: 'https://www.talisman.xyz/',
+				available: extensionNames.includes('talisman')
 			}
 		];
 	});
 
 	async function selectWallet(wallet: WalletInfo) {
 		selectedWallet = wallet;
-		if (wallet.action === 'Download') {
-			switch (wallet.name) {
-				case 'Polkadot.js':
-					window.open('https://polkadot.js.org/extension/', '_blank');
-					return;
-				case 'WalletConnect':
-					return;
-				case 'Nova Wallet':
-					window.open('https://novawallet.io/', '_blank');
-					return;
-				case 'Talisman':
-					window.open('https://www.talisman.xyz/', '_blank');
-					return;
-			}
-		} else {
-			currentPhase = 'waiting';
-			let selectedSource: SupportedSources;
-			switch (wallet.name) {
-				case 'Polkadot.js':
-					selectedSource = SupportedSources.PolkadotExtension;
-					break;
-				case 'WalletConnect':
-					selectedSource = SupportedSources.WalletConnect;
-					break;
-				case 'Nova Wallet':
-					selectedSource = SupportedSources.PolkadotExtension;
-					break;
-				case 'Talisman':
-					selectedSource = SupportedSources.TalismanExtension;
-					break;
-				default:
-					throw new Error('Internal error, unsupported extension');
-			}
+		currentPhase = 'waiting';
 
-			if (selectedSource === SupportedSources.WalletConnect) {
-				accounts = await walletConnect();
-			} else {
-				let injectedExtension;
-				try {
-					injectedExtension = await connectInjectedExtension(selectedSource, APP_NAME);
-				} catch (e) {
-					open = false;
-					showErrorDialog(
-						'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
-					);
-					console.error(e);
-					return;
-				}
-				injectedAccounts = injectedExtension.getAccounts();
-				accounts = injectedAccounts.map(({ address, name = 'Account' }) => ({
-					name,
-					source: selectedSource,
-					address: convertToPolkadotAddress(address)
-				}));
-			}
+		try {
+			accounts = await getAccounts(wallet.source);
+		} catch (e) {
+			open = false;
+			showErrorDialog(
+				'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
+			);
+			console.error(e);
+			return;
 		}
 
 		if (accounts.length === 0) {
@@ -135,25 +86,10 @@
 		currentPhase = 'accountSelection';
 	}
 
-	function selectAccount(account: AccountInfo) {
+	function selectAccount(account: AccountWithSigner) {
 		activeAccount.set(account);
+		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
-
-		if (
-			account.source === SupportedSources.WalletConnect &&
-			'signer' in account &&
-			account.signer
-		) {
-			walletConnectPolkadotSigner.set(account.signer as PolkadotSigner);
-		}
-
-		if (injectedAccounts) {
-			const injectedAccount = injectedAccounts.filter(
-				({ address }) => convertToPolkadotAddress(address) === account.address
-			);
-			injectedPolkadotAccount.set(injectedAccount[0]);
-		}
-
 		setActiveAccountBounties();
 		open = false;
 	}
@@ -206,9 +142,15 @@
 					<hr class="border-white opacity-35 w-full mt-4 mb-3" />
 					<div class="cursor-pointer w-full space-y-3">
 						{#each wallets as wallet}
-							<button class="w-full" on:click={() => selectWallet(wallet)}>
-								<WalletItem {wallet} />
-							</button>
+							{#if wallet.available}
+								<button class="w-full" on:click={() => selectWallet(wallet)}>
+									<WalletItem {wallet} />
+								</button>
+							{:else if wallet.url}
+								<a class="w-full block" href={wallet.url} target="_blank" rel="noopener noreferrer">
+									<WalletItem {wallet} />
+								</a>
+							{/if}
 						{/each}
 					</div>
 
