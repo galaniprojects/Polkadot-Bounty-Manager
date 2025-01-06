@@ -54,7 +54,7 @@
 	<div class="container setup-container max-w-screen-lg rounded-md p-4 space-y-5">
 		<h2 class="font-bold text-lg sm:text-2xl text-white text-start">Bounty Setup</h2>
 		<div class="border border-accent rounded-md overflow-clip">
-			<div class="flex relative h-16 sm:h-20 px-2 md:px-8 bg-primary rounded-md">
+			<div class="flex h-16 sm:h-20 px-2 md:px-8 bg-primary rounded-md">
 				<div class="w-1/3 md:w-1/6">
 					<BountySetupTab href="/bounty-setup">Creation</BountySetupTab>
 				</div>
