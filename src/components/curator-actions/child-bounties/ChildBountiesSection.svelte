@@ -31,7 +31,7 @@
 				? bounty.childBounties
 				: bounty.childBounties.filter(({ status }) => status === selectedFilter);
 
-		totalPages = Math.ceil(filteredChildBounties.length / itemsPerPage);
+		totalPages = Math.max(Math.ceil(filteredChildBounties.length / itemsPerPage), 1);
 		currentPage = Math.min(currentPage, totalPages);
 
 		const startIndex = (currentPage - 1) * itemsPerPage;
