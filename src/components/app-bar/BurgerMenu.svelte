@@ -6,8 +6,8 @@
 	} from '../../stores';
 	import { onMount } from 'svelte';
 
-	let burgerMenuOpen = false;
-	let burgerMenuContainer: HTMLDivElement | null = null;
+	let open = false;
+	let container: HTMLDivElement | null = null;
 
 	function toggleBurgerMenu() {
 		burgerMenuOpen = !burgerMenuOpen;
