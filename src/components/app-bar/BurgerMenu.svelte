@@ -12,11 +12,11 @@
 	function toggleBurgerMenu() {
 		burgerMenuOpen = !burgerMenuOpen;
 
-		if (burgerMenuOpen) {
+		$: { if (burgerMenuOpen) {
 			window.addEventListener('click', closeMenuOnOutsideClick);
 		} else {
 			window.removeEventListener('click', closeMenuOnOutsideClick);
-		}
+		} }
 	}
 
 	async function logOut() {
