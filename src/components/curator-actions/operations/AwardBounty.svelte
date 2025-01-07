@@ -13,7 +13,7 @@
 
 	let beneficiary = '';
 
-	const transaction = maybeTransaction(
+	$: transaction = maybeTransaction(
 		() =>
 			isValidAddress(beneficiary) &&
 			$dotApi.tx.Bounties.award_bounty({
