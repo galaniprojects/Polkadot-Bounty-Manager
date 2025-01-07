@@ -4,13 +4,21 @@
 		activeAccountBounties,
 		walletConnect as wcConnection
 	} from '../../stores';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let open = false;
 	let container: HTMLDivElement | null = null;
 
 	function toggleBurgerMenu() {
 		open = !open;
+	}
+
+	$: {
+		if (open) {
+			window.addEventListener('click', closeMenuOnOutsideClick);
+		} else {
+			window.removeEventListener('click', closeMenuOnOutsideClick);
+		}
 	}
 
 	async function logOut() {
@@ -34,11 +42,9 @@
 	}
 
 	onMount(() => {
-		window.addEventListener('click', closeMenuOnOutsideClick);
-	});
-
-	onDestroy(() => {
-		window.removeEventListener('click', closeMenuOnOutsideClick);
+		return () => {
+			window.removeEventListener('click', closeMenuOnOutsideClick);
+		};
 	});
 </script>
 
