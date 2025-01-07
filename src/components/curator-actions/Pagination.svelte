@@ -24,9 +24,9 @@
 		}
 	}
 
-	function handleDropdownChange(event: CustomEvent<number>) {
-		dispatch('itemsPerPageChange', { itemsPerPage: event.detail });
-		itemsPerPage = event.detail;
+	function handleDropdownChange({ detail: { value } }: CustomEvent<{ value: number }>) {
+		dispatch('itemsPerPageChange', { itemsPerPage: value });
+		itemsPerPage = value;
 	}
 </script>
 
