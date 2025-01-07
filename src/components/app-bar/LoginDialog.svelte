@@ -6,6 +6,7 @@
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svg';
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
+	import LogoMimir from '../svg/wallet-logo/LogoMimir.svg';
 	import { onDestroy, onMount } from 'svelte';
 	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
@@ -56,6 +57,13 @@
 				source: 'talisman',
 				url: 'https://www.talisman.xyz/',
 				available: extensionNames.includes('talisman')
+			},
+			{
+				icon: LogoMimir,
+				name: 'Mimir',
+				source: 'mimir',
+				url: 'https://app.mimir.global/',
+				available: extensionNames.includes('mimir')
 			}
 		];
 	});

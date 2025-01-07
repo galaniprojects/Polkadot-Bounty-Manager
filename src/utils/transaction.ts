@@ -28,6 +28,8 @@ export async function submitTransaction(
 
 		showLoadingDialog('Submitting transaction');
 
+		/* TODO: split signing and submission, run mimir verification of signed transaction with checkCallAsync */
+
 		const result = await transaction.signAndSubmit(signer);
 		if (!result.dispatchError) {
 			showSuccessDialog('Transaction', successMessage || 'Operation success.');
