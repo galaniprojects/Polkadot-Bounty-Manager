@@ -4,19 +4,13 @@
 		activeAccountBounties,
 		walletConnect as wcConnection
 	} from '../../stores';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let open = false;
 	let container: HTMLDivElement | null = null;
 
 	function toggleBurgerMenu() {
-		burgerMenuOpen = !burgerMenuOpen;
-
-		$: { if (burgerMenuOpen) {
-			window.addEventListener('click', closeMenuOnOutsideClick);
-		} else {
-			window.removeEventListener('click', closeMenuOnOutsideClick);
-		} }
+		open = !open;
 	}
 
 	async function logOut() {
@@ -30,36 +24,37 @@
 	}
 
 	function closeBurgerMenu() {
-		burgerMenuOpen = false;
-		window.removeEventListener('click', closeMenuOnOutsideClick);
+		open = false;
 	}
 
 	function closeMenuOnOutsideClick(event: MouseEvent) {
-		if (!burgerMenuContainer?.contains(event.target as Node)) {
+		if (!container?.contains(event.target as Node)) {
 			closeBurgerMenu();
 		}
 	}
 
 	onMount(() => {
-		return () => {
-			window.removeEventListener('click', closeMenuOnOutsideClick);
-		};
+		window.addEventListener('click', closeMenuOnOutsideClick);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('click', closeMenuOnOutsideClick);
 	});
 </script>
 
-<div bind:this={burgerMenuContainer} class="relative">
+<div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
 	<button on:click={toggleBurgerMenu}>
-		<span class="material-symbols-rounded text-white w-5 h-3"> menu </span>
+		<span class="material-symbols-rounded text-white"> menu </span>
 	</button>
 
 	<!-- Menu Overlay -->
-	{#if burgerMenuOpen}
+	{#if open}
 		<div
 			class="absolute top-0 right-0 flex flex-col items-start bg-backgroundContent border shadow-lg p-2.5 rounded-md w-[210px]"
 		>
 			<button on:click={toggleBurgerMenu} class="self-end mr-2.5 mb-1">
-				<span class="material-symbols-rounded text-accent w-5 h-3"> close </span>
+				<span class="material-symbols-rounded text-accent"> close </span>
 			</button>
 			<a
 				href="/bounty-setup"
