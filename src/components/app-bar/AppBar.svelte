@@ -62,7 +62,6 @@
 					{$activeAccount.name || 'Account'}
 					<span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
 				</div>
-				<!-- Burger Menu -->
 				<BurgerMenu />
 			</div>
 		{/if}
