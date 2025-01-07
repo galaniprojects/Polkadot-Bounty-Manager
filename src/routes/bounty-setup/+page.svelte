@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertFormattedDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
 	import { isPositiveNumber } from '../../utils/common';
@@ -67,7 +67,7 @@
 				value: BigInt(bountyValue)
 			};
 
-			const url = new URL($page.url);
+			const url = new URL(page.url);
 			url.searchParams.set('bounty-id', String(bountyIndex));
 			await goto(url);
 		}

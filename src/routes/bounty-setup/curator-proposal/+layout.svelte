@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { bountyInfo } from '../_bountyInfo';
 
 	onMount(async () => {
 		// on page load reset to wizard start while persisting the query string
-		const url = new URL($page.url);
+		const url = new URL(page.url);
 		url.pathname = '/bounty-setup/curator-proposal';
 		await goto(url.toString());
 	});

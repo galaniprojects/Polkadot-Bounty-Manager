@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import { truncateString } from '../../utils/common';
 
 	interface Labeled {
@@ -10,11 +9,10 @@
 	export let selectedItem: Labeled;
 	export let width: string;
 	export let truncate: boolean = false;
+	export let change: (item: Labeled) => void = () => {};
 
 	let dropdownOpen = false;
 	let dropdownContainer: HTMLDivElement | null = null;
-
-	const dispatch = createEventDispatcher();
 
 	function dropdownOnClick() {
 		dropdownOpen = !dropdownOpen;
@@ -29,7 +27,7 @@
 	function selectItem(item: Labeled) {
 		selectedItem = item;
 		dropdownOpen = false;
-		dispatch('change', item);
+		change(item);
 		window.removeEventListener('click', closeDropdownClickOutside);
 	}
 
@@ -57,13 +55,13 @@
 		>
 			{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 
-			<button class="material-symbols-outlined text-accent">
+			<span class="material-symbols-outlined text-accent">
 				{#if dropdownOpen}
 					keyboard_arrow_up
 				{:else}
 					keyboard_arrow_down
 				{/if}
-			</button>
+			</span>
 		</button>
 	</div>
 	{#if dropdownOpen}

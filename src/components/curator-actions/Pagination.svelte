@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let currentPage = 1;
@@ -8,25 +7,24 @@
 	export let itemsPerPage = 10;
 	export let perPageOptions = [5, 10, 15, 20].map((value) => ({ value, label: value.toString() }));
 	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0];
+	export let pageChange: (page: number) => void;
+	export let itemsPerPageChange: (itemsPerPage: number) => void;
 
 	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
-	const dispatch = createEventDispatcher();
 
 	let paginationContainer: HTMLElement | null = null;
 
 	function changePage(page: number) {
 		if (page > 0 && page <= totalPages && page !== currentPage) {
-			dispatch('pageChange', { page });
+			pageChange(page);
 
 			const scrollToContainer = paginationContainer?.closest('[data-pagination-scroll]');
 			scrollToContainer?.scrollIntoView({ behavior: 'smooth' });
 		}
 	}
 
-	function handleDropdownChange({ detail: { value } }: CustomEvent<{ value: number }>) {
-		dispatch('itemsPerPageChange', { itemsPerPage: value });
-		itemsPerPage = value;
+	function handleDropdownChange(itemsPerPage: unknown) {
+		itemsPerPageChange((itemsPerPage as { value: number }).value);
 	}
 </script>
 
@@ -36,7 +34,7 @@
 			items={perPageOptions}
 			bind:selectedItem
 			width="w-48"
-			on:change={handleDropdownChange}
+			change={handleDropdownChange}
 		/>
 	</div>
 	<div class="flex justify-center space-x-2">

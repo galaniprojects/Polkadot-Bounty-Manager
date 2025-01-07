@@ -32,7 +32,7 @@
 <ExternalLinksDialog
 	bind:open={externalLinksDialogOpen}
 	{url}
-	on:proceed={proceed}
+	{proceed}
 	{backgroundColor}
 	{textColor}
 	{buttonStyle}

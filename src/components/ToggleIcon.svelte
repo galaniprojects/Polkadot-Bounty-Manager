@@ -6,8 +6,8 @@
 	}
 </script>
 
-<button class="toggle" on:click={toggle}>
-	<div class="switch {checked ? 'checked' : ''}"></div>
+<button class="toggle" on:click={toggle} aria-label="Toggle" role="switch" aria-checked={checked}>
+	<span class="switch {checked ? 'checked' : ''}"></span>
 </button>
 
 <style>
