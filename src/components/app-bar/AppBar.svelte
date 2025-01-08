@@ -6,6 +6,7 @@
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
 	import LoginDialog from './LoginDialog.svelte';
 	import { setActiveAccountBounties } from '../../utils/bounties';
+	import { getPeopleChainName } from '../../utils/people';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
@@ -15,6 +16,8 @@
 	function showLoginDialog() {
 		loginDialogOpen = true;
 	}
+
+	let label: string | undefined;
 
 	onMount(async () => {
 		// Connect wallet automatically on the same tab.
@@ -37,6 +40,8 @@
 
 		polkadotSigner.set(account.polkadotSigner);
 		setActiveAccountBounties();
+
+		label = await getPeopleChainName(address);
 	});
 </script>
 
@@ -59,7 +64,7 @@
 					<div class="w-6 h-6">
 						<PolkadotIcon address={$activeAccount.address} />
 					</div>
-					{$activeAccount.name || 'Account'}
+					{label || $activeAccount.name || 'Account'}
 					<span class="text-darkgray text-sm">[{truncateString($activeAccount.address, 4)}]</span>
 				</div>
 				<BurgerMenu />
