@@ -9,10 +9,6 @@
 	let open = false;
 	let container: HTMLDivElement | null = null;
 
-	function toggleBurgerMenu() {
-		open = !open;
-	}
-
 	$: {
 		if (open) {
 			window.addEventListener('click', closeMenuOnOutsideClick);
@@ -28,16 +24,12 @@
 		if ($wcConnection) {
 			await $wcConnection.disconnect();
 		}
-		closeBurgerMenu();
-	}
-
-	function closeBurgerMenu() {
 		open = false;
 	}
 
 	function closeMenuOnOutsideClick(event: MouseEvent) {
 		if (!container?.contains(event.target as Node)) {
-			closeBurgerMenu();
+			open = false;
 		}
 	}
 
@@ -50,22 +42,32 @@
 
 <div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
-	<button on:click={() => { open = !open }}>
+	<button
+		on:click={() => {
+			open = !open;
+		}}
+	>
 		<span class="material-symbols-rounded text-white"> menu </span>
 	</button>
 
 	<!-- Menu Overlay -->
 	{#if open}
 		<div
-		  onclick={() => { open = false; }}
 			class="absolute top-0 right-0 flex flex-col items-start bg-backgroundContent border shadow-lg p-2.5 rounded-md w-[210px]"
 		>
-			<button class="self-end mr-2.5 mb-1">
+			<button
+				on:click={() => {
+					open = false;
+				}}
+				class="self-end mr-2.5 mb-1"
+			>
 				<span class="material-symbols-rounded text-accent"> close </span>
 			</button>
 			<a
+				on:click={() => {
+					open = false;
+				}}
 				href="/bounty-setup"
-				on:click={closeBurgerMenu}
 				class="bg-accent text-white p-2.5 mb-2 rounded-md w-[189px] flex justify-between items-center"
 			>
 				<span class="mt-1">Create new bounty</span>
