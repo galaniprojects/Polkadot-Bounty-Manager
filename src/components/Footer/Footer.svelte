@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LogoBountyManagerDesktop from '../svg/header-footer-logos/LogoBountyManagerDesktop.svg';
+	import LogoBountyManagerDesktop from './LogoBountyManagerFooter.svg';
 	import LogoTelegram from './LogoTelegram.svg';
 	import LogoEmail from './LogoEmail.svg';
 	import LogoPolkadot from './LogoPolkadot.svg';

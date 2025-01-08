@@ -41,19 +41,6 @@
 	data-pagination-scroll="parent-bounty-list"
 >
 	<div class="w-full rounded-md px-3 py-6 sm:px-12 sm:pt-2 sm:pb-2">
-		<div class="actions-container flex justify-between lg:px-8 lg:py-6 items-center rounded-md">
-			<div class="hidden space-x-5 items-center lg:inline-flex">
-				<h2 class="title mt-1 text-3xl text-white">Create new bounty here</h2>
-				<span class="material-symbols-outlined text-white text-xl"> arrow_forward_ios </span>
-			</div>
-			<a
-				href="/bounty-setup"
-				class="link-button border-accent bg-accent rounded-md w-full h-12 lg:max-w-64 text-white font-bold self-center"
-			>
-				NEW BOUNTY
-			</a>
-		</div>
-
 		<div class="min-h-[70vh]">
 			{#if !$activeAccount}
 				<div class="text-white flex justify-center mt-20">
@@ -107,13 +94,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	.actions-container {
-		background-color: #836fac40;
-	}
-
-	.title {
-		font-weight: 300;
-	}
-</style>
