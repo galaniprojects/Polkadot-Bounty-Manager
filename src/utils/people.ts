@@ -28,12 +28,17 @@ function createPeopleTypedApi() {
 	return sdkClient.getTypedApi(people);
 }
 
-const peopleApi = writable(createPeopleTypedApi());
+const peopleApi = writable<undefined | ReturnType<typeof createPeopleTypedApi>>();
 
 export async function getPeopleChainName(address: string | undefined) {
 	if (!address) return address;
 
+	if (!get(peopleApi)) {
+		peopleApi.set(createPeopleTypedApi());
+	}
 	const api = get(peopleApi);
+	if (!api) return address;
+
 	const result = await api.query.Identity.IdentityOf.getValue(address);
 	if (!result) return address;
 
