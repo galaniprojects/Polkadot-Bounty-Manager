@@ -8,7 +8,7 @@
 
 	let label: string | undefined;
 	$: {
-		label = address;
+		label = undefined;
 		(async () => {
 			label = await getPeopleChainName(address);
 		})();
@@ -32,7 +32,7 @@
 	}
 </script>
 
-{#if address && label}
+{#if address}
 	<button
 		class="flex space-x-1 justify-center items-center"
 		on:click={async () => {
@@ -42,7 +42,7 @@
 		<span class="h-4 w-4">
 			<PolkadotIcon {address} />
 		</span>
-		<span class="text-nowrap">{truncateString(label, 8)}</span>
+		<span class="text-nowrap">{label || truncateString(address, 8)}</span>
 		<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
 	</button>
 	<div class="w-80">
