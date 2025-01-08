@@ -57,9 +57,10 @@
 	<!-- Menu Overlay -->
 	{#if open}
 		<div
+		  onclick={() => { open = false; }}
 			class="absolute top-0 right-0 flex flex-col items-start bg-backgroundContent border shadow-lg p-2.5 rounded-md w-[210px]"
 		>
-			<button on:click={toggleBurgerMenu} class="self-end mr-2.5 mb-1">
+			<button class="self-end mr-2.5 mb-1">
 				<span class="material-symbols-rounded text-accent"> close </span>
 			</button>
 			<a
