@@ -50,7 +50,7 @@
 
 <div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
-	<button on:click={toggleBurgerMenu}>
+	<button on:click={() => { open = !open }}>
 		<span class="material-symbols-rounded text-white"> menu </span>
 	</button>
 
