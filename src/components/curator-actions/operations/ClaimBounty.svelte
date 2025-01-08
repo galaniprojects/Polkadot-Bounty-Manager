@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Dialog from '../../common/Dialog.svelte';
 	import { dotApi } from '../../../stores';
-	import { truncateString } from '../../../utils/common';
 	import type { Bounty } from '../../../types/bounty';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import { submitTransaction } from '../../../utils/transaction';
@@ -36,7 +35,7 @@
 		{#if bounty.beneficiary}
 			<div class="space-y-2">
 				<p class="text-xs">Beneficiary account</p>
-				<CopyableAddress address={truncateString(bounty.beneficiary, 13)} />
+				<CopyableAddress address={bounty.beneficiary} />
 			</div>
 		{/if}
 		<div class="space-y-2">

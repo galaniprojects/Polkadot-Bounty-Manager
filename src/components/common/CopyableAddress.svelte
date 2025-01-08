@@ -1,9 +1,18 @@
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
+	import { getPeopleChainName } from '../../utils/people';
 	import PolkadotIcon from './PolkadotIcon.svelte';
 
 	let showTooltip = false;
 	export let address: string | undefined;
+
+	let label: string | undefined;
+	$: {
+		label = address;
+		(async () => {
+			label = await getPeopleChainName(address);
+		})();
+	}
 
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
@@ -23,17 +32,17 @@
 	}
 </script>
 
-{#if address}
+{#if address && label}
 	<button
 		class="flex space-x-1 justify-center items-center"
 		on:click={async () => {
 			await copyToClipboard(address);
 		}}
 	>
-		<div class="h-4 w-4">
+		<span class="h-4 w-4">
 			<PolkadotIcon {address} />
-		</div>
-		<span>{truncateString(address, 8)}</span>
+		</span>
+		<span class="text-nowrap">{truncateString(label, 8)}</span>
 		<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
 	</button>
 	<div class="w-80">
