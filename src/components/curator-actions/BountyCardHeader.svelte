@@ -35,18 +35,16 @@
 		</button>
 	</div>
 
-	<div class="flex">
-		<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0">
-			<div class="flex flex-col justify-start lg:w-[250px]">
-				<section class="flex justify-start items-center space-x-1">
-					<p>Proposer:</p>
-					<CopyableAddress address={bounty.proposer} />
-				</section>
-			</div>
-			<section class="flex space-x-1">
-				<p>Status:</p>
-				<p>{statusLabels[bounty.status]}</p>
+	<div class="flex flex-col lg:flex-row lg:justify-start text-xs lg:mt-0 items-baseline">
+		<div class="flex flex-col justify-start lg:w-[250px]">
+			<section class="flex justify-start items-center space-x-1">
+				<p>Proposer:</p>
+				<CopyableAddress address={bounty.proposer} />
 			</section>
 		</div>
+		<section class="flex space-x-1">
+			<p>Status:</p>
+			<p>{statusLabels[bounty.status]}</p>
+		</section>
 	</div>
 </div>
