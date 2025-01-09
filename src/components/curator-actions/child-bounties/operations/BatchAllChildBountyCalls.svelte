@@ -109,13 +109,20 @@
 			<li>Claim child bounty.</li>
 		</ol>
 
+		<p class="text-xs mt-6 border border-red text-red rounded-[3px] p-2">
+			Currently, the child bounty's index needs to be guessed in order to execute a batch call. To
+			create multiple batch transactions, increment the child bounty's index by 1 for each new
+			transaction after the first to avoid conflicts. <br/> Please note: If multiple batch transactions
+			are assigned the same index or if another bounty creates a child bounty in the time between
+			the transaction creation and confirmation on Multix, the transaction will fail.
+		</p>
 		<div class="mt-5">
-			<p class="text-xs">Child Bounty ID *</p>
+			<p class="text-xs">Child Bounty Index</p>
 			<input
 				type="number"
 				min={nextAvailabeChildBountyId}
 				bind:value={childBountyId}
-				class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+				class="border border-black rounded-[3px] bg-childBountyHeaderBackground pl-2 pt-1 h-10 w-full"
 				placeholder=""
 			/>
 		</div>
@@ -169,11 +176,13 @@
 	</div>
 
 	<p class="text-xs mt-6">
-		* Currently we need to "guess" the index of the new child bounty to execute the batch call. If
-		you want to create multiple batch transactions, please increase the child index by 1 for each
-		new transaction, otherwise the transaction will fail once it is confirmed in Multix.
+		For the highest likelihood of success, ensure that the signatories confirm the transaction as
+		soon as possible
 	</p>
 
+	<!-- Currently, the child bounty's index needs to be guessed in order to execute a batch call. For creating multiple batch transactions, increment the child bounty's index by 1 for each new transaction to avoid conflicts. -->
+	<!-- Currently, the child bounty's index needs to be guessed in order to execute a batch call. For creating multiple batch transactions, increment the child bounty's index by 1 for each new transaction to avoid conflicts. -->
+	<!-- Please note: If multiple batch transactions are assigned the same index, the transaction will fail when submitted in Multix. -->
 	<button
 		on:click={submit}
 		disabled={!beneficiary.length || !curatorFee.length}
