@@ -155,8 +155,8 @@
 	</div>
 
 	<p class="text-xs mt-6">
-		This operation might fail because we have to guess the ID of the created child bounty. In this
-		case, please reload the page and try again.
+		<span class="text-red">Please note:</span> This operation might fail because we have to guess the
+		ID of the created child bounty. In this case, please reload the page and try again.
 	</p>
 
 	<button
