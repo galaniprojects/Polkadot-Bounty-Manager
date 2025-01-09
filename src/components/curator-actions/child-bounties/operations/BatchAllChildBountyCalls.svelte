@@ -180,9 +180,6 @@
 		soon as possible
 	</p>
 
-	<!-- Currently, the child bounty's index needs to be guessed in order to execute a batch call. For creating multiple batch transactions, increment the child bounty's index by 1 for each new transaction to avoid conflicts. -->
-	<!-- Currently, the child bounty's index needs to be guessed in order to execute a batch call. For creating multiple batch transactions, increment the child bounty's index by 1 for each new transaction to avoid conflicts. -->
-	<!-- Please note: If multiple batch transactions are assigned the same index, the transaction will fail when submitted in Multix. -->
 	<button
 		on:click={submit}
 		disabled={!beneficiary.length || !curatorFee.length}
