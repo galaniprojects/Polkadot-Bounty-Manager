@@ -20,8 +20,11 @@
 	let beneficiary = '';
 
 	let childBountyId: number;
+	let nextAvailabeChildBountyId: number;
+
 	(async () => {
-		childBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+		nextAvailabeChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+		childBountyId = nextAvailabeChildBountyId;
 	})();
 
 	$: transaction = maybeTransaction(() => {
@@ -105,6 +108,18 @@
 			<li>Award child bounty to the provided beneficiary.</li>
 			<li>Claim child bounty.</li>
 		</ol>
+
+		<div class="mt-5">
+			<p class="text-xs">Child Bounty ID *</p>
+			<input
+				type="number"
+				min={nextAvailabeChildBountyId}
+				bind:value={childBountyId}
+				class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+				placeholder=""
+			/>
+		</div>
+
 		<div class="my-4 relative">
 			<p class="text-xs">Value</p>
 			<input
@@ -126,7 +141,6 @@
 				placeholder="Child bounty name"
 			/>
 		</div>
-
 		<div class="mt-5 relative">
 			<p class="text-xs">Sub-curator fee:</p>
 			<input
@@ -155,8 +169,9 @@
 	</div>
 
 	<p class="text-xs mt-6">
-		This operation might fail because we have to guess the ID of the created child bounty. In this
-		case, please reload the page and try again.
+		* Currently we need to "guess" the index of the new child bounty to execute the batch call. If
+		you want to create multiple batch transactions, please increase the child index by 1 for each
+		new transaction, otherwise the transaction will fail once it is confirmed in Multix.
 	</p>
 
 	<button
