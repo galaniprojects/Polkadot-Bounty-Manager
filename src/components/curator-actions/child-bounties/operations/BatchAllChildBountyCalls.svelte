@@ -20,8 +20,11 @@
 	let beneficiary = '';
 
 	let childBountyId: number;
+	let nextAvailabeChildBountyId: number;
+
 	(async () => {
-		childBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+		nextAvailabeChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+		childBountyId = nextAvailabeChildBountyId;
 	})();
 
 	$: transaction = maybeTransaction(() => {
@@ -105,6 +108,25 @@
 			<li>Award child bounty to the provided beneficiary.</li>
 			<li>Claim child bounty.</li>
 		</ol>
+
+		<p class="text-xs mt-6 border border-red text-red rounded-[3px] p-2">
+			Currently, the child bounty's index needs to be guessed in order to execute a batch call. To
+			create multiple batch transactions, increment the child bounty's index by 1 for each new
+			transaction after the first to avoid conflicts. <br /> Please note: If multiple batch transactions
+			are assigned the same index or if another bounty creates a child bounty in the time between the
+			transaction creation and confirmation on Multix, the transaction will fail.
+		</p>
+		<div class="mt-5">
+			<p class="text-xs">Child Bounty Index</p>
+			<input
+				type="number"
+				min={nextAvailabeChildBountyId}
+				bind:value={childBountyId}
+				class="border border-black rounded-[3px] bg-childBountyHeaderBackground pl-2 pt-1 h-10 w-full"
+				placeholder=""
+			/>
+		</div>
+
 		<div class="my-4 relative">
 			<p class="text-xs">Value</p>
 			<input
@@ -126,7 +148,6 @@
 				placeholder="Child bounty name"
 			/>
 		</div>
-
 		<div class="mt-5 relative">
 			<p class="text-xs">Sub-curator fee:</p>
 			<input
@@ -155,8 +176,8 @@
 	</div>
 
 	<p class="text-xs mt-6">
-		<span class="text-red">Please note:</span> This operation might fail because we have to guess the
-		ID of the created child bounty. In this case, please reload the page and try again.
+		For the highest likelihood of success, ensure that the signatories confirm the transaction as
+		soon as possible
 	</p>
 
 	<button
