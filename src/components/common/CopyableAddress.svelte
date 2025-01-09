@@ -44,7 +44,9 @@
 			<PolkadotIcon {address} />
 		</span>
 		<span class="flex text-nowrap space-x-1">
-			<img class="w-4 h-4" src={Checkmark} alt="Checkmark" />
+			{#if label != undefined}
+				<img class="w-4 h-4" src={Checkmark} alt="Checkmark" />
+			{/if}
 			<span>{label || truncateString(address, 8)}</span>
 		</span>
 		<span class="material-symbols-outlined place-self-center mb-1 text-sm"> content_copy </span>
