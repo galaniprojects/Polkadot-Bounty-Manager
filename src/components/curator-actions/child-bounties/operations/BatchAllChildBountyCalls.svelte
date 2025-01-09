@@ -112,9 +112,9 @@
 		<p class="text-xs mt-6 border border-red text-red rounded-[3px] p-2">
 			Currently, the child bounty's index needs to be guessed in order to execute a batch call. To
 			create multiple batch transactions, increment the child bounty's index by 1 for each new
-			transaction after the first to avoid conflicts. <br/> Please note: If multiple batch transactions
-			are assigned the same index or if another bounty creates a child bounty in the time between
-			the transaction creation and confirmation on Multix, the transaction will fail.
+			transaction after the first to avoid conflicts. <br /> Please note: If multiple batch transactions
+			are assigned the same index or if another bounty creates a child bounty in the time between the
+			transaction creation and confirmation on Multix, the transaction will fail.
 		</p>
 		<div class="mt-5">
 			<p class="text-xs">Child Bounty Index</p>
