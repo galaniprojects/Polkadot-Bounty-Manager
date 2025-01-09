@@ -46,5 +46,5 @@ export async function getPeopleChainName(address: string | undefined) {
 	const text = value?.asText();
 	if (!text) return;
 
-	return `✅ ${text.substring(0, 20)}`;
+	return text.substring(0, 20);
 }

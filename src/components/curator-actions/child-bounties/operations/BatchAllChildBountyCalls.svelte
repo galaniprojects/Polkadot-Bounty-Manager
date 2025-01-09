@@ -105,6 +105,12 @@
 			<li>Award child bounty to the provided beneficiary.</li>
 			<li>Claim child bounty.</li>
 		</ol>
+
+		<p class="text-red bg-white p-2 border border-red rounded-[3px] mt-2 text-sm">
+			Please confirm this batch call on Multix first and then refresh Bounty Manager to produce the
+			next one. This is to make sure the correct child bounty index is calculated. We are currently
+			working to make this simpler in a future update without the need to confirm and refresh.
+		</p>
 		<div class="my-4 relative">
 			<p class="text-xs">Value</p>
 			<input
@@ -155,8 +161,8 @@
 	</div>
 
 	<p class="text-xs mt-6">
-		This operation might fail because we have to guess the ID of the created child bounty. In this
-		case, please reload the page and try again.
+		<span class="text-red">Please note:</span> This operation might fail because we have to guess the
+		ID of the created child bounty. In this case, please reload the page and try again.
 	</p>
 
 	<button

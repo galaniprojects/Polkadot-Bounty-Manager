@@ -2,6 +2,7 @@
 	import { truncateString } from '../../utils/common';
 	import { getPeopleChainName } from '../../utils/people';
 	import PolkadotIcon from './PolkadotIcon.svelte';
+	import Checkmark from './Checkmark.svg';
 
 	let showTooltip = false;
 	export let address: string | undefined;
@@ -34,7 +35,7 @@
 
 {#if address}
 	<button
-		class="flex space-x-1 justify-center items-center"
+		class="flex space-x-2 justify-center items-center"
 		on:click={async () => {
 			await copyToClipboard(address);
 		}}
@@ -42,17 +43,19 @@
 		<span class="h-4 w-4">
 			<PolkadotIcon {address} />
 		</span>
-		<span class="text-nowrap">{label || truncateString(address, 8)}</span>
-		<span class="material-symbols-outlined place-self-center mb-1"> content_copy </span>
+		<span class="flex text-nowrap space-x-1">
+			<img class="w-4 h-4" src={Checkmark} alt="Checkmark" />
+			<span>{label || truncateString(address, 8)}</span>
+		</span>
+		<span class="material-symbols-outlined place-self-center mb-1 text-sm"> content_copy </span>
 	</button>
-	<div class="w-80">
-		<div class="flex z-50">
-			{#if showTooltip}
-				<div class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50">
-					Copied to clipboard
-				</div>
-			{/if}
-		</div>
+
+	<div class="flex z-50">
+		{#if showTooltip}
+			<div class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50">
+				Copied to clipboard
+			</div>
+		{/if}
 	</div>
 {:else}
 	<p>-</p>
