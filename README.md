@@ -1,4 +1,5 @@
-![bounty manager logo](./static/Logo.svg)
+![bounty manager logo](https://github.com/user-attachments/assets/9992c484-0c8b-4f8d-bc78-2d62d9d67704)
+
 
 # Bounty Manager
 
