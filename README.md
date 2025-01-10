@@ -1,6 +1,5 @@
 ![bounty manager logo](./static/Logo_readme.svg)
 
-
 # Bounty Manager
 
 ### A UI to streamline Polkadot Bounties
