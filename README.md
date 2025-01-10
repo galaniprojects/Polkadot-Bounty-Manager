@@ -1,4 +1,4 @@
-![bounty manager logo](./static/Logo.svg)
+![bounty manager logo](./static/Logo_readme.svg)
 
 # Bounty Manager
 
