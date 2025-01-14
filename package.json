@@ -1,6 +1,6 @@
 {
 	"name": "polkadot-bounty-manager",
-	"version": "0.0.6",
+	"license": "Apache-2.0",
 	"private": true,
 	"scripts": {
 		"prepare": "svelte-kit sync && papi",
@@ -45,5 +45,14 @@
 		"dompurify": "^3.2.3",
 		"marked": "^15.0.6",
 		"polkadot-api": "^1.8.1"
+	},
+	"homepage": "https://www.bountymanager.io/",
+	"bugs": {
+		"url": "https://t.me/bounty_manager_feedback",
+		"email": "bountymanager@galaniprojects.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/galaniprojects/Polkadot-Bounty-Manager.git"
 	}
 }
