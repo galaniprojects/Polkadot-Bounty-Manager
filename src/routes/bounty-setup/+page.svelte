@@ -78,13 +78,13 @@
 	$: (async () => {
 		try {
 			bondValue = '-';
-			if (!transaction) return;
+			if (!bountyTitle) return;
 
 			bondValue = 'Calculating…';
 			const base = await $dotApi.constants.Bounties.BountyDepositBase();
-			const bytesLen = BigInt((await transaction.getEncodedData()).asBytes().length);
+			const bytesLen = BigInt(Binary.fromText(bountyTitle).asBytes().length);
 			const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
-			const bond = base + (bytesLen - 1n) * perByte;
+			const bond = base + bytesLen * perByte;
 			bondValue = `${formatPlanckToDot(bond)} DOT`;
 		} catch {
 			bondValue = '-';
