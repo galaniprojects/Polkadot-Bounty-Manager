@@ -1,0 +1,11 @@
+{
+	"version": 1,
+	"framework": { "name": "SvelteKit", "version": "2.0.0" },
+	"routes": [
+		{
+			"path": "/*",
+			"target": { "kind": "Static", "cacheControl": "public, max-age=2" },
+			"fallback": { "kind": "Static", "src": "404.html" }
+		}
+	]
+}
