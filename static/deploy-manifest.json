@@ -4,8 +4,7 @@
 	"routes": [
 		{
 			"path": "/*",
-			"target": { "kind": "Static", "cacheControl": "public, max-age=2" },
-			"fallback": { "kind": "Static", "src": "404.html" }
+			"target": { "kind": "Static", "cacheControl": "public, max-age=2" }
 		}
 	]
 }
