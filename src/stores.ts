@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
-import { type BlockInfo, createTypedApi } from './utils/polkadot';
+import { type createTypedApi } from './utils/createTypedApi';
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import type { AccountInfo } from './types/account';
 import { type PolkadotSigner } from 'polkadot-api';
@@ -34,9 +34,6 @@ export const bounties = writable<Bounty[]>([]);
 
 // Bounties and child bounties that are related to the active account.
 export const activeAccountBounties = writable<Bounty[]>([]);
-
-// Misc.
-export const currentBlock = writable<BlockInfo | undefined>();
 
 // For testing.
 export const showAllBounties = writable<boolean>(false);
