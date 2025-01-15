@@ -10,13 +10,6 @@ frontend:
       commands:
         - npm run build
 
-    postBuild:
-      commands:
-        - mv build out
-        - mkdir -p build
-        - mv out/deploy-manifest.json build/
-        - mv out build/static
-
   artifacts:
     baseDirectory: build
     files:
