@@ -29,7 +29,11 @@
 			<span class="self-start">{name}</span>
 			<span class="text-sm whitespace-nowrap">
 				{#if label !== undefined}
-					<img class="w-4 h-4 inline-block align-sub" src={Checkmark} alt="Account name from People Blockchain" />
+					<img
+						class="w-4 h-4 inline-block align-sub"
+						src={Checkmark}
+						alt="Account name from People Blockchain"
+					/>
 				{/if}
 				{label || truncateString(address, 20)}
 			</span>
