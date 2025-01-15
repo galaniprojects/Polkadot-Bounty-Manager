@@ -2,9 +2,19 @@
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import ForwardIcon from '../svg/ForwardIcon.svg';
+	import { getPeopleChainName } from '../../utils/people';
+	import Checkmark from '../common/Checkmark.svg';
 
 	export let name;
 	export let address: string;
+
+	let label: string | undefined;
+	$: {
+		label = undefined;
+		(async () => {
+			label = await getPeopleChainName(address);
+		})();
+	}
 </script>
 
 <div
@@ -17,7 +27,12 @@
 		</div>
 		<div class="flex flex-col text-white">
 			<span class="self-start">{name}</span>
-			<span class="text-sm">{truncateString(address, 20)}</span>
+			<span class="text-sm whitespace-nowrap">
+				{#if label !== undefined}
+					<img class="w-4 h-4 inline-block align-sub" src={Checkmark} alt="Account name from People Blockchain" />
+				{/if}
+				{label || truncateString(address, 20)}
+			</span>
 		</div>
 	</div>
 

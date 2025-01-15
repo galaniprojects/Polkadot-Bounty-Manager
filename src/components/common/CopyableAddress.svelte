@@ -44,7 +44,7 @@
 			<PolkadotIcon {address} />
 		</span>
 		<span class="flex text-nowrap space-x-1">
-			{#if label != undefined}
+			{#if label !== undefined}
 				<img class="w-4 h-4" src={Checkmark} alt="Account name from People Blockchain" />
 			{/if}
 			<span>{label || truncateString(address, 8)}</span>
