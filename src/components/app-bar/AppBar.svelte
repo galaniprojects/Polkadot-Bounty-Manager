@@ -40,9 +40,15 @@
 
 		polkadotSigner.set(account.polkadotSigner);
 		setActiveAccountBounties();
-
-		label = await getPeopleChainName(address);
 	});
+
+	$: {
+		label = undefined;
+		(async () => {
+			if (!$activeAccount) return;
+			label = await getPeopleChainName($activeAccount.address);
+		})();
+	}
 </script>
 
 <header class="relative flex items-center justify-between min-h-20 bg-primary px-4 sm:px-12">
