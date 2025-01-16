@@ -44,7 +44,7 @@
 		<div class="min-h-[70vh]">
 			{#if !$activeAccount}
 				<div class="text-white flex justify-center mt-20">
-					<div class="justify-start space-y-8">
+					<div class="justify-start space-y-8 max-w-4xl">
 						<h3 class="text-2xl md:text-3xl">Log in Instructions for Curators</h3>
 						<p class="text-xl md:text-2xl">
 							If you are a Curator please log in with the Pure Proxy Curator Address to access the
