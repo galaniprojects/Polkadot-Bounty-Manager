@@ -5,7 +5,6 @@
 	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
-	import { createTypedApi } from '../../utils/polkadot';
 
 	let days: number = 1;
 	let hours = 1;
@@ -74,9 +73,10 @@
 		await fastForward(1);
 	}
 
-	function changeEndpoint() {
+	async function changeEndpoint() {
 		nodeEndpoint.set(nodeEndpointInput);
 		sessionStorage.setItem('node', nodeEndpointInput);
+		const { createTypedApi } = await import('../../utils/createTypedApi');
 		dotApi.set(createTypedApi([nodeEndpointInput]));
 	}
 </script>

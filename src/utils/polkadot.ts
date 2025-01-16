@@ -1,26 +1,5 @@
-import { get } from 'svelte/store';
-import { currentBlock, dotApi } from '../stores';
-import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
-import { AccountId, createClient, getSs58AddressInfo } from 'polkadot-api';
-import { dot } from '@polkadot-api/descriptors';
-import { WsEvent } from '@polkadot-api/ws-provider/web';
-import { getWsProvider } from 'polkadot-api/ws-provider/web';
+import { AccountId, getSs58AddressInfo } from 'polkadot-api';
 import { isPositiveNumber } from './common';
-
-export function createTypedApi(endpoints: string[]) {
-	const sdkProvider = withPolkadotSdkCompat(
-		getWsProvider({
-			endpoints,
-			timeout: 5000,
-			onStatusChanged(event) {
-				if (event.type !== WsEvent.CONNECTED) return;
-				console.log(`Connected to ${event.uri}`);
-			}
-		})
-	);
-	const sdkClient = createClient(sdkProvider);
-	return sdkClient.getTypedApi(dot);
-}
 
 export function convertFormattedDotToPlanck(value: string): bigint {
 	if (!isPositiveNumber(value)) {
@@ -91,18 +70,3 @@ export type BlockInfo = {
 	 **/
 	timestamp: number;
 };
-
-export async function getCurrentBlock(): Promise<BlockInfo> {
-	const currentBlockFromStorage = get(currentBlock);
-	if (currentBlockFromStorage) {
-		return currentBlockFromStorage;
-	} else {
-		const api = get(dotApi);
-		const info = {
-			blockNumber: await api.query.System.Number.getValue(),
-			timestamp: Date.now()
-		};
-		currentBlock.set(info);
-		return info;
-	}
-}

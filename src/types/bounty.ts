@@ -1,5 +1,5 @@
 import type { ChildBounty } from './child-bounty';
-import { type createTypedApi } from '../utils/polkadot';
+import { type createTypedApi } from '../utils/createTypedApi';
 
 export type BountyRaw = Awaited<
 	ReturnType<

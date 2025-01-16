@@ -6,6 +6,11 @@
 	import { loadingDialogState } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
 	import Footer from '../components/Footer/Footer.svelte';
+	import { page } from '$app/state';
+
+	// prerender only the outer frame without contents
+	const apiNotUsed = ['/imprint', '/404'].includes(page.url.pathname);
+	const renderChildren = typeof window !== 'undefined' || apiNotUsed;
 </script>
 
 {#if !PUBLIC_HIDE_TEST_BAR}
@@ -16,7 +21,9 @@
 </div>
 <AppBar />
 <LoadingScreen bind:dialogState={$loadingDialogState} />
-<slot />
+
+{#if renderChildren}<slot />{/if}
+
 <Footer />
 
 <style lang="postcss">

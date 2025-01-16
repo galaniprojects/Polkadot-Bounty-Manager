@@ -1,4 +1,4 @@
-import { type createTypedApi } from '../utils/polkadot';
+import { type createTypedApi } from '../utils/createTypedApi';
 
 export type ChildBountyRaw = Awaited<
 	ReturnType<
