@@ -64,7 +64,12 @@
 									the pop-up.
 								</li>
 								<li>
-									<a href="https://multix.chainsafe.io/settings" target="_blank" rel="noreferrer" class="underline">
+									<a
+										href="https://multix.chainsafe.io/settings"
+										target="_blank"
+										rel="noreferrer"
+										class="underline"
+									>
 										Open Multix in a new tab
 									</a> and ensure you have selected the correct Pure Proxy account from the dropdown.
 								</li>
