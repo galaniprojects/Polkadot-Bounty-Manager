@@ -4,7 +4,7 @@ import { dotApi } from '../../stores';
 async function fetchCuratorProxyAddress(accountId: string) {
 	const api = get(dotApi);
 	const proxy = await api.query.Proxy.Proxies.getValue(accountId);
-	
+
 	return proxy[0][0].delegate;
 }
 
@@ -38,7 +38,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 		});
 
 		if (!response.ok) {
-			throw new Error("Error fetching signatories")
+			throw new Error('Error fetching signatories');
 		}
 
 		const data = (await response.json()) as GraphQLResponse;
