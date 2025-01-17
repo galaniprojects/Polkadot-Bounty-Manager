@@ -8,6 +8,8 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -15,17 +17,21 @@
 
 	let curatorAddress = '';
 	let curatorFee = '';
+	let extend = false;
 
 	$: transaction = maybeTransaction(
 		() =>
 			isValidAddress(curatorAddress) &&
 			isPositiveNumber(curatorFee) &&
-			$dotApi.tx.ChildBounties.propose_curator({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id,
-				curator: MultiAddress.Id(curatorAddress),
-				fee: convertFormattedDotToPlanck(curatorFee)
-			})
+			batchExtendBounty(
+				extend && childBounty.parentBounty,
+				$dotApi.tx.ChildBounties.propose_curator({
+					parent_bounty_id: childBounty.parentBounty,
+					child_bounty_id: childBounty.id,
+					curator: MultiAddress.Id(curatorAddress),
+					fee: convertFormattedDotToPlanck(curatorFee)
+				})
+			)
 	);
 
 	async function submit() {
@@ -78,6 +84,16 @@
 				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
 			</div>
 		</div>
+
+		<label class="my-4 flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} inverted />
+			<span class="text-xs">
+				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
+				<br />
+				New expiry date: {extendedExpiry()}
+			</span>
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>

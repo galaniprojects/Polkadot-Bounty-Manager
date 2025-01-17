@@ -4,16 +4,21 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
+	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
 	import Fee from '../../../Fee.svelte';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+	let extend = false;
 
-	$: transaction = $dotApi.tx.ChildBounties.unassign_curator({
-		child_bounty_id: childBounty.id,
-		parent_bounty_id: childBounty.parentBounty
-	});
+	$: transaction = batchExtendBounty(
+		extend && childBounty.parentBounty,
+		$dotApi.tx.ChildBounties.unassign_curator({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		})
+	);
 
 	let isToggled = false;
 
@@ -45,11 +50,21 @@
 
 		<div class="my-4">
 			<p class="text-xs">I understand</p>
-			<div class="flex justify-between items-start">
-				<p>Unassign anyway</p>
-				<span class="custom-toggle"><ToggleIcon bind:checked={isToggled} /></span>
-			</div>
+			<label class="flex justify-between items-start cursor-pointer">
+				<span>Unassign anyway</span>
+				<ToggleIcon bind:checked={isToggled} inverted />
+			</label>
 		</div>
+
+		<label class="my-4 flex items-center justify-between cursor-pointer">
+			<span class="text-xs">
+				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
+				<br />
+				New expiry date: {extendedExpiry()}
+			</span>
+			<ToggleIcon bind:checked={extend} inverted />
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>
@@ -65,11 +80,3 @@
 		SIGN
 	</button>
 </Dialog>
-
-<style>
-	.custom-toggle {
-		--toggle-background: rgba(101, 112, 139, 0.5);
-		--switch-background: theme('colors.white');
-		--switch-checked-background: theme('colors.childBountyGray');
-	}
-</style>

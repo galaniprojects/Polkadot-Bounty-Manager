@@ -5,14 +5,20 @@
 	import Fee from '../../../Fee.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
+	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+	let extend = false;
 
-	$: transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
-		child_bounty_id: childBounty.id,
-		parent_bounty_id: childBounty.parentBounty
-	});
+	$: transaction = batchExtendBounty(
+		extend && childBounty.parentBounty,
+		$dotApi.tx.ChildBounties.claim_child_bounty({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		})
+	);
 
 	async function submit() {
 		open = false;
@@ -39,6 +45,16 @@
 				<CopyableAddress address={childBounty.beneficiary} />
 			</div>
 		{/if}
+
+		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} inverted />
+			<span class="text-xs">
+				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
+				<br />
+				New expiry date: {extendedExpiry()}
+			</span>
+		</label>
+
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>

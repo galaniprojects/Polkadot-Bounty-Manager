@@ -1,47 +1,61 @@
 <script lang="ts">
 	export let checked = false;
-
-	function toggle() {
-		checked = !checked;
-	}
+	export let inverted = false;
 </script>
 
-<button class="toggle" on:click={toggle} aria-label="Toggle" role="switch" aria-checked={checked}>
-	<span class="switch {checked ? 'checked' : ''}"></span>
-</button>
+<input type="checkbox" bind:checked class="switch" data-inverted={inverted} />
 
 <style>
-	:global(.toggle) {
-		display: inline-flex;
-		align-items: center;
+	.switch {
+		--width: 52px;
+		--height: 26px;
+		--offset: 2px;
+		--knob: calc(var(--height) - var(--offset) * 2);
+
+		appearance: none;
 		cursor: pointer;
-	}
-
-	:global(.switch) {
-		width: 52px;
-		height: 26px;
-		border-radius: 20px;
-		background-color: var(--toggle-background, white);
+		margin: 0;
+		padding: 0;
+		display: inline-grid;
+		flex-shrink: 0;
+		inline-size: var(--width);
+		block-size: var(--height);
+		place-items: center;
 		position: relative;
-		transition: background-color 0.3s;
 	}
 
-	:global(.switch::before) {
+	.switch[data-inverted='true'] {
+		--toggle-background: rgba(101, 112, 139, 0.5);
+		--switch-background: theme('colors.white');
+		--switch-checked-background: theme('colors.childBountyGray');
+	}
+
+	.switch::before {
+		content: '';
+		display: block;
+		inline-size: var(--width);
+		block-size: var(--height);
+		border-radius: calc(var(--height) / 2);
+		background: var(--toggle-background, white);
+		position: absolute;
+	}
+
+	.switch::after {
+		display: block;
 		background-color: var(--switch-background, theme('colors.curatorMainBackground'));
 		content: '';
-		width: 22px;
-		height: 22px;
+		inline-size: var(--knob);
+		block-size: var(--knob);
 		border-radius: 50%;
 		position: absolute;
-		top: 2px;
-		left: 2px;
+		inset-inline-start: var(--offset);
 		transition:
-			transform 0.3s,
+			left 0.3s,
 			background-color 0.3s;
 	}
 
-	:global(.checked::before) {
-		background-color: var(--switch-checked-background, theme('colors.accent'));
-		transform: translateX(25px);
+	.switch:checked::after {
+		background: var(--switch-checked-background, theme('colors.accent'));
+		inset-inline-start: calc(var(--width) - var(--knob) - var(--offset));
 	}
 </style>

@@ -4,15 +4,20 @@
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
+	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
+	let extend = false;
 
-	$: transaction = $dotApi.tx.ChildBounties.close_child_bounty({
-		child_bounty_id: childBounty.id,
-		parent_bounty_id: childBounty.parentBounty
-	});
+	$: transaction = batchExtendBounty(
+		extend && childBounty.parentBounty,
+		$dotApi.tx.ChildBounties.close_child_bounty({
+			child_bounty_id: childBounty.id,
+			parent_bounty_id: childBounty.parentBounty
+		})
+	);
 
 	let isToggled = false;
 
@@ -37,11 +42,20 @@
 
 		<div>
 			<p class="text-xs">I understand</p>
-			<div class="flex justify-between items-start">
-				<p>Close down anyway</p>
+			<label class="flex justify-between items-start cursor-pointer">
+				<span>Close down anyway</span>
 				<ToggleIcon bind:checked={isToggled} />
-			</div>
+			</label>
 		</div>
+
+		<label class="flex items-center justify-between cursor-pointer">
+			<span class="text-xs">
+				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
+				<br />
+				New expiry date: {extendedExpiry()}
+			</span>
+			<ToggleIcon bind:checked={extend} />
+		</label>
 
 		<div class="flex space-x-24">
 			<div>
