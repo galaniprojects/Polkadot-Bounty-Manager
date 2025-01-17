@@ -72,8 +72,10 @@
 					class="flex justify-end lg:mr-12 2xl:mr-44 text-accent bg-white font-bold rounded-md lg:h-auto lg:pt-1 lg:max-w-32"
 					on:click={() => {
 						curatorsDialogOpen = true;
-					}}>SHOW CURATORS</button
+					}}
 				>
+					SHOW CURATORS
+				</button>
 			{/if}
 		</section>
 	</div>
@@ -140,8 +142,10 @@
 						class="w-full h-12 button-popup font-bold rounded-md"
 						on:click={() => {
 							curatorsDialogOpen = true;
-						}}>SHOW CURATORS</button
+						}}
 					>
+						SHOW CURATORS
+					</button>
 				{/if}
 				<div class="flex justify-center items-center">
 					<ExternalLinks dimension={10} bountyId={bounty.id} />
@@ -164,6 +168,4 @@
 	</div>
 </div>
 
-{#if curatorsDialogOpen}
-	<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />
-{/if}
+<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />

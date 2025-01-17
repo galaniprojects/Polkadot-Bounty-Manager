@@ -9,14 +9,14 @@
 	export let bounty: Bounty;
 	export let curatorAddress = '';
 
-	let signatories: string[] = [];
-	let isLoading = true;
+	let signatories: string[] | undefined;
 
 	onMount(async () => {
 		if (curatorAddress) {
 			signatories = await fetchMultisigSignatories(curatorAddress);
+		} else {
+			signatories = [];
 		}
-		isLoading = false;
 	});
 </script>
 
@@ -29,12 +29,12 @@
 			</div>
 			<section class="space-y-1">
 				<p class="font-bold">Signatories:</p>
-				{#if isLoading}
+				{#if signatories === undefined}
 					<p>Loading...</p>
 				{:else if signatories.length > 0}
 					<ul>
-						{#each signatories as signatory}
-							<li><CopyableAddress address={signatory} /></li>
+						{#each signatories as address}
+							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>
 				{:else}
