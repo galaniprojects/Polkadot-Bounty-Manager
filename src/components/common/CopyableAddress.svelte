@@ -1,19 +1,10 @@
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
-	import { getPeopleChainName } from '../../utils/people';
+	import PeopleChainName from '../PeopleChainName.svelte';
 	import PolkadotIcon from './PolkadotIcon.svelte';
-	import Checkmark from './Checkmark.svg';
 
 	let showTooltip = false;
 	export let address: string | undefined;
-
-	let label: string | undefined;
-	$: {
-		label = undefined;
-		(async () => {
-			label = await getPeopleChainName(address);
-		})();
-	}
 
 	async function copyToClipboard(text: string | undefined) {
 		if (!text) {
@@ -44,10 +35,7 @@
 			<PolkadotIcon {address} />
 		</span>
 		<span class="flex text-nowrap space-x-1">
-			{#if label !== undefined}
-				<img class="w-4 h-4" src={Checkmark} alt="Account name from People Blockchain" />
-			{/if}
-			<span>{label || truncateString(address, 8)}</span>
+			<PeopleChainName {address}>{truncateString(address, 8)}</PeopleChainName>
 		</span>
 		<span class="material-symbols-outlined place-self-center mb-1 text-sm"> content_copy </span>
 	</button>
