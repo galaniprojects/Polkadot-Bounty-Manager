@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { dotApi } from '../../stores';
 
-async function fetchCuratorProxyAddress(accountId: string): Promise<string | undefined> {
+async function fetchCuratorProxyAddress(accountId: string) {
 	const api = get(dotApi);
 	const proxy = await api.query.Proxy.Proxies.getValue(accountId);
 
