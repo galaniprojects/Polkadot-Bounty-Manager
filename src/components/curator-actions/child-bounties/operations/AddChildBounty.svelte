@@ -8,7 +8,8 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
-	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
@@ -94,11 +95,7 @@
 
 		<label class="flex gap-4 items-center cursor-pointer">
 			<ToggleIcon bind:checked={extend} />
-			<span class="text-xs">
-				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
-				<br />
-				New expiry date: {extendedExpiry()}
-			</span>
+			<ExtendBountyLabel />
 		</label>
 
 		<section class="mt-10">

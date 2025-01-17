@@ -4,7 +4,8 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
-	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
@@ -57,11 +58,7 @@
 		</div>
 
 		<label class="my-4 flex items-center justify-between cursor-pointer">
-			<span class="text-xs">
-				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
-				<br />
-				New expiry date: {extendedExpiry()}
-			</span>
+			<ExtendBountyLabel />
 			<ToggleIcon bind:checked={extend} inverted />
 		</label>
 

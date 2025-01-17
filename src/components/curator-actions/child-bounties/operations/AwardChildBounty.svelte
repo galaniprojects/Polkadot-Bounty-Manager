@@ -6,7 +6,8 @@
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
-	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
@@ -66,11 +67,7 @@
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
 			<ToggleIcon bind:checked={extend} inverted />
-			<span class="text-xs">
-				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
-				<br />
-				New expiry date: {extendedExpiry()}
-			</span>
+			<ExtendBountyLabel />
 		</label>
 
 		<section class="mt-10">

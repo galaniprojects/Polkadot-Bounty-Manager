@@ -5,7 +5,8 @@
 	import Fee from '../../../Fee.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
-	import { batchExtendBounty, extendedExpiry } from '../../../../utils/batchExtendBounty';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 
 	export let open = true;
@@ -48,11 +49,7 @@
 
 		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
 			<ToggleIcon bind:checked={extend} inverted />
-			<span class="text-xs">
-				Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
-				<br />
-				New expiry date: {extendedExpiry()}
-			</span>
+			<ExtendBountyLabel />
 		</label>
 
 		<div class="space-y-2">
