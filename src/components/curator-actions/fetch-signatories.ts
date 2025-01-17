@@ -45,7 +45,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 
 		return data.data.multisigAddress?.signatories || [];
 	} catch (error) {
-		console.log('Error fetching signatories', error);
+		console.error('Error fetching signatories', error);
 		return [];
 	}
 }
