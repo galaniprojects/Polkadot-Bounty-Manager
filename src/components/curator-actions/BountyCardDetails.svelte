@@ -6,12 +6,14 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { formatDate } from '../../utils/common';
 	import { formatPlanckToDot } from '../../utils/polkadot';
+	import Signatories from './Signatories.svelte';
 
 	export let bounty: Bounty;
 	export let description: string | undefined;
 	export let remainingBalance: string | undefined;
 
 	let detailsExpanded = false;
+	let curatorsDialogOpen = false;
 
 	function handleMoreDetailsToggleClick() {
 		detailsExpanded = !detailsExpanded;
@@ -20,7 +22,7 @@
 
 <div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
 	<!-- Desktop design -->
-	<div class="hidden lg:flex lg:flex-col gap-3 justify-start lg:ml-7">
+	<div class="hidden lg:flex lg:flex-col gap-3 lg:ml-7">
 		<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
 			<section class="flex flex-col lg:flex-row">
 				{#if remainingBalance}
@@ -63,15 +65,18 @@
 							<p>{formatDate(bounty.expiryDate)}</p>
 						</section>
 					{/if}
-					{#if bounty.curator}
-						<div class="mt-4 lg:mt-0">
-							<p class="text-xs">Curator</p>
-							<CopyableAddress address={bounty.curator} />
-						</div>
-					{/if}
 				</div>
-				<!--  -->
 			</section>
+			{#if bounty.curator}
+				<button
+					class="flex justify-end lg:mr-12 2xl:mr-44 text-accent bg-white font-bold rounded-md lg:h-auto lg:pt-1 lg:max-w-32"
+					on:click={() => {
+						curatorsDialogOpen = true;
+					}}
+				>
+					SHOW CURATORS
+				</button>
+			{/if}
 		</section>
 	</div>
 
@@ -118,12 +123,7 @@
 					<p class="text-xs">Curator Fee</p>
 					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
 				</div>
-				{#if bounty.curator}
-					<div class="space-y-1">
-						<p class="text-xs">Curator</p>
-						<CopyableAddress address={bounty.curator} />
-					</div>
-				{/if}
+
 				{#if description}
 					<section class="text-xs space-y-1">
 						<BountyDescription description={DOMPurify.sanitize(description)} />
@@ -137,6 +137,16 @@
 						</section>
 					{/if}
 				</div>
+				{#if bounty.curator}
+					<button
+						class="w-full h-12 button-popup font-bold rounded-md"
+						on:click={() => {
+							curatorsDialogOpen = true;
+						}}
+					>
+						SHOW CURATORS
+					</button>
+				{/if}
 				<div class="flex justify-center items-center">
 					<ExternalLinks dimension={10} bountyId={bounty.id} />
 				</div>
@@ -157,3 +167,5 @@
 		{/if}
 	</div>
 </div>
+
+<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />
