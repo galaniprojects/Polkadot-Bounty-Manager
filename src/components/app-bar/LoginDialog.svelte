@@ -14,6 +14,7 @@
 	import { type AccountWithSigner } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { getAccounts } from './getAccounts';
+	import { maybeInjectMimir } from './maybeInjectMimir';
 
 	export let title = '';
 	export let open;
@@ -26,7 +27,8 @@
 	const ethereum = (window as unknown as { ethereum?: { isNovaWallet: boolean } }).ethereum;
 	const novaWalletAvailable = Boolean(ethereum?.isNovaWallet);
 
-	onMount(() => {
+	onMount(async () => {
+		await maybeInjectMimir();
 		const extensionNames = getInjectedExtensions();
 		wallets = [
 			{
