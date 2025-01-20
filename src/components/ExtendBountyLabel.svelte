@@ -1,5 +1,5 @@
 <script>
-	import { extendedExpiry } from '../utils/batchExtendBounty.js';
+	import { extendedExpiry } from '../utils/batchExtendBounty';
 </script>
 
 <span class="text-xs">
