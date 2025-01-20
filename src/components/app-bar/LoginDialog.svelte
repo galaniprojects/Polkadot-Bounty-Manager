@@ -144,8 +144,9 @@
 						target="_blank"
 						rel="noopener noreferrer"
 						class="flex justify-center text-white opacity-50 underline underline-offset-2 mb-2"
-						>Follow the instructions in the new tab</a
 					>
+						Follow the instructions in the new tab
+					</a>
 					<div class="cursor-pointer w-full space-y-3">
 						{#each wallets as wallet}
 							{#if wallet.available}
