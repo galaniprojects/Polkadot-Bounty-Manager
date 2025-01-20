@@ -41,10 +41,10 @@
 
 		<div>
 			<p class="text-xs">Accept Sub-curator role</p>
-			<div class="flex justify-between items-start">
-				<p>I agree</p>
-				<span class="custom-toggle"><ToggleIcon bind:checked={isToggled} /></span>
-			</div>
+			<label class="flex justify-between items-start cursor-pointer">
+				<span>I agree</span>
+				<ToggleIcon bind:checked={isToggled} inverted />
+			</label>
 		</div>
 
 		<div class="flex space-x-24">
@@ -70,11 +70,3 @@
 		SIGN
 	</button>
 </Dialog>
-
-<style>
-	.custom-toggle {
-		--toggle-background: rgba(101, 112, 139, 0.5);
-		--switch-background: theme('colors.white');
-		--switch-checked-background: theme('colors.childBountyGray');
-	}
-</style>

@@ -6,21 +6,28 @@
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
 
 	let beneficiary = '';
+	let extend = false;
 
 	$: transaction = maybeTransaction(
 		() =>
 			isValidAddress(beneficiary) &&
-			$dotApi.tx.ChildBounties.award_child_bounty({
-				parent_bounty_id: childBounty.parentBounty,
-				child_bounty_id: childBounty.id,
-				beneficiary: MultiAddress.Id(beneficiary)
-			})
+			batchExtendBounty(
+				extend && childBounty.parentBounty,
+				$dotApi.tx.ChildBounties.award_child_bounty({
+					parent_bounty_id: childBounty.parentBounty,
+					child_bounty_id: childBounty.id,
+					beneficiary: MultiAddress.Id(beneficiary)
+				})
+			)
 	);
 
 	async function submit() {
@@ -48,6 +55,7 @@
 			<p class="text-xs">Child bounty value</p>
 			<p><span>{formatPlanckToDot(childBounty.value)}</span> DOT</p>
 		</section>
+
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>
 			<input
@@ -56,6 +64,12 @@
 				placeholder=""
 			/>
 		</div>
+
+		<label class="mt-5 flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} inverted />
+			<ExtendBountyLabel />
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee</p>
 			<p><Fee {transaction} /></p>

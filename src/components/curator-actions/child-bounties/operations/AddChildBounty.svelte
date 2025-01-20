@@ -8,6 +8,9 @@
 	import Dialog from '../../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -15,16 +18,20 @@
 
 	let bountyValue = '';
 	let bountyTitle = '';
+	let extend = false;
 
 	$: transaction = maybeTransaction(
 		() =>
 			bountyTitle &&
 			isPositiveNumber(bountyValue) &&
-			$dotApi.tx.ChildBounties.add_child_bounty({
-				parent_bounty_id: bounty.id,
-				value: convertFormattedDotToPlanck(bountyValue),
-				description: Binary.fromText(bountyTitle)
-			})
+			batchExtendBounty(
+				extend && bounty.id,
+				$dotApi.tx.ChildBounties.add_child_bounty({
+					parent_bounty_id: bounty.id,
+					value: convertFormattedDotToPlanck(bountyValue),
+					description: Binary.fromText(bountyTitle)
+				})
+			)
 	);
 
 	async function submit() {
@@ -85,6 +92,12 @@
 				placeholder="Child bounty name"
 			/>
 		</section>
+
+		<label class="flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} />
+			<ExtendBountyLabel />
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>

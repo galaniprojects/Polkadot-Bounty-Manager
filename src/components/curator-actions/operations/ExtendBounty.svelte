@@ -6,6 +6,7 @@
 	import Dialog from '../../common/Dialog.svelte';
 	import { Binary } from 'polkadot-api';
 	import { submitTransaction } from '../../../utils/transaction';
+	import { extendedExpiry } from '../../../utils/batchExtendBounty';
 	import Fee from '../../Fee.svelte';
 
 	export let open = false;
@@ -49,14 +50,7 @@
 
 			<div>
 				<p class="text-xs">Expiry Date after Extension</p>
-				<span>
-					{(() => {
-						// TODO: Maybe get date from chain.
-						const afterNinetyDays = new Date();
-						afterNinetyDays.setDate(afterNinetyDays.getDate() + 90);
-						return formatDate(afterNinetyDays);
-					})()}
-				</span>
+				<span>{extendedExpiry()}</span>
 			</div>
 		</div>
 

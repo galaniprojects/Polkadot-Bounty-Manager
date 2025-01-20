@@ -6,12 +6,16 @@
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
+	import { Binary } from 'polkadot-api';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+	let extend = false;
 
 	let curatorFee = '';
 	let beneficiary: string = '';
@@ -42,8 +46,19 @@
 			child_bounty_id: childBounty.id
 		});
 
+		const extendTx = $dotApi.tx.Bounties.extend_bounty_expiry({
+			bounty_id: childBounty.parentBounty,
+			remark: new Binary(new Uint8Array())
+		});
+
 		return $dotApi.tx.Utility.batch_all({
-			calls: [propose.decodedCall, accept.decodedCall, award.decodedCall, claim.decodedCall]
+			calls: [
+				propose.decodedCall,
+				accept.decodedCall,
+				award.decodedCall,
+				claim.decodedCall,
+				...(extend ? [extendTx.decodedCall] : [])
+			]
 		});
 	});
 
@@ -105,6 +120,12 @@
 				placeholder=""
 			/>
 		</div>
+
+		<label class="mt-5 flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} inverted />
+			<ExtendBountyLabel />
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>

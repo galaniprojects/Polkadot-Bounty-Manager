@@ -7,6 +7,8 @@
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
+	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
+	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 	import { Binary } from 'polkadot-api';
 	import type { Bounty } from '../../../../types/bounty';
@@ -18,13 +20,14 @@
 	let bountyTitle = '';
 	let curatorFee = '';
 	let beneficiary = '';
+	let extend = false;
 
 	let childBountyId: number;
-	let nextAvailabeChildBountyId: number;
+	let nextAvailableChildBountyId: number;
 
 	(async () => {
-		nextAvailabeChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
-		childBountyId = nextAvailabeChildBountyId;
+		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
+		childBountyId = nextAvailableChildBountyId;
 	})();
 
 	$: transaction = maybeTransaction(() => {
@@ -59,13 +62,19 @@
 			child_bounty_id: childBountyId
 		});
 
+		const extendTx = $dotApi.tx.Bounties.extend_bounty_expiry({
+			bounty_id: bounty.id,
+			remark: new Binary(new Uint8Array())
+		});
+
 		return $dotApi.tx.Utility.batch_all({
 			calls: [
 				add.decodedCall,
 				propose.decodedCall,
 				accept.decodedCall,
 				award.decodedCall,
-				claim.decodedCall
+				claim.decodedCall,
+				...(extend ? [extendTx.decodedCall] : [])
 			]
 		});
 	});
@@ -120,7 +129,7 @@
 			<p class="text-xs">Child Bounty Index</p>
 			<input
 				type="number"
-				min={nextAvailabeChildBountyId}
+				min={nextAvailableChildBountyId}
 				bind:value={childBountyId}
 				class="border border-black rounded-[3px] bg-childBountyHeaderBackground pl-2 pt-1 h-10 w-full"
 				placeholder=""
@@ -169,6 +178,12 @@
 				placeholder=""
 			/>
 		</div>
+
+		<label class="mt-5 flex gap-4 items-center cursor-pointer">
+			<ToggleIcon bind:checked={extend} inverted />
+			<ExtendBountyLabel />
+		</label>
+
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee:</p>
 			<p><Fee {transaction} /></p>

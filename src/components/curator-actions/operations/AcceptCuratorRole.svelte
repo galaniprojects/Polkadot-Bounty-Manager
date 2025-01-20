@@ -37,10 +37,10 @@
 
 		<div>
 			<p class="text-xs">Accept curator role</p>
-			<div class="flex justify-between items-start">
-				<p>I agree</p>
+			<label class="flex justify-between items-start cursor-pointer">
+				<span>I agree</span>
 				<ToggleIcon bind:checked={isToggled} />
-			</div>
+			</label>
 		</div>
 
 		<div class="flex space-x-24">
