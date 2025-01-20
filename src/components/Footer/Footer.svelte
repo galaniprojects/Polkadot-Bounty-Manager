@@ -26,7 +26,7 @@
 			<img width="40" height="40" src={LogoEmail} alt="Email Logo" />
 		</a>
 		<a
-			href="https://github.com/galaniprojects/Polkadot-Bounty-Manager.git"
+			href="https://github.com/galaniprojects/Polkadot-Bounty-Manager"
 			target="_blank"
 			rel="noopener noreferrer"><img width="40" height="40" src={LogoGithub} alt="" /></a
 		>
