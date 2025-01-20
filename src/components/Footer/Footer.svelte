@@ -2,6 +2,7 @@
 	import LogoBountyManagerDesktop from './LogoBountyManagerFooter.svg';
 	import LogoTelegram from './LogoTelegram.svg';
 	import LogoEmail from './LogoEmail.svg';
+	import LogoGithub from './LogoGithubWhite.svg';
 	import LogoPolkadot from './LogoPolkadot.svg';
 	import { page } from '$app/state';
 
@@ -24,6 +25,11 @@
 		<a href="mailto:bountymanager@galaniprojects.com">
 			<img width="40" height="40" src={LogoEmail} alt="Email Logo" />
 		</a>
+		<a
+			href="https://github.com/galaniprojects/Polkadot-Bounty-Manager"
+			target="_blank"
+			rel="noopener noreferrer"><img width="40" height="40" src={LogoGithub} alt="" /></a
+		>
 	</div>
 
 	<!-- Terms and Conditions -->
