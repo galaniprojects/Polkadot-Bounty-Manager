@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { replaceState } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	onMount(() => {
-		replaceState('/curator-actions', {});
+	onMount(async () => {
+		await goto('/curator-actions', { replaceState: true });
 	});
 </script>
