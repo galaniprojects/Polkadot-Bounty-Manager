@@ -44,7 +44,7 @@
 		"@reactive-dot/wallet-walletconnect": "^0.17.0",
 		"dompurify": "^3.2.3",
 		"marked": "^15.0.6",
-		"polkadot-api": "^1.8.1"
+		"polkadot-api": "^1.8.2"
 	},
 	"homepage": "https://www.bountymanager.io/",
 	"bugs": {
