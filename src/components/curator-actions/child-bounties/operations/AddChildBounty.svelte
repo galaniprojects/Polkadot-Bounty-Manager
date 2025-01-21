@@ -101,16 +101,9 @@
 			<p><Fee {transaction} /></p>
 		</section>
 
-		<p class="flex justify-between items-center">
-			<button
-				on:click={submit}
-				class={['w-full md:w-fit h-12 button-active', !isFormValid && 'cursor-not-allowed']}
-				disabled={!isFormValid}
-			>
-				SIGN
-			</button>
+		<p class="mt-10 flex flex-col md:flex-row-reverse gap-6 justify-between md:items-center">
 			<a
-				class="inline-block ml-auto underline"
+				class="underline"
 				href="/curator-actions/batch/create?{new URLSearchParams({
 					'bounty-id': String(bounty.id),
 					value: bountyValue,
@@ -119,6 +112,13 @@
 			>
 				Add several in one transaction
 			</a>
+			<button
+				on:click={submit}
+				class={['h-12 button-active', !isFormValid && 'cursor-not-allowed']}
+				disabled={!isFormValid}
+			>
+				SIGN
+			</button>
 		</p>
 	</div>
 </Dialog>
