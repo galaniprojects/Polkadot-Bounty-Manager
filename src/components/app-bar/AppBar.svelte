@@ -10,6 +10,7 @@
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
+	import { page } from '$app/state';
 
 	let loginDialogOpen = false;
 
@@ -50,8 +51,9 @@
 
 	<div>
 		{#if !$activeAccount}
-			<button class=" text-white" on:click={showLoginDialog}>Connect Wallet</button>
-
+			{#if !page.url.pathname.startsWith('/docs/')}
+				<button class=" text-white" on:click={showLoginDialog}>Connect Wallet</button>
+			{/if}
 			<w3m-button></w3m-button>
 		{:else}
 			<!-- User Address -->

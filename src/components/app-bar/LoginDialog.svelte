@@ -140,7 +140,7 @@
 				{#if currentPhase === 'walletSelection'}
 					<p class="flex justify-center text-2xl text-white">{title}</p>
 					<a
-						href="https://github.com/galaniprojects/Polkadot-Bounty-Manager/wiki/Log%E2%80%90in-Instructions-for-Curators"
+						href="/docs/multix-walletconnect"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="flex justify-center text-white opacity-50 underline underline-offset-2 mb-2"
