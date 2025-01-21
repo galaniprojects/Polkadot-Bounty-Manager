@@ -18,8 +18,8 @@
 
 	let childBounties = [
 		{
-			value: '',
-			title: ''
+			value: page.url.searchParams.get('value') ?? '',
+			title: page.url.searchParams.get('title') ?? ''
 		}
 	];
 

@@ -111,7 +111,11 @@
 			</button>
 			<a
 				class="inline-block ml-auto underline"
-				href="/curator-actions/batch/create?bounty-id={bounty.id}"
+				href="/curator-actions/batch/create?{new URLSearchParams({
+					'bounty-id': String(bounty.id),
+					value: bountyValue,
+					title: bountyTitle
+				}).toString()}"
 			>
 				Add several in one transaction
 			</a>
