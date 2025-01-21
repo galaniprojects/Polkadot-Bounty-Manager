@@ -101,12 +101,17 @@
 			<p><Fee {transaction} /></p>
 		</section>
 
-		<button
-			on:click={submit}
-			class={['w-full md:w-fit mt-10 h-12 button-active', !isFormValid && 'cursor-not-allowed']}
-			disabled={!isFormValid}
-		>
-			SIGN
-		</button>
+		<p class="flex justify-between items-center">
+			<button
+				on:click={submit}
+				class={['w-full md:w-fit h-12 button-active', !isFormValid && 'cursor-not-allowed']}
+				disabled={!isFormValid}
+			>
+				SIGN
+			</button>
+			<a class="inline-block ml-auto underline" href="/curator-actions/batch/create?bounty-id={bounty.id}">
+				Add several in one transaction
+			</a>
+		</p>
 	</div>
 </Dialog>
