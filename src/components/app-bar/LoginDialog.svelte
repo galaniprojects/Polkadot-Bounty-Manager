@@ -142,7 +142,6 @@
 					<a
 						href="/docs/multix-walletconnect"
 						target="_blank"
-						rel="noopener"
 						class="flex justify-center text-white opacity-50 underline underline-offset-2 mb-2"
 					>
 						Follow the instructions in the new tab
