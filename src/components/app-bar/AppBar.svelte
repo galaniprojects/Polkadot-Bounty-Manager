@@ -52,7 +52,7 @@
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button class="text-white" on:click={showLoginDialog}> Connect Wallet </button>
+				<button class="text-white" on:click={showLoginDialog}>Connect Wallet</button>
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
