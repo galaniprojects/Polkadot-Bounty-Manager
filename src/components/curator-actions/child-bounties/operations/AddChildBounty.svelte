@@ -66,9 +66,7 @@
 			<span>#{bounty.id}</span>
 			<span>{bounty.description ?? ''}</span>
 		</div>
-		<p>
-			Please use a descriptive title and add info about the task and beneficiary in the description.
-		</p>
+		<p>Please use a descriptive title.</p>
 	</div>
 
 	<div class="flex flex-col gap-6 mt-6">
