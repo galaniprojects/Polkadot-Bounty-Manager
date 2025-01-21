@@ -20,6 +20,7 @@
 	<p class="m-2">This is a beta version, some features may still be incomplete.</p>
 </div>
 <AppBar />
+
 <LoadingScreen bind:dialogState={$loadingDialogState} />
 
 {#if renderChildren}<slot />{/if}

@@ -129,7 +129,7 @@
 				{/if}
 
 				<div class={currentPhase === 'walletSelection' ? 'ml-auto' : ''}>
-					<button class="material-symbols-outlined text-3xl mt-3" on:click={() => (open = false)}>
+					<button class="material-symbols-outlined text-3xl" on:click={() => (open = false)}>
 						cancel
 					</button>
 				</div>
@@ -139,7 +139,13 @@
 				<!-- Wallet Selection -->
 				{#if currentPhase === 'walletSelection'}
 					<p class="flex justify-center text-2xl text-white">{title}</p>
-					<hr class="border-white opacity-35 w-full mt-4 mb-3" />
+					<a
+						href="/docs/multix-walletconnect"
+						target="_blank"
+						class="flex justify-center text-white opacity-50 underline underline-offset-2 mb-2"
+					>
+						Follow the instructions in the new tab
+					</a>
 					<div class="cursor-pointer w-full space-y-3">
 						{#each wallets as wallet}
 							{#if wallet.available}
