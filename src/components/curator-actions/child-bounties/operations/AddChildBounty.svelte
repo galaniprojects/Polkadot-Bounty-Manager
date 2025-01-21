@@ -105,8 +105,7 @@
 
 		<button
 			on:click={submit}
-			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'cursor-not-allowed'}`}
-		{!isFormValid ? 'button-active' : 'cursor-allowed'}"
+			class={['w-full md:w-fit mt-10 h-12 button-active', !isFormValid && 'cursor-not-allowed']}
 			disabled={!isFormValid}
 		>
 			SIGN
