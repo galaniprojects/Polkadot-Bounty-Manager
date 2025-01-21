@@ -165,7 +165,10 @@
 			<p>
 				<button
 					type="submit"
-					class={['w-full md:w-fit h-12 button-active', !isFormValid && 'cursor-not-allowed opacity-50']}
+					class={[
+						'w-full md:w-fit h-12 button-active',
+						!isFormValid && 'cursor-not-allowed opacity-50'
+					]}
 				>
 					SIGN
 				</button>

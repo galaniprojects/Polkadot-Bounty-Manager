@@ -109,7 +109,10 @@
 			>
 				SIGN
 			</button>
-			<a class="inline-block ml-auto underline" href="/curator-actions/batch/create?bounty-id={bounty.id}">
+			<a
+				class="inline-block ml-auto underline"
+				href="/curator-actions/batch/create?bounty-id={bounty.id}"
+			>
 				Add several in one transaction
 			</a>
 		</p>
