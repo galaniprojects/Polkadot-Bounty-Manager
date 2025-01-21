@@ -143,8 +143,7 @@
 				</div>
 				<div class="flex flex-col bg-childBountyHeaderBackground lg:bg-white p-4 rounded-md">
 					<div class="text-center space-y-3">
-						<p>No child bounties created yet.</p>
-						<p>Create one.</p>
+						<p>There are currently no active child bounties.</p>
 						<p class="text-4xl">(-‿-)</p>
 					</div>
 				</div>
