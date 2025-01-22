@@ -24,9 +24,9 @@
 		{ value: '', title: '' }
 	];
 
-	$: isFormValid = childBounties.every(
-		({ title, value }) => title.trim().length > 0 && isPositiveNumber(value)
-	);
+	$: isFormValid =
+		childBounties.length > 0 &&
+		childBounties.every(({ title, value }) => title.trim().length > 0 && isPositiveNumber(value));
 
 	function validateBountyValue(this: HTMLInputElement) {
 		this.setCustomValidity(isPositiveNumber(this.value) ? '' : 'Bounty value is invalid');
@@ -119,19 +119,17 @@
 								/>
 							</label>
 
-							{#if index > 0}
-								<p class="text-right">
-									<button
-										type="button"
-										class="underline text-sm"
-										onclick={() => {
-											childBounties = childBounties.toSpliced(index, 1);
-										}}
-									>
-										Remove
-									</button>
-								</p>
-							{/if}
+							<p class="text-right">
+								<button
+									type="button"
+									class="underline text-sm"
+									onclick={() => {
+										childBounties = childBounties.toSpliced(index, 1);
+									}}
+								>
+									Remove
+								</button>
+							</p>
 						</div>
 					</fieldset>
 				{/each}
