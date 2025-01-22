@@ -221,7 +221,7 @@
 				{/each}
 
 				{#if childBounties.length < 10}
-					<p class="bg-white p-5 lg:w-full rounded-md shadow-lg grid place-items-center">
+					<p class="bg-white p-5 rounded-md shadow-lg grid place-items-center">
 						<button
 							type="button"
 							class="py-2 px-4 rounded-md border border-childBountyGray text-childBountyGray font-bold"
