@@ -38,14 +38,6 @@
 			isFormValid &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
-					...(!extend
-						? []
-						: [
-								$dotApi.tx.Bounties.extend_bounty_expiry({
-									bounty_id: bountyId,
-									remark: new Binary(new Uint8Array())
-								}).decodedCall
-							]),
 					...childBounties.map(
 						({ title, value }) =>
 							$dotApi.tx.ChildBounties.add_child_bounty({
@@ -53,7 +45,15 @@
 								value: convertFormattedDotToPlanck(value),
 								description: Binary.fromText(title.trim())
 							}).decodedCall
-					)
+					),
+					...(!extend
+						? []
+						: [
+								$dotApi.tx.Bounties.extend_bounty_expiry({
+									bounty_id: bountyId,
+									remark: new Binary(new Uint8Array())
+								}).decodedCall
+							])
 				]
 			})
 	);
