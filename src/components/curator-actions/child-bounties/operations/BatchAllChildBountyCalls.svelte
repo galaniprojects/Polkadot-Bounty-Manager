@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
+	import { isValidAddress } from '../../../../utils/polkadot';
+	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import PolkaCoin from '../../../svg/PolkaCoin.svg';
-	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
@@ -33,50 +33,23 @@
 	$: transaction = maybeTransaction(() => {
 		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
 
-		const add = $dotApi.tx.ChildBounties.add_child_bounty({
-			parent_bounty_id: bounty.id,
-			value: convertFormattedDotToPlanck(bountyValue),
-			description: Binary.fromText(bountyTitle)
-		});
-
-		const propose = $dotApi.tx.ChildBounties.propose_curator({
+		const batch = getAllChildBountyCalls({
 			parent_bounty_id: bounty.id,
 			child_bounty_id: childBountyId,
-			curator: MultiAddress.Id($activeAccount.address),
-			fee: convertFormattedDotToPlanck(curatorFee)
+			title: bountyTitle,
+			value: bountyValue,
+			curator: $activeAccount.address,
+			beneficiary: beneficiary,
+			fee: curatorFee
 		});
 
-		const accept = $dotApi.tx.ChildBounties.accept_curator({
-			parent_bounty_id: bounty.id,
-			child_bounty_id: childBountyId
-		});
-
-		const award = $dotApi.tx.ChildBounties.award_child_bounty({
-			parent_bounty_id: bounty.id,
-			child_bounty_id: childBountyId,
-			beneficiary: MultiAddress.Id(beneficiary)
-		});
-
-		const claim = $dotApi.tx.ChildBounties.claim_child_bounty({
-			parent_bounty_id: bounty.id,
-			child_bounty_id: childBountyId
-		});
-
-		const extendTx = $dotApi.tx.Bounties.extend_bounty_expiry({
+		const extendCall = $dotApi.tx.Bounties.extend_bounty_expiry({
 			bounty_id: bounty.id,
 			remark: new Binary(new Uint8Array())
-		});
+		}).decodedCall;
 
-		return $dotApi.tx.Utility.batch_all({
-			calls: [
-				add.decodedCall,
-				propose.decodedCall,
-				accept.decodedCall,
-				award.decodedCall,
-				claim.decodedCall,
-				...(extend ? [extendTx.decodedCall] : [])
-			]
-		});
+		const calls = [...batch, ...(extend ? [extendCall] : [])];
+		return $dotApi.tx.Utility.batch_all({ calls });
 	});
 
 	async function submit() {
@@ -131,8 +104,7 @@
 				type="number"
 				min={nextAvailableChildBountyId}
 				bind:value={childBountyId}
-				class="border border-black rounded-[3px] bg-childBountyHeaderBackground pl-2 pt-1 h-10 w-full"
-				placeholder=""
+				class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
 			/>
 		</div>
 
@@ -158,7 +130,7 @@
 			/>
 		</div>
 		<div class="mt-5 relative">
-			<p class="text-xs">Sub-curator fee:</p>
+			<p class="text-xs">Sub-curator fee</p>
 			<input
 				bind:value={curatorFee}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
@@ -175,7 +147,6 @@
 			<input
 				bind:value={beneficiary}
 				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder=""
 			/>
 		</div>
 
@@ -195,14 +166,29 @@
 		soon as possible
 	</p>
 
-	<button
-		on:click={submit}
-		disabled={!beneficiary.length || !curatorFee.length}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
+	<p class="mt-10 flex flex-col md:flex-row-reverse gap-6 justify-between md:items-center">
+		<a
+			class="underline"
+			href="/curator-actions/batch/everything?{new URLSearchParams({
+				'bounty-id': String(bounty.id),
+				'child-bounty-id': String(childBountyId),
+				value: bountyValue,
+				title: bountyTitle,
+				fee: curatorFee,
+				beneficiary
+			}).toString()}"
+		>
+			Run several in one transaction
+		</a>
+		<button
+			on:click={submit}
+			disabled={!beneficiary.length || !curatorFee.length}
+			class="h-12 bg-childBountyGray basic-button
 		{beneficiary.length === 0 || curatorFee.length === 0
-			? 'basic-button opacity-50'
-			: 'cursor-allowed'}"
-	>
-		SIGN
-	</button>
+				? 'cursor-not-allowed opacity-50'
+				: 'cursor-allowed'}"
+		>
+			SIGN
+		</button>
+	</p>
 </Dialog>
