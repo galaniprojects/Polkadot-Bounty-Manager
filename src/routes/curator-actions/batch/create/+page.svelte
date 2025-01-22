@@ -12,14 +12,15 @@
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
-	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
+	const { searchParams } = page.url;
+	const bountyId = parseInt(searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
 	$: error = getBountyCuratorError(bountyId, $bounties, bounty, $activeAccount?.address);
 
 	let childBounties = [
 		{
-			value: page.url.searchParams.get('value') ?? '',
-			title: page.url.searchParams.get('title') ?? ''
+			value: searchParams.get('value') ?? '',
+			title: searchParams.get('title') ?? ''
 		},
 		{ value: '', title: '' }
 	];
