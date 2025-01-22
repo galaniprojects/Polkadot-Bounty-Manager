@@ -20,7 +20,8 @@
 		{
 			value: page.url.searchParams.get('value') ?? '',
 			title: page.url.searchParams.get('title') ?? ''
-		}
+		},
+		{ value: '', title: '' }
 	];
 
 	$: isFormValid = childBounties.every(
