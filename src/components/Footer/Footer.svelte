@@ -35,7 +35,7 @@
 	<!-- Terms and Conditions -->
 	<a
 		href={isOnImprintPage ? '/curator-actions' : '/imprint'}
-		class="text-xs text-white underline underline-offset-2 pr-5"
+		class="text-xs text-white underline underline-offset-2"
 	>
 		{isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions'}
 	</a>

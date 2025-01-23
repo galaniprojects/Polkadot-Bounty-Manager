@@ -66,9 +66,7 @@
 			<span>#{bounty.id}</span>
 			<span>{bounty.description ?? ''}</span>
 		</div>
-		<p>
-			Please use a descriptive title and add info about the task and beneficiary in the description.
-		</p>
+		<p>Please use a descriptive title.</p>
 	</div>
 
 	<div class="flex flex-col gap-6 mt-6">
@@ -91,13 +89,24 @@
 			<p><Fee {transaction} /></p>
 		</section>
 
-		<button
-			on:click={submit}
-			class="{`w-full md:w-fit mt-10 h-12 ${isFormValid ? 'button-active' : 'cursor-not-allowed'}`}
-		{!isFormValid ? 'button-active' : 'cursor-allowed'}"
-			disabled={!isFormValid}
-		>
-			SIGN
-		</button>
+		<p class="mt-10 flex flex-col md:flex-row-reverse gap-6 justify-between md:items-center">
+			<a
+				class="underline"
+				href="/curator-actions/batch/create?{new URLSearchParams({
+					'bounty-id': String(bounty.id),
+					value: bountyValue,
+					title: bountyTitle
+				}).toString()}"
+			>
+				Add several in one transaction
+			</a>
+			<button
+				on:click={submit}
+				class={['h-12 button-active', !isFormValid && 'cursor-not-allowed']}
+				disabled={!isFormValid}
+			>
+				SIGN
+			</button>
+		</p>
 	</div>
 </Dialog>
