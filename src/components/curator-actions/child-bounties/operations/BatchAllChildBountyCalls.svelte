@@ -83,20 +83,24 @@
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
-		<ol class="text-xs mt-6 ml-4 list-decimal">
-			<li>Add new child bounty.</li>
-			<li>Assign the connected account as sub-curator.</li>
-			<li>Accept sub-curator role.</li>
-			<li>Award child bounty to the provided beneficiary.</li>
-			<li>Claim child bounty.</li>
-		</ol>
+
+		<section class="mt-6">
+			<p class="text-xs">Executed actions:</p>
+
+			<ol class="text-xs mt-2 ml-4 list-decimal">
+				<li>Create a new child bounty.</li>
+				<li>Assign the connected account as sub-curator.</li>
+				<li>Accept the sub-curator role.</li>
+				<li>Award the child bounty to the provided beneficiary.</li>
+				<li>Claim the child bounty.</li>
+			</ol>
+		</section>
 
 		<p class="text-xs mt-6 border border-red text-red rounded-[3px] p-2">
-			Currently, the child bounty's index needs to be guessed in order to execute a batch call. To
-			create multiple batch transactions, increment the child bounty's index by 1 for each new
-			transaction after the first to avoid conflicts. <br /> Please note: If multiple batch transactions
-			are assigned the same index or if another bounty creates a child bounty in the time between the
-			transaction creation and confirmation on Multix, the transaction will fail.
+			Currently, the child bounty’s index is estimated by incrementing the highest available on the
+			blockchain. <br /> Please note: if multiple child bounties are assigned the same index, or if another
+			bounty creates a child between this transaction’s creation and confirmation, this transaction will
+			fail.
 		</p>
 		<div class="mt-5">
 			<p class="text-xs">Child Bounty Index</p>
