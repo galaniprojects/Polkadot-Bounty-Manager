@@ -8,7 +8,7 @@
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
-	import PolkaCoin from '../../../../components/svg/PolkaCoin.svg';
+	import Input from '../../../../components/Input/Input.module.css';
 	import ToggleIcon from '../../../../components/ToggleIcon.svelte';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
@@ -100,25 +100,19 @@
 								<span class="text-xs block">Value</span>
 								<input
 									bind:value={child.value}
-									class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
+									class={Input.polkadot}
 									placeholder="00.00"
 									required
 									oninput={validateBountyValue}
 									inputmode="decimal"
 								/>
-								<span
-									class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"
-								></span>
-								<span class="absolute right-2 top-[26px]">
-									<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-								</span>
 							</label>
 
 							<label>
 								<span class="text-xs block">Title</span>
 								<input
 									bind:value={child.title}
-									class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+									class={Input.input}
 									placeholder="Child bounty name"
 									required
 								/>
