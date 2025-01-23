@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
 	import { activeAccount, bounties, dotApi } from '../../../../stores';
 	import { isPositiveNumber } from '../../../../utils/common';
@@ -96,7 +97,10 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
+		const success = await submitTransaction(transaction);
+		if (success) {
+			await goto('/curator-actions');
+		}
 	}
 </script>
 
