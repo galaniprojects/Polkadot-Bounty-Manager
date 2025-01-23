@@ -4,7 +4,7 @@
 	import { activeAccount, dotApi } from '../../../../stores';
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { isPositiveNumber } from '../../../../utils/common';
-	import PolkaCoin from '../../../svg/PolkaCoin.svg';
+	import Input from '../../../Input/Input.module.css';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
@@ -131,52 +131,27 @@
 				type="number"
 				min={nextAvailableChildBountyId}
 				bind:value={childBountyId}
-				class="border border-black rounded-[3px] bg-childBountyHeaderBackground pl-2 pt-1 h-10 w-full"
-				placeholder=""
+				class={Input.input}
 			/>
 		</div>
 
-		<div class="my-4 relative">
+		<div class="my-4">
 			<p class="text-xs">Value</p>
-			<input
-				bind:value={bountyValue}
-				class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
-				placeholder="00.00"
-			/>
-			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]">
-				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-			</div>
+			<input bind:value={bountyValue} class={Input.polkadot} placeholder="00.00" />
 		</div>
 
 		<div class="mt-5">
 			<p class="text-xs">Title</p>
-			<input
-				bind:value={bountyTitle}
-				class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-				placeholder="Child bounty name"
-			/>
+			<input bind:value={bountyTitle} class={Input.input} placeholder="Child bounty name" />
 		</div>
-		<div class="mt-5 relative">
+		<div class="mt-5">
 			<p class="text-xs">Sub-curator fee:</p>
-			<input
-				bind:value={curatorFee}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-				placeholder="00.00"
-			/>
-			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]">
-				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-			</div>
+			<input bind:value={curatorFee} class={Input.polkadot} placeholder="00.00" />
 		</div>
 
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>
-			<input
-				bind:value={beneficiary}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder=""
-			/>
+			<input bind:value={beneficiary} class={Input.input} />
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">

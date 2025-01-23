@@ -7,6 +7,7 @@
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
 	import Fee from '../../Fee.svelte';
+	import Input from '../../Input/Input.module.css';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -63,10 +64,7 @@
 		</section>
 		<div class="my-4">
 			<p class="text-xs">Beneficiary account address</p>
-			<input
-				bind:value={beneficiary}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-			/>
+			<input bind:value={beneficiary} class={Input.input} />
 		</div>
 		<section class="mt-10">
 			<p class="text-xs">Estimated basic fee</p>

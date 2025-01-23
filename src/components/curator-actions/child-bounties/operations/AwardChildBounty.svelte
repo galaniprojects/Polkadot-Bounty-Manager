@@ -10,6 +10,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
+	import Input from '../../../Input/Input.module.css';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -58,11 +59,7 @@
 
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>
-			<input
-				bind:value={beneficiary}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder=""
-			/>
+			<input bind:value={beneficiary} class={Input.input} />
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
