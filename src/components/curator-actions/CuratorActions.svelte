@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
-	import { onMount } from 'svelte';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
-	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import BountyCard from './BountyCard.svelte';
 	import Pagination from './Pagination.svelte';
 
@@ -28,12 +26,6 @@
 		itemsPerPage = value;
 		currentPage = 1;
 	}
-
-	onMount(async () => {
-		if ($bounties.length === 0) {
-			await fetchBountiesAndChildBounties();
-		}
-	});
 </script>
 
 <div
