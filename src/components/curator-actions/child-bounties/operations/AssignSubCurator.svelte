@@ -4,13 +4,12 @@
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
-	import PolkaCoin from '../../../svg/PolkaCoin.svg';
+	import Input from '../../../Input/Input.module.css';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -67,27 +66,16 @@
 
 		<div class="my-4">
 			<p class="text-xs">Sub-curator address:</p>
-			<input
-				bind:value={curatorAddress}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-			/>
+			<input bind:value={curatorAddress} class={Input.input} />
 		</div>
 
-		<div class="my-4 relative">
+		<div class="my-4">
 			<p class="text-xs">Sub-curator fee:</p>
-			<input
-				bind:value={curatorFee}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
-				placeholder="00.00"
-			/>
-			<div class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"></div>
-			<div class="absolute right-2 top-[26px]">
-				<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-			</div>
+			<input bind:value={curatorFee} class={Input.polkadot} placeholder="00.00" />
 		</div>
 
 		<label class="my-4 flex gap-4 items-center cursor-pointer">
-			<ToggleIcon bind:checked={extend} inverted />
+			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
 			<ExtendBountyLabel />
 		</label>
 

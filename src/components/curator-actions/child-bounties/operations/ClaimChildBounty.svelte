@@ -7,7 +7,7 @@
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
+	import Input from '../../../Input/Input.module.css';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -48,7 +48,7 @@
 		{/if}
 
 		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-			<ToggleIcon bind:checked={extend} inverted />
+			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
 			<ExtendBountyLabel />
 		</label>
 

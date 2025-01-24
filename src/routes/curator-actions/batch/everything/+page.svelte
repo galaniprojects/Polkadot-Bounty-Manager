@@ -9,8 +9,7 @@
 	import { showErrorDialog } from '../../../../utils/loading-screen';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
-	import PolkaCoin from '../../../../components/svg/PolkaCoin.svg';
-	import ToggleIcon from '../../../../components/ToggleIcon.svelte';
+	import Input from '../../../../components/Input/Input.module.css';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
@@ -157,57 +156,45 @@
 						<legend class="relative top-7">Child bounty #{index + 1}</legend>
 
 						<div class="flex flex-col gap-6 mt-6">
-							<label class="relative">
+							<label>
 								<span class="text-xs block">Value</span>
 								<input
 									bind:value={child.value}
-									class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
+									class={Input.polkadot}
 									placeholder="00.00"
 									required
 									oninput={validateBountyValue}
 									inputmode="decimal"
 								/>
-								<span
-									class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"
-								></span>
-								<span class="absolute right-2 top-[26px]">
-									<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-								</span>
 							</label>
 
 							<label>
 								<span class="text-xs block">Title</span>
 								<input
 									bind:value={child.title}
-									class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+									class={Input.input}
 									placeholder="Child bounty name"
 									required
 								/>
 							</label>
 
-							<label class="relative">
+							<label>
 								<span class="text-xs block">Sub-curator fee</span>
 								<input
 									bind:value={child.fee}
-									class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 w-full"
+									class={Input.polkadot}
 									placeholder="00.00"
 									required
 									oninput={validateFee}
 									inputmode="decimal"
 								/>
-								<span
-									class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"
-								></span>
-								<span class="absolute right-2 top-[26px]">
-									<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
-								</span>
 							</label>
 
 							<label>
 								<span class="text-xs block">Beneficiary account address</span>
 								<input
 									bind:value={child.beneficiary}
-									class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+									class={Input.input}
 									required
 									oninput={validateAddress}
 								/>
@@ -248,7 +235,7 @@
 
 			<p>
 				<label class="inline-flex gap-4 items-center cursor-pointer">
-					<ToggleIcon bind:checked={extend} />
+					<input type="checkbox" bind:checked={extend} class={Input.switch} />
 					<ExtendBountyLabel />
 				</label>
 			</p>

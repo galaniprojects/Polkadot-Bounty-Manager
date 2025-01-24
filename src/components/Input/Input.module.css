@@ -1,0 +1,79 @@
+.input {
+	height: 2.5rem;
+	width: 100%;
+	border: 1px solid #28123e; /* border-primary */
+	border-radius: 3px;
+	padding-top: 0.25rem;
+	padding-inline: 0.5rem;
+	color: #28123e; /* text-primary */
+	background: white;
+}
+
+.polkadot {
+	composes: input;
+	padding-right: 2.5rem;
+	background:
+		url(coin.svg) no-repeat center right 7px/20px,
+		url(bar.svg) no-repeat center right 35px;
+	background-color: white;
+}
+
+.switch {
+	--width: 52px;
+	--height: 26px;
+	--offset: 2px;
+	--knob: calc(var(--height) - var(--offset) * 2);
+
+	appearance: none;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	display: inline-grid;
+	flex-shrink: 0;
+	inline-size: var(--width);
+	block-size: var(--height);
+	place-items: center;
+	position: relative;
+}
+
+.switch[data-inverted='true'] {
+	--toggle-background: rgba(101, 112, 139, 0.5);
+	--switch-background: theme('colors.white');
+	--switch-checked-background: theme('colors.childBountyGray');
+}
+
+.switchInverted {
+	composes: switch;
+	--toggle-background: rgba(101, 112, 139, 0.5);
+	--switch-background: theme('colors.white');
+	--switch-checked-background: theme('colors.childBountyGray');
+}
+
+.switch::before {
+	content: '';
+	display: block;
+	inline-size: var(--width);
+	block-size: var(--height);
+	border-radius: calc(var(--height) / 2);
+	background: var(--toggle-background, white);
+	position: absolute;
+}
+
+.switch::after {
+	display: block;
+	background-color: var(--switch-background, theme('colors.curatorMainBackground'));
+	content: '';
+	inline-size: var(--knob);
+	block-size: var(--knob);
+	border-radius: 50%;
+	position: absolute;
+	inset-inline-start: var(--offset);
+	transition:
+		left 0.3s,
+		background-color 0.3s;
+}
+
+.switch:checked::after {
+	background: var(--switch-checked-background, theme('colors.accent'));
+	inset-inline-start: calc(var(--width) - var(--knob) - var(--offset));
+}

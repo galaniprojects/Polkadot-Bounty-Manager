@@ -7,6 +7,7 @@
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { Binary } from 'polkadot-api';
 	import Fee from '../../components/Fee.svelte';
+	import Input from '../../components/Input/Input.module.css';
 	import { maybeTransaction, submitTransaction } from '../../utils/transaction';
 	import { bountyInfo } from './_bountyInfo';
 
@@ -95,7 +96,7 @@
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
 	<input
 		bind:value={bountyTitle}
-		class="rounded-md bg-gray-100 w-full md:w-1/2 pl-3 pt-1"
+		class="{Input.input} title"
 		placeholder="Give your Bounty a title"
 	/>
 	{#if false}
@@ -112,11 +113,7 @@
 	<div>
 		<section class="space-y-1 sm:space-y-3">
 			<p class="text-xs">Bounty value</p>
-			<input
-				bind:value={bountyValue}
-				class="border pt-1 pl-2 w-full md:w-1/3 rounded-md bg-white"
-				placeholder="1000.00"
-			/>
+			<input bind:value={bountyValue} class="{Input.polkadot} value" placeholder="1000.00" />
 		</section>
 		<hr class="border-white my-5 sm:my-10 w-full md:w-1/2" />
 
@@ -138,3 +135,14 @@
 		</button>
 	</div>
 </div>
+
+<style>
+	@media (width > 768px /* md */) {
+		.title {
+			max-width: 50%;
+		}
+		.value {
+			max-width: 33%;
+		}
+	}
+</style>

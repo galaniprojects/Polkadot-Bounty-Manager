@@ -8,7 +8,7 @@
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
+	import Input from '../../../Input/Input.module.css';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -58,15 +58,11 @@
 
 		<div class="mt-5">
 			<p class="text-xs">Beneficiary account address</p>
-			<input
-				bind:value={beneficiary}
-				class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-full text-primary"
-				placeholder=""
-			/>
+			<input bind:value={beneficiary} class={Input.input} />
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
-			<ToggleIcon bind:checked={extend} inverted />
+			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
 			<ExtendBountyLabel />
 		</label>
 

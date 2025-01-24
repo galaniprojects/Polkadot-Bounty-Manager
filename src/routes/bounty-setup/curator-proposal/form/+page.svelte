@@ -16,6 +16,7 @@
 	import Fee from '../../../../components/Fee.svelte';
 	import DropdownMenu from '../../../../components/common/DropdownMenu.svelte';
 	import { bountyInfo } from '../../_bountyInfo';
+	import Input from '../../../../components/Input/Input.module.css';
 
 	let curatorFee = '';
 	let curatorAddress = '';
@@ -79,18 +80,11 @@
 			</p>
 			<div class="space-y-1 sm:space-y-3">
 				<p class="text-xs my-1">Curator Address</p>
-				<input
-					bind:value={curatorAddress}
-					class="w-full md:w-1/2 pt-1 pl-2 rounded-md bg-white mr-2"
-				/>
+				<input bind:value={curatorAddress} class="{Input.input} address" />
 			</div>
 			<div class="space-y-1 sm:space-y-3">
 				<p class="text-xs my-1">Curator Fee</p>
-				<input
-					bind:value={curatorFee}
-					placeholder="00.00"
-					class="pt-1 pl-2 rounded-md bg-white mr-2 w-full md:w-1/3"
-				/>
+				<input bind:value={curatorFee} placeholder="00.00" class="{Input.input} fee" />
 			</div>
 		</div>
 
@@ -129,3 +123,14 @@
 		<button type="submit" class="button-active">SUBMIT</button>
 	</div>
 </form>
+
+<style>
+	@media (width > 768px /* md */) {
+		.address {
+			max-width: 50%;
+		}
+		.fee {
+			max-width: 33%;
+		}
+	}
+</style>

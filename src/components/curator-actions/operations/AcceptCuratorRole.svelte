@@ -3,7 +3,7 @@
 	import { dotApi } from '../../../stores';
 	import Deposit from '../../Deposit.svelte';
 	import { showErrorDialog } from '../../../utils/loading-screen';
-	import ToggleIcon from '../../ToggleIcon.svelte';
+	import Input from '../../../components/Input/Input.module.css';
 	import Dialog from '../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../utils/transaction';
 	import Fee from '../../Fee.svelte';
@@ -39,7 +39,7 @@
 			<p class="text-xs">Accept curator role</p>
 			<label class="flex justify-between items-start cursor-pointer">
 				<span>I agree</span>
-				<ToggleIcon bind:checked={isToggled} />
+				<input type="checkbox" bind:checked={isToggled} class={Input.switch} />
 			</label>
 		</div>
 
