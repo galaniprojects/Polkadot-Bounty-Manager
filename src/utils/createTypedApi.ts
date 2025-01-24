@@ -1,6 +1,6 @@
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
 import { getWsProvider, WsEvent } from 'polkadot-api/ws-provider/web';
-import { dot } from '@polkadot-api/descriptors';
+import { dot, type paseo } from '@polkadot-api/descriptors';
 import { createClient } from 'polkadot-api';
 
 export function createTypedApi(endpoints: string[]) {
@@ -16,7 +16,10 @@ export function createTypedApi(endpoints: string[]) {
 	);
 
 	const client = createClient(sdkProvider);
-	const api = client.getTypedApi(dot);
+
+	const descriptors: typeof dot | typeof paseo = dot;
+	const api = client.getTypedApi(descriptors);
+
 	return { client, api };
 }
 
