@@ -36,7 +36,7 @@ export function formatPlanckToDot(value: bigint, nDecimals = 5): string {
 		value = value / 10n + rounding;
 		value *= 10n ** BigInt(precision - nDecimals);
 	}
-	const intPartStr = (value / precisionMultiplier).toString();
+	const intPartStr = (value / precisionMultiplier).toLocaleString('en');
 	const decimalPart = value % precisionMultiplier;
 	if (decimalPart === 0n) {
 		return intPartStr;
