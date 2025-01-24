@@ -27,7 +27,7 @@ export function convertDotToPlanck(value: bigint): bigint {
 
 export function formatPlanckToDot(value: bigint, nDecimals = 5): string {
 	const precision = get(blockChainMeta).decimals;
-	const precisionMultiplier = 10n ** BigInt(precision);
+	const precisionMultiplier = get(blockChainMeta).multiplier;
 
 	if (nDecimals < precision) {
 		value = value / 10n ** BigInt(precision - (nDecimals + 1));
