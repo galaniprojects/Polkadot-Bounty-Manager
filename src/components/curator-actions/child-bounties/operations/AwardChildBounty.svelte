@@ -8,8 +8,8 @@
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import Fee from '../../../Fee.svelte';
 	import Input from '../../../Input/Input.module.css';
+	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
