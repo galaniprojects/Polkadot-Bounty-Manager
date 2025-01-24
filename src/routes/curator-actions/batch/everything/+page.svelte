@@ -166,6 +166,12 @@
 									oninput={validateBountyValue}
 									inputmode="decimal"
 								/>
+								<span
+									class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"
+								></span>
+								<span class="absolute right-2 top-[26px]">
+									<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
+								</span>
 							</label>
 
 							<label>
@@ -188,6 +194,12 @@
 									oninput={validateFee}
 									inputmode="decimal"
 								/>
+								<span
+									class="border border-accent absolute right-9 top-9 transform -translate-y-1/2 h-6"
+								></span>
+								<span class="absolute right-2 top-[26px]">
+									<img src={PolkaCoin} width="20" height="20" alt="PolkaCoin" />
+								</span>
 							</label>
 
 							<label>
