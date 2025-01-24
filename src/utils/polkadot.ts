@@ -1,5 +1,7 @@
 import { AccountId, getSs58AddressInfo } from 'polkadot-api';
 import { isPositiveNumber } from './common';
+import { get } from 'svelte/store';
+import { blockChainMeta } from '../stores';
 
 export function convertFormattedDotToPlanck(value: string): bigint {
 	if (!isPositiveNumber(value)) {
@@ -20,10 +22,11 @@ export function convertFormattedDotToPlanck(value: string): bigint {
 }
 
 export function convertDotToPlanck(value: bigint): bigint {
-	return value * BigInt(1e10);
+	return value * get(blockChainMeta).multiplier;
 }
 
-export function formatPlanckToDot(value: bigint, nDecimals = 5, precision = 10): string {
+export function formatPlanckToDot(value: bigint, nDecimals = 5): string {
+	const precision = get(blockChainMeta).decimals;
 	const precisionMultiplier = 10n ** BigInt(precision);
 
 	if (nDecimals < precision) {
@@ -48,14 +51,14 @@ export function formatPlanckToDot(value: bigint, nDecimals = 5, precision = 10):
  */
 export function isValidAddress(address: string) {
 	const info = getSs58AddressInfo(address);
-	return info.isValid && info.ss58Format === 0;
+	return info.isValid && info.ss58Format === get(blockChainMeta).ss58Format;
 }
 
 /**
  * converts an Ss58Address to a polkadot with prefix 0.
  */
 export function convertToPolkadotAddress(address: string): string {
-	const codec = AccountId(0);
+	const codec = AccountId(get(blockChainMeta).ss58Format);
 	const addressInfo = getSs58AddressInfo(address);
 	if (!addressInfo.isValid) {
 		throw new Error('Could not decode account address');

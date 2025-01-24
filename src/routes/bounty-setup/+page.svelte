@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { activeAccount, dotApi } from '../../stores';
-	import { convertFormattedDotToPlanck, formatPlanckToDot } from '../../utils/polkadot';
+	import { convertFormattedDotToPlanck } from '../../utils/polkadot';
 	import { isPositiveNumber } from '../../utils/common';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { Binary } from 'polkadot-api';
@@ -10,10 +10,11 @@
 	import Input from '../../components/Input/Input.module.css';
 	import { maybeTransaction, submitTransaction } from '../../utils/transaction';
 	import { bountyInfo } from './_bountyInfo';
+	import Currency from '../../components/Currency.svelte';
 
 	let bountyValue: string | undefined;
 	let bountyTitle = '';
-	let bondValue = '-';
+	let bondValue: bigint | string = '-';
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -85,8 +86,7 @@
 			const base = await $dotApi.constants.Bounties.BountyDepositBase();
 			const bytesLen = BigInt(Binary.fromText(bountyTitle).asBytes().length);
 			const perByte = await $dotApi.constants.Bounties.DataDepositPerByte();
-			const bond = base + bytesLen * perByte;
-			bondValue = `${formatPlanckToDot(bond)} DOT`;
+			bondValue = base + bytesLen * perByte;
 		} catch {
 			bondValue = '-';
 		}
@@ -120,7 +120,13 @@
 		<div class="my-5 sm:my-10 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Bounty bond</p>
-				<p class="value">{bondValue}</p>
+				<p class="value">
+					{#if typeof bondValue === 'string'}
+						{bondValue}
+					{:else}
+						<Currency value={bondValue} />
+					{/if}
+				</p>
 			</section>
 			<section class="space-y-1 sm:space-y-3">
 				<p class="label text-xs">Estimated basic fee</p>

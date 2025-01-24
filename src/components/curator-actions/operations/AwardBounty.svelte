@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
-	import { formatPlanckToDot, isValidAddress } from '../../../utils/polkadot';
+	import { isValidAddress } from '../../../utils/polkadot';
 	import { dotApi } from '../../../stores';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import Dialog from '../../common/Dialog.svelte';
@@ -8,6 +8,7 @@
 	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
 	import Fee from '../../Fee.svelte';
 	import Input from '../../Input/Input.module.css';
+	import Currency from '../../Currency.svelte';
 
 	export let open = true;
 	export let bounty: Bounty;
@@ -60,7 +61,7 @@
 		</section>
 		<section class="mt-10">
 			<p class="text-xs">Bounty value</p>
-			<p><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
+			<p><Currency value={bounty.value} /></p>
 		</section>
 		<div class="my-4">
 			<p class="text-xs">Beneficiary account address</p>

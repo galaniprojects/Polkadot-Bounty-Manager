@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../../app.css';
-	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { initializeApi } from '../../utils/initializeApi';
 	import TestBar from '../../components/TestBar.svelte';
 	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
@@ -76,8 +77,7 @@
 	async function changeEndpoint() {
 		nodeEndpoint.set(nodeEndpointInput);
 		sessionStorage.setItem('node', nodeEndpointInput);
-		const { createTypedApi } = await import('../../utils/createTypedApi');
-		dotApi.set(createTypedApi([nodeEndpointInput]));
+		await initializeApi([nodeEndpointInput]);
 	}
 </script>
 

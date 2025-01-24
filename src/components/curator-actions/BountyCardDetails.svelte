@@ -5,12 +5,12 @@
 	import BountyDescription from './BountyDescription.svelte';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { formatDate } from '../../utils/common';
-	import { formatPlanckToDot } from '../../utils/polkadot';
+	import Currency from '../Currency.svelte';
 	import Signatories from './Signatories.svelte';
 
 	export let bounty: Bounty;
 	export let description: string | undefined;
-	export let remainingBalance: string | undefined;
+	export let remainingBalance: bigint | undefined;
 
 	let detailsExpanded = false;
 	let curatorsDialogOpen = false;
@@ -28,17 +28,17 @@
 				{#if remainingBalance}
 					<div class="lg:w-[250px]">
 						<p class="text-xs">Remaining Balance</p>
-						<p class="text-2xl"><span>{remainingBalance}</span> DOT</p>
+						<p class="text-2xl"><Currency value={remainingBalance} /></p>
 					</div>
 				{/if}
 				<div class="lg:w-40 xl:w-44">
 					<p class="text-xs">Value</p>
-					<p class="text-md"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
+					<p class="text-md"><Currency value={bounty.value} /></p>
 				</div>
 
 				<div class="mt-4 lg:mt-0 lg:w-40 xl:w-44">
 					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
+					<p class="text-md"><Currency value={bounty.fee} /></p>
 				</div>
 				{#if bounty.beneficiary}
 					<div class="mt-4 lg:mt-0">
@@ -86,12 +86,12 @@
 			{#if remainingBalance}
 				<div class="lg:w-[250px] xl:w-[490px]">
 					<p class="text-xs">Remaining Balance</p>
-					<p class="text-2xl"><span>{remainingBalance}</span> DOT</p>
+					<p class="text-2xl"><Currency value={remainingBalance} /></p>
 				</div>
 			{:else}
 				<div>
 					<p class="text-xs">Value</p>
-					<p class="text-2xl"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
+					<p class="text-2xl"><Currency value={bounty.value} /></p>
 				</div>
 			{/if}
 		</div>
@@ -116,12 +116,12 @@
 				{#if remainingBalance}
 					<div>
 						<p class="text-xs">Value</p>
-						<p class="text-md"><span>{formatPlanckToDot(bounty.value)}</span> DOT</p>
+						<p class="text-md"><Currency value={bounty.value} /></p>
 					</div>
 				{/if}
 				<div class="space-y-1">
 					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><span>{formatPlanckToDot(bounty.fee)}</span> DOT</p>
+					<p class="text-md"><Currency value={bounty.fee} /></p>
 				</div>
 
 				{#if description}

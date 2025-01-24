@@ -1,11 +1,7 @@
-import { type createTypedApi } from '../utils/createTypedApi';
+import { type ApiType } from '../utils/createTypedApi';
 
 export type ChildBountyRaw = Awaited<
-	ReturnType<
-		Awaited<
-			ReturnType<typeof createTypedApi>['query']['ChildBounties']['ChildBounties']['getEntries']
-		>
-	>
+	ReturnType<ApiType['query']['ChildBounties']['ChildBounties']['getEntries']>
 >[number]['value'];
 
 export const childBountyStatuses = ['Added', 'Active', 'CuratorProposed', 'PendingPayout'] as const;

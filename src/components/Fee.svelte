@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { type AnyTransaction } from '../utils/transaction';
 	import { activeAccount } from '../stores';
-	import { formatPlanckToDot } from '../utils/polkadot';
+	import Currency from './Currency.svelte';
 
 	export let transaction: AnyTransaction | undefined;
-	let fee = '-';
+	let fee: string | bigint = '-';
 
 	$: {
 		(async (oldTransaction) => {
@@ -17,9 +17,13 @@
 			const transactionHasChangedMeanwhile = oldTransaction !== transaction;
 			if (transactionHasChangedMeanwhile) return;
 
-			fee = `${formatPlanckToDot(value.partial_fee)} DOT`;
+			fee = value.partial_fee;
 		})(transaction);
 	}
 </script>
 
-{fee}
+{#if typeof fee === 'string'}
+	{fee}
+{:else}
+	<Currency value={fee} />
+{/if}

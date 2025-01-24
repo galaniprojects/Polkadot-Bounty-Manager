@@ -1,10 +1,8 @@
 import type { ChildBounty } from './child-bounty';
-import { type createTypedApi } from '../utils/createTypedApi';
+import { type ApiType } from '../utils/createTypedApi';
 
 export type BountyRaw = Awaited<
-	ReturnType<
-		Awaited<ReturnType<typeof createTypedApi>['query']['Bounties']['Bounties']['getEntries']>
-	>
+	ReturnType<ApiType['query']['Bounties']['Bounties']['getEntries']>
 >[number]['value'];
 
 export interface Bounty {

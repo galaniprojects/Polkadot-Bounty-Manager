@@ -14,6 +14,10 @@ export function createTypedApi(endpoints: string[]) {
 			}
 		})
 	);
-	const sdkClient = createClient(sdkProvider);
-	return sdkClient.getTypedApi(dot);
+
+	const client = createClient(sdkProvider);
+	const api = client.getTypedApi(dot);
+	return { client, api };
 }
+
+export type ApiType = ReturnType<typeof createTypedApi>['api'];

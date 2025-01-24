@@ -5,14 +5,13 @@
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
 	import BountyCardDetails from './BountyCardDetails.svelte';
-	import { formatPlanckToDot } from '../../utils/polkadot';
 	import AwardBounty from './operations/AwardBounty.svelte';
 
 	export let bounty: Bounty;
 	export let expanded: boolean;
 
 	let description: string | undefined;
-	let remainingBalance: string | undefined;
+	let remainingBalance: bigint | undefined;
 	let awardBountyDialogOpen = false;
 
 	// Handle description and balance fetch
@@ -38,7 +37,7 @@
 				try {
 					const fundsAddress = data.onchainData.address;
 					const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-					remainingBalance = formatPlanckToDot(account.data.free);
+					remainingBalance = account.data.free;
 				} catch {
 					console.error('Error fetching remaining balance.');
 					remainingBalance = undefined;

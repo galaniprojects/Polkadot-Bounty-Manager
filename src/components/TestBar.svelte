@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	import { dotApi, nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
+	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
+	import { initializeApi } from '../utils/initializeApi';
 
 	onMount(async () => {
 		const node = sessionStorage.getItem('node');
 		if (node) {
 			nodeEndpoint.set(node);
-			const { createTypedApi } = await import('../utils/createTypedApi');
-			dotApi.set(createTypedApi([node]));
+			await initializeApi([node]);
 		}
 	});
 </script>
