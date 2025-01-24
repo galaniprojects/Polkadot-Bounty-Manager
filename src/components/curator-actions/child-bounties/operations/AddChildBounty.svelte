@@ -10,7 +10,6 @@
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -80,7 +79,7 @@
 		</section>
 
 		<label class="flex gap-4 items-center cursor-pointer">
-			<ToggleIcon bind:checked={extend} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 

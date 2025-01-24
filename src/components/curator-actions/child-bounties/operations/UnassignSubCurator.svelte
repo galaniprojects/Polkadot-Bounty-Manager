@@ -2,7 +2,7 @@
 	import { dotApi } from '../../../../stores';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import Dialog from '../../../common/Dialog.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
+	import Input from '../../../Input/Input.module.css';
 	import { submitTransaction } from '../../../../utils/transaction';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
@@ -53,13 +53,13 @@
 			<p class="text-xs">I understand</p>
 			<label class="flex justify-between items-start cursor-pointer">
 				<span>Unassign anyway</span>
-				<ToggleIcon bind:checked={isToggled} inverted />
+				<input type="checkbox" bind:checked={isToggled} class={Input.switchInverted} />
 			</label>
 		</div>
 
 		<label class="my-4 flex items-center justify-between cursor-pointer">
 			<ExtendBountyLabel />
-			<ToggleIcon bind:checked={extend} inverted />
+			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
 		</label>
 
 		<section class="mt-10">

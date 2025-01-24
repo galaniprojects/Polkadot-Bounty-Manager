@@ -10,7 +10,6 @@
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
 	import Fee from '../../../Fee.svelte';
 
 	export let open = true;
@@ -110,7 +109,7 @@
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
-			<ToggleIcon bind:checked={extend} inverted />
+			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
 			<ExtendBountyLabel />
 		</label>
 

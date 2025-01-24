@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dotApi } from '../../../../stores';
-	import ToggleIcon from '../../../ToggleIcon.svelte';
+	import Input from '../../../Input/Input.module.css';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { calculateDeposit } from '../../operations/calculateDeposit';
 	import Dialog from '../../../common/Dialog.svelte';
@@ -43,7 +43,7 @@
 			<p class="text-xs">Accept Sub-curator role</p>
 			<label class="flex justify-between items-start cursor-pointer">
 				<span>I agree</span>
-				<ToggleIcon bind:checked={isToggled} inverted />
+				<input type="checkbox" bind:checked={isToggled} class={Input.switchInverted} />
 			</label>
 		</div>
 

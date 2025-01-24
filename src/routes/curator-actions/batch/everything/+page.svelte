@@ -10,7 +10,6 @@
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Input from '../../../../components/Input/Input.module.css';
-	import ToggleIcon from '../../../../components/ToggleIcon.svelte';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
@@ -236,7 +235,7 @@
 
 			<p>
 				<label class="inline-flex gap-4 items-center cursor-pointer">
-					<ToggleIcon bind:checked={extend} />
+					<input type="checkbox" bind:checked={extend} class={Input.switch} />
 					<ExtendBountyLabel />
 				</label>
 			</p>
