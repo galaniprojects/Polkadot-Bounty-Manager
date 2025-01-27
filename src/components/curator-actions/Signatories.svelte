@@ -4,12 +4,16 @@
 	import { fetchMultisigSignatories } from './fetch-signatories';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
+	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
+	import type { ChildBounty } from '../../types/child-bounty';
 
 	export let open = false;
 	export let bounty: Bounty;
+	export let childBounty: ChildBounty;
 	export let curatorAddress = '';
 
 	let signatories: string[] | undefined;
+	let salariesDialogOpen = false;
 
 	onMount(async () => {
 		if (curatorAddress) {
@@ -22,7 +26,7 @@
 
 <Dialog bind:open title="CURATORS LIST">
 	<div class="modal mt-5">
-		<div class="space-y-3">
+		<div class="space-y-5">
 			<div class="space-y-1">
 				<p class="font-bold">Curator Proxy:</p>
 				<p><CopyableAddress address={bounty.curator} /></p>
@@ -41,6 +45,19 @@
 					<p>No signatories found.</p>
 				{/if}
 			</section>
+			<button
+				on:click={() => {
+					salariesDialogOpen = true;
+				}}
+				class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
+			>
 		</div>
 	</div>
 </Dialog>
+
+<CreateSalaryPayouts
+	{bounty}
+	bind:open={salariesDialogOpen}
+	curatorAddress={bounty.curator}
+	{childBounty}
+/>
