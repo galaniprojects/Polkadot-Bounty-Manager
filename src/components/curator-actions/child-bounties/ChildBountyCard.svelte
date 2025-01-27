@@ -11,7 +11,7 @@
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
-	import { formatPlanckToDot } from '../../../utils/polkadot';
+	import Currency from '../../Currency.svelte';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -55,14 +55,14 @@
 				<div class="mt-3 flex flex-col lg:w-[250px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
 						<p class="text-xs">Value</p>
-						<p>{formatPlanckToDot(childBounty.value)} DOT</p>
+						<p><Currency value={childBounty.value} /></p>
 					</section>
 				</div>
 
 				<div class="hidden lg:flex flex-col lg:w-40 xl:w-44 lg:mt-0">
 					<section>
 						<p class="text-xs">Sub-curator Fee</p>
-						<p>{formatPlanckToDot(childBounty.fee)} DOT</p>
+						<p><Currency value={childBounty.fee} /></p>
 					</section>
 					{#if childBounty.dateOfPayout}
 						<section class="lg:mt-3">
@@ -109,7 +109,7 @@
 			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
-					<p class="">{formatPlanckToDot(childBounty.fee)} DOT</p>
+					<p class=""><Currency value={childBounty.fee} /></p>
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>

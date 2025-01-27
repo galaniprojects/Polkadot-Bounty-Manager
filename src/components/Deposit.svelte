@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { formatPlanckToDot } from '../utils/polkadot';
+	import Currency from './Currency.svelte';
 
 	export let getter: (() => bigint) | (() => Promise<bigint>);
-	let deposit = '-';
+	let deposit: bigint | string = '-';
 
 	$: {
 		(async (input) => {
@@ -14,7 +14,7 @@
 				const hasInputChangedMeanwhile = input !== getter;
 				if (hasInputChangedMeanwhile) return;
 
-				deposit = `${formatPlanckToDot(value)} DOT`;
+				deposit = value;
 			} catch (exception) {
 				deposit = '-';
 				console.error(exception);
@@ -23,4 +23,8 @@
 	}
 </script>
 
-{deposit}
+{#if typeof deposit === 'string'}
+	{deposit}
+{:else}
+	<Currency value={deposit} />
+{/if}
