@@ -41,16 +41,16 @@
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>
+					<button
+					on:click={() => {
+						salariesDialogOpen = true;
+					}}
+					class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
+				>
 				{:else}
 					<p>No signatories found.</p>
 				{/if}
 			</section>
-			<button
-				on:click={() => {
-					salariesDialogOpen = true;
-				}}
-				class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
-			>
 		</div>
 	</div>
 </Dialog>

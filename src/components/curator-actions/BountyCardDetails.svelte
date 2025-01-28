@@ -7,8 +7,10 @@
 	import { formatDate } from '../../utils/common';
 	import Currency from '../Currency.svelte';
 	import Signatories from './Signatories.svelte';
+	import type { ChildBounty } from '../../types/child-bounty';
 
 	export let bounty: Bounty;
+	export let childBounty: ChildBounty;
 	export let description: string | undefined;
 	export let remainingBalance: bigint | undefined;
 
@@ -168,4 +170,4 @@
 	</div>
 </div>
 
-<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />
+<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} {childBounty}/>

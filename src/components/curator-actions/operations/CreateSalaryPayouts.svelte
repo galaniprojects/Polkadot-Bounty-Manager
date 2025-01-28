@@ -172,8 +172,6 @@
 				return;
 			}
 		}
-
-		showErrorDialog('All transactions have been processed successfully!');
 	}
 </script>
 
