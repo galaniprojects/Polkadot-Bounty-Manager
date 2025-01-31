@@ -73,6 +73,12 @@
 		}
 
 		await submitTransaction(transaction);
+
+		bountyValue = '';
+		bountyTitle = '';
+		curatorFee = '';
+		beneficiary = '';
+		extend = false;
 	}
 </script>
 
