@@ -7,7 +7,7 @@
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
 	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
-	import { error } from "@sveltejs/kit";
+	import { error } from '@sveltejs/kit';
 
 	let days: number = 1;
 	let hours = 1;
