@@ -26,30 +26,31 @@
 		if (typeof $dotApi === 'undefined') {
 			showLoadingDialog('Connecting to Polkadot...');
 			await initializeApi(endpoints);
+
+			// Connect wallet automatically on the same tab.
+			const storedAccount = sessionStorage.getItem('account');
+			if (!storedAccount) return;
+
+			const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
+			activeAccount.set(parsedAccount);
+
+			const { address, source } = parsedAccount;
+
+			const accounts = await getAccounts(source);
+			const account = accounts.find((account) => account.address === address);
+			if (!account) {
+				activeAccount.set(undefined);
+				sessionStorage.clear();
+				console.error('something went wrong while trying to restore session.');
+				return;
+			}
+			polkadotSigner.set(account.polkadotSigner);
+
 			hideLoadingDialog();
 		}
 
 		await fetchBountiesAndChildBounties();
 
-		// Connect wallet automatically on the same tab.
-		const storedAccount = sessionStorage.getItem('account');
-		if (!storedAccount) return;
-
-		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-		activeAccount.set(parsedAccount);
-
-		const { address, source } = parsedAccount;
-
-		const accounts = await getAccounts(source);
-		const account = accounts.find((account) => account.address === address);
-		if (!account) {
-			activeAccount.set(undefined);
-			sessionStorage.clear();
-			console.error('something went wrong while trying to restore session.');
-			return;
-		}
-
-		polkadotSigner.set(account.polkadotSigner);
 		setActiveAccountBounties();
 	});
 </script>

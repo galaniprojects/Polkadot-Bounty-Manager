@@ -3,7 +3,7 @@
 	import '../app.css';
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import LoadingScreen from '../components/LoadingScreen.svelte';
-	import { loadingDialogState } from '../stores';
+	import { dotApi, loadingDialogState } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
 	import Footer from '../components/Footer/Footer.svelte';
 	import { page } from '$app/state';
@@ -23,7 +23,7 @@
 
 <LoadingScreen bind:dialogState={$loadingDialogState} />
 
-{#if renderChildren}<slot />{/if}
+{#if renderChildren && $dotApi}<slot />{/if}
 
 <Footer />
 
