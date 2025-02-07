@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { activeAccount, polkadotSigner } from '../../stores';
+	import { activeAccount, dotApi, polkadotSigner } from '../../stores';
 	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
@@ -11,6 +11,10 @@
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
+	import { hideLoadingDialog, showLoadingDialog } from '../../utils/loading-screen';
+	import { initializeApi } from '../../utils/initializeApi';
+	import { endpoints } from '../../utils/endpoints';
+	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 
 	let loginDialogOpen = false;
 
@@ -19,25 +23,34 @@
 	}
 
 	onMount(async () => {
-		// Connect wallet automatically on the same tab.
-		const storedAccount = sessionStorage.getItem('account');
-		if (!storedAccount) return;
+		if (typeof $dotApi === 'undefined') {
+			showLoadingDialog('Connecting to Polkadot...');
+			await initializeApi(endpoints);
 
-		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-		activeAccount.set(parsedAccount);
+			// Connect wallet automatically on the same tab.
+			const storedAccount = sessionStorage.getItem('account');
+			if (!storedAccount) return;
 
-		const { address, source } = parsedAccount;
+			const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
+			activeAccount.set(parsedAccount);
 
-		const accounts = await getAccounts(source);
-		const account = accounts.find((account) => account.address === address);
-		if (!account) {
-			activeAccount.set(undefined);
-			sessionStorage.clear();
-			console.error('something went wrong while trying to restore session.');
-			return;
+			const { address, source } = parsedAccount;
+
+			const accounts = await getAccounts(source);
+			const account = accounts.find((account) => account.address === address);
+			if (!account) {
+				activeAccount.set(undefined);
+				sessionStorage.clear();
+				console.error('something went wrong while trying to restore session.');
+				return;
+			}
+			polkadotSigner.set(account.polkadotSigner);
+
+			hideLoadingDialog();
 		}
 
-		polkadotSigner.set(account.polkadotSigner);
+		await fetchBountiesAndChildBounties();
+
 		setActiveAccountBounties();
 	});
 </script>
