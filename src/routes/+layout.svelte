@@ -3,33 +3,17 @@
 	import '../app.css';
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import LoadingScreen from '../components/LoadingScreen.svelte';
-	import { dotApi, loadingDialogState } from '../stores';
+	import { loadingDialogState } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
 	import Footer from '../components/Footer/Footer.svelte';
 	import { page } from '$app/state';
-	import { onMount } from 'svelte';
-	import { initializeApi } from '../utils/initializeApi';
-	import { endpoints } from '../utils/endpoints';
-	import { hideLoadingDialog, showLoadingDialog } from '../utils/loading-screen';
 
 	// prerender only the outer frame without contents
 	const apiNotUsed = ['/imprint', '/404'].includes(page.url.pathname);
 	const renderChildren = typeof window !== 'undefined' || apiNotUsed;
-
-	let apiInitialized = $state(false);
-
-	onMount(async () => {
-		if (typeof $dotApi === 'undefined') {
-			showLoadingDialog('Connecting to Polkadot...');
-			await initializeApi(endpoints);
-
-			hideLoadingDialog();
-		}
-		apiInitialized = true;
-	});
 </script>
 
-{#if !PUBLIC_HIDE_TEST_BAR}
+{#if PUBLIC_HIDE_TEST_BAR.toLocaleLowerCase() === 'false'}
 	<TestBar />
 {/if}
 <div class="bg-accent text-xs md:text-lg text-white flex justify-center items-center">
@@ -39,7 +23,7 @@
 
 <LoadingScreen bind:dialogState={$loadingDialogState} />
 
-{#if renderChildren && apiInitialized}<slot />{/if}
+{#if renderChildren}<slot />{/if}
 
 <Footer />
 
