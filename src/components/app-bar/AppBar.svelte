@@ -26,6 +26,7 @@
 		if (typeof $dotApi === 'undefined') {
 			showLoadingDialog('Connecting to Polkadot...');
 			await initializeApi(endpoints);
+			hideLoadingDialog();
 
 			// Connect wallet automatically on the same tab.
 			const storedAccount = sessionStorage.getItem('account');
@@ -45,8 +46,6 @@
 				return;
 			}
 			polkadotSigner.set(account.polkadotSigner);
-
-			hideLoadingDialog();
 		}
 
 		await fetchBountiesAndChildBounties();
