@@ -26,32 +26,34 @@
 		if (typeof $dotApi === 'undefined') {
 			showLoadingDialog('Connecting to Polkadot...');
 			await initializeApi(endpoints);
+			await connectStoredAccount();
 			hideLoadingDialog();
-
-			// Connect wallet automatically on the same tab.
-			const storedAccount = sessionStorage.getItem('account');
-			if (!storedAccount) return;
-
-			const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-			activeAccount.set(parsedAccount);
-
-			const { address, source } = parsedAccount;
-
-			const accounts = await getAccounts(source);
-			const account = accounts.find((account) => account.address === address);
-			if (!account) {
-				activeAccount.set(undefined);
-				sessionStorage.clear();
-				console.error('something went wrong while trying to restore session.');
-				return;
-			}
-			polkadotSigner.set(account.polkadotSigner);
 		}
 
 		await fetchBountiesAndChildBounties();
-
 		setActiveAccountBounties();
 	});
+
+	async function connectStoredAccount() {
+		// Connect wallet automatically on the same tab.
+		const storedAccount = sessionStorage.getItem('account');
+		if (!storedAccount) return;
+
+		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
+		activeAccount.set(parsedAccount);
+
+		const { address, source } = parsedAccount;
+
+		const accounts = await getAccounts(source);
+		const account = accounts.find((account) => account.address === address);
+		if (!account) {
+			activeAccount.set(undefined);
+			sessionStorage.clear();
+			console.error('something went wrong while trying to restore session.');
+			return;
+		}
+		polkadotSigner.set(account.polkadotSigner);
+	}
 </script>
 
 <header class="relative flex items-center justify-between min-h-20 bg-primary px-4 sm:px-12">
