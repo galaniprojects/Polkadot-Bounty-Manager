@@ -94,7 +94,10 @@
 				<DropdownMenu
 					bind:selectedItem={selectedTreasuryTrack}
 					items={treasuryTracks}
-					width="w-56 lg:w-80"
+					widthContainer="w-56 lg:w-80"
+					widthDropdown="w-56 lg:w-80"
+					textAlign="text-center"
+					bgColor="lilac"
 				/>
 			</div>
 			<p class="text-xs mt-1">
