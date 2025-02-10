@@ -25,7 +25,12 @@ export default {
 			notifications: '#FFAA35',
 			red: '#E6003D',
 			transparent: colors.transparent,
-			white: colors.white
+			white: colors.white,
+
+			// colors in the new design
+			charcoal: '#131313',
+			cloudGray: '#C4C4C4',
+			lightGray: '#E4E4E4'
 		},
 		extend: {
 			screens: {

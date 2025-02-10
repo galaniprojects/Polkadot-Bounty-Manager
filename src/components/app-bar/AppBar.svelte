@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { activeAccount, dotApi, polkadotSigner } from '../../stores';
-	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
 	import LoginDialog from './LoginDialog.svelte';
@@ -15,6 +14,7 @@
 	import { initializeApi } from '../../utils/initializeApi';
 	import { endpoints } from '../../utils/endpoints';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
+	import ChainMenu from './ChainMenu.svelte';
 
 	let loginDialogOpen = false;
 
@@ -56,31 +56,29 @@
 	}
 </script>
 
-<header class="relative flex items-center justify-between min-h-20 bg-primary px-4 sm:px-12">
-	<div>
+<header class="relative flex items-center justify-between min-h-20 bg-primary px-4 sm:px-12 py-4">
+	<div class="flex flex-col items-center space-y-3">
 		<a href="/curator-actions">
-			<img width="71" height="54" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
+			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
 		</a>
+		<ChainMenu />
 	</div>
 
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button class="text-white" on:click={showLoginDialog}>Connect Wallet</button>
+				<button class="text-white align-top" on:click={showLoginDialog}>Connect Wallet</button>
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
 			<!-- User Address -->
-			<div class="flex items-center align-top space-x-3">
-				<div class=" flex gap-2 items-center text-white">
-					<div class="w-6 h-6">
+			<div class="flex flex-col items-center align-top space-y-5">
+				<div class="flex gap-2 items-center text-white">
+					<div class="w-5 h-5">
 						<PolkadotIcon address={$activeAccount.address} />
 					</div>
 					<PeopleChainName address={$activeAccount.address}>
 						{$activeAccount.name || 'Account'}
-						<span class="text-darkgray text-sm">
-							[{truncateString($activeAccount.address, 4)}]
-						</span>
 					</PeopleChainName>
 				</div>
 				<BurgerMenu />

@@ -33,8 +33,11 @@
 		<DropdownMenu
 			items={perPageOptions}
 			bind:selectedItem
-			width="w-48"
+			textAlign="text-center"
+			widthDropdown="w-20"
+			widthContainer="w-20"
 			change={handleDropdownChange}
+			bgColor="lilac"
 		/>
 	</div>
 	<div class="flex justify-center space-x-2">
