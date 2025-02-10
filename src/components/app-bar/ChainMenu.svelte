@@ -1,11 +1,12 @@
 <script lang="ts">
-	import Dropdown, { type Labeled } from '../common/DropdownMenu.svelte';
+	import Dropdown from '../common/DropdownMenu.svelte';
 	import coin from '../Input/coin.svg';
 	import logoPaseo from './LogoPaseo.svg';
 	import coinInverted from './LogoPolkadot.svg';
 	import paseoInverted from './LogoPaseoInverted.svg';
+	import type { Labeled } from './labeled';
 
-	const chains: Labeled[] = [
+	const chains = [
 		{ label: 'Polkadot', logo: coin, invertedLogo: coinInverted },
 		{ label: 'Paseo', logo: logoPaseo, invertedLogo: paseoInverted }
 	];

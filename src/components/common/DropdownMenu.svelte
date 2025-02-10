@@ -1,13 +1,6 @@
-<script context="module" lang="ts">
-	export interface Labeled {
-		label: string;
-		logo?: string;
-		invertedLogo?: string;
-	}
-</script>
-
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
+	import type { Labeled } from '../app-bar/labeled';
 
 	export let items: Array<Labeled>;
 	export let selectedItem: Labeled;
