@@ -60,7 +60,9 @@
 			})
 	);
 
-	async function submit() {
+	async function submit(event: SubmitEvent) {
+		event.preventDefault();
+
 		if (!transaction) {
 			showErrorDialog('An internal error has happened');
 			return;
