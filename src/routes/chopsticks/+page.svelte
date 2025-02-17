@@ -1,6 +1,8 @@
 <script lang="ts">
 	import '../../app.css';
-	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { customEndpoint } from '../../utils/endpoints';
+	import { showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
 	import TestBar from '../../components/TestBar.svelte';
 	import { onMount } from 'svelte';
@@ -14,7 +16,9 @@
 	let mins = 1;
 	let current = 0;
 	$: target = String(current + (((days * 24 + hours) * 60 + mins) * 60) / 6);
-	$: client = createClient(getWsProvider($nodeEndpoint));
+
+	let nodeEndpoint = customEndpoint;
+	$: client = createClient(getWsProvider(nodeEndpoint));
 
 	let nodeEndpointInput = '';
 
@@ -81,9 +85,10 @@
 	}
 
 	async function changeEndpoint() {
-		nodeEndpoint.set(nodeEndpointInput);
+		nodeEndpoint = nodeEndpointInput;
 		sessionStorage.setItem('node', nodeEndpointInput);
 		await initializeApi([nodeEndpointInput]);
+		await fetchBountiesAndChildBounties();
 	}
 </script>
 
@@ -121,7 +126,7 @@
 	<hr class="border-gray mt-5 mb-1 w-1/2" />
 
 	<div class="m-5 gap-5 text-white">
-		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
+		<p class="text-sm">Current node endpoint: {nodeEndpoint}</p>
 		<input
 			class="border pt-1 pl-2 w-1/4 rounded-md bg-white text-black min-w-40"
 			bind:value={nodeEndpointInput}
