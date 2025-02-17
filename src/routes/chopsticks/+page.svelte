@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
-	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
+	import { hideTestBar } from '../../utils/hideTestBar';
 	import { goto } from '$app/navigation';
 
 	let days: number = 1;
@@ -25,7 +25,7 @@
 	}
 
 	onMount(async () => {
-		if (PUBLIC_HIDE_TEST_BAR.toLocaleLowerCase() !== 'false') {
+		if (hideTestBar) {
 			await goto('/404');
 			return;
 		}
