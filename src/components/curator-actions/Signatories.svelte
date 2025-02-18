@@ -5,11 +5,9 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
 	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
-	import type { ChildBounty } from '../../types/child-bounty';
 
 	export let open = false;
 	export let bounty: Bounty;
-	export let childBounty: ChildBounty;
 	export let curatorAddress = '';
 
 	let signatories: string[] | undefined;
@@ -59,5 +57,4 @@
 	{bounty}
 	bind:open={salariesDialogOpen}
 	curatorAddress={bounty.curator}
-	{childBounty}
 />
