@@ -54,5 +54,5 @@
 </Dialog>
 
 {#if signatories !== undefined}
-	<CreateSalaryPayouts {bounty} bind:open={salariesDialogOpen} addresses={signatories} />
+	<CreateSalaryPayouts {bounty} bind:open={salariesDialogOpen} {signatories} />
 {/if}

@@ -12,42 +12,41 @@
 
 	export let open = false;
 	export let bounty: Bounty;
-	export let addresses: string[];
+	export let signatories: string[];
 
-	let signatories: { address: string; salary: number | null }[] = addresses.map((address) => ({
+	let salaries: { address: string; salary: number | null }[] = signatories.map((address) => ({
 		address,
 		salary: null
 	}));
 
-	let totalSalary: number | null = null;
-	$: totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
+	$: totalSalary = salaries.reduce((sum, { salary }) => sum + (salary || 0), 0) || null;
 
-	$: isSalaryCustom = signatories.some((s) => s.salary !== signatories[0]?.salary);
+	$: isSalaryCustom = salaries.some(({ salary }) => salary !== salaries[0]?.salary);
 
 	let equalSalary: number | null = null;
 	$: if (isSalaryCustom) {
 		equalSalary = null;
 	} else if (totalSalary !== null) {
-		equalSalary = signatories[0]?.salary;
+		equalSalary = salaries[0]?.salary;
 	}
 
 	function applyEqualSalary() {
 		if (equalSalary !== null && equalSalary > 0) {
-			signatories = signatories.map((s) => ({ ...s, salary: equalSalary as number }));
+			salaries = salaries.map((salary) => ({ ...salary, salary: equalSalary }));
 		}
 	}
 
 	function calculateEqualSalariesFromTotal() {
-		if (totalSalary !== null && totalSalary > 0 && signatories.length > 0) {
-			equalSalary = parseFloat((totalSalary / signatories.length).toFixed(4));
+		if (totalSalary !== null && totalSalary > 0 && salaries.length > 0) {
+			equalSalary = parseFloat((totalSalary / salaries.length).toFixed(4));
 			applyEqualSalary();
 		}
 	}
 
 	const currentMonth = new Date().toLocaleDateString('en', { month: 'long' });
-	let description: string = `${currentMonth} Salary`;
 
-	let curatorFee = '0';
+	let description = `${currentMonth} Salary`;
+	let curatorFee: number | null = 0;
 	let extend = false;
 	let nextAvailableChildBountyId: number;
 	let childBountyId: number;
@@ -57,7 +56,10 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: isFormValid = signatories.some(({ salary }) => salary !== null && salary > 0);
+	$: isFormValid =
+		description &&
+		curatorFee !== null &&
+		salaries.some(({ salary }) => salary !== null && salary > 0);
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -65,7 +67,7 @@
 			$activeAccount?.address &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
-					...signatories
+					...salaries
 						.filter(({ salary }) => Boolean(salary))
 						.flatMap(({ address, salary }, index) =>
 							getAllChildBountyCalls({
@@ -75,7 +77,7 @@
 								value: String(salary || 0),
 								curator: $activeAccount.address,
 								beneficiary: address,
-								fee: curatorFee
+								fee: String(curatorFee)
 							})
 						),
 					...(!extend
@@ -147,6 +149,7 @@
 					type="number"
 					step="any"
 					min="0"
+					required
 					bind:value={totalSalary}
 					placeholder="Total"
 					on:input={calculateEqualSalariesFromTotal}
@@ -156,7 +159,7 @@
 		</div>
 
 		<ul class="space-y-1.5">
-			{#each signatories as { address, salary }}
+			{#each salaries as { address, salary }}
 				<li class="flex justify-between relative">
 					<CopyableAddress {address} />
 					<input
