@@ -64,26 +64,8 @@
 		totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
 	}
 
-	function getCurrentMonth() {
-		const date = new Date();
-		const monthNames = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December'
-		];
-		return monthNames[date.getMonth()];
-	}
-
-	let currentMonth: string = `${getCurrentMonth()} Salary`;
+	const currentMonth = new Date().toLocaleDateString('en', { month: 'long' });
+	let description: string = `${currentMonth} Salary`;
 
 	export let childBounty: ChildBounty;
 	export let bounty: Bounty;
@@ -106,7 +88,7 @@
 		const create = $dotApi.tx.ChildBounties.add_child_bounty({
 			parent_bounty_id: bounty.id,
 			value: convertFormattedDotToPlanck(String(salary || 0)),
-			description: Binary.fromText(`${currentMonth} - ${childBountyId + 1}`)
+			description: Binary.fromText(`${description} - ${childBountyId + 1}`)
 		});
 
 		const propose = $dotApi.tx.ChildBounties.propose_curator({
@@ -184,8 +166,8 @@
 				<div class="my-1">
 					<input
 						class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 text-primary"
-						bind:value={currentMonth}
-						placeholder={`${getCurrentMonth()} Salary`}
+						bind:value={description}
+						placeholder="{currentMonth} Salary"
 					/>
 				</div>
 				<p>for Curator</p>
