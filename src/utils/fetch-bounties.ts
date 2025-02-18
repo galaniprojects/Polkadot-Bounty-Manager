@@ -1,8 +1,8 @@
 import { bounties as bountiesStore, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
-import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty, setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
+import type { Bounty } from '../types/bounty';
 
 function keyBy<Value extends object>(list: Value[], field: keyof Value) {
 	return Object.fromEntries(list.map((value) => [value[field], value] as [keyof Value, Value]));
@@ -52,6 +52,25 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		bounties.forEach((bounty: Bounty) => {
 			bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
 		});
+
+		// for (const bounty of bounties){
+		// 	bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
+		// 	console.log(childBounties);
+
+		// 	const oldCB = await fetchOldCB(bounty.id);
+		// 	childBounties = childBounties.concat(oldCB);
+		// 	console.log(childBounties);
+		// };
+
+		// for (const bounty of bounties) {
+		// 	const oldChildBounties = await fetchOldCB(bounty.id);
+
+		// 	bounty.childBounties = [
+		// 		...childBounties.filter(({ parentBounty }) => parentBounty === bounty.id),
+		// 		...oldChildBounties
+		// 	];
+		// }
+		// console.log(childBounties);
 
 		bountiesStore.set(bounties);
 		setActiveAccountBounties();
