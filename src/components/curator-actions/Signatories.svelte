@@ -53,8 +53,6 @@
 	</div>
 </Dialog>
 
-<CreateSalaryPayouts
-	{bounty}
-	bind:open={salariesDialogOpen}
-	curatorAddress={bounty.curator}
-/>
+{#if signatories !== undefined}
+	<CreateSalaryPayouts {bounty} bind:open={salariesDialogOpen} addresses={signatories} />
+{/if}

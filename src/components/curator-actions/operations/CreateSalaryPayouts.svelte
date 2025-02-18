@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import Dialog from '../../common/Dialog.svelte';
-	import { fetchMultisigSignatories } from '../fetch-signatories';
 	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
 	import { activeAccount, dotApi } from '../../../stores';
 	import { getAllChildBountyCalls } from '../../../utils/getAllChildBountyCalls';
-	import { isPositiveNumber } from '../../../utils/common';
 	import Input from '../../Input/Input.module.css';
 	import ExtendBountyLabel from '../../ExtendBountyLabel.svelte';
 	import { Binary } from 'polkadot-api';
@@ -14,61 +11,41 @@
 	import type { Bounty } from '../../../types/bounty';
 
 	export let open = false;
-	export let curatorAddress = '';
+	export let bounty: Bounty;
+	export let addresses: string[];
 
-	let signatories: { address: string; salary: number | '' }[] = [];
-	let equalSalary: number | null = null;
+	let signatories: { address: string; salary: number | null }[] = addresses.map((address) => ({
+		address,
+		salary: null
+	}));
+
 	let totalSalary: number | null = null;
-	let isSalaryCustom = false;
+	$: totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
 
-	onMount(async () => {
-		const fetchedSignatories = await fetchMultisigSignatories(curatorAddress);
-		signatories = fetchedSignatories.map((address) => ({ address, salary: '' }));
-	});
+	$: isSalaryCustom = signatories.some((s) => s.salary !== signatories[0]?.salary);
+
+	let equalSalary: number | null = null;
+	$: if (isSalaryCustom) {
+		equalSalary = null;
+	} else if (totalSalary !== null) {
+		equalSalary = signatories[0]?.salary;
+	}
 
 	function applyEqualSalary() {
 		if (equalSalary !== null && equalSalary > 0) {
-			isSalaryCustom = false;
 			signatories = signatories.map((s) => ({ ...s, salary: equalSalary as number }));
-			calculateTotalFromEqualSalaries();
 		}
-	}
-
-	function calculateTotalFromEqualSalaries() {
-		totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
 	}
 
 	function calculateEqualSalariesFromTotal() {
 		if (totalSalary !== null && totalSalary > 0 && signatories.length > 0) {
 			equalSalary = parseFloat((totalSalary / signatories.length).toFixed(4));
-			signatories = signatories.map((s) => ({ ...s, salary: equalSalary as number }));
+			applyEqualSalary();
 		}
-	}
-
-	function handleSignatoryChange(this: HTMLInputElement) {
-		const index = parseInt(this.name);
-		const parsedValue = parseFloat(this.value);
-
-		const isValid = isPositiveNumber(this.value) && !isNaN(parsedValue);
-		signatories[index].salary = !isValid ? '' : parsedValue;
-
-		isSalaryCustom = signatories.some((s) => s.salary !== equalSalary);
-		if (isSalaryCustom) {
-			equalSalary = null;
-			totalSalary = null;
-		} else {
-			calculateTotalFromEqualSalaries();
-		}
-	}
-
-	$: if (isSalaryCustom) {
-		totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
 	}
 
 	const currentMonth = new Date().toLocaleDateString('en', { month: 'long' });
 	let description: string = `${currentMonth} Salary`;
-
-	export let bounty: Bounty;
 
 	let curatorFee = '0';
 	let extend = false;
@@ -80,7 +57,7 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: isFormValid = signatories.some(({ salary }) => salary !== '' && salary > 0);
+	$: isFormValid = signatories.some(({ salary }) => salary !== null && salary > 0);
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -179,18 +156,16 @@
 		</div>
 
 		<ul class="space-y-1.5">
-			{#each signatories as { address, salary }, index}
+			{#each signatories as { address, salary }}
 				<li class="flex justify-between relative">
 					<CopyableAddress {address} />
 					<input
 						class={[Input.polkadot, 'max-w-52']}
-						name={String(index)}
+						bind:value={salary}
 						type="number"
 						step="any"
 						min="0"
-						value={salary !== '' ? salary : ''}
 						placeholder="Enter salary"
-						on:input={handleSignatoryChange}
 					/>
 				</li>
 			{/each}
