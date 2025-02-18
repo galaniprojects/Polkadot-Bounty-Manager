@@ -26,26 +26,26 @@
 		signatories = fetchedSignatories.map((address) => ({ address, salary: '' }));
 	});
 
-	const applyEqualSalary = () => {
+	function applyEqualSalary() {
 		if (equalSalary !== '') {
 			isSalaryCustom = false;
 			signatories = signatories.map((s) => ({ ...s, salary: equalSalary }));
 			calculateTotalFromEqualSalaries();
 		}
-	};
+	}
 
-	const calculateTotalFromEqualSalaries = () => {
+	function calculateTotalFromEqualSalaries() {
 		totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
-	};
+	}
 
-	const calculateEqualSalariesFromTotal = () => {
+	function calculateEqualSalariesFromTotal() {
 		if (totalSalary !== '' && signatories.length) {
-			equalSalary = Math.floor((totalSalary as number) / signatories.length);
+			equalSalary = Math.floor(totalSalary / signatories.length);
 			signatories = signatories.map((s) => ({ ...s, salary: equalSalary }));
 		}
-	};
+	}
 
-	const handleSignatoryChange = (index: number, value: string) => {
+	function handleSignatoryChange(index: number, value: string) {
 		const parsedValue = parseFloat(value);
 		signatories[index].salary = isNaN(parsedValue) ? '' : parsedValue;
 
@@ -58,13 +58,13 @@
 			isSalaryCustom = false;
 			calculateTotalFromEqualSalaries();
 		}
-	};
+	}
 
 	$: if (isSalaryCustom) {
 		totalSalary = signatories.reduce((sum, s) => sum + (s.salary || 0), 0);
 	}
 
-	const getCurrentMonth = (): string => {
+	function getCurrentMonth() {
 		const date = new Date();
 		const monthNames = [
 			'January',
@@ -81,7 +81,7 @@
 			'December'
 		];
 		return monthNames[date.getMonth()];
-	};
+	}
 
 	let currentMonth: string = `${getCurrentMonth()} Salary`;
 
@@ -168,6 +168,7 @@
 			try {
 				await submitTransaction(transaction);
 			} catch (error) {
+				console.error(error);
 				showErrorDialog('Failed to process transaction for a signatory');
 				return;
 			}
@@ -223,7 +224,9 @@
 						type="number"
 						value={salary !== '' ? salary : ''}
 						placeholder="Enter salary"
-						on:input={(e) => handleSignatoryChange(index, e.currentTarget.value)}
+						on:input={(e) => {
+							handleSignatoryChange(index, e.currentTarget.value);
+						}}
 					/>
 				</li>
 			{/each}
