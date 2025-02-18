@@ -3,12 +3,12 @@
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import Dialog from '../../common/Dialog.svelte';
 	import { fetchMultisigSignatories } from '../fetch-signatories';
-	import { submitTransaction } from '../../../utils/transaction';
+	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
 	import { activeAccount, dotApi } from '../../../stores';
-	import { convertFormattedDotToPlanck, isValidAddress } from '../../../utils/polkadot';
+	import { getAllChildBountyCalls } from '../../../utils/getAllChildBountyCalls';
 	import { isPositiveNumber } from '../../../utils/common';
-	import type { ChildBounty } from '../../../types/child-bounty';
-	import { MultiAddress } from '@polkadot-api/descriptors';
+	import Input from '../../Input/Input.module.css';
+	import ExtendBountyLabel from '../../ExtendBountyLabel.svelte';
 	import { Binary } from 'polkadot-api';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import type { Bounty } from '../../../types/bounty';
@@ -17,8 +17,8 @@
 	export let curatorAddress = '';
 
 	let signatories: { address: string; salary: number | '' }[] = [];
-	let equalSalary: number | '' = '';
-	let totalSalary: number | '';
+	let equalSalary: number | null = null;
+	let totalSalary: number | null = null;
 	let isSalaryCustom = false;
 
 	onMount(async () => {
@@ -27,9 +27,9 @@
 	});
 
 	function applyEqualSalary() {
-		if (equalSalary !== '') {
+		if (equalSalary !== null && equalSalary > 0) {
 			isSalaryCustom = false;
-			signatories = signatories.map((s) => ({ ...s, salary: equalSalary }));
+			signatories = signatories.map((s) => ({ ...s, salary: equalSalary as number }));
 			calculateTotalFromEqualSalaries();
 		}
 	}
@@ -39,23 +39,24 @@
 	}
 
 	function calculateEqualSalariesFromTotal() {
-		if (totalSalary !== '' && signatories.length) {
-			equalSalary = Math.floor(totalSalary / signatories.length);
-			signatories = signatories.map((s) => ({ ...s, salary: equalSalary }));
+		if (totalSalary !== null && totalSalary > 0 && signatories.length > 0) {
+			equalSalary = parseFloat((totalSalary / signatories.length).toFixed(4));
+			signatories = signatories.map((s) => ({ ...s, salary: equalSalary as number }));
 		}
 	}
 
-	function handleSignatoryChange(index: number, value: string) {
-		const parsedValue = parseFloat(value);
-		signatories[index].salary = isNaN(parsedValue) ? '' : parsedValue;
+	function handleSignatoryChange(this: HTMLInputElement) {
+		const index = parseInt(this.name);
+		const parsedValue = parseFloat(this.value);
 
-		const hasCustomSalaries = signatories.some((s) => s.salary !== equalSalary);
-		if (hasCustomSalaries) {
-			isSalaryCustom = true;
-			equalSalary = '';
-			totalSalary = '';
+		const isValid = isPositiveNumber(this.value) && !isNaN(parsedValue);
+		signatories[index].salary = !isValid ? '' : parsedValue;
+
+		isSalaryCustom = signatories.some((s) => s.salary !== equalSalary);
+		if (isSalaryCustom) {
+			equalSalary = null;
+			totalSalary = null;
 		} else {
-			isSalaryCustom = false;
 			calculateTotalFromEqualSalaries();
 		}
 	}
@@ -67,11 +68,9 @@
 	const currentMonth = new Date().toLocaleDateString('en', { month: 'long' });
 	let description: string = `${currentMonth} Salary`;
 
-	export let childBounty: ChildBounty;
 	export let bounty: Bounty;
 
-	let beneficiary = '';
-	let curatorFee = '';
+	let curatorFee = '0';
 	let extend = false;
 	let nextAvailableChildBountyId: number;
 	let childBountyId: number;
@@ -81,96 +80,74 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: transactions = signatories.map(({ address, salary }, childBountyId) => {
-		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee))
-			return null;
+	$: isFormValid = signatories.some(({ salary }) => salary !== '' && salary > 0);
 
-		const create = $dotApi.tx.ChildBounties.add_child_bounty({
-			parent_bounty_id: bounty.id,
-			value: convertFormattedDotToPlanck(String(salary || 0)),
-			description: Binary.fromText(`${description} - ${childBountyId + 1}`)
-		});
+	$: transaction = maybeTransaction(
+		() =>
+			isFormValid &&
+			$activeAccount?.address &&
+			$dotApi.tx.Utility.batch_all({
+				calls: [
+					...signatories
+						.filter(({ salary }) => Boolean(salary))
+						.flatMap(({ address, salary }, index) =>
+							getAllChildBountyCalls({
+								parent_bounty_id: bounty.id,
+								child_bounty_id: childBountyId + index,
+								title: `${description} for ${address}`, // TODO: People name
+								value: String(salary || 0),
+								curator: $activeAccount.address,
+								beneficiary: address,
+								fee: curatorFee
+							})
+						),
+					...(!extend
+						? []
+						: [
+								$dotApi.tx.Bounties.extend_bounty_expiry({
+									bounty_id: bounty.id,
+									remark: new Binary(new Uint8Array())
+								}).decodedCall
+							])
+				]
+			})
+	);
 
-		const propose = $dotApi.tx.ChildBounties.propose_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id + childBountyId,
-			curator: MultiAddress.Id($activeAccount.address),
-			fee: convertFormattedDotToPlanck(String(curatorFee))
-		});
+	async function submit(event: SubmitEvent) {
+		event.preventDefault();
 
-		const accept = $dotApi.tx.ChildBounties.accept_curator({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id + childBountyId
-		});
-
-		const award = $dotApi.tx.ChildBounties.award_child_bounty({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id + childBountyId,
-			beneficiary: MultiAddress.Id(address)
-		});
-
-		const claim = $dotApi.tx.ChildBounties.claim_child_bounty({
-			parent_bounty_id: childBounty.parentBounty,
-			child_bounty_id: childBounty.id + childBountyId
-		});
-
-		const extendTx = $dotApi.tx.Bounties.extend_bounty_expiry({
-			bounty_id: childBounty.parentBounty,
-			remark: new Binary(new Uint8Array())
-		});
-
-		return $dotApi.tx.Utility.batch_all({
-			calls: [
-				create.decodedCall,
-				propose.decodedCall,
-				accept.decodedCall,
-				award.decodedCall,
-				claim.decodedCall,
-				...(extend ? [extendTx.decodedCall] : [])
-			]
-		});
-	});
-
-	async function submit() {
-		open = false;
+		if (!isFormValid) return;
 
 		if (!$activeAccount) {
 			showErrorDialog('Wallet is not connected');
 			return;
 		}
 
-		if (!transactions.length) {
-			showErrorDialog('No transactions to submit.');
+		if (!transaction) {
+			showErrorDialog('An internal error has happened');
 			return;
 		}
 
-		for (const transaction of transactions) {
-			if (!transaction) continue;
+		open = false;
 
-			try {
-				await submitTransaction(transaction);
-			} catch (error) {
-				console.error(error);
-				showErrorDialog('Failed to process transaction for a signatory');
-				return;
-			}
-		}
+		await submitTransaction(transaction);
 	}
 </script>
 
 <Dialog bind:open title="SALARY PAYOUTS" backgroundColor="white" textColor="primary">
-	<div class="mt-5 space-y-4">
+	<form class="mt-5 space-y-4" on:submit={submit}>
 		<div>
 			<p class="text-xs">Edit the suggested title if desired</p>
 			<div class="flex items-baseline space-x-2">
 				<div class="my-1">
 					<input
-						class="border border-black pt-1 pl-2 rounded-[3px] bg-white h-10 text-primary"
+						class={Input.input}
 						bind:value={description}
+						required
 						placeholder="{currentMonth} Salary"
 					/>
 				</div>
-				<p>for Curator</p>
+				<p>for <em>Curator</em></p>
 			</div>
 		</div>
 
@@ -178,19 +155,23 @@
 			<p class="text-xs">Enter an individual salary or the total payout</p>
 			<div class="flex justify-between items-baseline relative">
 				<input
-					class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-[30%] text-primary"
+					class={[Input.polkadot, 'max-w-32']}
 					type="number"
+					step="any"
+					min="0"
 					bind:value={equalSalary}
-					placeholder="Individual salary"
+					placeholder="Individual"
 					on:input={applyEqualSalary}
 				/>
-				<p>per / signatory =</p>
+				<p>per signatory =</p>
 
 				<input
-					class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 w-[30%] text-primary"
+					class={[Input.polkadot, 'max-w-32']}
 					type="number"
+					step="any"
+					min="0"
 					bind:value={totalSalary}
-					placeholder="Total salary"
+					placeholder="Total"
 					on:input={calculateEqualSalariesFromTotal}
 				/>
 				<p>total</p>
@@ -202,21 +183,53 @@
 				<li class="flex justify-between relative">
 					<CopyableAddress {address} />
 					<input
-						class="border border-primary rounded-[3px] bg-white pl-2 pt-1 h-10 text-primary"
+						class={[Input.polkadot, 'max-w-52']}
+						name={String(index)}
 						type="number"
+						step="any"
+						min="0"
 						value={salary !== '' ? salary : ''}
 						placeholder="Enter salary"
-						on:input={(e) => {
-							handleSignatoryChange(index, e.currentTarget.value);
-						}}
+						on:input={handleSignatoryChange}
 					/>
 				</li>
 			{/each}
 		</ul>
 
-		<p>Total: {totalSalary || 0}</p>
-		<button on:click={submit} class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button">
+		<label class="block">
+			<span class="text-xs block">Sub-curator fee per payout</span>
+			<input
+				bind:value={curatorFee}
+				class={Input.polkadot}
+				placeholder="00.00"
+				required
+				type="number"
+				step="any"
+				min="0"
+				inputmode="decimal"
+			/>
+		</label>
+
+		<p>
+			<label class="inline-flex gap-4 items-center cursor-pointer">
+				<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+				<ExtendBountyLabel />
+			</label>
+		</p>
+
+		<p class="text-xs">
+			For the highest likelihood of success, ensure that the signatories confirm the transaction as
+			soon as possible
+		</p>
+
+		<button
+			type="submit"
+			class={[
+				'w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button',
+				!isFormValid && 'cursor-not-allowed opacity-50'
+			]}
+		>
 			CREATE
 		</button>
-	</div>
+	</form>
 </Dialog>
