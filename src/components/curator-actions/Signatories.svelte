@@ -43,8 +43,10 @@
 						on:click={() => {
 							salariesDialogOpen = true;
 						}}
-						class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
+						class="w-full md:w-fit h-12 button-popup"
 					>
+						CREATE SALARIES
+					</button>
 				{:else}
 					<p>No signatories found.</p>
 				{/if}
@@ -54,5 +56,5 @@
 </Dialog>
 
 {#if signatories !== undefined}
-	<CreateSalaryPayouts {bounty} bind:open={salariesDialogOpen} {signatories} />
+	<CreateSalaryPayouts {bounty} {signatories} bind:open={salariesDialogOpen} />
 {/if}
