@@ -42,11 +42,11 @@
 						{/each}
 					</ul>
 					<button
-					on:click={() => {
-						salariesDialogOpen = true;
-					}}
-					class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
-				>
+						on:click={() => {
+							salariesDialogOpen = true;
+						}}
+						class="w-full md:w-fit h-12 button-popup">CREATE SALARIES</button
+					>
 				{:else}
 					<p>No signatories found.</p>
 				{/if}

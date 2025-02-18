@@ -170,4 +170,9 @@
 	</div>
 </div>
 
-<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} {childBounty}/>
+<Signatories
+	bind:open={curatorsDialogOpen}
+	{bounty}
+	curatorAddress={bounty.curator}
+	{childBounty}
+/>
