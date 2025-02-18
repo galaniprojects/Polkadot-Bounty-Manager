@@ -168,8 +168,4 @@
 	</div>
 </div>
 
-<Signatories
-	bind:open={curatorsDialogOpen}
-	{bounty}
-	curatorAddress={bounty.curator}
-/>
+<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />
