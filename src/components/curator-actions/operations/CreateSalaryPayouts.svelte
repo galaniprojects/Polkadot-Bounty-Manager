@@ -14,10 +14,18 @@
 	export let bounty: Bounty;
 	export let signatories: string[];
 
-	let salaries: { address: string; salary: number | null }[] = signatories.map((address) => ({
-		address,
-		salary: null
-	}));
+	interface Salary {
+		address: string;
+		salary: number | null;
+	}
+
+	interface Payout {
+		address: string;
+		salary: number;
+	}
+
+	$: salaries = signatories.map((address) => ({ address, salary: null })) as Salary[];
+	$: payouts = salaries.filter(({ salary }) => salary !== null && salary > 0) as Payout[];
 
 	$: totalSalary = salaries.reduce((sum, { salary }) => sum + (salary || 0), 0) || null;
 
@@ -56,10 +64,7 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: isFormValid =
-		description &&
-		curatorFee !== null &&
-		salaries.some(({ salary }) => salary !== null && salary > 0);
+	$: isFormValid = description && curatorFee !== null && payouts.length > 0;
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -67,19 +72,17 @@
 			$activeAccount?.address &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
-					...salaries
-						.filter(({ salary }) => Boolean(salary))
-						.flatMap(({ address, salary }, index) =>
-							getAllChildBountyCalls({
-								parent_bounty_id: bounty.id,
-								child_bounty_id: childBountyId + index,
-								title: `${description} for ${address}`, // TODO: People name
-								value: String(salary || 0),
-								curator: $activeAccount.address,
-								beneficiary: address,
-								fee: String(curatorFee)
-							})
-						),
+					...payouts.flatMap(({ address, salary }, index) =>
+						getAllChildBountyCalls({
+							parent_bounty_id: bounty.id,
+							child_bounty_id: childBountyId + index,
+							title: `${description} for ${address}`, // TODO: People name
+							value: String(salary),
+							curator: $activeAccount.address,
+							beneficiary: address,
+							fee: String(curatorFee)
+						})
+					),
 					...(!extend
 						? []
 						: [
