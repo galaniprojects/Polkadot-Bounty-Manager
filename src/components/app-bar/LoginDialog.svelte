@@ -6,6 +6,7 @@
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svg';
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
+	import LogoMimir from '../svg/wallet-logo/LogoMimir.svg';
 	import { onDestroy, onMount } from 'svelte';
 	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
@@ -13,6 +14,7 @@
 	import { type AccountWithSigner } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { getAccounts } from './getAccounts';
+	import { maybeInjectMimir } from './maybeInjectMimir';
 
 	export let title = '';
 	export let open;
@@ -25,9 +27,23 @@
 	const ethereum = (window as unknown as { ethereum?: { isNovaWallet: boolean } }).ethereum;
 	const novaWalletAvailable = Boolean(ethereum?.isNovaWallet);
 
-	onMount(() => {
+	onMount(async () => {
+		await maybeInjectMimir();
 		const extensionNames = getInjectedExtensions();
 		wallets = [
+			{
+				icon: LogoWalletConnect,
+				name: 'WalletConnect',
+				source: 'WalletConnect',
+				available: true
+			},
+			{
+				icon: LogoMimir,
+				name: 'Mimir',
+				source: 'mimir',
+				url: 'https://app.mimir.global/',
+				available: extensionNames.includes('mimir')
+			},
 			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
@@ -36,12 +52,6 @@
 				available:
 					// !novaWalletAvailable to prevent polkadot button from being enabled on Nova.
 					extensionNames.includes('polkadot-js') && !novaWalletAvailable
-			},
-			{
-				icon: LogoWalletConnect,
-				name: 'WalletConnect',
-				source: 'WalletConnect',
-				available: true
 			},
 			{
 				icon: LogoNovaWallet,
