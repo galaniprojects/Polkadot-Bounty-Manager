@@ -6,6 +6,7 @@
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svg';
 	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
+	import LogoMimir from '../svg/wallet-logo/LogoMimir.svg';
 	import { onDestroy, onMount } from 'svelte';
 	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
@@ -13,6 +14,7 @@
 	import { type AccountWithSigner } from '../../types/account';
 	import { showErrorDialog } from '../../utils/loading-screen';
 	import { getAccounts } from './getAccounts';
+	import { maybeInjectMimir } from './maybeInjectMimir';
 
 	export let title = '';
 	export let open;
@@ -25,7 +27,8 @@
 	const ethereum = (window as unknown as { ethereum?: { isNovaWallet: boolean } }).ethereum;
 	const novaWalletAvailable = Boolean(ethereum?.isNovaWallet);
 
-	onMount(() => {
+	onMount(async () => {
+		await maybeInjectMimir();
 		const extensionNames = getInjectedExtensions();
 		wallets = [
 			{
@@ -56,6 +59,13 @@
 				source: 'talisman',
 				url: 'https://www.talisman.xyz/',
 				available: extensionNames.includes('talisman')
+			},
+			{
+				icon: LogoMimir,
+				name: 'Mimir',
+				source: 'mimir',
+				url: 'https://app.mimir.global/',
+				available: extensionNames.includes('mimir')
 			}
 		];
 	});
