@@ -35,6 +35,7 @@
 
 	async function submit() {
 		open = false;
+
 		if (bountyTitle.length === 0) {
 			showErrorDialog('Bounty title is empty');
 			return;
@@ -49,6 +50,10 @@
 		}
 
 		await submitTransaction(transaction);
+
+		bountyValue = '';
+		bountyTitle = '';
+		extend = false;
 	}
 
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';

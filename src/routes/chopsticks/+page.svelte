@@ -6,6 +6,8 @@
 	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
+	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
+	import { goto } from '$app/navigation';
 
 	let days: number = 1;
 	let hours = 1;
@@ -22,13 +24,17 @@
 		})();
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		if (PUBLIC_HIDE_TEST_BAR.toLocaleLowerCase() !== 'false') {
+			await goto('/404');
+			return;
+		}
 		updateCurrentBlock();
 		const interval = setInterval(updateCurrentBlock, 6000);
 
-		return () => {
+		return new Promise(() => {
 			clearInterval(interval);
-		};
+		});
 	});
 
 	async function sleep() {
