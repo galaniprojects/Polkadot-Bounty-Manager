@@ -135,9 +135,9 @@
 
 		<div class="space-y-1">
 			<p class="text-xs">Enter an individual salary or the total payout</p>
-			<div class="flex justify-between items-baseline">
+			<div class="flex items-center gap-2">
 				<input
-					class={[Input.polkadot, 'max-w-32']}
+					class={[Input.polkadot, 'grow shrink']}
 					type="number"
 					step="any"
 					min="0"
@@ -145,10 +145,10 @@
 					placeholder="Individual"
 					on:input={applyEqualSalary}
 				/>
-				<p>per signatory =</p>
+				<p class="whitespace-nowrap">each =</p>
 
 				<input
-					class={[Input.polkadot, 'max-w-32']}
+					class={[Input.polkadot, 'grow shrink']}
 					type="number"
 					step="any"
 					min="0"
@@ -163,16 +163,16 @@
 
 		<ul class="space-y-1.5">
 			{#each salaries as { address, salary }}
-				<li class="flex justify-between">
-					<CopyableAddress {address} />
+				<li class="flex gap-4">
 					<input
-						class={[Input.polkadot, 'max-w-52']}
+						class={[Input.polkadot, 'max-w-36']}
 						bind:value={salary}
 						type="number"
 						step="any"
 						min="0"
 						placeholder="Enter salary"
 					/>
+					<CopyableAddress {address} />
 				</li>
 			{/each}
 		</ul>
