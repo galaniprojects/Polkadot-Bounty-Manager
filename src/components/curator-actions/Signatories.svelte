@@ -41,6 +41,7 @@
 					</ul>
 					<button
 						on:click={() => {
+							open = false;
 							salariesDialogOpen = true;
 						}}
 						class="w-full md:w-fit h-12 button-popup"
