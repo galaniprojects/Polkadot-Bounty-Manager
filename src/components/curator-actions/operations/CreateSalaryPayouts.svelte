@@ -123,6 +123,8 @@
 </script>
 
 <Dialog bind:open title="SALARY PAYOUTS" backgroundColor="white" textColor="primary">
+	<p>#{bounty.id} {bounty.description ?? ''}</p>
+
 	<form class="mt-5 space-y-4" on:submit={submit}>
 		<div>
 			<p class="text-xs">Edit the suggested title if desired</p>
