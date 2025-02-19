@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
 	import { fetchMultisigSignatories } from './fetch-signatories';
+	import { activeAccount } from '../../stores';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
 	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
@@ -39,15 +40,17 @@
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>
-					<button
-						on:click={() => {
-							open = false;
-							salariesDialogOpen = true;
-						}}
-						class="w-full md:w-fit h-12 button-popup"
-					>
-						CREATE SALARIES
-					</button>
+					{#if bounty.curator && bounty.curator === $activeAccount?.address}
+						<button
+							on:click={() => {
+								open = false;
+								salariesDialogOpen = true;
+							}}
+							class="w-full md:w-fit h-12 button-popup"
+						>
+							CREATE SALARIES
+						</button>
+					{/if}
 				{:else}
 					<p>No signatories found.</p>
 				{/if}
