@@ -9,6 +9,7 @@
 	import Fee from '../../Fee.svelte';
 	import { Binary } from 'polkadot-api';
 	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { names } from '../../../utils/people';
 	import type { Bounty } from '../../../types/bounty';
 
 	export let open = false;
@@ -18,14 +19,19 @@
 	interface Salary {
 		address: string;
 		salary: number | null;
+		name: string;
 	}
 
-	interface Payout {
-		address: string;
+	interface Payout extends Salary {
 		salary: number;
 	}
 
-	$: salaries = signatories.map((address) => ({ address, salary: null })) as Salary[];
+	$: salaries = signatories.map((address) => ({
+		address,
+		salary: null,
+		name: $names[address]
+	})) as Salary[];
+
 	$: payouts = salaries.filter(({ salary }) => salary !== null && salary > 0) as Payout[];
 
 	$: totalSalary = salaries.reduce((sum, { salary }) => sum + (salary || 0), 0) || null;
@@ -72,11 +78,11 @@
 			$activeAccount?.address &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
-					...payouts.flatMap(({ address, salary }, index) =>
+					...payouts.flatMap(({ address, salary, name = address }, index) =>
 						getAllChildBountyCalls({
 							parent_bounty_id: bounty.id,
 							child_bounty_id: childBountyId + index,
-							title: `${description} for ${address}`, // TODO: People name
+							title: `${description} for ${name}`,
 							value: String(salary),
 							curator: $activeAccount.address,
 							beneficiary: address,
