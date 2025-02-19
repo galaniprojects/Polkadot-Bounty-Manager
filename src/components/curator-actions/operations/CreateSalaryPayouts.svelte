@@ -6,6 +6,7 @@
 	import { getAllChildBountyCalls } from '../../../utils/getAllChildBountyCalls';
 	import Input from '../../Input/Input.module.css';
 	import ExtendBountyLabel from '../../ExtendBountyLabel.svelte';
+	import Fee from '../../Fee.svelte';
 	import { Binary } from 'polkadot-api';
 	import { showErrorDialog } from '../../../utils/loading-screen';
 	import type { Bounty } from '../../../types/bounty';
@@ -197,6 +198,11 @@
 				<ExtendBountyLabel />
 			</label>
 		</p>
+
+		<section class="mt-10">
+			<p class="text-xs">Estimated basic fee</p>
+			<p><Fee {transaction} /></p>
+		</section>
 
 		<p class="text-xs">
 			For the highest likelihood of success, ensure that the signatories confirm the transaction as
