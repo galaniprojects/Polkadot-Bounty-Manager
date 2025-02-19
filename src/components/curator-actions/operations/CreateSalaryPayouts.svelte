@@ -55,7 +55,6 @@
 	const currentMonth = new Date().toLocaleDateString('en', { month: 'long' });
 
 	let description = `${currentMonth} Salary`;
-	let curatorFee: number | null = 0;
 	let extend = false;
 	let nextAvailableChildBountyId: number;
 	let childBountyId: number;
@@ -65,7 +64,7 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: isFormValid = description && curatorFee !== null && payouts.length > 0;
+	$: isFormValid = description && payouts.length > 0;
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -81,7 +80,7 @@
 							value: String(salary),
 							curator: $activeAccount.address,
 							beneficiary: address,
-							fee: String(curatorFee)
+							fee: '0'
 						})
 					),
 					...(!extend
@@ -177,20 +176,6 @@
 				</li>
 			{/each}
 		</ul>
-
-		<label class="block">
-			<span class="text-xs block">Sub-curator fee per payout</span>
-			<input
-				bind:value={curatorFee}
-				class={Input.polkadot}
-				placeholder="00.00"
-				required
-				type="number"
-				step="any"
-				min="0"
-				inputmode="decimal"
-			/>
-		</label>
 
 		<p>
 			<label class="inline-flex gap-4 items-center cursor-pointer">
