@@ -135,7 +135,7 @@
 
 		<div class="space-y-1">
 			<p class="text-xs">Enter an individual salary or the total payout</p>
-			<div class="flex justify-between items-baseline relative">
+			<div class="flex justify-between items-baseline">
 				<input
 					class={[Input.polkadot, 'max-w-32']}
 					type="number"
@@ -163,7 +163,7 @@
 
 		<ul class="space-y-1.5">
 			{#each salaries as { address, salary }}
-				<li class="flex justify-between relative">
+				<li class="flex justify-between">
 					<CopyableAddress {address} />
 					<input
 						class={[Input.polkadot, 'max-w-52']}
