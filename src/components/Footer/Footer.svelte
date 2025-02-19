@@ -9,9 +9,7 @@
 	const isOnImprintPage = $derived(page.url.pathname === '/imprint');
 </script>
 
-<hr class="dotted-line border border-accent border-dotted bg-primary" />
-
-<footer class="bg-primary flex flex-col justify-center items-center pt-5 pb-6 space-y-6">
+<footer class="bg-backgroundApp flex flex-col justify-center items-center pt-5 pb-6 space-y-6">
 	<!-- Bounty Manager Logo -->
 	<p>
 		<img width="225" height="47" src={LogoBountyManagerDesktop} alt="Logo" />
@@ -35,14 +33,14 @@
 	<!-- Terms and Conditions -->
 	<a
 		href={isOnImprintPage ? '/curator-actions' : '/imprint'}
-		class="text-xs text-white underline underline-offset-2"
+		class="text-xs text-textPrimary underline underline-offset-2"
 	>
 		{isOnImprintPage ? 'Back' : 'Imprint and Terms & Conditions'}
 	</a>
 
 	<!-- Polkadot Logo -->
 	<div class="flex items-baseline space-x-1">
-		<p class="text-white text-xs">powered by</p>
+		<p class="text-textPrimary text-xs">powered by</p>
 		<img width="49" height="11" src={LogoPolkadot} alt="Polkadot Logo" />
 	</div>
 </footer>

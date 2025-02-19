@@ -65,7 +65,7 @@
 	<button
 		on:click={submit}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+		class="{`w-full md:w-fit h-12 mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {!isToggled ? 'button-popup' : 'cursor-allowed'}"
 	>
 		SIGN

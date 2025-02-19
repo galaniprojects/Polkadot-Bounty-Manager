@@ -3,7 +3,7 @@
 </script>
 
 {#if $bountyInfo}
-	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
+	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if $bountyInfo.description}
 				#{$bountyInfo.id} {$bountyInfo.description}
@@ -18,7 +18,7 @@
 	</div>
 
 	<div
-		class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		class="bg-backgroundApp text-textPrimary max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
 	>
 		<p class="w-full md:w-2/3 text-sm sm:text-base">
 			The Referendum for the approval of Bounty <br />
@@ -35,8 +35,12 @@
 			and the Curator list has been informally accepted by the community in discussions on the platforms.
 		</p>
 		<div class="mt-5 flex-col space-y-2 sm:flex-row max-w-fit">
-			<a href="/curator-actions" class="button-cancel sm:mr-5">RETURN HOME</a>
-			<a href="/bounty-setup/curator-proposal" class="button-active">PROCEED</a>
+			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2"
+				>RETURN HOME</a
+			>
+			<a href="/bounty-setup/curator-proposal" class="button-active h-12 inline-flex items-center"
+				>PROCEED</a
+			>
 		</div>
 	</div>
 {/if}

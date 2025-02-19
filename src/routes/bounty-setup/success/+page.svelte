@@ -3,12 +3,12 @@
 </script>
 
 {#if $bountyInfo}
-	<div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
-		<p class="text-white">#{$bountyInfo.id} {$bountyInfo.description}</p>
+	<div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
+		<p class="text-white text-lg sm:text-2xl">#{$bountyInfo.id} {$bountyInfo.description}</p>
 	</div>
 
 	<div
-		class="bg-backgroundContent p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden"
+		class="bg-backgroundApp text-textPrimary p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden"
 	>
 		<p>
 			#{$bountyInfo.id}
@@ -22,8 +22,12 @@
 		</p>
 
 		<div class="flex-col space-y-2 sm:flex-row mt-10 sm:mt-40">
-			<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
-			<a href="/bounty-setup/approval" class="button-active">PROCEED</a>
+			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2"
+				>RETURN HOME</a
+			>
+			<a href="/bounty-setup/approval" class="button-active h-12 inline-flex items-center"
+				>PROCEED</a
+			>
 		</div>
 	</div>
 {/if}

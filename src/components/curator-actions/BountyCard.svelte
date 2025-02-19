@@ -54,7 +54,7 @@
 	}
 </script>
 
-<div class="bg-curatorMainBackground overflow-hidden rounded-md my-6">
+<div class="bg-backgroundBounty overflow-hidden rounded-md my-6">
 	<!-- Header -->
 	<BountyCardHeader {bounty} bind:isParentExpanded={expanded} />
 
@@ -77,9 +77,9 @@
 		>
 			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm text-white">Award bounty</p>
+					<p class="pt-2 text-sm text-textPrimary">Award bounty</p>
 					<button
-						class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-5"
+						class="w-full h-12 button-popup font-bold rounded-md lg:h-auto lg:pt-1 lg:w-[128px] lg:px-4"
 						on:click={() => {
 							awardBountyDialogOpen = true;
 						}}
@@ -93,8 +93,8 @@
 		<!-- Footer -->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
 			<button class="flex items-center pt-5 pb-1" on:click={toggleExpanded}>
-				<p class="text-white text-xs">Close bounty view</p>
-				<span class="material-symbols-outlined text-white text-3xl">keyboard_arrow_up</span>
+				<p class="text-textPrimary text-xs">Close bounty view</p>
+				<span class="material-symbols-outlined text-textPrimary text-3xl">keyboard_arrow_up</span>
 			</button>
 		</div>
 	{/if}

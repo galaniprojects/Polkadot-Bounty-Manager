@@ -29,7 +29,7 @@
 
 	{#if $showAllCuratorOptions || ['Proposed', 'Approved', 'Funded'].includes(bounty.status)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-			<p class="pt-2 text-sm text-white">Curator Role</p>
+			<p class="pt-2 text-sm text-textPrimary">Curator Role</p>
 
 			<a
 				class="link-button w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-7"
@@ -42,7 +42,7 @@
 
 	{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-			<p class="pt-2 text-sm text-white">Curator Role</p>
+			<p class="pt-2 text-sm text-textPrimary">Curator Role</p>
 			<button
 				class="w-full h-12 button-popup font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 				on:click={() => {
@@ -56,7 +56,7 @@
 
 	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
 		<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-			<p class="pt-2 text-sm text-white">Extend Bounty</p>
+			<p class="pt-2 text-sm text-textPrimary">Extend Bounty</p>
 			<button
 				class="w-full h-12 px-10 bg-extendButtonBackground text-white font-bold rounded-md lg:w-fit lg:h-auto lg:pt-1 lg:max-w-32 lg:px-9"
 				on:click={() => {

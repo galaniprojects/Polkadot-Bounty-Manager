@@ -47,13 +47,14 @@
 			open = !open;
 		}}
 	>
-		<span class="material-symbols-rounded text-white"> menu </span>
+		<span class="material-symbols-rounded text-textPrimary"> menu </span>
 	</button>
 
 	<!-- Menu Overlay -->
 	{#if open}
+		<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
 		<div
-			class="absolute top-0 right-0 flex flex-col items-start bg-backgroundContent border shadow-lg p-2.5 rounded-md w-[210px]"
+			class="absolute top-0 right-0 flex flex-col items-start z-20 bg-backgroundApp border shadow-lg p-2.5 rounded-md w-[210px]"
 		>
 			<button
 				on:click={() => {
@@ -61,21 +62,21 @@
 				}}
 				class="self-end mr-2.5 mb-1"
 			>
-				<span class="material-symbols-rounded text-accent"> close </span>
+				<span class="material-symbols-rounded text-textPrimary"> close </span>
 			</button>
 			<a
 				on:click={() => {
 					open = false;
 				}}
 				href="/bounty-setup"
-				class="bg-accent text-white p-2.5 mb-2 rounded-md w-[189px] flex justify-between items-center"
+				class="bg-backgroundBounty text-textPrimary p-2.5 mb-2 rounded-md w-[189px] flex justify-between items-center"
 			>
 				<span class="mt-1">Create new bounty</span>
 				<span class="material-symbols-rounded"> add </span>
 			</a>
 			<button
 				on:click={logOut}
-				class="text-primary p-2.5 rounded-md w-[189px] flex justify-between items-center"
+				class="text-textPrimary p-2.5 rounded-md w-[189px] flex justify-between items-center"
 			>
 				<span class="mt-1">Log out</span>
 				<span class="material-symbols-rounded"> logout </span>

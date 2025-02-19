@@ -31,26 +31,30 @@
 	}
 </script>
 
-<div class="childContainer bg-white pb-3 lg:w-full rounded-md shadow-lg mt-6">
+<div class="childContainer bg-backgroundBounty pb-3 lg:w-full shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex justify-between gap-4 text-white rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6"
-		data-status={childBounty.status}
+		class="flex justify-between gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty text-textPrimary"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
-				<span class="text-sm">#{childBounty.id} {childBounty.description}</span>
+				<span class="text-[18px]">#{childBounty.id} {childBounty.description}</span>
 			</div>
 		</div>
 
-		<span class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5">
+		<span
+			class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5 text-white rounded-md pt-1.5 px-3"
+			data-status={childBounty.status}
+		>
 			{statusLabels[childBounty.status]}
 		</span>
 	</div>
 
 	<!-- Child Bounty Card Content -->
-	<div class="flex flex-col lg:flex-row justify-between lg:pr-6 lg:pt-1 lg:pl-4">
-		<div class="bg-childBountyHeaderBackground lg:bg-white">
+	<div
+		class="flex flex-col lg:flex-row justify-between bg-backgroundChildBountyDetails mt-2 mx-2 lg:pr-[16px] lg:pt-1 lg:pl-2"
+	>
+		<div class=" text-textPrimary">
 			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
 				<div class="mt-3 flex flex-col lg:w-[250px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
@@ -90,9 +94,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-center items-center text-primary lg:hidden">
+		<div class="flex justify-center items-center text-textPrimary lg:hidden">
 			{#if !detailsExpended}
-				<div class="bg-childBountyHeaderBackground max-w-fit rounded-b-md max-h-[24px]">
+				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						more details
 					</button>
@@ -106,7 +110,7 @@
 			{/if}
 		</div>
 		{#if detailsExpended}
-			<div class="flex flex-col bg-childBountyHeaderBackground px-2 space-y-3 pb-5">
+			<div class="flex flex-col bg-backgroundBounty text-textPrimary px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
 					<p class=""><Currency value={childBounty.fee} /></p>
@@ -129,7 +133,7 @@
 
 		<div class="flex justify-center items-center">
 			{#if detailsExpended}
-				<div class="bg-childBountyHeaderBackground max-w-fit rounded-b-md max-h-[24px]">
+				<div class="bg-backgroundBounty text-textPrimary max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						less details
 					</button>
@@ -143,7 +147,7 @@
 			{/if}
 		</div>
 
-		<div class="space-y-3 p-2 2xl:mr-[140px]">
+		<div class="space-y-3 p-2 2xl:mr-[140px] text-textPrimary">
 			<div class="flex justify-end">
 				<div class="hidden lg:flex lg:flex-row lg:items-center lg:justify-end lg:mr-2">
 					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
@@ -155,8 +159,7 @@
 
 					<button
 						on:click={() => (assignSubCuratorOpen = true)}
-						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-						data-status={childBounty.status}
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						ASSIGN
 					</button>
@@ -166,8 +169,7 @@
 
 					<button
 						on:click={() => (batchOpen = true)}
-						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-						data-status={childBounty.status}
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						BATCH
 					</button>
@@ -179,8 +181,7 @@
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 					<button
 						on:click={() => (acceptSubCuratorRuleOpen = true)}
-						data-status={childBounty.status}
-						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						ACCEPT
 					</button>
@@ -192,10 +193,8 @@
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
 					<button
-						id="close"
-						data-status={childBounty.status}
 						on:click={() => (closeDownChildBountyOpen = true)}
-						class="bg-transparent border rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
+						class="bg-backgroundCloseChildBounty text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
 					>
 						CLOSE DOWN
 					</button>
@@ -207,10 +206,8 @@
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
 					<button
-						id="close"
-						data-status={childBounty.status}
 						on:click={() => (unassignSubCuratorOpen = true)}
-						class="bg-transparent border rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
 					>
 						UNASSIGN
 					</button>
@@ -222,8 +219,7 @@
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}
-						data-status={childBounty.status}
-						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						AWARD
 					</button>
@@ -234,8 +230,7 @@
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (claimChildBountyOpen = true)}
-						data-status={childBounty.status}
-						class="text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
+						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
 					>
 						CLAIM
 					</button>
@@ -284,37 +279,17 @@
 	[data-status='Active'] {
 		background-color: theme('colors.childBountyGreen');
 	}
-	#close[data-status='Active'] {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGreen');
-		color: theme('colors.childBountyGreen');
-	}
 
 	[data-status='PendingPayout'] {
 		background-color: theme('colors.curatorMainBackground');
-	}
-	#close[data-status='PendingPayout'] {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.curatorMainBackground');
-		color: theme('colors.curatorMainBackground');
 	}
 
 	[data-status='CuratorProposed'] {
 		background-color: theme('colors.childBountyGray');
 	}
-	#close[data-status='CuratorProposed'] {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGray');
-		color: theme('colors.childBountyGray');
-	}
 
 	[data-status='Added'] {
 		background-color: theme('colors.childBountyGray');
-	}
-	#close[data-status='Added'] {
-		background-color: theme('colors.transparent');
-		border-color: theme('colors.childBountyGray');
-		color: theme('colors.childBountyGray');
 	}
 
 	.childContainer {

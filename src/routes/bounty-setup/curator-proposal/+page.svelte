@@ -2,7 +2,7 @@
 	import { bountyInfo } from '../_bountyInfo';
 </script>
 
-<p class="w-full md:w-2/3 text-sm sm:text-base">
+<p class="w-full md:w-2/3 text-sm sm:text-base text-textPrimary">
 	It is strongly recommended to create the Curator Proposal referendum, after the Bounty has been
 	funded and the Curator list has been informally accepted by the community in discussions on the
 	platforms.
@@ -15,8 +15,12 @@
 </p>
 
 <div class="flex-col space-y-2 sm:flex-row my-5 sm:mt-20">
-	<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
+	<a href="/curator-actions" class="button-cancel mr-2 h-12 inline-flex items-center">RETURN HOME</a
+	>
 	{#if $bountyInfo}
-		<a href="/bounty-setup/curator-proposal/form" class="button-active">PROCEED</a>
+		<a
+			href="/bounty-setup/curator-proposal/form"
+			class="button-active h-12 inline-flex items-center">PROCEED</a
+		>
 	{/if}
 </div>

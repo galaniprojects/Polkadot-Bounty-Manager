@@ -20,7 +20,7 @@
 	}
 </script>
 
-<div class="bg-curatorCarousel xl:pt-6 text-white w-full p-0 sm:p-3">
+<div class="bg-backgroundBounty xl:pt-6 text-textPrimary w-full p-0 sm:p-3">
 	<!-- Desktop design -->
 	<div class="hidden lg:flex lg:flex-col gap-3 lg:ml-7">
 		<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
@@ -31,7 +31,7 @@
 						<p class="text-2xl"><Currency value={remainingBalance} /></p>
 					</div>
 				{/if}
-				<div class="lg:w-40 xl:w-44">
+				<div class="lg:w-40 xl:w-[250px]">
 					<p class="text-xs">Value</p>
 					<p class="text-md"><Currency value={bounty.value} /></p>
 				</div>
@@ -47,7 +47,7 @@
 					</div>
 				{/if}
 			</section>
-			<div class="flex justify-center lg:mr-12 2xl:mr-44">
+			<div class="flex justify-center lg:mr-12 2xl:mr-[180px]">
 				<ExternalLinks dimension={6} bountyId={bounty.id} />
 			</div>
 		</section>
@@ -69,7 +69,7 @@
 			</section>
 			{#if bounty.curator}
 				<button
-					class="flex justify-end lg:mr-12 2xl:mr-44 text-accent bg-white font-bold rounded-md lg:h-auto lg:pt-1 lg:max-w-32"
+					class="flex justify-end lg:mr-[48px] 2xl:mr-[180px] bg-backgroundButtonDark text-white font-bold rounded-md lg:h-auto lg:pt-1 lg:max-w-32"
 					on:click={() => {
 						curatorsDialogOpen = true;
 					}}
@@ -82,7 +82,7 @@
 
 	<!-- Mobile design -->
 	<div class="lg:hidden">
-		<div class="grid space-y-5 bg-curatorCarousel px-[10px] py-5 text-white">
+		<div class="grid space-y-5 bg-backgroundBounty px-[10px] py-5 text-textPrimary">
 			{#if remainingBalance}
 				<div class="lg:w-[250px] xl:w-[490px]">
 					<p class="text-xs">Remaining Balance</p>
@@ -95,9 +95,9 @@
 				</div>
 			{/if}
 		</div>
-		<div class="flex justify-center items-center text-white">
+		<div class="flex justify-center items-center text-textPrimary">
 			{#if !detailsExpanded}
-				<div class="bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
+				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						more details
 					</button>
@@ -112,7 +112,7 @@
 		</div>
 
 		{#if detailsExpanded}
-			<div class="bg-curatorCarousel text-white px-[10px] pb-6 space-y-5">
+			<div class="bg-backgroundBounty text-textPrimary px-[10px] pb-6 space-y-5">
 				{#if remainingBalance}
 					<div>
 						<p class="text-xs">Value</p>
@@ -152,7 +152,7 @@
 				</div>
 			</div>
 			<div class="flex justify-center items-center">
-				<div class="text-white bg-curatorCarousel max-w-fit rounded-b-md max-h-[24px]">
+				<div class="text-textPrimary bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						less details
 					</button>

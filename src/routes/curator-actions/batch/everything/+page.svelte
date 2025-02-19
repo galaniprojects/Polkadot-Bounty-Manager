@@ -105,8 +105,8 @@
 	}
 </script>
 
-<div class="bg-childBountyBackground p-5 m-3 rounded-md">
-	<h1 class="text-2xl">BATCH ALL CALLS FOR MULTIPLE CHILD BOUNTIES</h1>
+<div class="bg-backgroundBounty p-5 m-3 rounded-md">
+	<h1 class="text-2xl text-textPrimary">BATCH ALL CALLS FOR MULTIPLE CHILD BOUNTIES</h1>
 
 	{#if error}
 		<p class="my-2 p-2 text-white bg-childBountyOrange">
@@ -115,12 +115,12 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-white bg-childBountyGray">
+		<p class="my-2 p-1 text-textPrimary">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
 
-		<form onsubmit={submit} class="mt-4 flex flex-col gap-6">
+		<form onsubmit={submit} class="mt-4 flex flex-col gap-6 text-textPrimary">
 			<section>
 				<h3 class="text-xs">Executed actions:</h3>
 
@@ -221,7 +221,7 @@
 					<p class="bg-white p-5 rounded-md shadow-lg grid place-items-center">
 						<button
 							type="button"
-							class="py-2 px-4 rounded-md border border-childBountyGray text-childBountyGray font-bold"
+							class="py-2 px-4 rounded-md border border-backgroundButtonDark text-backgroundButtonDark font-bold"
 							onclick={() => {
 								childBounties = [
 									...childBounties,
@@ -256,7 +256,7 @@
 				<button
 					type="submit"
 					class={[
-						'w-full md:w-fit h-12 button-active',
+						'w-full md:w-fit h-12 button-popup',
 						!isFormValid && 'cursor-not-allowed opacity-50'
 					]}
 				>

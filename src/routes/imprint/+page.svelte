@@ -1,5 +1,5 @@
 <div
-	class="bg-curatorMainBackground rounded-lg m-0 mb-3 sm:my-5 sm:mx-12 px-5 py-5 flex-col space-y-5 text-white"
+	class="bg-backgroundApp rounded-lg m-0 mb-3 sm:my-5 sm:mx-12 px-5 py-5 flex-col space-y-5 text-textPrimary"
 >
 	<h2 class="text-xl">Imprint</h2>
 	<p>

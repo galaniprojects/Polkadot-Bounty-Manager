@@ -3,7 +3,7 @@
 
 	export let currentPage = 1;
 	export let totalPages = 5;
-	export let activeButtonColor = 'text-white border border-white';
+	export let activeButtonColor = 'text-textPrimary border border-textPrimary';
 	export let itemsPerPage = 10;
 	export let perPageOptions = [5, 10, 15, 20].map((value) => ({ value, label: value.toString() }));
 	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0];
@@ -50,7 +50,7 @@
 
 		{#each pageNumbers as page}
 			<button
-				class={`page-number ${page === currentPage ? activeButtonColor : 'bg-accent text-white '}`}
+				class={`page-number ${page === currentPage ? activeButtonColor : 'bg-textPrimary text-backgroundApp '}`}
 				on:click={() => {
 					changePage(page);
 				}}
@@ -83,7 +83,7 @@
 	}
 
 	.pagination-arrows {
-		color: var(--pagination-arrow-color, theme('colors.white'));
+		color: var(--pagination-arrow-color, theme('colors.textPrimary'));
 	}
 
 	.pagination-arrows:disabled,

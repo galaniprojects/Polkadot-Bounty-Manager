@@ -75,8 +75,8 @@
 	}
 </script>
 
-<div class="bg-childBountyBackground p-5 m-3 rounded-md">
-	<h1 class="text-2xl">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
+<div class="bg-backgroundBounty p-5 m-3 rounded-md">
+	<h1 class="text-2xl text-textPrimary">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
 
 	{#if error}
 		<p class="my-2 p-2 text-white bg-childBountyOrange">
@@ -85,12 +85,12 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-white bg-childBountyGray">
+		<p class="my-2 p-1 text-textPrimary">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
 
-		<form onsubmit={submit} class="mt-4 flex flex-col gap-6">
+		<form onsubmit={submit} class="mt-4 flex flex-col gap-6 text-textPrimary">
 			<div class="grid cardsGrid gap-6">
 				{#each childBounties as child, index}
 					<fieldset class="bg-white -mt-3 p-5 lg:w-full rounded-md shadow-lg">
@@ -138,7 +138,7 @@
 					<p class="bg-white p-5 rounded-md shadow-lg grid place-items-center">
 						<button
 							type="button"
-							class="py-2 px-4 rounded-md border border-childBountyGray text-childBountyGray font-bold"
+							class="py-2 px-4 rounded-md border border-backgroundButtonDark text-backgroundButtonDark font-bold"
 							onclick={() => {
 								childBounties = [...childBounties, { value: '', title: '' }];
 							}}

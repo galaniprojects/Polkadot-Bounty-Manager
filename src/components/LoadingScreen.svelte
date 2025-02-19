@@ -31,8 +31,8 @@
 	.loader {
 		width: 50px;
 		height: 50px;
-		border: 7px solid theme('colors.darkgray');
-		border-bottom-color: theme('colors.primary');
+		border: 7px solid theme('colors.backgroundButtonLight');
+		border-bottom-color: theme('colors.backgroundButtonDark');
 		border-radius: 50%;
 		display: inline-block;
 		box-sizing: border-box;

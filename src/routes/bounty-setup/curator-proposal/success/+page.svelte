@@ -3,7 +3,7 @@
 </script>
 
 {#if $bountyInfo}
-	<p class="w-full md:w-2/3 text-sm sm:text-base">
+	<p class="w-full md:w-2/3 text-sm sm:text-base text-textPrimary">
 		The Referendum for Curator Proposal of Bounty <br />
 		"#{$bountyInfo.id}
 		{$bountyInfo.description}" <br />
@@ -17,6 +17,6 @@
 	</p>
 
 	<div class="mt-7 sm:mt-24 mb-2 flex">
-		<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
+		<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center">RETURN HOME</a>
 	</div>
 {/if}
