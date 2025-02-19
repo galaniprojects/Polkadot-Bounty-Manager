@@ -32,6 +32,19 @@
 		const extensionNames = getInjectedExtensions();
 		wallets = [
 			{
+				icon: LogoWalletConnect,
+				name: 'WalletConnect',
+				source: 'WalletConnect',
+				available: true
+			},
+			{
+				icon: LogoMimir,
+				name: 'Mimir',
+				source: 'mimir',
+				url: 'https://app.mimir.global/',
+				available: extensionNames.includes('mimir')
+			},
+			{
 				icon: LogoPolkadotWallet,
 				name: 'Polkadot.js',
 				source: 'polkadot-js',
@@ -39,12 +52,6 @@
 				available:
 					// !novaWalletAvailable to prevent polkadot button from being enabled on Nova.
 					extensionNames.includes('polkadot-js') && !novaWalletAvailable
-			},
-			{
-				icon: LogoWalletConnect,
-				name: 'WalletConnect',
-				source: 'WalletConnect',
-				available: true
 			},
 			{
 				icon: LogoNovaWallet,
@@ -59,13 +66,6 @@
 				source: 'talisman',
 				url: 'https://www.talisman.xyz/',
 				available: extensionNames.includes('talisman')
-			},
-			{
-				icon: LogoMimir,
-				name: 'Mimir',
-				source: 'mimir',
-				url: 'https://app.mimir.global/',
-				available: extensionNames.includes('mimir')
 			}
 		];
 	});
