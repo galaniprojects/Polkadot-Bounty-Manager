@@ -1,10 +1,14 @@
 import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import { hideTestBar } from './hideTestBar';
 
-const storedEndpoint =
-	(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('node')) || undefined;
+export function getEndpoint() {
+	const storedEndpoint =
+		(typeof sessionStorage !== 'undefined' && sessionStorage.getItem('node')) || undefined;
 
-export const customEndpoint = (!hideTestBar && storedEndpoint) || PUBLIC_NODE_ENDPOINT;
+	return (!hideTestBar && storedEndpoint) || PUBLIC_NODE_ENDPOINT;
+}
+
+export const customEndpoint = getEndpoint();
 
 const overrideEndpoints = PUBLIC_NODE_ENDPOINT !== 'RANDOM';
 
