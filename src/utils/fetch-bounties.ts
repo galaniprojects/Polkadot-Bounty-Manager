@@ -37,9 +37,11 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		});
 
 		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
+		const oldChildBounties = await fetchOldCB();
 		const childBounties = rawChildBounties
 			.map(({ value, keyArgs: [, id] }) => parseChildBounty(value, id, currentBlock))
-			.sort((a, b) => (a.id > b.id ? -1 : 1));
+			.sort((a, b) => (a.id > b.id ? -1 : 1))
+			.concat(oldChildBounties);
 
 		const childBountiesMap = keyBy(childBounties, 'id');
 		const childDescriptions = await api.query.ChildBounties.ChildBountyDescriptions.getEntries();
@@ -53,25 +55,6 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		bounties.forEach((bounty: Bounty) => {
 			bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
 		});
-
-		for (const bounty of bounties){
-			bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
-			console.log(childBounties);
-
-			const oldCB = await fetchOldCB(bounty.id);
-			childBounties.push(...oldCB);
-			console.log(childBounties);
-		}
-
-		for (const bounty of bounties) {
-			const oldChildBounties = await fetchOldCB(bounty.id);
-
-			bounty.childBounties = [
-				...childBounties.filter(({ parentBounty }) => parentBounty === bounty.id),
-				...oldChildBounties
-			];
-		}
-		console.log(childBounties);
 
 		bountiesStore.set(bounties);
 		setActiveAccountBounties();

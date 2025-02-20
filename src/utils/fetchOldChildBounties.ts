@@ -1,17 +1,19 @@
 import type { ChildBounty, childBountyStatuses } from '../types/child-bounty';
 
-export async function fetchOldCB(parentBountyId: number) {
-	const items = await fetchAllChildBounties(parentBountyId);
-	return items.map(
-		({ beneficiary, curator, curatorDeposit, fee, index, parentBounty, state, title, value }) =>
+export async function fetchOldCB() {
+	return [
+		...(await fetchAllChildBounties('Claimed')),
+		...(await fetchAllChildBounties('Canceled'))
+	].map(
+		({ beneficiary, curator, dValue, fee, index, parentBountyId, state, description, value }) =>
 			<ChildBounty>{
 				id: index,
-				parentBounty,
-				value,
-				fee,
-				curatorDeposit,
-				status: state,
-				description: title,
+				parentBounty: parentBountyId,
+				value: BigInt(value),
+				fee: fee !== null ? BigInt(fee) : 0n,
+				curatorDeposit: dValue.$numberDecimal !== 'NaN' ? BigInt(dValue.$numberDecimal) : 0n,
+				status: state.state,
+				description,
 				curator,
 				beneficiary
 			}
@@ -19,13 +21,17 @@ export async function fetchOldCB(parentBountyId: number) {
 }
 
 interface SubsquareChildBountyItem {
-	state: (typeof childBountyStatuses)[number];
-	parentBounty: number;
+	state: {
+		state: (typeof childBountyStatuses)[number];
+	};
+	parentBountyId: number;
 	index: number;
-	title: string;
-	value: bigint;
-	fee: bigint;
-	curatorDeposit: bigint;
+	description: string;
+	value: number;
+	fee: number | null;
+	dValue: {
+		$numberDecimal: string;
+	};
 	curator: string;
 	beneficiary: string;
 }
@@ -37,14 +43,14 @@ interface SubsquareResponse {
 	pageSize: number;
 }
 
-const childBountiesApi = 'https://polkadot.subsquare.io/api/treasury/child-bounties';
+const childBountiesApi = 'https://polkadot-api.dotreasury.com/child-bounties';
 
-async function fetchAllChildBounties(parentBountyId: number) {
+async function fetchAllChildBounties(status: string) {
 	const url = new URL(childBountiesApi);
-	url.searchParams.set('parentBountyId', String(parentBountyId));
-	url.searchParams.set('page_size', '100');
+	url.searchParams.set('status', status);
+	url.searchParams.set('page_size', '1000');
 
-	let page = 1;
+	let page = 0;
 	let totalItems: SubsquareChildBountyItem[] = [];
 
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -58,9 +64,7 @@ async function fetchAllChildBounties(parentBountyId: number) {
 		}
 
 		const { items, pageSize } = (await response.json()) as SubsquareResponse;
-
-		const filteredItems = items.filter(({ state }) => ['Canceled', 'Claimed'].includes(state));
-		totalItems = totalItems.concat(filteredItems);
+		totalItems = totalItems.concat(items);
 
 		if (items.length < pageSize) {
 			return totalItems;
