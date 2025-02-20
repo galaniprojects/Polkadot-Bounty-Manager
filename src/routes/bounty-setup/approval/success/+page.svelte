@@ -18,7 +18,7 @@
 	</div>
 
 	<div
-		class="bg-backgroundApp text-textPrimary max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		class="bg-backgroundApp max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
 	>
 		<p class="w-full md:w-2/3 text-sm sm:text-base">
 			The Referendum for the approval of Bounty <br />

@@ -20,7 +20,7 @@
 	}
 </script>
 
-<div class="bg-backgroundBounty xl:pt-6 text-textPrimary w-full p-0 sm:p-3">
+<div class="bg-backgroundBounty xl:pt-6 w-full p-0 sm:p-3">
 	<!-- Desktop design -->
 	<div class="hidden lg:flex lg:flex-col gap-3 lg:ml-7">
 		<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
@@ -82,7 +82,7 @@
 
 	<!-- Mobile design -->
 	<div class="lg:hidden">
-		<div class="grid space-y-5 bg-backgroundBounty px-[10px] py-5 text-textPrimary">
+		<div class="grid space-y-5 bg-backgroundBounty px-[10px] py-5">
 			{#if remainingBalance}
 				<div class="lg:w-[250px] xl:w-[490px]">
 					<p class="text-xs">Remaining Balance</p>
@@ -95,7 +95,7 @@
 				</div>
 			{/if}
 		</div>
-		<div class="flex justify-center items-center text-textPrimary">
+		<div class="flex justify-center items-center">
 			{#if !detailsExpanded}
 				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
@@ -112,7 +112,7 @@
 		</div>
 
 		{#if detailsExpanded}
-			<div class="bg-backgroundBounty text-textPrimary px-[10px] pb-6 space-y-5">
+			<div class="bg-backgroundBounty px-[10px] pb-6 space-y-5">
 				{#if remainingBalance}
 					<div>
 						<p class="text-xs">Value</p>
@@ -152,7 +152,7 @@
 				</div>
 			</div>
 			<div class="flex justify-center items-center">
-				<div class="text-textPrimary bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
+				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						less details
 					</button>

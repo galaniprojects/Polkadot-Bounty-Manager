@@ -48,14 +48,14 @@
 		<button
 			on:click={dropdownOnClick}
 			type="button"
-			class="inline-flex {width} justify-between items-center rounded-md bg-backgroundApp px-2 py-2 text-textPrimary ring-1 ring-inset ring-borderDropdown"
+			class="inline-flex {width} justify-between items-center rounded-md bg-backgroundApp px-2 py-2 ring-1 ring-inset ring-borderDropdown"
 			id="menu-button"
 			aria-expanded="true"
 			aria-haspopup="true"
 		>
 			{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 
-			<span class="material-symbols-outlined text-textPrimary">
+			<span class="material-symbols-outlined">
 				{#if dropdownOpen}
 					keyboard_arrow_up
 				{:else}

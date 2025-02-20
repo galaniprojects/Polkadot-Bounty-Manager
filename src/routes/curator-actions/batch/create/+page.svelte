@@ -76,7 +76,7 @@
 </script>
 
 <div class="bg-backgroundBounty p-5 m-3 rounded-md">
-	<h1 class="text-2xl text-textPrimary">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
+	<h1 class="text-2xl">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
 
 	{#if error}
 		<p class="my-2 p-2 text-white bg-childBountyOrange">
@@ -85,12 +85,12 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-textPrimary">
+		<p class="my-2 p-1">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
 
-		<form onsubmit={submit} class="mt-4 flex flex-col gap-6 text-textPrimary">
+		<form onsubmit={submit} class="mt-4 flex flex-col gap-6">
 			<div class="grid cardsGrid gap-6">
 				{#each childBounties as child, index}
 					<fieldset class="bg-white -mt-3 p-5 lg:w-full rounded-md shadow-lg">

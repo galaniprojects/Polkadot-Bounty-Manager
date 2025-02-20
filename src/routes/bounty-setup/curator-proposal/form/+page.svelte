@@ -73,7 +73,7 @@
 </script>
 
 <form on:submit={submit}>
-	<div class="text-textPrimary">
+	<div>
 		<div class="space-y-2 sm:space-y-5">
 			<p class="w-full md:1/3 mb-2 text-sm sm:text-base">
 				It is highly recommended to use a pure proxy multisig address for the curators!
@@ -90,7 +90,7 @@
 
 		<div class="mt-5 space-y-1 sm:space-y-3">
 			<p class="text-xs mb-1">Treasury track</p>
-			<div class="border">
+			<div>
 				<DropdownMenu
 					bind:selectedItem={selectedTreasuryTrack}
 					items={treasuryTracks}

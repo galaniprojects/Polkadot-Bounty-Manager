@@ -5,7 +5,8 @@
 @tailwind utilities;
 
 body {
-	color: theme('colors.backgroundApp');
+	color: theme('colors.textPrimary');
+	background-color: theme('colors.backgroundApp');
 }
 
 .basic-button {

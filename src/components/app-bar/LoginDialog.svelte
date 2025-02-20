@@ -129,7 +129,7 @@
 			class="flex flex-col h-fit w-[300px] xs:w-[490px] rounded-md bg-backgroundApp sm:p-5 overflow-y-auto"
 		>
 			<!-- Header -->
-			<div class="flex justify-between items-center text-textPrimary sm:mb-0">
+			<div class="flex justify-between items-center sm:mb-0">
 				{#if currentPhase !== 'walletSelection'}
 					<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
 						arrow_back_ios
@@ -146,11 +146,11 @@
 			<section class="s:max-h-96 pb-3">
 				<!-- Wallet Selection -->
 				{#if currentPhase === 'walletSelection'}
-					<p class="flex justify-center text-2xl text-textPrimary">{title}</p>
+					<p class="flex justify-center text-2xl">{title}</p>
 					<a
 						href="/docs/multix-walletconnect"
 						target="_blank"
-						class="flex justify-center text-textPrimary opacity-50 underline underline-offset-2 mb-2"
+						class="flex justify-center opacity-50 underline underline-offset-2 mb-2"
 					>
 						Follow the instructions in the new tab
 					</a>
@@ -184,7 +184,7 @@
 							</div>
 						</div>
 
-						<div class="grid items-center text-center gap-2 text-textPrimary text-md mt-14">
+						<div class="grid items-center text-center gap-2 text-md mt-14">
 							<p>WAITING FOR AUTHORIZATION</p>
 							<p>
 								Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
@@ -194,7 +194,7 @@
 
 					<!-- Account Selection -->
 				{:else if currentPhase === 'accountSelection'}
-					<p class="flex justify-center text-2xl text-textPrimary">SELECT ACCOUNT</p>
+					<p class="flex justify-center text-2xl">SELECT ACCOUNT</p>
 					<hr class="border-backgroundButtonDark opacity-35 mt-4 w-full" />
 					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 						{#each accounts as account}
@@ -221,12 +221,10 @@
 								<img src={selectedWallet.icon} alt="Logo" />
 							{/if}
 						</div>
-						<button class="flex items-center text-textPrimary px-4">
+						<button class="flex items-center px-4">
 							{selectedWallet?.name} &nbsp |
 						</button>
-						<button on:click={backToWalletSelection} class="text-textPrimary flex items-center">
-							Switch
-						</button>
+						<button on:click={backToWalletSelection} class="flex items-center"> Switch </button>
 					</div>
 				</div>
 			{/if}

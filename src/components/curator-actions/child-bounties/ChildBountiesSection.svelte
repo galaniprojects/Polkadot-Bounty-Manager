@@ -55,7 +55,7 @@
 <div data-pagination-scroll="bounty-{bounty.id}" class="bg-backgroundApp p-3 m-3 w-full lg:w-full">
 	<!-- Header section -->
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
-		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3 text-textPrimary">
+		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
 			<p class="text-2xl">
 				{bounty.childBounties.length} Active Child {bounty.childBounties.length === 1
@@ -73,10 +73,10 @@
 							? 'lg:mr-0'
 							: '2xl:mr-36'}"
 					>
-						<p class="lg:mr-3 text-xs lg:text-base text-textPrimary">Add new child bounty</p>
+						<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
 						<button
 							on:click={() => (createChildBountyOpen = true)}
-							class="bg-backgroundButtonLight text-textPrimary rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+							class="bg-backgroundButtonLight rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
 						>
 							ADD
 						</button>
@@ -87,10 +87,10 @@
 							? 'lg:mr-0'
 							: '2xl:mr-36'}"
 					>
-						<p class="lg:mr-3 text-xs lg:text-base text-textPrimary">All operations</p>
+						<p class="lg:mr-3 text-xs lg:text-base">All operations</p>
 						<button
 							on:click={() => (createChildBatchOpen = true)}
-							class="bg-backgroundButtonLight text-textPrimary rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
+							class="bg-backgroundButtonLight rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
 						>
 							BATCH
 						</button>
@@ -132,16 +132,14 @@
 	</section>
 
 	<!-- Child bounty list section -->
-	<div class="text-textPrimary">
+	<div>
 		{#each paginatedChildBounties as childBounty}
 			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}
 
 		{#if bounty.childBounties.length === 0}
-			<div class="childContainer bg-backgroundApp lg:w-full shadow-lg mt-6">
-				<div
-					class="flex flex-col bg-childBountyHeaderBackground lg:bg-backgroundApp p-4 rounded-md"
-				>
+			<div class="childContainer lg:w-full shadow-lg mt-6">
+				<div class="flex flex-col p-4 rounded-md">
 					<div class="text-center space-y-3">
 						<p>There are currently no active child bounties.</p>
 						<p class="text-4xl">(-‿-)</p>
@@ -149,7 +147,7 @@
 				</div>
 			</div>
 		{:else if filteredChildBounties.length === 0}
-			<p>No Child bounties for the selected filter</p>
+			<p>There are no child bounties for the selected filter.</p>
 		{/if}
 
 		<div class="pagination py-[18px]">

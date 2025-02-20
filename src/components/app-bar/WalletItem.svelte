@@ -13,11 +13,11 @@
 		<span class="w-10 h-10">
 			<img src={wallet.icon} alt="Logo" />
 		</span>
-		<span class="text-textPrimary text-2xl">{wallet.name}</span>
+		<span class="text-2xl">{wallet.name}</span>
 	</span>
 
 	<!-- Action Button -->
-	<span class="flex justify-end items-center sm:space-x-2 text-textPrimary">
+	<span class="flex justify-end items-center sm:space-x-2">
 		<span>
 			{#if wallet.available}
 				Connect

@@ -77,7 +77,7 @@
 		>
 			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm text-textPrimary">Award bounty</p>
+					<p class="pt-2 text-sm">Award bounty</p>
 					<button
 						class="w-full h-12 button-popup font-bold rounded-md lg:h-auto lg:pt-1 lg:w-[128px] lg:px-4"
 						on:click={() => {
@@ -93,8 +93,8 @@
 		<!-- Footer -->
 		<div class="flex justify-end px-5 my-4 lg:px-10">
 			<button class="flex items-center pt-5 pb-1" on:click={toggleExpanded}>
-				<p class="text-textPrimary text-xs">Close bounty view</p>
-				<span class="material-symbols-outlined text-textPrimary text-3xl">keyboard_arrow_up</span>
+				<p class="text-xs">Close bounty view</p>
+				<span class="material-symbols-outlined text-3xl">keyboard_arrow_up</span>
 			</button>
 		</div>
 	{/if}

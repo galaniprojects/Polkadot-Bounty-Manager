@@ -2,7 +2,7 @@
 	import { bountyInfo } from '../_bountyInfo';
 </script>
 
-<p class="w-full md:w-2/3 text-sm sm:text-base text-textPrimary">
+<p class="w-full md:w-2/3 text-sm sm:text-base">
 	It is strongly recommended to create the Curator Proposal referendum, after the Bounty has been
 	funded and the Curator list has been informally accepted by the community in discussions on the
 	platforms.

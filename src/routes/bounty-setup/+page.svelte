@@ -108,7 +108,7 @@
 </div>
 
 <div
-	class="grid content-between sm:space-y-10 bg-backgroundApp text-textPrimary p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden"
+	class="grid content-between sm:space-y-10 bg-backgroundApp p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden"
 >
 	<div>
 		<section class="space-y-1 sm:space-y-3">

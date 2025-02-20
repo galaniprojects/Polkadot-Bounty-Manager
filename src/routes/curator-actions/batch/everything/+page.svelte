@@ -106,7 +106,7 @@
 </script>
 
 <div class="bg-backgroundBounty p-5 m-3 rounded-md">
-	<h1 class="text-2xl text-textPrimary">BATCH ALL CALLS FOR MULTIPLE CHILD BOUNTIES</h1>
+	<h1 class="text-2xl">BATCH ALL CALLS FOR MULTIPLE CHILD BOUNTIES</h1>
 
 	{#if error}
 		<p class="my-2 p-2 text-white bg-childBountyOrange">
@@ -115,12 +115,12 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-textPrimary">
+		<p class="my-2 p-1">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
 
-		<form onsubmit={submit} class="mt-4 flex flex-col gap-6 text-textPrimary">
+		<form onsubmit={submit} class="mt-4 flex flex-col gap-6">
 			<section>
 				<h3 class="text-xs">Executed actions:</h3>
 

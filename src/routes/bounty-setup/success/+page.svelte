@@ -7,9 +7,7 @@
 		<p class="text-white text-lg sm:text-2xl">#{$bountyInfo.id} {$bountyInfo.description}</p>
 	</div>
 
-	<div
-		class="bg-backgroundApp text-textPrimary p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden"
-	>
+	<div class="bg-backgroundApp p-3 sm:pt-7 sm:pb-12 md:px-6 w-full box-border overflow-x-hidden">
 		<p>
 			#{$bountyInfo.id}
 			{$bountyInfo.description}

@@ -34,7 +34,7 @@
 <div class="childContainer bg-backgroundBounty pb-3 lg:w-full shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex justify-between gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty text-textPrimary"
+		class="flex justify-between gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
@@ -54,7 +54,7 @@
 	<div
 		class="flex flex-col lg:flex-row justify-between bg-backgroundChildBountyDetails mt-2 mx-2 lg:pr-[16px] lg:pt-1 lg:pl-2"
 	>
-		<div class=" text-textPrimary">
+		<div>
 			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
 				<div class="mt-3 flex flex-col lg:w-[250px] pr-3">
 					<section class="space-y-2 lg:space-y-0">
@@ -94,7 +94,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-center items-center text-textPrimary lg:hidden">
+		<div class="flex justify-center items-center lg:hidden">
 			{#if !detailsExpended}
 				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
@@ -110,10 +110,10 @@
 			{/if}
 		</div>
 		{#if detailsExpended}
-			<div class="flex flex-col bg-backgroundBounty text-textPrimary px-2 space-y-3 pb-5">
+			<div class="flex flex-col bg-backgroundBounty px-2 space-y-3 pb-5">
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
-					<p class=""><Currency value={childBounty.fee} /></p>
+					<p><Currency value={childBounty.fee} /></p>
 				</section>
 				<div class="flex flex-col">
 					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>
@@ -133,7 +133,7 @@
 
 		<div class="flex justify-center items-center">
 			{#if detailsExpended}
-				<div class="bg-backgroundBounty text-textPrimary max-w-fit rounded-b-md max-h-[24px]">
+				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
 					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
 						less details
 					</button>
@@ -147,7 +147,7 @@
 			{/if}
 		</div>
 
-		<div class="space-y-3 p-2 2xl:mr-[140px] text-textPrimary">
+		<div class="space-y-3 p-2 2xl:mr-[140px]">
 			<div class="flex justify-end">
 				<div class="hidden lg:flex lg:flex-row lg:items-center lg:justify-end lg:mr-2">
 					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />

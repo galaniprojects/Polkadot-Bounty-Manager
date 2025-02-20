@@ -16,7 +16,7 @@
 		<div class="w-10 h-10">
 			<PolkadotIcon {address} />
 		</div>
-		<div class="flex flex-col text-textPrimary">
+		<div class="flex flex-col">
 			<span class="self-start">{name}</span>
 			<span class="text-sm whitespace-nowrap">
 				<PeopleChainName {address}>{truncateString(address, 20)}</PeopleChainName>
@@ -26,7 +26,7 @@
 
 	<!-- Action Button -->
 	<div class="flex items-center space-x-1">
-		<span class="text-textPrimary text-base">Select</span>
+		<span class="text-base">Select</span>
 		<span class="mb-1"><img src={ForwardIcon} alt="Forward" /></span>
 	</div>
 </div>

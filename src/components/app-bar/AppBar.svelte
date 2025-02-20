@@ -55,7 +55,7 @@
 	}
 </script>
 
-<header class="relative flex items-center justify-between min-h-20 bg-backgroundApp px-4 sm:px-12">
+<header class="relative flex items-center justify-between min-h-20 px-4 sm:px-12">
 	<div>
 		<a href="/curator-actions">
 			<img width="71" height="54" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
@@ -65,13 +65,13 @@
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button class="text-textPrimary" on:click={showLoginDialog}>Connect Wallet</button>
+				<button class="" on:click={showLoginDialog}>Connect Wallet</button>
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
 			<!-- User Address -->
 			<div class="flex items-center align-top space-x-3">
-				<div class=" flex gap-2 items-center text-textPrimary">
+				<div class=" flex gap-2 items-center">
 					<div class="w-6 h-6">
 						<PolkadotIcon address={$activeAccount.address} />
 					</div>

@@ -47,7 +47,7 @@
 			open = !open;
 		}}
 	>
-		<span class="material-symbols-rounded text-textPrimary"> menu </span>
+		<span class="material-symbols-rounded"> menu </span>
 	</button>
 
 	<!-- Menu Overlay -->
@@ -62,21 +62,21 @@
 				}}
 				class="self-end mr-2.5 mb-1"
 			>
-				<span class="material-symbols-rounded text-textPrimary"> close </span>
+				<span class="material-symbols-rounded"> close </span>
 			</button>
 			<a
 				on:click={() => {
 					open = false;
 				}}
 				href="/bounty-setup"
-				class="bg-backgroundBounty text-textPrimary p-2.5 mb-2 rounded-md w-[189px] flex justify-between items-center"
+				class="bg-backgroundBounty p-2.5 mb-2 rounded-md w-[189px] flex justify-between items-center"
 			>
 				<span class="mt-1">Create new bounty</span>
 				<span class="material-symbols-rounded"> add </span>
 			</a>
 			<button
 				on:click={logOut}
-				class="text-textPrimary p-2.5 rounded-md w-[189px] flex justify-between items-center"
+				class="p-2.5 rounded-md w-[189px] flex justify-between items-center"
 			>
 				<span class="mt-1">Log out</span>
 				<span class="material-symbols-rounded"> logout </span>

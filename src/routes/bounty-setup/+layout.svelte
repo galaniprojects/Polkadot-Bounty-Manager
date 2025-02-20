@@ -48,9 +48,9 @@
 	});
 </script>
 
-<div class="main border-x-0 bg-backgroundApp flex justify-center items-center md:py-20 lg:py-40">
+<div class="main border-x-0 flex justify-center items-center md:py-20 lg:py-40">
 	<div class="container setup-container max-w-screen-lg p-4 space-y-5">
-		<h2 class="font-bold text-lg sm:text-2xl text-textPrimary text-start">Bounty Setup</h2>
+		<h2 class="font-bold text-lg sm:text-2xl text-start">Bounty Setup</h2>
 		<div class="overflow-clip">
 			<div class="flex h-16 sm:h-20 px-2 md:px-8 bg-backgroundButtonDark rounded-t-md">
 				<div class="w-1/3 md:w-1/6">
