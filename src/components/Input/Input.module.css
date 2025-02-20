@@ -20,8 +20,8 @@
 
 .switch {
 	--width: 52px;
-	--height: 26px;
-	--offset: 2px;
+	--height: 28px;
+	--offset: 3px;
 	--knob: calc(var(--height) - var(--offset) * 2);
 
 	appearance: none;
@@ -34,19 +34,20 @@
 	block-size: var(--height);
 	place-items: center;
 	position: relative;
+	border-radius: calc(var(--height) / 2);
 }
 
 .switch[data-inverted='true'] {
 	--toggle-background: rgba(101, 112, 139, 0.5);
 	--switch-background: theme('colors.white');
-	--switch-checked-background: theme('colors.childBountyGray');
+	--switch-checked-background: theme('colors.backgroundButtonLight');
 }
 
 .switchInverted {
 	composes: switch;
 	--toggle-background: rgba(101, 112, 139, 0.5);
 	--switch-background: theme('colors.white');
-	--switch-checked-background: theme('colors.childBountyGray');
+	--switch-checked-background: theme('colors.backgroundButtonLight');
 }
 
 .switch::before {
@@ -54,14 +55,19 @@
 	display: block;
 	inline-size: var(--width);
 	block-size: var(--height);
-	border-radius: calc(var(--height) / 2);
+	border-radius: calc(var(--height));
 	background: var(--toggle-background, white);
 	position: absolute;
+	border: 2px solid theme('colors.backgroundButtonLight');
+}
+
+.switch:checked::before {
+	border: 2px solid theme('colors.backgroundButtonDark');
 }
 
 .switch::after {
 	display: block;
-	background-color: var(--switch-background, theme('colors.curatorMainBackground'));
+	background-color: var(--switch-background, theme('colors.backgroundButtonLight'));
 	content: '';
 	inline-size: var(--knob);
 	block-size: var(--knob);
@@ -74,6 +80,7 @@
 }
 
 .switch:checked::after {
-	background: var(--switch-checked-background, theme('colors.accent'));
+	background: var(--switch-checked-background, theme('colors.backgroundButtonDark'));
 	inset-inline-start: calc(var(--width) - var(--knob) - var(--offset));
+	border: 2px solid theme('colors.backgroundButtonDark');
 }

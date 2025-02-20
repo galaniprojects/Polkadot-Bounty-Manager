@@ -92,23 +92,23 @@
 	}
 </script>
 
-<div class="bg-primary py-40 md:px-40">
+<div class="bg-backgroundBounty py-40 md:px-40">
 	<div class="ml-5">
 		<TestBar />
 	</div>
 	<h1 class="m-5 text-2xl font-bold">Fast Forward</h1>
 	<div class="flex m-5 gap-3">
-		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" />
+		<input bind:value={days} class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" />
 		<button on:click={fastForwardDays} class="button-active min-w-40">DAYS</button>
 	</div>
 
 	<div class="flex m-5 gap-3">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={hours} />
+		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={hours} />
 		<button on:click={fastForwardHours} class="button-active min-w-40">HOURS</button>
 	</div>
 
 	<div class="flex m-5 gap-3">
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={mins} />
+		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={mins} />
 		<button on:click={fastForwardMinutes} class="button-active min-w-40">MINUTES</button>
 	</div>
 
@@ -118,19 +118,16 @@
 	</div>
 
 	<div class="m-5 gap-3">
-		<p class="text-sm text-white block">{current} is the current block</p>
-		<input class="border pt-1 pl-2 w-1/4 rounded-md bg-white min-w-40" bind:value={target} />
+		<p class="text-sm block">{current} is the current block</p>
+		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={target} />
 		<button on:click={handleGoToBlock} class="button-active min-w-40">TO BLOCK</button>
 	</div>
 
 	<hr class="border-gray mt-5 mb-1 w-1/2" />
 
-	<div class="m-5 gap-5 text-white">
+	<div class="m-5 gap-5">
 		<p class="text-sm">Current node endpoint: {nodeEndpoint}</p>
-		<input
-			class="border pt-1 pl-2 w-1/4 rounded-md bg-white text-black min-w-40"
-			bind:value={nodeEndpointInput}
-		/>
+		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={nodeEndpointInput} />
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
 	</div>
 	<a class="button-active mx-5" href="/curator-actions">=> Curator Actions</a>
@@ -138,11 +135,11 @@
 	<div class="mt-5 sm:flex flex-col sm:flex-row">
 		<label class="flex gap-3 mx-4">
 			<input type="checkbox" bind:checked={$showAllBounties} />
-			<p class="text-white">all bounties</p>
+			<p>all bounties</p>
 		</label>
 		<label class="flex gap-3">
 			<input type="checkbox" bind:checked={$showAllCuratorOptions} />
-			<p class="text-white">all options</p>
+			<p>all options</p>
 		</label>
 	</div>
 </div>

@@ -55,11 +55,9 @@
 	}
 </script>
 
-<!-- ToDo: dynamically change the background colors according to the child bounty the button exists in (only exists in one: created) -->
-
-<Dialog bind:open title="ASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="ASSIGN SUB-CURATOR">
 	<div>
-		<p class="p-1 text-white bg-childBountyGray">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -75,7 +73,7 @@
 		</div>
 
 		<label class="my-4 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 
@@ -88,7 +86,7 @@
 	<button
 		on:click={submit}
 		disabled={!curatorAddress.length}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
+		class="mt-10 h-12 button-popup
 		{curatorAddress.length === 0 ? 'basic-button opacity-50' : 'cursor-allowed'}"
 	>
 		SIGN

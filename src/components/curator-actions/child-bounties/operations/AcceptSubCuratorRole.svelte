@@ -32,9 +32,9 @@
 	}
 </script>
 
-<Dialog bind:open title="ACCEPT SUB-CURATOR ROLE" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="ACCEPT SUB-CURATOR ROLE">
 	<section class="space-y-5">
-		<p class="p-1 text-white bg-childBountyGray">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -43,7 +43,7 @@
 			<p class="text-xs">Accept Sub-curator role</p>
 			<label class="flex justify-between items-start cursor-pointer">
 				<span>I agree</span>
-				<input type="checkbox" bind:checked={isToggled} class={Input.switchInverted} />
+				<input type="checkbox" bind:checked={isToggled} class={Input.switch} />
 			</label>
 		</div>
 
@@ -64,8 +64,8 @@
 	<button
 		on:click={acceptCuratorRole}
 		disabled={!isToggled}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}"
+		class="mt-10 h-12 button-popup
+		{!isToggled ? 'opacity-50' : 'cursor-allowed'}"
 	>
 		SIGN
 	</button>

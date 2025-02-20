@@ -48,14 +48,14 @@
 		<button
 			on:click={dropdownOnClick}
 			type="button"
-			class="inline-flex {width} justify-between items-center rounded-md bg-white px-2 py-2 text-primary ring-1 ring-inset ring-accent"
+			class="inline-flex {width} justify-between items-center rounded-md bg-backgroundApp px-2 py-2 ring-1 ring-inset ring-borderDropdown"
 			id="menu-button"
 			aria-expanded="true"
 			aria-haspopup="true"
 		>
 			{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 
-			<span class="material-symbols-outlined text-accent">
+			<span class="material-symbols-outlined">
 				{#if dropdownOpen}
 					keyboard_arrow_up
 				{:else}
@@ -66,7 +66,7 @@
 	</div>
 	{#if dropdownOpen}
 		<div
-			class="absolute {width} rounded-md overflow-hidden -mt-12 z-10 bg-white shadow-lg ring-1 ring-black ring-opacity-20"
+			class="absolute {width} rounded-md overflow-hidden -mt-12 z-10 bg-backgroundApp shadow-lg ring-1 ring-black ring-opacity-20"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="menu-button"
@@ -76,8 +76,8 @@
 				{#each items as item, index}
 					<button
 						class="block {width} px-4 py-2.5 text-sm text-primary cursor-pointer
-							{selectedItem === item ? 'bg-curatorMainBackground text-white' : 'bg-white'}
-							hover:bg-curatorMainBackground focus:bg-curatorMainBackground hover:bg-opacity-30 focus:bg-opacity-30"
+							{selectedItem === item ? 'bg-backgroundButtonDark text-white' : 'bg-backgroundApp'}
+							hover:bg-backgroundButtonLight hover:text-textPrimary focus:bg-backgroundButtonLight focus:text-textPrimary hover:bg-opacity-30 focus:bg-opacity-30"
 						role="menuitem"
 						tabindex="-1"
 						on:click={() => {

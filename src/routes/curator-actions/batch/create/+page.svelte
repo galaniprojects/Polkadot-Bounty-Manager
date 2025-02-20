@@ -75,7 +75,7 @@
 	}
 </script>
 
-<div class="bg-childBountyBackground p-5 m-3 rounded-md">
+<div class="bg-backgroundBounty p-5 m-3 rounded-md">
 	<h1 class="text-2xl">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
 
 	{#if error}
@@ -85,7 +85,7 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-white bg-childBountyGray">
+		<p class="my-2 p-1">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
@@ -138,7 +138,7 @@
 					<p class="bg-white p-5 rounded-md shadow-lg grid place-items-center">
 						<button
 							type="button"
-							class="py-2 px-4 rounded-md border border-childBountyGray text-childBountyGray font-bold"
+							class="py-2 px-4 rounded-md border border-backgroundButtonDark text-backgroundButtonDark font-bold"
 							onclick={() => {
 								childBounties = [...childBounties, { value: '', title: '' }];
 							}}
