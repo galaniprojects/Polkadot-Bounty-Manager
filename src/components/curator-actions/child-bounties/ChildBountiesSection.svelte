@@ -60,7 +60,7 @@
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
-			<p class="text-2xl">{bounty.childBounties.length} Active Child Bounties</p>
+			<p class="text-2xl">{bounty.childBounties.length} Child Bounties</p>
 		</div>
 
 		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
@@ -140,7 +140,7 @@
 			<div class="childContainer bg-white lg:w-full rounded-md shadow-lg mt-6">
 				<div class="flex flex-col bg-childBountyHeaderBackground lg:bg-white p-4 rounded-md">
 					<div class="text-center space-y-3">
-						<p>There are currently no active child bounties.</p>
+						<p>There are currently no child bounties.</p>
 						<p class="text-4xl">(-‿-)</p>
 					</div>
 				</div>
