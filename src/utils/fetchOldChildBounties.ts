@@ -66,9 +66,10 @@ async function fetchAllChildBounties(status: string) {
 		const { items, pageSize } = (await response.json()) as SubsquareResponse;
 		totalItems = totalItems.concat(items);
 
-		if (items.length < pageSize) {
-			return totalItems;
-		}
+		if (items.length < pageSize) break;
+
 		page++;
 	}
+
+	return totalItems;
 }
