@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
+	import { hideTestBar } from '../utils/hideTestBar';
 	import '../app.css';
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import LoadingScreen from '../components/LoadingScreen.svelte';
@@ -13,7 +13,7 @@
 	const renderChildren = typeof window !== 'undefined' || apiNotUsed;
 </script>
 
-{#if PUBLIC_HIDE_TEST_BAR.toLocaleLowerCase() === 'false'}
+{#if !hideTestBar}
 	<TestBar />
 {/if}
 <div class="bg-accent text-xs md:text-lg text-white flex justify-center items-center">
