@@ -1,20 +1,21 @@
 import type { ChildBounty, childBountyStatuses } from '../types/child-bounty';
 
-export async function fetchOldCB(parentBountyId: number): Promise<ChildBounty[]> {
-	const response = await fetchAllChildBounties(parentBountyId);
-	return response.map((cbFromSubsquare) => {
-		return {
-			id: cbFromSubsquare.index,
-			parentBounty: cbFromSubsquare.parentBounty,
-			value: cbFromSubsquare.value,
-			fee: cbFromSubsquare.fee,
-			curatorDeposit: cbFromSubsquare.curatorDeposit,
-			status: cbFromSubsquare.state,
-			description: cbFromSubsquare.title,
-			curator: cbFromSubsquare.curator,
-			beneficiary: cbFromSubsquare.beneficiary
-		};
-	});
+export async function fetchOldCB(parentBountyId: number) {
+	const items = await fetchAllChildBounties(parentBountyId);
+	return items.map(
+		({ beneficiary, curator, curatorDeposit, fee, index, parentBounty, state, title, value }) =>
+			<ChildBounty>{
+				id: index,
+				parentBounty,
+				value,
+				fee,
+				curatorDeposit,
+				status: state,
+				description: title,
+				curator,
+				beneficiary
+			}
+	);
 }
 
 interface SubsquareChildBountyItem {
@@ -36,25 +37,34 @@ interface SubsquareResponse {
 	pageSize: number;
 }
 
+const childBountiesApi = 'https://polkadot.subsquare.io/api/treasury/child-bounties';
+
 async function fetchAllChildBounties(parentBountyId: number) {
-	const baseUrl = `https://polkadot.subsquare.io/api/treasury/child-bounties?parentBountyId=${parentBountyId}`;
+	const url = new URL(childBountiesApi);
+	url.searchParams.set('parentBountyId', String(parentBountyId));
+	url.searchParams.set('page_size', '100');
+
 	let page = 1;
 	let totalItems: SubsquareChildBountyItem[] = [];
 
-	let endPage = false;
-	while (!endPage) {
-		const response = await fetch(`${baseUrl}?page_size=100&page=${page}`);
-		const data = (await response.json()) as SubsquareResponse;
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	while (true) {
+		url.searchParams.set('page', String(page));
 
-		const filteredItems = data.items.filter(
-			(item) => item.state === 'Canceled' || item.state === 'Claimed'
-		);
+		const response = await fetch(url);
+		if (!response.ok) {
+			console.error(response);
+			throw new Error('Could not fetch child bounties');
+		}
 
+		const { items, pageSize } = (await response.json()) as SubsquareResponse;
+
+		const filteredItems = items.filter(({ state }) => ['Canceled', 'Claimed'].includes(state));
 		totalItems = totalItems.concat(filteredItems);
-		if (data.items.length < data.pageSize) {
-			endPage = true;
+
+		if (items.length < pageSize) {
+			return totalItems;
 		}
 		page++;
 	}
-	return totalItems;
 }
