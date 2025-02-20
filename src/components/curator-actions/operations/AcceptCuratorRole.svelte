@@ -48,10 +48,12 @@
 				<p class="text-xs">Estimated basic fee</p>
 				<p><Fee {transaction} /></p>
 			</div>
-			<div>
-				<p class="text-xs">Estimated deposit</p>
-				<p><Deposit getter={() => calculateDeposit(bounty.fee)} /></p>
-			</div>
+			{#if bounty.fee}
+				<div>
+					<p class="text-xs">Estimated deposit</p>
+					<p><Deposit getter={() => calculateDeposit(bounty.fee)} /></p>
+				</div>
+			{/if}
 		</div>
 	</section>
 

@@ -23,7 +23,6 @@ export interface ChildBounty {
 	description?: string;
 	curator?: string;
 	beneficiary?: string;
-	unlockAt?: string;
 	dateOfPayout?: string;
 }
 
