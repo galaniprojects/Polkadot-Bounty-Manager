@@ -126,7 +126,7 @@
 	<hr class="border-gray mt-5 mb-1 w-1/2" />
 
 	<div class="m-5 gap-5">
-		<p class="text-sm">Current node endpoint: {$nodeEndpoint}</p>
+		<p class="text-sm">Current node endpoint: {nodeEndpoint}</p>
 		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={nodeEndpointInput} />
 		<button on:click={changeEndpoint} class="mx-5 button-active min-w-40">Change </button>
 	</div>
