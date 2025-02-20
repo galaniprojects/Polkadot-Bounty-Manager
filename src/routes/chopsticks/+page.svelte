@@ -1,12 +1,14 @@
 <script lang="ts">
 	import '../../app.css';
-	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { customEndpoint } from '../../utils/endpoints';
+	import { showAllBounties, showAllCuratorOptions } from '../../stores';
+	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
 	import TestBar from '../../components/TestBar.svelte';
 	import { onMount } from 'svelte';
 	import { createClient } from 'polkadot-api';
 	import { getWsProvider } from 'polkadot-api/ws-provider/web';
-	import { PUBLIC_HIDE_TEST_BAR } from '$env/static/public';
+	import { hideTestBar } from '../../utils/hideTestBar';
 	import { goto } from '$app/navigation';
 
 	let days: number = 1;
@@ -14,7 +16,9 @@
 	let mins = 1;
 	let current = 0;
 	$: target = String(current + (((days * 24 + hours) * 60 + mins) * 60) / 6);
-	$: client = createClient(getWsProvider($nodeEndpoint));
+
+	let nodeEndpoint = customEndpoint;
+	$: client = createClient(getWsProvider(nodeEndpoint));
 
 	let nodeEndpointInput = '';
 
@@ -25,7 +29,7 @@
 	}
 
 	onMount(async () => {
-		if (PUBLIC_HIDE_TEST_BAR.toLocaleLowerCase() !== 'false') {
+		if (hideTestBar) {
 			await goto('/404');
 			return;
 		}
@@ -81,9 +85,10 @@
 	}
 
 	async function changeEndpoint() {
-		nodeEndpoint.set(nodeEndpointInput);
+		nodeEndpoint = nodeEndpointInput;
 		sessionStorage.setItem('node', nodeEndpointInput);
 		await initializeApi([nodeEndpointInput]);
+		await fetchBountiesAndChildBounties();
 	}
 </script>
 

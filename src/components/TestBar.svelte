@@ -1,16 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
-	import { nodeEndpoint, showAllBounties, showAllCuratorOptions } from '../stores';
-	import { initializeApi } from '../utils/initializeApi';
-
-	onMount(async () => {
-		const node = sessionStorage.getItem('node');
-		if (node) {
-			nodeEndpoint.set(node);
-			await initializeApi([node]);
-		}
-	});
+	import { showAllBounties, showAllCuratorOptions } from '../stores';
 </script>
 
 <div class="w-100">
