@@ -3,7 +3,7 @@ import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading
 import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty, setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
-import { fetchOldCB } from './fetchOldChildBounties';
+import { fetchChildBounties } from './fetchOldChildBounties';
 
 function keyBy<Value extends object>(list: Value[], field: keyof Value) {
 	return Object.fromEntries(list.map((value) => [value[field], value] as [keyof Value, Value]));
@@ -37,7 +37,7 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		});
 
 		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
-		const oldChildBounties = await fetchOldCB();
+		const oldChildBounties = await fetchChildBounties();
 		const childBounties = rawChildBounties
 			.map(({ value, keyArgs: [, id] }) => parseChildBounty(value, id, currentBlock))
 			.sort((a, b) => (a.id > b.id ? -1 : 1))
