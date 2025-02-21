@@ -27,3 +27,4 @@ export function setActiveAccountBounties() {
 	}
 	activeAccountBounties.set(filteredBounties);
 }
+

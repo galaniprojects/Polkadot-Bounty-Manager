@@ -24,5 +24,6 @@ export interface Bounty {
 		| 'Rejected';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
+	updateDue?: number;
 	expiryDate?: Date | undefined;
 }
