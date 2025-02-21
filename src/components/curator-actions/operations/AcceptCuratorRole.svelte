@@ -51,7 +51,7 @@
 			{#if bounty.fee}
 				<div>
 					<p class="text-xs">Estimated deposit</p>
-					<p><Deposit getter={() => calculateDeposit(bounty.fee)} /></p>
+					<p><Deposit getter={() => calculateDeposit(bounty.fee ?? 0n)} /></p>
 				</div>
 			{/if}
 		</div>
