@@ -17,28 +17,39 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		if (showProgress) {
 			showLoadingDialog('Loading...');
 		}
+
 		const bounties = await fetchBountiesFromBlockchain();
-		const doTreasuryBounties = await fetchBountiesFromDoTreasury();
 
-		const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
-		const doTreasuryChildBounties = doTreasuryBounties.flatMap(
-			({ childBounties }) => childBounties
-		);
+		try {
+			// get optional data about inactive bounties from doTreasury API
 
-		const bountiesMap = keyBy(bounties, 'id');
-		const childBountiesMap = keyBy(childBounties, 'id');
+			const doTreasuryBounties = await fetchBountiesFromDoTreasury();
 
-		// merge parent bounties
-		const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
-		bounties.push(...missingBounties);
+			const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
+			const doTreasuryChildBounties = doTreasuryBounties.flatMap(
+				({ childBounties }) => childBounties
+			);
 
-		// merge child bounties
-		const missingChildBounties = doTreasuryChildBounties.filter(
-			({ id }) => !(id in childBountiesMap)
-		);
-		bounties.forEach(({ id, childBounties }) => {
-			childBounties.push(...missingChildBounties.filter(({ parentBounty }) => id === parentBounty));
-		});
+			const bountiesMap = keyBy(bounties, 'id');
+			const childBountiesMap = keyBy(childBounties, 'id');
+
+			// merge parent bounties
+			const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
+			bounties.push(...missingBounties);
+
+			// merge child bounties
+			const missingChildBounties = doTreasuryChildBounties.filter(
+				({ id }) => !(id in childBountiesMap)
+			);
+			bounties.forEach(({ id, childBounties }) => {
+				childBounties.push(
+					...missingChildBounties.filter(({ parentBounty }) => id === parentBounty)
+				);
+			});
+		} catch (exception) {
+			// log the error for developers but continue normally even if doTreasury is down
+			console.error(exception);
+		}
 
 		bounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 		bounties.forEach(({ childBounties }) => {
