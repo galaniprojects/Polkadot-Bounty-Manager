@@ -68,7 +68,7 @@
 				{truncate ? truncateString(selectedItem.label, 9) : selectedItem.label}
 			{/if}
 
-			<span class="material-symbols-outlined text-charcoal">
+			<span class="material-symbols-outlined">
 				{#if dropdownOpen}
 					keyboard_arrow_up
 				{:else}
@@ -88,8 +88,9 @@
 			<div role="none">
 				{#each items as item, index}
 					<button
-						class={`block ${widthDropdown} px-2 py-2.5 text-[16px] text-primary cursor-pointer ${textAlign} 
-						${selectedItem === item ? `${selectedBgColor} text-white` : `bg-lightGray hover:${selectedBgColor} hover:bg-opacity-30 focus:bg-opacity-30 hover:text-primary`}`}
+						class="block {widthDropdown} px-2 py-2.5 text-[16px] text-primary cursor-pointer {textAlign}
+							{selectedItem === item ? `${selectedBgColor} text-white` : `bg-backgroundApp hover:${selectedBgColor}`}
+							hover:bg-backgroundButtonLight hover:text-textPrimary focus:bg-backgroundButtonLight focus:text-textPrimary hover:bg-opacity-30 focus:bg-opacity-30"
 						role="menuitem"
 						tabindex="-1"
 						on:click={() => {

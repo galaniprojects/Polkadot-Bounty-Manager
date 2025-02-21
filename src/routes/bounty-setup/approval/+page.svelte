@@ -69,7 +69,7 @@
 </script>
 
 <form on:submit={submit}>
-	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
+	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if $bountyInfo?.id && $bountyInfo.description}
 				#{$bountyInfo.id} {$bountyInfo.description}
@@ -84,7 +84,7 @@
 	</div>
 
 	<div
-		class=" bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		class="bg-backgroundApp max-h-[400px] sm:min-h-[500px] p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
 	>
 		<div>
 			<div class="space-y-1 sm:space-y-3">
@@ -102,7 +102,7 @@
 				<p class="text-xs">(preselected based on Bounty value)</p>
 			</div>
 
-			<hr class="border-white my-5 sm:my-10 w-full md:w-1/3" />
+			<hr class="border-backgroundButtonLight my-5 sm:my-10 w-full md:w-1/3" />
 
 			<div class="my-5 sm:my-10 sm:mb-14 h-24 space-y-2 sm:space-y-5">
 				<section class="space-y-1 sm:space-y-3">
@@ -118,8 +118,8 @@
 			</div>
 		</div>
 		<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
-			<a href="/curator-actions" class="button-cancel">CANCEL</a>
-			<button type="submit" disabled={!$bountyInfo || !$bountyInfo.id} class="button-active">
+			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center">CANCEL</a>
+			<button type="submit" disabled={!$bountyInfo || !$bountyInfo.id} class="button-active h-12">
 				SUBMIT
 			</button>
 		</div>

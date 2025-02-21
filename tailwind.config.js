@@ -5,6 +5,8 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		colors: {
+			// ToDo: remove colors under here which are no longer necessary
+
 			primary: '#28123E',
 			secondary: '#431B5E',
 			accent: '#E6007A',
@@ -30,7 +32,17 @@ export default {
 			// colors in the new design
 			charcoal: '#131313',
 			cloudGray: '#C4C4C4',
-			lightGray: '#E4E4E4'
+			lightGray: '#E4E4E4',
+
+			// New colors for lighter design
+			backgroundApp: '#FCFCFC',
+			backgroundBounty: '#DDD',
+			backgroundChildBountyDetails: '#E7E7E7',
+			backgroundButtonDark: '#606060',
+			backgroundButtonLight: '#B2B2B2',
+			borderDropdown: '#9A9A9A',
+			backgroundCloseChildBounty: '#B23434',
+			textPrimary: '#131313'
 		},
 		extend: {
 			screens: {

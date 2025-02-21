@@ -4,7 +4,7 @@
 	import AccountItem from './AccountItem.svelte';
 	import LogoPolkadotWallet from '../svg/wallet-logo/LogoPolkadotWallet.svg';
 	import LogoWalletConnect from '../svg/wallet-logo/LogoWalletConnect.svg';
-	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.png';
+	import LogoNovaWallet from '../svg/wallet-logo/LogoNovaWallet.svg';
 	import LogoTalisman from '../svg/wallet-logo/LogoTalisman.svg';
 	import LogoMimir from '../svg/wallet-logo/LogoMimir.svg';
 	import { onDestroy, onMount } from 'svelte';
@@ -123,15 +123,13 @@
 
 <!-- Base Modal Layout -->
 {#if openDialog}
-	<div
-		class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60 overflow-y-auto"
-	></div>
-	<div class="flex justify-center fixed inset-0 w-screen z-20 py-52 overflow-y-auto">
+	<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
+	<div class="flex justify-center items-center fixed inset-0 w-screen z-20 overflow-y-auto">
 		<div
-			class="flex flex-col mx-2 h-fit w-[300px] xs:w-[490px] rounded-md bg-primary p-3 sm:p-5 overflow-y-auto"
+			class="flex flex-col h-fit w-[300px] xs:w-[490px] rounded-md bg-backgroundApp sm:p-5 overflow-y-auto"
 		>
 			<!-- Header -->
-			<div class="flex justify-between items-center text-white sm:mb-0">
+			<div class="flex justify-between items-center sm:mb-0">
 				{#if currentPhase !== 'walletSelection'}
 					<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
 						arrow_back_ios
@@ -148,15 +146,15 @@
 			<section class="s:max-h-96 pb-3">
 				<!-- Wallet Selection -->
 				{#if currentPhase === 'walletSelection'}
-					<p class="flex justify-center text-2xl text-white">{title}</p>
+					<p class="flex justify-center text-2xl">{title}</p>
 					<a
 						href="/docs/multix-walletconnect"
 						target="_blank"
-						class="flex justify-center text-white opacity-50 underline underline-offset-2 mb-2"
+						class="flex justify-center opacity-50 underline underline-offset-2 mb-2"
 					>
 						Follow the instructions in the new tab
 					</a>
-					<div class="cursor-pointer w-full space-y-3">
+					<div class="cursor-pointer w-full space-y-3 pb-3">
 						{#each wallets as wallet}
 							{#if wallet.available}
 								<button class="w-full" on:click={() => selectWallet(wallet)}>
@@ -181,12 +179,12 @@
 									{/if}
 								</div>
 								<div
-									class="absolute top-0 left-0 w-14 h-14 border-4 border-t-gray-500 border-white rounded-full animate-spin"
+									class="absolute top-0 left-0 w-14 h-14 border-4 border-t-backgroundButtonDark border-backgroundButtonLight rounded-full animate-spin"
 								></div>
 							</div>
 						</div>
 
-						<div class="grid items-center text-center gap-2 text-white text-md mt-14">
+						<div class="grid items-center text-center gap-2 text-md mt-14">
 							<p>WAITING FOR AUTHORIZATION</p>
 							<p>
 								Please authorize your {selectedWallet?.name} wallet extension to connect to Bounty Manager.
@@ -196,8 +194,8 @@
 
 					<!-- Account Selection -->
 				{:else if currentPhase === 'accountSelection'}
-					<p class="flex justify-center text-2xl text-white">SELECT ACCOUNT</p>
-					<hr class="border-white opacity-35 mt-4 w-full" />
+					<p class="flex justify-center text-2xl">SELECT ACCOUNT</p>
+					<hr class="border-backgroundButtonDark opacity-35 mt-4 w-full" />
 					<div class="account-items w-full max-h-64 overflow-y-auto pr-3">
 						{#each accounts as account}
 							<button
@@ -216,19 +214,17 @@
 			<!-- Footer -->
 			{#if currentPhase !== 'walletSelection'}
 				<div class="mt-auto">
-					<hr class="border-white opacity-35 mb-3 w-full" />
+					<hr class="border-backgroundButtonDark opacity-35 mb-3 w-full" />
 					<div class="flex justify-end items-center">
 						<div class="w-6 h-6">
 							{#if selectedWallet?.icon}
 								<img src={selectedWallet.icon} alt="Logo" />
 							{/if}
 						</div>
-						<button class="flex items-center text-white px-4">
+						<button class="flex items-center px-4">
 							{selectedWallet?.name} &nbsp |
 						</button>
-						<button on:click={backToWalletSelection} class="text-white flex items-center">
-							Switch
-						</button>
+						<button on:click={backToWalletSelection} class="flex items-center"> Switch </button>
 					</div>
 				</div>
 			{/if}

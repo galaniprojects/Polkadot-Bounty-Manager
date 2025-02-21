@@ -59,12 +59,7 @@
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<Dialog
-	bind:open
-	title="ADD NEW CHILD BOUNTY"
-	backgroundColor="childBountyBackground"
-	textColor="primary"
->
+<Dialog bind:open title="ADD NEW CHILD BOUNTY">
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -106,7 +101,7 @@
 			</a>
 			<button
 				on:click={submit}
-				class={['h-12 button-active', !isFormValid && 'cursor-not-allowed']}
+				class={['h-12 button-popup', !isFormValid && 'opacity-50 cursor-not-allowed']}
 				disabled={!isFormValid}
 			>
 				SIGN

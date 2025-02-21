@@ -29,9 +29,9 @@
 	}
 </script>
 
-<Dialog bind:open title="UNASSIGN SUB-CURATOR" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="UNASSIGN SUB-CURATOR">
 	<div>
-		<p class="p-1 text-white bg-childBountyGray">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -53,13 +53,13 @@
 			<p class="text-xs">I understand</p>
 			<label class="flex justify-between items-start cursor-pointer">
 				<span>Unassign anyway</span>
-				<input type="checkbox" bind:checked={isToggled} class={Input.switchInverted} />
+				<input type="checkbox" bind:checked={isToggled} class={Input.switch} />
 			</label>
 		</div>
 
 		<label class="my-4 flex items-center justify-between cursor-pointer">
 			<ExtendBountyLabel />
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 		</label>
 
 		<section class="mt-10">
@@ -71,8 +71,8 @@
 	<button
 		on:click={unassignSubCurator}
 		disabled={!isToggled}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{!isToggled ? 'basic-button opacity-50' : 'cursor-allowed'}"
+		class="w-full md:w-fit mt-10 h-12 button-popup
+		{!isToggled ? 'opacity-50' : 'cursor-allowed'}"
 	>
 		SIGN
 	</button>

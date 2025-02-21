@@ -13,7 +13,7 @@
 </script>
 
 <div>
-	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
+	<div class="p-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
 		<p class="text-lg sm:text-2xl text-white min-h-8">
 			{#if $bountyInfo?.id && $bountyInfo.description}
 				#{$bountyInfo.id} {$bountyInfo.description}
@@ -28,7 +28,7 @@
 	</div>
 
 	<div
-		class="bg-backgroundContent max-h-[400px] sm:min-h-[500px] p-3 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
+		class="bg-backgroundApp max-h-[400px] sm:min-h-[500px] p-3 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden overflow-y-auto"
 	>
 		<slot />
 	</div>

@@ -46,9 +46,9 @@
 	}
 </script>
 
-<Dialog bind:open title="AWARD CHILD BOUNTY" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="AWARD CHILD BOUNTY">
 	<div class="grid">
-		<p class="space-x-1 mb-7 p-1 text-white bg-childBountyGreen">
+		<p class="space-x-1 mb-7 p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -63,7 +63,7 @@
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 
@@ -75,7 +75,7 @@
 		<button
 			on:click={submit}
 			disabled={beneficiary.length === 0}
-			class="w-full md:w-fit mt-10 h-12 bg-childBountyGreen basic-button {beneficiary.length === 0
+			class="w-full md:w-fit mt-10 h-12 button-popup {beneficiary.length === 0
 				? 'opacity-50 cursor-not-allowed'
 				: ''}"
 		>

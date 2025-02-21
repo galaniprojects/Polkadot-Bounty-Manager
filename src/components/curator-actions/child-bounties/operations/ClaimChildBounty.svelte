@@ -27,9 +27,9 @@
 	}
 </script>
 
-<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD">
 	<div class="space-y-8">
-		<p class="p-1 text-white bg-curatorMainBackground">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -48,7 +48,7 @@
 		{/if}
 
 		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 
@@ -58,10 +58,5 @@
 		</div>
 	</div>
 
-	<button
-		on:click={submit}
-		class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
-	>
-		SIGN
-	</button>
+	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 button-popup"> SIGN </button>
 </Dialog>
