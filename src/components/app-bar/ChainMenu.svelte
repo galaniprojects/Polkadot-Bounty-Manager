@@ -4,39 +4,20 @@
 	import { initializeApi } from '../../utils/initializeApi';
 	import { getEndpoint } from '../../utils/endpoints';
 	import Dropdown from '../common/DropdownMenu.svelte';
-	import coin from '../Input/coin.svg';
-	import logoPaseo from './LogoPaseo.svg';
-	import coinInverted from './LogoPolkadot.svg';
-	import paseoInverted from './LogoPaseoInverted.svg';
 	import type { Labeled } from '../common/labeled';
-
-	const chains = [
-		{
-			label: 'Polkadot',
-			logo: coin,
-			invertedLogo: coinInverted,
-			endpoint: ''
-		},
-		{
-			label: 'Paseo',
-			logo: logoPaseo,
-			invertedLogo: paseoInverted,
-			endpoint: 'wss://paseo-rpc.dwellir.com'
-		}
-	];
+	import { type Blockchain, blockchains, currentBlockchain } from './blockchains';
 
 	let visible = false;
-	let selectedChain = chains[0];
 
 	onMount(() => {
-		const isPaseoSelected = sessionStorage.getItem('node') === chains[1].endpoint;
-		selectedChain = isPaseoSelected ? chains[1] : chains[0];
+		const isPaseoSelected = sessionStorage.getItem('node') === blockchains[1].endpoint;
+		$currentBlockchain = isPaseoSelected ? blockchains[1] : blockchains[0];
 		visible = true;
 	});
 
 	async function handleChainChange(chain: Labeled) {
-		selectedChain = chain as typeof selectedChain;
-		sessionStorage.setItem('node', selectedChain.endpoint);
+		$currentBlockchain = chain as Blockchain;
+		sessionStorage.setItem('node', $currentBlockchain.endpoint);
 		await initializeApi([getEndpoint()]);
 		await fetchBountiesAndChildBounties();
 	}
@@ -44,8 +25,8 @@
 
 {#if visible}
 	<Dropdown
-		items={chains}
-		selectedItem={selectedChain}
+		items={blockchains}
+		selectedItem={$currentBlockchain}
 		change={handleChainChange}
 		widthContainer="w-[70px]"
 		widthDropdown="w-[200px]"
