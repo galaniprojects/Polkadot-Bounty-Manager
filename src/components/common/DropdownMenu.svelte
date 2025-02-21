@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { truncateString } from '../../utils/common';
-	import type { Labeled } from '../app-bar/labeled';
+	import type { Labeled } from './labeled';
 
 	export let items: Array<Labeled>;
 	export let selectedItem: Labeled;

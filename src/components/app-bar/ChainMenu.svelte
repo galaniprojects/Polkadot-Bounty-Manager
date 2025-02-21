@@ -8,7 +8,7 @@
 	import logoPaseo from './LogoPaseo.svg';
 	import coinInverted from './LogoPolkadot.svg';
 	import paseoInverted from './LogoPaseoInverted.svg';
-	import type { Labeled } from './labeled';
+	import type { Labeled } from '../common/labeled';
 
 	const chains = [
 		{
