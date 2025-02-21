@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { generate } from '@bramus/pagination-sequence';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	export let currentPage = 1;
@@ -10,7 +11,7 @@
 	export let pageChange: (page: number) => void;
 	export let itemsPerPageChange: (itemsPerPage: number) => void;
 
-	$: pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+	$: pageNumbers = generate(currentPage, totalPages, 1, 1);
 
 	let paginationContainer: HTMLElement | null = null;
 
@@ -49,14 +50,21 @@
 		</button>
 
 		{#each pageNumbers as page}
-			<button
-				class={`page-number ${page === currentPage ? activeButtonColor : 'bg-textPrimary text-backgroundApp '}`}
-				on:click={() => {
-					changePage(page);
-				}}
-			>
-				{page}
-			</button>
+			{#if typeof page === 'number'}
+				<button
+					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-textPrimary text-backgroundApp '}`}
+					disabled={page === currentPage}
+					on:click={() => {
+						changePage(page);
+					}}
+				>
+					{page}
+				</button>
+			{:else}
+				<span class="page-number {activeButtonColor} text-center border-0">
+					{page}
+				</span>
+			{/if}
 		{/each}
 
 		<button
@@ -76,6 +84,7 @@
 	.page-number {
 		width: 40px;
 		height: 40px;
+		line-height: 40px;
 		align-items: center;
 		text-align: center;
 		cursor: pointer;
@@ -87,7 +96,8 @@
 	}
 
 	.pagination-arrows:disabled,
-	.page-number:disabled {
+	.page-number:disabled,
+	span.page-number {
 		opacity: 0.5;
 	}
 </style>
