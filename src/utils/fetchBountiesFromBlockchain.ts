@@ -93,7 +93,6 @@ export async function fetchBountiesFromBlockchain() {
 		}
 	});
 
-	// Assign to parent bounty.
 	bounties.forEach((bounty) => {
 		bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
 	});
