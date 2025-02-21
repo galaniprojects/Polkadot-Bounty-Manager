@@ -10,14 +10,25 @@ export const blockchains = [
 		label: 'Polkadot',
 		logo: coin,
 		invertedLogo: coinInverted,
-		endpoint: ''
+		endpoint: '',
+		baseUrls: {
+			doTreasury: 'https://polkadot.dotreasury.com',
+			subScan: 'https://polkadot.subscan.io',
+			subSquare: 'https://polkadot.subsquare.io',
+			polkAssembly: 'https://polkadot.polkassembly.io'
+		}
 	} as const,
 	{
 		id: 'polkadot:77afd6190f1554ad45fd0d31aee62aac',
 		label: 'Paseo',
 		logo: logoPaseo,
 		invertedLogo: paseoInverted,
-		endpoint: 'wss://paseo-rpc.dwellir.com'
+		endpoint: 'wss://paseo-rpc.dwellir.com',
+		baseUrls: {
+			subScan: 'https://paseo.subscan.io',
+			subSquare: 'https://paseo.subsquare.io',
+			polkAssembly: 'https://paseo.polkassembly.io'
+		}
 	} as const
 ];
 

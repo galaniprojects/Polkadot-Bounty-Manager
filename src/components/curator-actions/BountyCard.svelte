@@ -4,6 +4,7 @@
 	import BountyOperations from './BountyOperations.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
+	import { currentBlockchain } from '../app-bar/blockchains';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 
@@ -20,7 +21,7 @@
 
 		(async () => {
 			try {
-				const url = `https://polkadot.subsquare.io/api/treasury/bounties/${bountyId}`;
+				const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
 				const response = await fetch(url);
 				if (!response.ok) throw new Error('Failed to fetch bounty details.');
 
