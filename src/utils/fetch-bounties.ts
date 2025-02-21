@@ -2,9 +2,8 @@ import { bounties as bountiesStore, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
 import { setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
-import { fetchBountiesFromDoTreasury } from './fetchBountiesFromDoTreasury';
 import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';
-import { keyBy } from './keyBy';
+import { addBountiesFromDoTreasury } from './addBountiesFromDoTreasury';
 import { calculateExpirationDate, formatDate } from './common';
 
 /**
@@ -21,31 +20,9 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		const bounties = await fetchBountiesFromBlockchain();
 
 		try {
+			// TODO: skip for Paseo
 			// get optional data about inactive bounties from doTreasury API
-
-			const doTreasuryBounties = await fetchBountiesFromDoTreasury();
-
-			const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
-			const doTreasuryChildBounties = doTreasuryBounties.flatMap(
-				({ childBounties }) => childBounties
-			);
-
-			const bountiesMap = keyBy(bounties, 'id');
-			const childBountiesMap = keyBy(childBounties, 'id');
-
-			// merge parent bounties
-			const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
-			bounties.push(...missingBounties);
-
-			// merge child bounties
-			const missingChildBounties = doTreasuryChildBounties.filter(
-				({ id }) => !(id in childBountiesMap)
-			);
-			bounties.forEach(({ id, childBounties }) => {
-				childBounties.push(
-					...missingChildBounties.filter(({ parentBounty }) => id === parentBounty)
-				);
-			});
+			await addBountiesFromDoTreasury(bounties);
 		} catch (exception) {
 			// log the error for developers but continue normally even if doTreasury is down
 			console.error(exception);

@@ -1,6 +1,7 @@
 import { fetchPaginated } from './fetchPaginated';
 import type { ChildBounty, childBountyStatuses } from '../types/child-bounty';
 import type { Bounty } from '../types/bounty';
+import { keyBy } from './keyBy';
 
 interface DoTreasuryChildBounty {
 	state: {
@@ -67,8 +68,25 @@ function parseBounty(input: DoTreasuryBounty) {
 
 const bountiesApi = 'https://polkadot-api.dotreasury.com/bounties';
 
-export async function fetchBountiesFromDoTreasury() {
-	// TODO: skip for Paseo
+export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
 	const rawBounties = await fetchPaginated<DoTreasuryBounty>(new URL(bountiesApi), 20);
-	return rawBounties.map(parseBounty);
+	const doTreasuryBounties = rawBounties.map(parseBounty);
+
+	const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
+	const doTreasuryChildBounties = doTreasuryBounties.flatMap(({ childBounties }) => childBounties);
+
+	const bountiesMap = keyBy(bounties, 'id');
+	const childBountiesMap = keyBy(childBounties, 'id');
+
+	// merge parent bounties
+	const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
+	bounties.push(...missingBounties);
+
+	// merge child bounties
+	const missingChildBounties = doTreasuryChildBounties.filter(
+		({ id }) => !(id in childBountiesMap)
+	);
+	bounties.forEach(({ id, childBounties }) => {
+		childBounties.push(...missingChildBounties.filter(({ parentBounty }) => id === parentBounty));
+	});
 }
