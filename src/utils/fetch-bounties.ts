@@ -28,9 +28,11 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		const bountiesMap = keyBy(bounties, 'id');
 		const childBountiesMap = keyBy(childBounties, 'id');
 
+		// merge parent bounties
 		const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
 		bounties.push(...missingBounties);
 
+		// merge child bounties
 		const missingChildBounties = doTreasuryChildBounties.filter(
 			({ id }) => !(id in childBountiesMap)
 		);

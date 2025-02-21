@@ -68,6 +68,7 @@ function parseBounty(input: DoTreasuryBounty) {
 const bountiesApi = 'https://polkadot-api.dotreasury.com/bounties';
 
 export async function fetchBountiesFromDoTreasury() {
+	// TODO: skip for Paseo
 	const rawBounties = await fetchPaginated<DoTreasuryBounty>(new URL(bountiesApi), 20);
 	return rawBounties.map(parseBounty);
 }
