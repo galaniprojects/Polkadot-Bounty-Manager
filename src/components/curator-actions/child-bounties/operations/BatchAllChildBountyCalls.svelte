@@ -82,9 +82,9 @@
 	}
 </script>
 
-<Dialog bind:open title="BATCH ALL CHILD BOUNTY CALLS" backgroundColor="white" textColor="primary">
+<Dialog bind:open title="BATCH ALL CHILD BOUNTY CALLS">
 	<div>
-		<p class="p-1 text-white bg-childBountyGray">
+		<p class="p-1">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
@@ -137,7 +137,7 @@
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 
@@ -169,7 +169,7 @@
 		<button
 			on:click={submit}
 			disabled={!beneficiary.length || !curatorFee.length}
-			class="h-12 bg-childBountyGray basic-button
+			class="h-12 button-popup
 		{beneficiary.length === 0 || curatorFee.length === 0
 				? 'cursor-not-allowed opacity-50'
 				: 'cursor-allowed'}"

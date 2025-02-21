@@ -93,7 +93,7 @@
 	})();
 </script>
 
-<div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-secondary">
+<div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
 	<input
 		bind:value={bountyTitle}
 		class="{Input.input} title"
@@ -108,14 +108,14 @@
 </div>
 
 <div
-	class="grid content-between sm:space-y-10 bg-backgroundContent p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden"
+	class="grid content-between sm:space-y-10 bg-backgroundApp p-3 pb-7 sm:pt-7 sm:pb-10 md:px-6 w-full box-border overflow-x-hidden"
 >
 	<div>
 		<section class="space-y-1 sm:space-y-3">
 			<p class="text-xs">Bounty value</p>
 			<input bind:value={bountyValue} class="{Input.polkadot} value" placeholder="1000.00" />
 		</section>
-		<hr class="border-white my-5 sm:my-10 w-full md:w-1/2" />
+		<hr class="border-backgroundButtonLight my-5 sm:my-10 w-full md:w-1/2" />
 
 		<div class="my-5 sm:my-10 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
@@ -135,8 +135,8 @@
 		</div>
 	</div>
 	<div class="flex-col space-y-2 sm:flex-row sm:space-x-2">
-		<a href="/curator-actions" class="button-cancel">CANCEL</a>
-		<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active">
+		<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center">CANCEL</a>
+		<button disabled={!bountyTitle || !bountyValue} on:click={submit} class="button-active h-12">
 			SUBMIT
 		</button>
 	</div>

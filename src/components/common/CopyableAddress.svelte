@@ -42,7 +42,9 @@
 
 	<div class="flex z-50">
 		{#if showTooltip}
-			<div class="tooltip show absolute bg-primary text-white rounded text-sm py-1 px-2 z-50">
+			<div
+				class="tooltip show absolute bg-backgroundButtonDark text-white rounded text-sm py-1 px-2 z-50"
+			>
 				Copied to clipboard
 			</div>
 		{/if}

@@ -13,9 +13,6 @@
 	export let icon: string;
 	export let url: string;
 	export let dimension: number = 10;
-	export let backgroundColor: string = 'curatorMainBackground';
-	export let textColor: string = 'white';
-	export let buttonStyle: string = 'bg-white text-accent';
 
 	let externalLinksDialogOpen = false;
 
@@ -29,14 +26,7 @@
 	}
 </script>
 
-<ExternalLinksDialog
-	bind:open={externalLinksDialogOpen}
-	{url}
-	{proceed}
-	{backgroundColor}
-	{textColor}
-	{buttonStyle}
-/>
+<ExternalLinksDialog bind:open={externalLinksDialogOpen} {url} {proceed} />
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
 	<img src={icon} alt="" />

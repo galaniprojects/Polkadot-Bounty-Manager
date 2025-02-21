@@ -90,7 +90,7 @@
 
 		<div class="mt-5 space-y-1 sm:space-y-3">
 			<p class="text-xs mb-1">Treasury track</p>
-			<div class="border">
+			<div>
 				<DropdownMenu
 					bind:selectedItem={selectedTreasuryTrack}
 					items={treasuryTracks}
@@ -103,7 +103,7 @@
 			</p>
 		</div>
 
-		<hr class="border-white w-full sm:w-1/2 my-5 sm:my-10" />
+		<hr class="border-backgroundButtonLight w-full sm:w-1/2 my-5 sm:my-10" />
 
 		<div class="my-5 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
@@ -119,8 +119,8 @@
 		</div>
 	</div>
 	<div class="flex-col space-y-2 sm:flex-row my-3 sm:mt-10 sm:mb-5">
-		<a href="/curator-actions" class="button-cancel mr-5">CANCEL</a>
-		<button type="submit" class="button-active">SUBMIT</button>
+		<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2">CANCEL</a>
+		<button type="submit" class="button-active h-12">SUBMIT</button>
 	</div>
 </form>
 
