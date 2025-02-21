@@ -28,7 +28,7 @@ export async function submitTransaction(
 
 		showLoadingDialog('Submitting transaction');
 
-		const result = await transaction.signAndSubmit(signer);
+		const result = await transaction.signAndSubmit(signer, { at: 'best' });
 		if (!result.dispatchError) {
 			showSuccessDialog('Transaction', successMessage || 'Operation success.');
 			await fetchBountiesAndChildBounties(false);
