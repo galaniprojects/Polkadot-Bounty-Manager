@@ -28,7 +28,16 @@ export async function submitTransaction(
 
 		showLoadingDialog('Submitting transaction');
 
-		const result = await transaction.signAndSubmit(signer, { at: 'best' });
+		const result = await new Promise<TxFinalizedPayload>((resolve, reject) => {
+			transaction.signSubmitAndWatch(signer).subscribe({
+				error: reject,
+				next: (event) => {
+					if (event.type === 'txBestBlocksState' && event.found) {
+						resolve(event);
+					}
+				}
+			});
+		});
 		if (!result.dispatchError) {
 			showSuccessDialog('Transaction', successMessage || 'Operation success.');
 			await fetchBountiesAndChildBounties(false);

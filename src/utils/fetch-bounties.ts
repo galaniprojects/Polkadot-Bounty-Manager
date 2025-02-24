@@ -22,26 +22,28 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		await api.query.System.BlockWeight.getValue(); // somehow makes the next query work
 		const currentBlock = await api.query.System.Number.getValue();
 
-		const rawBounties = await api.query.Bounties.Bounties.getEntries();
+		const rawBounties = await api.query.Bounties.Bounties.getEntries({ at: 'best' });
 		const bounties = rawBounties
 			.map(({ value, keyArgs: [id] }) => parseBounty(value, id, currentBlock))
 			.sort((a, b) => (a.id > b.id ? -1 : 1));
 
 		const bountiesMap = keyBy(bounties, 'id');
-		const descriptions = await api.query.Bounties.BountyDescriptions.getEntries();
+		const descriptions = await api.query.Bounties.BountyDescriptions.getEntries({ at: 'best' });
 		descriptions.forEach(({ value, keyArgs: [id] }) => {
 			if (id in bountiesMap) {
 				bountiesMap[id].description = value.asText();
 			}
 		});
 
-		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
+		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries({ at: 'best' });
 		const childBounties = rawChildBounties
 			.map(({ value, keyArgs: [, id] }) => parseChildBounty(value, id, currentBlock))
 			.sort((a, b) => (a.id > b.id ? -1 : 1));
 
 		const childBountiesMap = keyBy(childBounties, 'id');
-		const childDescriptions = await api.query.ChildBounties.ChildBountyDescriptions.getEntries();
+		const childDescriptions = await api.query.ChildBounties.ChildBountyDescriptions.getEntries({
+			at: 'best'
+		});
 		childDescriptions.forEach(({ value, keyArgs: [id] }) => {
 			if (id in childBountiesMap) {
 				childBountiesMap[id].description = value.asText();
