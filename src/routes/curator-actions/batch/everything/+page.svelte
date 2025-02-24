@@ -24,10 +24,11 @@
 	(async () => {
 		void $dotApi.query.ChildBounties.ChildBountyCount.watchValue().forEach((value) => {
 			nextAvailableChildBountyId = value;
+			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
 		});
 		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
 		const external = parseInt(searchParams.get('child-bounty-id') ?? '');
-		childBountyId = !Number.isNaN(external) ? external : nextAvailableChildBountyId;
+		childBountyId = Math.max(!Number.isNaN(external) ? external : 0, nextAvailableChildBountyId);
 	})();
 
 	let childBounties = [

@@ -27,6 +27,7 @@
 	(async () => {
 		void $dotApi.query.ChildBounties.ChildBountyCount.watchValue().forEach((value) => {
 			nextAvailableChildBountyId = value;
+			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
 		});
 		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
 		childBountyId = nextAvailableChildBountyId;
