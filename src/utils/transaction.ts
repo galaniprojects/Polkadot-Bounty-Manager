@@ -1,4 +1,4 @@
-import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { Transaction, TxEventsPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, polkadotSigner } from '../stores';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
@@ -18,7 +18,7 @@ export type AnyTransaction = Transaction<any, string, string, unknown>;
 export async function submitTransaction(
 	transaction: AnyTransaction,
 	successMessage?: string
-): Promise<TxFinalizedPayload | undefined> {
+): Promise<TxEventsPayload | undefined> {
 	try {
 		const signer = get(polkadotSigner);
 		if (!signer) {
@@ -28,7 +28,7 @@ export async function submitTransaction(
 
 		showLoadingDialog('Submitting transaction');
 
-		const result = await new Promise<TxFinalizedPayload>((resolve, reject) => {
+		const result = await new Promise<TxEventsPayload>((resolve, reject) => {
 			transaction.signSubmitAndWatch(signer).subscribe({
 				error: reject,
 				next: (event) => {
