@@ -34,7 +34,7 @@
 <div class="childContainer bg-backgroundBounty pb-3 lg:w-full shadow-lg mt-6">
 	<!-- Header Section -->
 	<div
-		class="flex justify-between gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty"
+		class="flex justify-between items-start gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty"
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
@@ -43,7 +43,7 @@
 		</div>
 
 		<span
-			class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5 text-white rounded-md pt-1.5 px-3"
+			class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5 text-white rounded-md py-1.5 px-3"
 			data-status={childBounty.status}
 		>
 			{statusLabels[childBounty.status]}
