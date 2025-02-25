@@ -1,12 +1,10 @@
 import { bounties as bountiesStore, dotApi } from '../stores';
 import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
-import type { Bounty } from '../types/bounty';
-import { parseBounty, parseChildBounty, setActiveAccountBounties } from './bounties';
+import { setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
-
-function keyBy<Value extends object>(list: Value[], field: keyof Value) {
-	return Object.fromEntries(list.map((value) => [value[field], value] as [keyof Value, Value]));
-}
+import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';
+import { addBountiesFromDoTreasury } from './addBountiesFromDoTreasury';
+import { calculateExpirationDate, formatDate } from './common';
 
 /**
  * Fetches all bounties, child bounties and their descriptions, sorts them,
@@ -18,41 +16,36 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		if (showProgress) {
 			showLoadingDialog('Loading...');
 		}
+
+		const bounties = await fetchBountiesFromBlockchain();
+
+		try {
+			// TODO: skip for Paseo
+			// get optional data about inactive bounties from doTreasury API
+			await addBountiesFromDoTreasury(bounties);
+		} catch (exception) {
+			// log the error for developers but continue normally even if doTreasury is down
+			console.error(exception);
+		}
+
+		bounties.sort((a, b) => (a.id > b.id ? -1 : 1));
+		bounties.forEach(({ childBounties }) => {
+			childBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
+		});
+
 		const api = get(dotApi);
 		await api.query.System.BlockWeight.getValue(); // somehow makes the next query work
 		const currentBlock = await api.query.System.Number.getValue();
-
-		const rawBounties = await api.query.Bounties.Bounties.getEntries({ at: 'best' });
-		const bounties = rawBounties
-			.map(({ value, keyArgs: [id] }) => parseBounty(value, id, currentBlock))
-			.sort((a, b) => (a.id > b.id ? -1 : 1));
-
-		const bountiesMap = keyBy(bounties, 'id');
-		const descriptions = await api.query.Bounties.BountyDescriptions.getEntries({ at: 'best' });
-		descriptions.forEach(({ value, keyArgs: [id] }) => {
-			if (id in bountiesMap) {
-				bountiesMap[id].description = value.asText();
+		bounties.forEach((bounty) => {
+			if (bounty.updateDue) {
+				bounty.expiryDate = calculateExpirationDate(bounty.updateDue, currentBlock);
 			}
-		});
-
-		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries({ at: 'best' });
-		const childBounties = rawChildBounties
-			.map(({ value, keyArgs: [, id] }) => parseChildBounty(value, id, currentBlock))
-			.sort((a, b) => (a.id > b.id ? -1 : 1));
-
-		const childBountiesMap = keyBy(childBounties, 'id');
-		const childDescriptions = await api.query.ChildBounties.ChildBountyDescriptions.getEntries({
-			at: 'best'
-		});
-		childDescriptions.forEach(({ value, keyArgs: [id] }) => {
-			if (id in childBountiesMap) {
-				childBountiesMap[id].description = value.asText();
-			}
-		});
-
-		// Assign to parent bounty.
-		bounties.forEach((bounty: Bounty) => {
-			bounty.childBounties = childBounties.filter(({ parentBounty }) => parentBounty === bounty.id);
+			bounty.childBounties.forEach((childBounty) => {
+				if (childBounty.unlockAt) {
+					const expiryDate = calculateExpirationDate(childBounty.unlockAt, currentBlock);
+					childBounty.dateOfPayout = formatDate(expiryDate);
+				}
+			});
 		});
 
 		bountiesStore.set(bounties);

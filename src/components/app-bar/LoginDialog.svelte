@@ -56,7 +56,7 @@
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				source: 'nova',
+				source: 'polkadot-js',
 				url: 'https://novawallet.io/',
 				available: novaWalletAvailable
 			},

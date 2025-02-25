@@ -292,6 +292,13 @@
 		background-color: theme('colors.childBountyGray');
 	}
 
+	[data-status='Claimed'] {
+		background-color: theme('colors.childBountyGray');
+	}
+	[data-status='Canceled'] {
+		background-color: theme('colors.childBountyGray');
+	}
+
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
 	}
