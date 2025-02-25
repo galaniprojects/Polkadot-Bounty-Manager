@@ -20,7 +20,6 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		const bounties = await fetchBountiesFromBlockchain();
 
 		try {
-			// TODO: skip for Paseo
 			// get optional data about inactive bounties from doTreasury API
 			await addBountiesFromDoTreasury(bounties);
 		} catch (exception) {
