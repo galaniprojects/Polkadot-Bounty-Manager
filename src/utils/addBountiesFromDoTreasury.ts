@@ -1,3 +1,5 @@
+import { get } from 'svelte/store';
+import { currentBlockchain } from '../components/app-bar/blockchains';
 import { fetchAllWithPagination } from './fetchAllWithPagination';
 import type { ChildBounty, childBountyStatuses } from '../types/child-bounty';
 import type { Bounty } from '../types/bounty';
@@ -66,12 +68,14 @@ function parseBounty(input: DoTreasuryBounty) {
 	};
 }
 
-const bountiesApi = 'https://polkadot-api.dotreasury.com/bounties';
-
 /** Some bounties are not delivered by blockchain nodes and can only be fetched from indexers like doTreasury.
  * This function modifies existing list because it also needs to modify childBounties property. */
 export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
-	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(new URL(bountiesApi), 20);
+	const { doTreasury } = get(currentBlockchain).baseUrls;
+	if (!doTreasury) return;
+
+	const url = new URL(`${doTreasury}/bounties`);
+	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(url, 20);
 	const doTreasuryBounties = rawBounties.map(parseBounty);
 
 	const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
