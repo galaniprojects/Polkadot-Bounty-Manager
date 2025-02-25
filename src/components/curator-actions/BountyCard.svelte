@@ -37,7 +37,7 @@
 
 				try {
 					const fundsAddress = data.onchainData.address;
-					const account = await $dotApi.query.System.Account.getValue(fundsAddress);
+					const account = await $dotApi.query.System.Account.getValue(fundsAddress, { at: 'best' });
 					remainingBalance = account.data.free;
 				} catch {
 					console.error('Error fetching remaining balance.');
