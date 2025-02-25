@@ -1,4 +1,4 @@
-export async function fetchPaginated<Item>(url: URL, pageSize: number) {
+export async function fetchAllWithPagination<Item>(url: URL, pageSize: number) {
 	url.searchParams.set('page_size', String(pageSize));
 
 	let page = 0;
