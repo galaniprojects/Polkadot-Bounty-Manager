@@ -58,7 +58,7 @@
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
 			<p class="text-xs">Child Bounties</p>
 			<p class="text-2xl">
-				{bounty.childBounties.length} Active Child {bounty.childBounties.length === 1
+				{bounty.childBounties.length} Child {bounty.childBounties.length === 1
 					? 'Bounty'
 					: 'Bounties'}
 			</p>
@@ -141,7 +141,7 @@
 			<div class="childContainer lg:w-full shadow-lg mt-6">
 				<div class="flex flex-col p-4 rounded-md">
 					<div class="text-center space-y-3">
-						<p>There are currently no active child bounties.</p>
+						<p>There are currently no child bounties.</p>
 						<p class="text-4xl">(-‿-)</p>
 					</div>
 				</div>

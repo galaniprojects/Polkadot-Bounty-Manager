@@ -21,6 +21,7 @@
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.17.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"@types/bramus__pagination-sequence": "^1.2.2",
 		"@types/dompurify": "^3.2.0",
 		"@types/eslint": "^9.6.1",
 		"autoprefixer": "^10.4.20",
@@ -39,6 +40,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@bramus/pagination-sequence": "^1.2.1",
 		"@mimirdev/apps-inject": "^1.0.2",
 		"@polkadot-api/descriptors": "file:.papi/descriptors",
 		"@polkadot/ui-shared": "^3.11.3",

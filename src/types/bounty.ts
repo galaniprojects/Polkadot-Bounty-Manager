@@ -9,13 +9,21 @@ export interface Bounty {
 	id: number;
 	description?: string;
 	beneficiary?: string;
-	proposer: string;
+	proposer?: string;
 	value: bigint;
-	fee: bigint;
-	curatorDeposit: bigint;
-	bond: bigint;
-	status: 'Proposed' | 'Approved' | 'Funded' | 'CuratorProposed' | 'Active' | 'PendingPayout';
+	fee?: bigint;
+	status:
+		| 'Proposed'
+		| 'Approved'
+		| 'Funded'
+		| 'CuratorProposed'
+		| 'Active'
+		| 'PendingPayout'
+		| 'Claimed'
+		| 'Canceled'
+		| 'Rejected';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
+	updateDue?: number;
 	expiryDate?: Date | undefined;
 }
