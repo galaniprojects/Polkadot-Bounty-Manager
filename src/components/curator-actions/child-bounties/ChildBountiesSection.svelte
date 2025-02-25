@@ -52,7 +52,7 @@
 	}
 </script>
 
-<div data-pagination-scroll="bounty-{bounty.id}" class="bg-backgroundApp p-3 m-3 w-full lg:w-full">
+<div data-pagination-scroll class="bg-backgroundApp p-3 m-3 w-full lg:w-full">
 	<!-- Header section -->
 	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
 		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
@@ -136,7 +136,7 @@
 
 	<!-- Child bounty list section -->
 	<div>
-		{#each paginatedChildBounties as childBounty}
+		{#each paginatedChildBounties as childBounty (childBounty.id)}
 			<ChildBountyCard {childBounty} parentBounty={bounty} />
 		{/each}
 
