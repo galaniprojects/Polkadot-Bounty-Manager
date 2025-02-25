@@ -71,10 +71,10 @@ function parseBounty(input: DoTreasuryBounty) {
 /** Some bounties are not delivered by blockchain nodes and can only be fetched from indexers like doTreasury.
  * This function modifies existing list because it also needs to modify childBounties property. */
 export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
-	const { doTreasury } = get(currentBlockchain).baseUrls;
-	if (!doTreasury) return;
+	const { doTreasuryApi } = get(currentBlockchain).baseUrls;
+	if (!doTreasuryApi) return;
 
-	const url = new URL(`${doTreasury}/bounties`);
+	const url = new URL(`${doTreasuryApi}/bounties`);
 	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(url, 20);
 	const doTreasuryBounties = rawBounties.map(parseBounty);
 

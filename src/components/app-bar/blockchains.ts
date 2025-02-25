@@ -13,6 +13,7 @@ export const blockchains = [
 		endpoint: '',
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
+			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
