@@ -121,8 +121,11 @@
 							<DropdownMenu
 								bind:selectedItem={selectedFilter}
 								items={filters}
-								width="w-44 lg:w-32 2xl:w-36"
+								widthContainer="w-44 lg:w-32 2xl:w-36"
+								widthDropdown="w-44 lg:w-32 2xl:w-36"
+								textAlign="text-center"
 								truncate={true}
+								bgColor="lilac"
 							/>
 						</div>
 					</div>
