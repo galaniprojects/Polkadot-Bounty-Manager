@@ -77,22 +77,22 @@ export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
 	const url = new URL(`${doTreasuryApi}/bounties`);
 	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(url, 20);
 	const doTreasuryBounties = rawBounties.map(parseBounty);
-
-	const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
 	const doTreasuryChildBounties = doTreasuryBounties.flatMap(({ childBounties }) => childBounties);
 
 	const bountiesMap = keyBy(bounties, 'id');
-	const childBountiesMap = keyBy(childBounties, 'id');
 
 	// merge parent bounties
 	const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
 	bounties.push(...missingBounties);
 
 	// merge child bounties
-	const missingChildBounties = doTreasuryChildBounties.filter(
-		({ id }) => !(id in childBountiesMap)
-	);
 	bounties.forEach(({ id, childBounties }) => {
-		childBounties.push(...missingChildBounties.filter(({ parentBounty }) => id === parentBounty));
+		const childBountiesMap = keyBy(childBounties, 'id');
+
+		const missingChildBounties = doTreasuryChildBounties
+			.filter(({ parentBounty }) => id === parentBounty)
+			.filter(({ id }) => !(id in childBountiesMap));
+
+		childBounties.push(...missingChildBounties);
 	});
 }
