@@ -5,7 +5,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Deposit from '../../../../components/Deposit.svelte';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/ErrorModal/showErrorModal';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
@@ -46,22 +46,22 @@
 
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
-			showErrorDialog('Curator address is invalid');
+			showErrorModal('Curator address is invalid');
 			return;
 		}
 
 		if (!curatorFee || !isPositiveNumber(curatorFee)) {
-			showErrorDialog('Invalid value of curator fee');
+			showErrorModal('Invalid value of curator fee');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 

@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-	import ExternalLinksDialog from './ExternalLinksDialog.svelte';
+	import ExternalLinksModal from './ExternalLinksModal.svelte';
 
 	export let icon: string;
 	export let url: string;
@@ -26,7 +26,7 @@
 	}
 </script>
 
-<ExternalLinksDialog bind:open={externalLinksDialogOpen} {url} {proceed} />
+<ExternalLinksModal bind:open={externalLinksDialogOpen} {url} {proceed} />
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
 	<img src={icon} alt="" />

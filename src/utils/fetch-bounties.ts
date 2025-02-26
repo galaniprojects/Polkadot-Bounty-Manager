@@ -1,5 +1,6 @@
 import { bounties as bountiesStore, dotApi } from '../stores';
-import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
+import { showErrorModal } from '../components/ErrorModal/showErrorModal';
+import { hideLoadingModal, showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
 import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';
@@ -14,7 +15,7 @@ import { calculateExpirationDate, formatDate } from './common';
 export async function fetchBountiesAndChildBounties(showProgress = true) {
 	try {
 		if (showProgress) {
-			showLoadingDialog('Loading...');
+			showLoadingModal('Loading…');
 		}
 
 		const bounties = await fetchBountiesFromBlockchain();
@@ -51,12 +52,12 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		setActiveAccountBounties();
 
 		if (showProgress) {
-			hideLoadingDialog();
+			hideLoadingModal();
 		}
 	} catch (e) {
 		console.error(e);
 		if (showProgress) {
-			showErrorDialog('Error while loading bounty details');
+			showErrorModal('Error while loading bounty details');
 		}
 	}
 }

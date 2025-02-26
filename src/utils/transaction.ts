@@ -1,7 +1,9 @@
 import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, polkadotSigner } from '../stores';
-import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
+import { showSuccessModal } from '../components/SuccessModal/showSuccessModal';
+import { showLoadingModal } from '../components/LoadingModal/loadingModalStores';
+import { showErrorModal } from '../components/ErrorModal/showErrorModal';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
 
@@ -22,34 +24,34 @@ export async function submitTransaction(
 	try {
 		const signer = get(polkadotSigner);
 		if (!signer) {
-			showErrorDialog('Internal Error, signer is undefined.');
+			showErrorModal('Internal Error, signer is undefined.');
 			return;
 		}
 
-		showLoadingDialog('Submitting transaction');
+		showLoadingModal('Submitting transaction…');
 
 		const result = await transaction.signAndSubmit(signer);
 		if (!result.dispatchError) {
-			showSuccessDialog('Transaction', successMessage || 'Operation success.');
+			showSuccessModal('Transaction', successMessage || 'Operation success.');
 			await fetchBountiesAndChildBounties(false);
 			return result;
 		}
 
-		showErrorDialog(readableError(result.dispatchError));
+		showErrorModal(readableError(result.dispatchError));
 	} catch (e) {
 		const account = get(activeAccount);
 		if (!account) {
-			showErrorDialog('Internal error, active account not found.');
+			showErrorModal('Internal error, active account not found.');
 			return;
 		}
 
 		if (account.source !== 'WalletConnect') {
-			showErrorDialog(readableError(e));
+			showErrorModal(readableError(e));
 			return;
 		}
 
 		console.error(e);
-		showErrorDialog(
+		showErrorModal(
 			`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
 				readableError(e) +
 				')'

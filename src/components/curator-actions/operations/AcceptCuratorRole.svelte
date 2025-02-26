@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { dotApi } from '../../../stores';
 	import Deposit from '../../Deposit.svelte';
-	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { showErrorModal } from '../../ErrorModal/showErrorModal';
 	import Input from '../../../components/Input/Input.module.css';
 	import Dialog from '../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../utils/transaction';
@@ -23,7 +23,7 @@
 		const result = await submitTransaction(transaction);
 
 		if (result === undefined) {
-			showErrorDialog('Internal error');
+			showErrorModal('Internal error');
 		}
 	}
 </script>

@@ -3,7 +3,7 @@
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
@@ -58,21 +58,21 @@
 	async function submit() {
 		open = false;
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 
 		if (!isPositiveNumber(curatorFee)) {
-			showErrorDialog('Curator fee value is invalid');
+			showErrorModal('Curator fee value is invalid');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 

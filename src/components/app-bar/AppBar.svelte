@@ -3,31 +3,26 @@
 	import { activeAccount, dotApi, polkadotSigner } from '../../stores';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
-	import LoginDialog from './LoginDialog.svelte';
+	import LoginModal from './LoginModal.svelte';
+	import { showLoginModal } from './loginModalStores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
-	import { hideLoadingDialog, showLoadingDialog } from '../../utils/loading-screen';
+	import { hideLoadingModal, showLoadingModal } from '../LoadingModal/loadingModalStores';
 	import { initializeApi } from '../../utils/initializeApi';
 	import { endpoints } from '../../utils/endpoints';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
 
-	let loginDialogOpen = false;
-
-	function showLoginDialog() {
-		loginDialogOpen = true;
-	}
-
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
-			showLoadingDialog('Connecting to Polkadot...');
+			showLoadingModal('Connecting to Polkadot…');
 			await initializeApi(endpoints);
 			await connectStoredAccount();
-			hideLoadingDialog();
+			hideLoadingModal();
 		}
 
 		await fetchBountiesAndChildBounties();
@@ -67,7 +62,7 @@
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button on:click={showLoginDialog}>Connect Wallet</button>
+				<button on:click={showLoginModal}>Connect Wallet</button>
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
@@ -93,6 +88,4 @@
 	</div>
 </header>
 
-{#if loginDialogOpen}
-	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />
-{/if}
+<LoginModal />

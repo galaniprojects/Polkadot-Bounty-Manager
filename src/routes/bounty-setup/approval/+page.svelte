@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Deposit from '../../../components/Deposit.svelte';
-	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { showErrorModal } from '../../../components/ErrorModal/showErrorModal';
 	import {
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
@@ -49,11 +49,11 @@
 	async function submit() {
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
+				showErrorModal('Wallet is not connected');
 				return;
 			}
 			if (!transaction) {
-				showErrorDialog('Unexpected error, bounty id is not set.');
+				showErrorModal('Unexpected error, bounty id is not set.');
 				return;
 			}
 
@@ -63,7 +63,7 @@
 			}
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`Something went wrong, ${String(e)}`);
+			showErrorModal(`Something went wrong, ${String(e)}`);
 		}
 	}
 </script>

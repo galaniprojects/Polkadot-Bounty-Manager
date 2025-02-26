@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../../types/bounty';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
 	import { dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import Dialog from '../../../common/Dialog.svelte';
@@ -37,15 +37,15 @@
 		open = false;
 
 		if (bountyTitle.length === 0) {
-			showErrorDialog('Bounty title is empty');
+			showErrorModal('Bounty title is empty');
 			return;
 		}
 		if (!isPositiveNumber(bountyValue)) {
-			showErrorDialog('Bounty value is invalid');
+			showErrorModal('Bounty value is invalid');
 			return;
 		}
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 

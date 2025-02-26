@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
@@ -37,17 +37,17 @@
 	async function submit() {
 		open = false;
 		if (!isValidAddress(curatorAddress)) {
-			showErrorDialog('Curator address is invalid');
+			showErrorModal('Curator address is invalid');
 			return;
 		}
 
 		if (!isPositiveNumber(curatorFee)) {
-			showErrorDialog('Curator fee value is invalid');
+			showErrorModal('Curator fee value is invalid');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 

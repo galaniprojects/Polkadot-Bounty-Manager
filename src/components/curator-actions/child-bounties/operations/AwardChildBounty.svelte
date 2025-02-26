@@ -3,7 +3,7 @@
 	import Currency from '../../../Currency.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
@@ -34,11 +34,11 @@
 	async function submit() {
 		open = false;
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
