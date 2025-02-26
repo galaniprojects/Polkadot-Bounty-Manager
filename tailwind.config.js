@@ -29,6 +29,11 @@ export default {
 			transparent: colors.transparent,
 			white: colors.white,
 
+			// colors in the new design
+			charcoal: '#131313',
+			cloudGray: '#C4C4C4',
+			lightGray: '#E4E4E4',
+
 			// New colors for lighter design
 			backgroundApp: '#FCFCFC',
 			backgroundBounty: '#DDD',

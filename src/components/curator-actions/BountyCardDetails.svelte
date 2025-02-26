@@ -36,10 +36,13 @@
 					<p class="text-md"><Currency value={bounty.value} /></p>
 				</div>
 
-				<div class="mt-4 lg:mt-0 lg:w-40 xl:w-44">
-					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><Currency value={bounty.fee} /></p>
-				</div>
+				{#if bounty.fee}
+					<div class="mt-4 lg:mt-0 lg:w-40 xl:w-44">
+						<p class="text-xs">Curator Fee</p>
+						<p class="text-md"><Currency value={bounty.fee} /></p>
+					</div>
+				{/if}
+
 				{#if bounty.beneficiary}
 					<div class="mt-4 lg:mt-0">
 						<p class="text-xs">Beneficiary</p>
@@ -119,10 +122,13 @@
 						<p class="text-md"><Currency value={bounty.value} /></p>
 					</div>
 				{/if}
-				<div class="space-y-1">
-					<p class="text-xs">Curator Fee</p>
-					<p class="text-md"><Currency value={bounty.fee} /></p>
-				</div>
+
+				{#if bounty.fee}
+					<div class="space-y-1">
+						<p class="text-xs">Curator Fee</p>
+						<p class="text-md"><Currency value={bounty.fee} /></p>
+					</div>
+				{/if}
 
 				{#if description}
 					<section class="text-xs space-y-1">

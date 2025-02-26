@@ -57,7 +57,7 @@
 			{
 				icon: LogoNovaWallet,
 				name: 'Nova Wallet',
-				source: 'nova',
+				source: 'polkadot-js',
 				url: 'https://novawallet.io/',
 				available: novaWalletAvailable
 			},
@@ -127,10 +127,10 @@
 
 <!-- Base Modal Layout -->
 {#if openDialog}
-	<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
+	<div class="fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
 	<div class="flex justify-center items-center fixed inset-0 w-screen z-20 overflow-y-auto">
 		<div
-			class="flex flex-col h-fit w-[300px] xs:w-[490px] rounded-md bg-backgroundApp sm:p-5 overflow-y-auto"
+			class="flex flex-col h-fit max-h-[100svh] w-[300px] xs:w-[490px] rounded-md bg-backgroundApp sm:p-5 overflow-y-auto"
 		>
 			<!-- Header -->
 			<div class="flex justify-between items-center sm:mb-0">

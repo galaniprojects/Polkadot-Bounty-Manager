@@ -4,7 +4,14 @@ export type ChildBountyRaw = Awaited<
 	ReturnType<ApiType['query']['ChildBounties']['ChildBounties']['getEntries']>
 >[number]['value'];
 
-export const childBountyStatuses = ['Added', 'Active', 'CuratorProposed', 'PendingPayout'] as const;
+export const childBountyStatuses = [
+	'Added',
+	'Active',
+	'CuratorProposed',
+	'PendingPayout',
+	'Claimed',
+	'Canceled'
+] as const;
 
 export interface ChildBounty {
 	id: number;
@@ -16,7 +23,7 @@ export interface ChildBounty {
 	description?: string;
 	curator?: string;
 	beneficiary?: string;
-	unlockAt?: string;
+	unlockAt?: number;
 	dateOfPayout?: string;
 }
 
@@ -24,5 +31,7 @@ export const statusLabels = {
 	Added: 'added',
 	CuratorProposed: 'sub-curator proposed',
 	Active: 'active',
-	PendingPayout: 'pending payout'
+	PendingPayout: 'pending payout',
+	Canceled: 'canceled',
+	Claimed: 'claimed'
 };

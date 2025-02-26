@@ -10,7 +10,10 @@
 		Funded: 'funded',
 		CuratorProposed: 'curator proposed',
 		Active: 'active',
-		PendingPayout: 'pending payout'
+		PendingPayout: 'pending payout',
+		Claimed: 'claimed',
+		Canceled: 'canceled',
+		Rejected: 'rejected'
 	};
 </script>
 

@@ -23,7 +23,7 @@
 		class="flex justify-center fixed inset-0 w-screen z-20 items-center md:py-40 overflow-y-auto"
 	>
 		<div
-			class="w-full s:w-[400px] md:w-[490px] min-h-52 h-fit p-3 pt-2 md:px-7 md:py-6 rounded-md bg-backgroundApp"
+			class="w-full s:w-[400px] md:w-[490px] min-h-52 h-fit max-h-[100svh] p-3 pt-2 md:px-7 md:py-6 rounded-md bg-backgroundApp"
 		>
 			<div class="flex justify-end">
 				{#if dismissable}
