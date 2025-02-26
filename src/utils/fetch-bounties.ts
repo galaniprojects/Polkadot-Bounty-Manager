@@ -3,6 +3,7 @@ import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading
 import type { Bounty } from '../types/bounty';
 import { parseBounty, parseChildBounty, setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
+import { fetchCuratorProxyAddress } from '../components/curator-actions/fetch-signatories';
 
 function keyBy<Value extends object>(list: Value[], field: keyof Value) {
 	return Object.fromEntries(list.map((value) => [value[field], value] as [keyof Value, Value]));
@@ -34,6 +35,13 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 				bountiesMap[id].description = value.asText();
 			}
 		});
+
+		for (const bounty of bounties) {
+			if (bounty.curator) {
+				// TODO: This might need to be optimized.
+				bounty.curatorMultisigAccount = await fetchCuratorProxyAddress(bounty.curator);
+			}
+		}
 
 		const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
 		const childBounties = rawChildBounties

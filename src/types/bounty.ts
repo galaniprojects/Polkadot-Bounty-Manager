@@ -17,5 +17,6 @@ export interface Bounty {
 	status: 'Proposed' | 'Approved' | 'Funded' | 'CuratorProposed' | 'Active' | 'PendingPayout';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
+	curatorMultisigAccount: string | undefined;
 	expiryDate?: Date | undefined;
 }

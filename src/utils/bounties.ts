@@ -3,6 +3,7 @@ import { activeAccount, activeAccountBounties, bounties } from '../stores';
 import { type Bounty, type BountyRaw } from '../types/bounty';
 import { type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
 import { calculateExpirationDate, formatDate } from './common';
+import { getRelevantMultisig } from "./getRelevantMultisig";
 
 /**
  * Sets the store's `activeAccountBounties` value to filtered bounties
@@ -10,14 +11,15 @@ import { calculateExpirationDate, formatDate } from './common';
  */
 export function setActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
-	const address = get(activeAccount)?.address;
-	if (!address) {
+	const account = get(activeAccount);
+	if (!account) {
 		return;
 	}
+	const address = account.address;
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {
-		if (bounty.proposer === address || bounty.curator === address) {
+		if (bounty.proposer === address || bounty.curator === address || getRelevantMultisig(bounty, account)!== undefined) { 
 			filteredBounties.push(bounty);
 			continue;
 		}
@@ -51,6 +53,7 @@ export function parseBounty(raw: BountyRaw, id: number, currentBlock: number) {
 		bond,
 		status: type,
 		curator,
+		curatorMultisigAccount: undefined,
 		childBounties: []
 	};
 
