@@ -20,7 +20,7 @@
 <div class="max-h-fit p-5 lg:px-10 w-full">
 	<div class="flex justify-between">
 		<div class="flex flex-col lg:flex-row lg:justify-start">
-			<span class="text-xl lg:text-2xl">
+			<span class="text-xl lg:text-2xl break-word">
 				#{bounty.id}
 				{bounty.description}
 			</span>
@@ -52,3 +52,9 @@
 		<p>{statusLabels[bounty.status]}</p>
 	</section>
 </div>
+
+<style>
+	.break-word {
+		word-break: break-word;
+	}
+</style>
