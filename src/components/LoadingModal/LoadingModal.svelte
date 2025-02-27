@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { modalStyles, showModal } from '../Modal/tools';
-	import { title, visible } from './loadingModalStores';
+	import { title, open } from './loadingModalStores';
 
 	function preventCloseOnEscKey(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -9,7 +9,7 @@
 	}
 
 	$effect(() => {
-		if ($visible) {
+		if ($open) {
 			document.addEventListener('keydown', preventCloseOnEscKey);
 		} else {
 			document.removeEventListener('keydown', preventCloseOnEscKey);
@@ -21,7 +21,7 @@
 	});
 </script>
 
-<dialog use:showModal={visible} class={modalStyles.dialog}>
+<dialog use:showModal={open} class={modalStyles.dialog}>
 	<h2 class={modalStyles.title}>
 		{$title}
 	</h2>
