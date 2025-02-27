@@ -73,14 +73,20 @@
 		{:else}
 			<!-- User Address -->
 			<div class="flex flex-col items-center align-top space-y-5">
-				<div class="flex gap-2 items-center">
-					<div class="w-5 h-5">
+				<button
+					type="button"
+					class="flex gap-2 items-center"
+					on:click={async () => {
+						await navigator.clipboard.writeText($activeAccount.address);
+					}}
+				>
+					<span class="w-5 h-5">
 						<PolkadotIcon address={$activeAccount.address} />
-					</div>
+					</span>
 					<PeopleChainName address={$activeAccount.address}>
 						{$activeAccount.name || 'Account'}
 					</PeopleChainName>
-				</div>
+				</button>
 				<BurgerMenu />
 			</div>
 		{/if}
