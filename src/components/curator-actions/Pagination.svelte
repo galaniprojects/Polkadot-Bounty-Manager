@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { generate } from '@bramus/pagination-sequence';
 	import DropdownMenu from '../common/DropdownMenu.svelte';
 
@@ -15,13 +16,15 @@
 
 	let paginationContainer: HTMLElement | null = null;
 
-	function changePage(page: number) {
-		if (page > 0 && page <= totalPages && page !== currentPage) {
-			pageChange(page);
+	async function changePage(page: number) {
+		if (page <= 0 || page > totalPages || page === currentPage) return;
 
-			const scrollToContainer = paginationContainer?.closest('[data-pagination-scroll]');
-			scrollToContainer?.scrollIntoView({ behavior: 'smooth' });
-		}
+		pageChange(page);
+
+		await tick(); // give Svelte time to re-render before DOM access
+		paginationContainer
+			?.closest('[data-pagination-scroll]')
+			?.scrollIntoView({ behavior: 'smooth' });
 	}
 
 	function handleDropdownChange(itemsPerPage: unknown) {
@@ -45,8 +48,8 @@
 		<button
 			class="pagination-arrows material-symbols-outlined"
 			disabled={currentPage === 1}
-			on:click={() => {
-				changePage(currentPage - 1);
+			on:click={async () => {
+				await changePage(currentPage - 1);
 			}}
 		>
 			arrow_back_ios
@@ -57,8 +60,8 @@
 				<button
 					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-textPrimary text-backgroundApp '}`}
 					disabled={page === currentPage}
-					on:click={() => {
-						changePage(page);
+					on:click={async () => {
+						await changePage(page);
 					}}
 				>
 					{page}
@@ -72,8 +75,8 @@
 
 		<button
 			class="pagination-arrows material-symbols-outlined"
-			on:click={() => {
-				changePage(currentPage + 1);
+			on:click={async () => {
+				await changePage(currentPage + 1);
 			}}
 			disabled={currentPage === totalPages}
 		>

@@ -28,10 +28,7 @@
 	}
 </script>
 
-<div
-	class="main flex justify-center items-center overflow-x-hidden"
-	data-pagination-scroll="parent-bounty-list"
->
+<div class="main flex justify-center items-center overflow-x-hidden" data-pagination-scroll>
 	<div class="w-full rounded-md px-3 py-6 sm:px-12 sm:pt-2 sm:pb-2">
 		<div class="min-h-[70vh]">
 			{#if !$activeAccount}
@@ -100,10 +97,8 @@
 					</div>
 				</div>
 			{:else}
-				{#each paginatedBounties as bounty, index}
-					<div data-pagination-scroll={`bounty-${bounty.id}`}>
-						<BountyCard {bounty} expanded={index === 0} />
-					</div>
+				{#each paginatedBounties as bounty, index (bounty.id)}
+					<BountyCard {bounty} expanded={index === 0} />
 				{/each}
 				{#if activeBounties.length !== 0}
 					<Pagination
