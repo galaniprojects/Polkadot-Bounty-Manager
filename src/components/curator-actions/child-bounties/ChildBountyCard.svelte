@@ -38,7 +38,7 @@
 	>
 		<div class="flex flex-col lg:flex-row items-start lg:items-center">
 			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
-				<span class="text-[18px]">#{childBounty.id} {childBounty.description}</span>
+				<span class="text-[18px] break-word">#{childBounty.id} {childBounty.description}</span>
 			</div>
 		</div>
 
@@ -301,5 +301,9 @@
 
 	.childContainer {
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+	}
+
+	.break-word {
+		word-break: break-word;
 	}
 </style>
