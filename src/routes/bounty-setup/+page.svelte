@@ -4,7 +4,7 @@
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertFormattedDotToPlanck } from '../../utils/polkadot';
 	import { isPositiveNumber } from '../../utils/common';
-	import { showErrorModal } from '../../components/ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../components/modals';
 	import { Binary } from 'polkadot-api';
 	import Fee from '../../components/Fee.svelte';
 	import Input from '../../components/Input/Input.module.css';

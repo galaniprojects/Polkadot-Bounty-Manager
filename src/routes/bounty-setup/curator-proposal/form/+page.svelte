@@ -5,7 +5,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Deposit from '../../../../components/Deposit.svelte';
-	import { showErrorModal } from '../../../../components/ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../../components/modals';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,

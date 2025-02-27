@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { dotApi } from '../../../stores';
 	import Deposit from '../../Deposit.svelte';
-	import { showErrorModal } from '../../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../modals';
 	import Input from '../../../components/Input/Input.module.css';
 	import Dialog from '../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../utils/transaction';

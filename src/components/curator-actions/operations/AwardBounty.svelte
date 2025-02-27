@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { isValidAddress } from '../../../utils/polkadot';
 	import { dotApi } from '../../../stores';
-	import { showErrorModal } from '../../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../modals';
 	import Dialog from '../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';

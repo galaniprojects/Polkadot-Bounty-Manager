@@ -3,7 +3,7 @@
 	import Currency from '../../../Currency.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { dotApi } from '../../../../stores';
-	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../modals';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';

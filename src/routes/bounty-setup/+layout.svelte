@@ -4,11 +4,7 @@
 	import { page } from '$app/state';
 
 	import BountySetupTab from '../../components/bounty-setup/BountySetupTab.svelte';
-	import { showErrorModal } from '../../components/ErrorModal/showErrorModal';
-	import {
-		hideLoadingModal,
-		showLoadingModal
-	} from '../../components/LoadingModal/loadingModalStores';
+	import { hideLoadingModal, showErrorModal, showLoadingModal } from '../../components/modals';
 	import { dotApi } from '../../stores';
 	import { bountyInfo } from './_bountyInfo';
 

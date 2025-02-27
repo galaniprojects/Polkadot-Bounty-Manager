@@ -6,7 +6,7 @@
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { isValidAddress } from '../../../../utils/polkadot';
-	import { showErrorModal } from '../../../../components/ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../../components/modals';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Input from '../../../../components/Input/Input.module.css';

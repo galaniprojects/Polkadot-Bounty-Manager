@@ -1,6 +1,5 @@
 import { bounties as bountiesStore, dotApi } from '../stores';
-import { showErrorModal } from '../components/ErrorModal/showErrorModal';
-import { hideLoadingModal, showLoadingModal } from '../components/LoadingModal/loadingModalStores';
+import { hideLoadingModal, showErrorModal, showLoadingModal } from '../components/modals';
 import { setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
 import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';

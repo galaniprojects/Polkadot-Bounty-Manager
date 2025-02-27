@@ -11,7 +11,7 @@
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
-	import { hideLoadingModal, showLoadingModal } from '../LoadingModal/loadingModalStores';
+	import { hideLoadingModal, showLoadingModal } from '../modals';
 	import { initializeApi } from '../../utils/initializeApi';
 	import { endpoints } from '../../utils/endpoints';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';

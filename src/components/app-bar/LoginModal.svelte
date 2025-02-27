@@ -14,7 +14,7 @@
 	import { setActiveAccountBounties } from '../../utils/bounties';
 	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
 	import { type AccountWithSigner } from '../../types/account';
-	import { showErrorModal } from '../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../modals';
 	import { getAccounts } from './getAccounts';
 	import { maybeInjectMimir } from './maybeInjectMimir';
 	import { open } from './loginModalStores';

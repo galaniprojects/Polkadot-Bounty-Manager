@@ -3,7 +3,7 @@
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../modals';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';

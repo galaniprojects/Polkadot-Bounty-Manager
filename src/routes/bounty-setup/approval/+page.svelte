@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Deposit from '../../../components/Deposit.svelte';
-	import { showErrorModal } from '../../../components/ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../components/modals';
 	import {
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,

@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../../types/bounty';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
 	import { dotApi } from '../../../../stores';
-	import { showErrorModal } from '../../../ErrorModal/showErrorModal';
+	import { showErrorModal } from '../../../modals';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import Dialog from '../../../common/Dialog.svelte';
