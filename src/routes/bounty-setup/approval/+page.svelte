@@ -96,7 +96,8 @@
 						widthContainer="w-56 lg:w-80"
 						widthDropdown="w-56 lg:w-80"
 						textAlign="text-center"
-						bgColor="lilac"
+						bgColor="grey"
+						backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
 					/>
 				</div>
 				<p class="text-xs">(preselected based on Bounty value)</p>

@@ -33,5 +33,6 @@
 		textAlign="text-start"
 		useLogos={true}
 		bgColor="pink"
+		backgroundColorContainer="bg-backgroundButtonLight"
 	/>
 {/if}
