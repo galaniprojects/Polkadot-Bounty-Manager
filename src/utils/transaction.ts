@@ -1,7 +1,12 @@
 import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, polkadotSigner } from '../stores';
-import { showErrorModal, showLoadingModal, showSuccessModal } from '../components/modals';
+import {
+	hideLoadingModal,
+	showErrorModal,
+	showLoadingModal,
+	showSuccessModal
+} from '../components/modals';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
 
@@ -54,6 +59,8 @@ export async function submitTransaction(
 				readableError(e) +
 				')'
 		);
+	} finally {
+		hideLoadingModal();
 	}
 }
 

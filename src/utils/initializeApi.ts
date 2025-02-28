@@ -1,6 +1,9 @@
+import { showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { blockChainMeta, dotApi } from '../stores';
 
 export async function initializeApi(endpoints: string[]) {
+	showLoadingModal('Connecting to Polkadot…');
+
 	const { createTypedApi } = await import('./createTypedApi');
 	const { client, api } = createTypedApi(endpoints);
 

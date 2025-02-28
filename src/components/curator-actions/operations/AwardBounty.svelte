@@ -25,7 +25,6 @@
 	);
 
 	async function submit() {
-		open = false;
 		try {
 			if (!isValidAddress(beneficiary)) {
 				showErrorModal('Beneficiary address is invalid');
@@ -36,7 +35,11 @@
 				return;
 			}
 
-			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
+			const successful = await submitTransaction(
+				transaction,
+				'Your bounty has been awarded and can now be claimed'
+			);
+			open = !successful;
 		} catch (e) {
 			console.error(e);
 			showErrorModal(String(e));

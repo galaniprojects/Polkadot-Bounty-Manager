@@ -37,9 +37,10 @@
 				description: bountyDescription.asText(),
 				value: undefined
 			};
-			hideLoadingModal();
 		} catch {
 			showErrorModal('Failed to load bounty info');
+		} finally {
+			hideLoadingModal();
 		}
 	});
 </script>

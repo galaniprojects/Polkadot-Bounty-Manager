@@ -23,8 +23,7 @@
 	let isToggled = false;
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 </script>
 

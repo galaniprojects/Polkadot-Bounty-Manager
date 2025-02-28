@@ -19,8 +19,8 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		open = false;
 		const result = await submitTransaction(transaction);
+		open = !result;
 
 		if (result === undefined) {
 			showErrorModal('Internal error');

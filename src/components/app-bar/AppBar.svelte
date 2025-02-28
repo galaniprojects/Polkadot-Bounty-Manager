@@ -11,7 +11,6 @@
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
-	import { hideLoadingModal, showLoadingModal } from '../modals';
 	import { initializeApi } from '../../utils/initializeApi';
 	import { endpoints } from '../../utils/endpoints';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
@@ -19,10 +18,8 @@
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
-			showLoadingModal('Connecting to Polkadot…');
 			await initializeApi(endpoints);
 			await connectStoredAccount();
-			hideLoadingModal();
 		}
 
 		await fetchBountiesAndChildBounties();

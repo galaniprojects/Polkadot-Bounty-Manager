@@ -20,8 +20,7 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		open = false;
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 
 	function calculateChildBountyDeposit(parent: string | undefined, child: ChildBounty) {

@@ -56,7 +56,6 @@
 	});
 
 	async function submit() {
-		open = false;
 		if (!$activeAccount) {
 			showErrorModal('Wallet is not connected');
 			return;
@@ -76,13 +75,15 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
-
-		bountyValue = '';
-		bountyTitle = '';
-		curatorFee = '';
-		beneficiary = '';
-		extend = false;
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			open = false;
+			bountyValue = '';
+			bountyTitle = '';
+			curatorFee = '';
+			beneficiary = '';
+			extend = false;
+		}
 	}
 </script>
 

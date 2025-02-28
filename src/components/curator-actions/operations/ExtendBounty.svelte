@@ -28,8 +28,8 @@
 	});
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction, 'Your bounty has been extended');
+		const successful = await submitTransaction(transaction, 'Your bounty has been extended');
+		open = !successful;
 	}
 </script>
 

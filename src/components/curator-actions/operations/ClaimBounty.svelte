@@ -14,8 +14,7 @@
 	});
 
 	async function claimBounty() {
-		open = false;
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 </script>
 

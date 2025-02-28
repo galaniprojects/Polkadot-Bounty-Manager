@@ -22,8 +22,8 @@
 	);
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction, 'Child bounty successfully claimed');
+		const successful = await submitTransaction(transaction, 'Child bounty successfully claimed');
+		open = !successful;
 	}
 </script>
 

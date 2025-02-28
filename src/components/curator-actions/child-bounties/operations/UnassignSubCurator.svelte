@@ -24,8 +24,7 @@
 	let isToggled = false;
 
 	async function unassignSubCurator() {
-		open = false;
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 </script>
 

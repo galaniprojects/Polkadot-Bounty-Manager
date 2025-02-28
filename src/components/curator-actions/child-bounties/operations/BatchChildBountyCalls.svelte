@@ -62,7 +62,6 @@
 	});
 
 	async function submit() {
-		open = false;
 		if (!$activeAccount) {
 			showErrorModal('Wallet is not connected');
 			return;
@@ -82,7 +81,7 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 </script>
 

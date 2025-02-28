@@ -35,7 +35,6 @@
 	);
 
 	async function submit() {
-		open = false;
 		if (!isValidAddress(curatorAddress)) {
 			showErrorModal('Curator address is invalid');
 			return;
@@ -51,7 +50,7 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
+		open = !(await submitTransaction(transaction));
 	}
 </script>
 

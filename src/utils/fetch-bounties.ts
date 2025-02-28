@@ -49,14 +49,15 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 
 		bountiesStore.set(bounties);
 		setActiveAccountBounties();
-
-		if (showProgress) {
-			hideLoadingModal();
-		}
-	} catch (e) {
-		console.error(e);
+	} catch (error) {
+		console.error(error);
 		if (showProgress) {
 			showErrorModal('Error while loading bounty details');
+		}
+	} finally {
+		if (showProgress) {
+			await new Promise(resolve => setTimeout(resolve, 3000));
+			hideLoadingModal();
 		}
 	}
 }
