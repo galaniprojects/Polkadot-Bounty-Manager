@@ -28,6 +28,7 @@
 .backdrop {
 	position: fixed;
 	inset: 0;
+	z-index: 10; /* to cover some elements with position: relative */
 }
 
 .closeForm {
