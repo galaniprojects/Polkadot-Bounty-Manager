@@ -43,6 +43,8 @@
 			change={handleDropdownChange}
 			bgColor="grey"
 			backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+			height="h-10"
+			positionOverlay="-mt-[40px]"
 		/>
 	</div>
 	<div class="flex justify-center space-x-[6px]">

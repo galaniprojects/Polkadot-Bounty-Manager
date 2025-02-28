@@ -74,18 +74,6 @@
 				</div>
 			{/if}
 		</div>
-
-		<div class="hidden lg:flex lg:flex-col gap-3 lg:ml-7">
-			<section class="flex flex-col lg:flex lg:flex-row lg:justify-between">
-				<section class="flex flex-col lg:flex-row"></section>
-				<div class="flex justify-center lg:mr-12 2xl:mr-[180px]"></div>
-			</section>
-			<section class="flex-col lg:flex lg:flex-row lg:justify-between">
-				<section class="flex justify-start">
-					<div class="flex justify-between lg:space-x-[160px] xl:space-x-40"></div>
-				</section>
-			</section>
-		</div>
 	</div>
 </div>
 

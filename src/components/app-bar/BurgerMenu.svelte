@@ -48,7 +48,7 @@
 		}}
 	>
 		<span
-			class="material-symbols-rounded items-center rounded-md bg-backgroundButtonLight px-[23px] py-[9px] text-textPrimary"
+			class="material-symbols-rounded items-center rounded-[10px] bg-backgroundButtonLight px-[23px] py-[11px] text-textPrimary"
 		>
 			menu
 		</span>
@@ -58,7 +58,7 @@
 	{#if open}
 		<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
 		<div
-			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-md w-[210px]"
+			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-[10px] w-[210px]"
 		>
 			<button
 				on:click={() => {

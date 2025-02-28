@@ -12,6 +12,8 @@
 	export let useLogos: boolean = false;
 	export let bgColor: string;
 	export let backgroundColorContainer: string;
+	export let height: string;
+	export let positionOverlay: string;
 
 	let dropdownOpen = false;
 	let dropdownContainer: HTMLDivElement | null = null;
@@ -57,7 +59,7 @@
 		<button
 			on:click={dropdownOnClick}
 			type="button"
-			class="inline-flex {widthContainer} justify-between items-center rounded-[10px] h-10 {backgroundColorContainer} p-2 text-textPrimary"
+			class="inline-flex {widthContainer} {height} justify-between items-center rounded-[10px] {backgroundColorContainer} p-2 text-textPrimary"
 			id="menu-button"
 			aria-expanded="true"
 			aria-haspopup="true"
@@ -79,7 +81,7 @@
 	</div>
 	{#if dropdownOpen}
 		<div
-			class="absolute {widthDropdown} rounded-[10px] overflow-hidden -mt-[40px] z-10 bg-lightGray shadow-lg ring-1 ring-black ring-opacity-20"
+			class="absolute {widthDropdown} rounded-[10px] overflow-hidden {positionOverlay} z-10 bg-lightGray shadow-lg ring-1 ring-black ring-opacity-20"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="menu-button"
