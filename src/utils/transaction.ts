@@ -36,7 +36,12 @@ export async function submitTransaction(
 		const result = await transaction.signAndSubmit(signer);
 		if (!result.dispatchError) {
 			showSuccessModal('Transaction', successMessage || 'Operation success.');
-			await fetchBountiesAndChildBounties(false);
+
+			(async () => {
+				// trigger update in the background but return immediately
+				await fetchBountiesAndChildBounties(false);
+			})();
+
 			return result;
 		}
 
