@@ -1,8 +1,10 @@
+import { get } from 'svelte/store';
+import { currentBlockchain } from '../components/app-bar/blockchains';
 import { showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { blockChainMeta, dotApi } from '../stores';
 
 export async function initializeApi(endpoints: string[]) {
-	showLoadingModal('Connecting to Polkadot…');
+	showLoadingModal(`Connecting to ${get(currentBlockchain).label}…`);
 
 	const { createTypedApi } = await import('./createTypedApi');
 	const { client, api } = createTypedApi(endpoints);
