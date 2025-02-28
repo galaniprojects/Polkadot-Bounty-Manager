@@ -79,9 +79,32 @@
 		currentPhase = 'waiting';
 
 		try {
-			accounts = await getAccounts(wallet.source);
+			const observer = new MutationObserver((events) => {
+				const hasWCModal = events.find(({ addedNodes }) =>
+					[...addedNodes].some(({ nodeName }) => nodeName === 'WCM-MODAL')
+				);
+				if (hasWCModal) {
+					// do not cover Wallet Connect "modal"
+					$open = false;
+				}
+			});
+
+			const { source } = wallet;
+			const isWalletConnect = source === 'WalletConnect';
+
+			if (isWalletConnect) {
+				observer.observe(document.body, { childList: true, subtree: true });
+			}
+
+			accounts = await getAccounts(source);
+
+			if (isWalletConnect) {
+				observer.disconnect();
+				$open = true;
+			}
 		} catch (e) {
 			$open = false;
+			currentPhase = 'walletSelection';
 			showErrorModal(
 				'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
 			);
@@ -91,6 +114,7 @@
 
 		if (accounts.length === 0) {
 			$open = false;
+			currentPhase = 'walletSelection';
 			showErrorModal(
 				'No accounts found. Make sure the Bounty Manager has access to your wallet accounts.'
 			);
