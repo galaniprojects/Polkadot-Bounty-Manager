@@ -1,6 +1,9 @@
-import { show } from './ErrorModal.svelte';
+import { writable } from 'svelte/store';
+
+export const open = writable(false);
+export const message = writable('');
 
 export function showErrorModal(messageString: string) {
-	/* eslint-disable-next-line @typescript-eslint/no-unsafe-call */
-	show(messageString);
+	message.set(messageString);
+	open.set(true);
 }

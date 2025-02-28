@@ -1,19 +1,10 @@
-<script lang="ts" module>
+<script lang="ts">
 	import Dialog from '../common/Dialog.svelte';
-
-	let title = '';
-	let message = '';
-	let open = false;
-
-	export function show(titleString: string, messageString: string) {
-		title = titleString;
-		message = messageString;
-		open = true;
-	}
+	import { open, title, message } from './showSuccessModal';
 </script>
 
-<Dialog bind:open {title}>
+<Dialog bind:open={$open} title={$title}>
 	<output>
-		{message}
+		{$message}
 	</output>
 </Dialog>

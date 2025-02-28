@@ -1,17 +1,10 @@
-<script lang="ts" module>
+<script lang="ts">
 	import Dialog from '../common/Dialog.svelte';
-
-	let message = '';
-	let open = false;
-
-	export function show(messageString: string) {
-		message = messageString;
-		open = true;
-	}
+	import { open, message } from './showErrorModal';
 </script>
 
-<Dialog bind:open title="Error">
+<Dialog bind:open={$open} title="Error">
 	<output>
-		{message}
+		{$message}
 	</output>
 </Dialog>
