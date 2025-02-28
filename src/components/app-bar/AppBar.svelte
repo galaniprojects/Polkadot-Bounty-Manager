@@ -48,7 +48,8 @@
 	}
 </script>
 
-<header class="relative flex items-center justify-between min-h-20 px-4 sm:px-12 py-4">
+<header class="relative flex justify-between items-center min-h-20 p-2 md:p-0 md:w-[754px] mx-auto">
+	<!-- First Element -->
 	<div class="flex flex-col items-center space-y-3">
 		<a href="/curator-actions">
 			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
@@ -56,6 +57,7 @@
 		<ChainMenu />
 	</div>
 
+	<!-- Second Element -->
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
@@ -64,7 +66,7 @@
 			<w3m-button></w3m-button>
 		{:else}
 			<!-- User Address -->
-			<div class="flex flex-col items-center align-top space-y-5">
+			<div class="flex flex-col items-center space-y-[23px] mt-1">
 				<button
 					type="button"
 					class="flex gap-2 items-center"

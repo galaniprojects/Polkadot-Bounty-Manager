@@ -38,13 +38,16 @@
 			items={perPageOptions}
 			bind:selectedItem
 			textAlign="text-center"
-			widthDropdown="w-20"
-			widthContainer="w-20"
+			widthDropdown="w-[350px]"
+			widthContainer="w-[350px]"
 			change={handleDropdownChange}
-			bgColor="lilac"
+			bgColor="grey"
+			backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+			height="h-10"
+			positionOverlay="-mt-[40px]"
 		/>
 	</div>
-	<div class="flex justify-center space-x-2">
+	<div class="flex justify-center space-x-[6px]">
 		<button
 			class="pagination-arrows material-symbols-outlined"
 			disabled={currentPage === 1}
@@ -58,7 +61,7 @@
 		{#each pageNumbers as page}
 			{#if typeof page === 'number'}
 				<button
-					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-textPrimary text-backgroundApp '}`}
+					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-backgroundButtonDark text-backgroundApp '}`}
 					disabled={page === currentPage}
 					on:click={async () => {
 						await changePage(page);
@@ -94,16 +97,14 @@
 		align-items: center;
 		text-align: center;
 		cursor: pointer;
-		border-radius: 0.375rem;
+		border-radius: 10px;
 	}
 
 	.pagination-arrows {
 		color: var(--pagination-arrow-color, theme('colors.textPrimary'));
 	}
 
-	.pagination-arrows:disabled,
-	.page-number:disabled,
-	span.page-number {
+	.pagination-arrows:disabled {
 		opacity: 0.5;
 	}
 </style>

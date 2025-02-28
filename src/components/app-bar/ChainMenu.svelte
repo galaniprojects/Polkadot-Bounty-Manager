@@ -33,5 +33,8 @@
 		textAlign="text-start"
 		useLogos={true}
 		bgColor="pink"
+		backgroundColorContainer="bg-backgroundButtonLight"
+		height="h-[50px]"
+		positionOverlay="-mt-[50px]"
 	/>
 {/if}

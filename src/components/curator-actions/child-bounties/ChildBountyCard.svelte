@@ -25,219 +25,195 @@
 	let batchOpen = false;
 
 	let detailsExpended = false;
+	let closeDownExpended = false;
 
 	function handleMoreDetailsToggleClick() {
 		detailsExpended = !detailsExpended;
 	}
+
+	function initiateCloseDownToggleClick() {
+		closeDownExpended = !closeDownExpended;
+	}
 </script>
 
-<div class="childContainer bg-backgroundBounty pb-3 lg:w-full shadow-lg mt-6">
+<div class="childContainer bg-backgroundBounty">
 	<!-- Header Section -->
-	<div
-		class="flex justify-between items-start gap-4 rounded-t-md px-[10px] pt-2 pb-0 lg:pl-4 lg:pr-3 min-h-6 bg-backgroundBounty"
-	>
-		<div class="flex flex-col lg:flex-row items-start lg:items-center">
-			<div class="flex flex-col lg:w-[400px] xl:w-[650px] mb-2 lg:mb-0">
-				<span class="text-[18px] break-word">#{childBounty.id} {childBounty.description}</span>
-			</div>
+	<div class="flex flex-col rounded-t-md pt-[16px] px-[11px] bg-backgroundBounty">
+		<span class="text-[18px] break-word">#{childBounty.id} {childBounty.description}</span>
+		<div class="flex justify-end bg-backgroundChildBountyDetails">
+			<span
+				class="status justify-end items-center text-xs flex-shrink-0 text-white rounded-md pt-1.5 px-3"
+				data-status={childBounty.status}
+			>
+				{statusLabels[childBounty.status]}
+			</span>
 		</div>
-
-		<span
-			class="status justify-end items-center text-xs flex-shrink-0 mr-0 sm:mr-5 text-white rounded-md py-1.5 px-3"
-			data-status={childBounty.status}
-		>
-			{statusLabels[childBounty.status]}
-		</span>
 	</div>
 
 	<!-- Child Bounty Card Content -->
 	<div
-		class="flex flex-col lg:flex-row justify-between bg-backgroundChildBountyDetails mt-2 mx-2 lg:pr-[16px] lg:pt-1 lg:pl-2"
+		class="flex flex-col bg-backgroundChildBountyDetails mt-2 mx-[10px] space-y-3 py-[12px] px-[6px]"
 	>
-		<div>
-			<div class="mx-2 mb-3 lg:mx-0 flex flex-col space-y-3 lg:flex-row items-start">
-				<div class="mt-3 flex flex-col lg:w-[250px] pr-3">
-					<section class="space-y-2 lg:space-y-0">
-						<p class="text-xs">Value</p>
-						<p><Currency value={childBounty.value} /></p>
-					</section>
-				</div>
-
-				<div class="hidden lg:flex flex-col lg:w-40 xl:w-44 lg:mt-0">
-					<section>
-						<p class="text-xs">Sub-curator Fee</p>
-						<p><Currency value={childBounty.fee} /></p>
-					</section>
-					{#if childBounty.dateOfPayout}
-						<section class="lg:mt-3">
-							<p class="text-xs">Award date</p>
-							<p>{childBounty.dateOfPayout}</p>
-						</section>
-					{/if}
-				</div>
-				<div>
-					<div class="flex flex-col w-full lg:w-48 xl:w-62 space-y-3">
-						{#if childBounty.curator}
-							<section>
-								<p class="text-xs">Sub-Curator</p>
-								<CopyableAddress address={childBounty.curator || '-'} />
-							</section>
-						{/if}
-
-						{#if childBounty.beneficiary}
-							<section>
-								<p class="text-xs">Beneficiary</p>
-								<CopyableAddress address={childBounty.beneficiary} />
-							</section>
-						{/if}
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="flex justify-center items-center lg:hidden">
-			{#if !detailsExpended}
-				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
-					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
-						more details
-					</button>
-					<button
-						class="material-symbols-outlined align-top w-6 h-6 mr-2"
-						on:click={handleMoreDetailsToggleClick}
-					>
-						keyboard_arrow_down
-					</button>
-				</div>
-			{/if}
-		</div>
-		{#if detailsExpended}
-			<div class="flex flex-col bg-backgroundBounty px-2 space-y-3 pb-5">
+		<div class="space-y-3">
+			<div class="flex justify-between">
+				<section>
+					<p class="text-xs">Value</p>
+					<p><Currency value={childBounty.value} /></p>
+				</section>
 				<section>
 					<p class="text-xs">Sub-curator Fee</p>
 					<p><Currency value={childBounty.fee} /></p>
 				</section>
-				<div class="flex flex-col">
-					<div class="flex flex-col lg:w-52 xl:w-[270px] mb-2 lg:mb-0"></div>
+			</div>
 
-					<div class="flex flex-col lg:w-80 mb-2 lg:mb-0">
-						{#if childBounty.dateOfPayout}
-							<p class="text-xs">Award date:</p>
-							<p>{childBounty.dateOfPayout}</p>
-						{/if}
-					</div>
-				</div>
-				<div class="mt-3 flex-wrap flex justify-center items-center">
-					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
-				</div>
+			<div class="flex-col space-y-2">
+				{#if childBounty.curator}
+					<section>
+						<p class="text-xs">Sub-Curator</p>
+						<CopyableAddress address={childBounty.curator || '-'} />
+					</section>
+				{/if}
+
+				{#if childBounty.beneficiary}
+					<section>
+						<p class="text-xs">Beneficiary</p>
+						<CopyableAddress address={childBounty.beneficiary} />
+					</section>
+				{/if}
+			</div>
+		</div>
+
+		{#if !detailsExpended}
+			<div class="flex items-center justify-center bg-backgroundChildBountyExpand rounded-b-md">
+				<button class="text-xs" on:click={handleMoreDetailsToggleClick}>
+					all child bounty details
+				</button>
+
+				<button class="material-symbols-outlined" on:click={handleMoreDetailsToggleClick}>
+					keyboard_arrow_down
+				</button>
 			</div>
 		{/if}
 
-		<div class="flex justify-center items-center">
-			{#if detailsExpended}
-				<div class="bg-backgroundBounty max-w-fit rounded-b-md max-h-[24px]">
-					<button class="text-xs align-top mt-1 ml-2" on:click={handleMoreDetailsToggleClick}>
-						less details
-					</button>
-					<button
-						class="material-symbols-outlined align-top w-6 h-6 mr-2"
-						on:click={handleMoreDetailsToggleClick}
-					>
-						keyboard_arrow_up
-					</button>
+		{#if detailsExpended}
+			<div class="flex flex-col bg-backgroundChildBountyDetails space-y-3">
+				<div>
+					{#if childBounty.dateOfPayout}
+						<p class="text-xs">Award date:</p>
+						<p>{childBounty.dateOfPayout}</p>
+					{/if}
 				</div>
-			{/if}
-		</div>
 
-		<div class="space-y-3 p-2 2xl:mr-[140px]">
-			<div class="flex justify-end">
-				<div class="hidden lg:flex lg:flex-row lg:items-center lg:justify-end lg:mr-2">
-					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
+				<div class="flex-wrap flex justify-center items-center">
+					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
 				</div>
 			</div>
-			{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
-				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
-					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
-
-					<button
-						on:click={() => (assignSubCuratorOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-					>
-						ASSIGN
-					</button>
-				</div>
-				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
-					<p class="text-xs lg:text-base lg:pt-2">All operations</p>
-
-					<button
-						on:click={() => (batchOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-					>
-						BATCH
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
-				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
-					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
-					<button
-						on:click={() => (acceptSubCuratorRuleOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-					>
-						ACCEPT
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
-				<div
-					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
-				>
-					<button
-						on:click={() => (closeDownChildBountyOpen = true)}
-						class="bg-backgroundCloseChildBounty text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
-					>
-						CLOSE DOWN
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
-				<div
-					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
-				>
-					<button
-						on:click={() => (unassignSubCuratorOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-7 lg:min-w-32"
-					>
-						UNASSIGN
-					</button>
-				</div>
-			{/if}
-
-			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
-				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
-					<button
-						on:click={() => (awardChildBountyOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-					>
-						AWARD
-					</button>
-				</div>
-			{/if}
-
-			{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
-				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
-					<button
-						on:click={() => (claimChildBountyOpen = true)}
-						class="text-white bg-backgroundButtonDark rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:min-w-32"
-					>
-						CLAIM
-					</button>
-				</div>
-			{/if}
-		</div>
+			<div class="flex justify-center items-center bg-backgroundChildBountyExpand rounded-b-md">
+				<button class="text-xs" on:click={handleMoreDetailsToggleClick}> show less details </button>
+				<button class="material-symbols-outlined" on:click={handleMoreDetailsToggleClick}>
+					keyboard_arrow_up
+				</button>
+			</div>
+		{/if}
 	</div>
+	<div class="space-y-3 mx-[8px] my-[15px]">
+		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
+			<div class="flex flex-col gap-[8px]">
+				<p class="text-xs">Sub-curator</p>
+				<button
+					on:click={() => (assignSubCuratorOpen = true)}
+					class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+				>
+					ASSIGN
+				</button>
+			</div>
+			<div class="flex flex-col gap-[8px]">
+				<p class="text-xs">Child bounty operations</p>
+
+				<button
+					on:click={() => (batchOpen = true)}
+					class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+				>
+					BATCH CALL
+				</button>
+			</div>
+		{/if}
+
+		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
+			<div class="flex flex-col gap-[8px]">
+				<p class="text-xs">Sub-curator role</p>
+				<button
+					on:click={() => (acceptSubCuratorRuleOpen = true)}
+					class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+				>
+					ACCEPT
+				</button>
+			</div>
+		{/if}
+
+		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+			<div class="flex flex-col gap-[8px]">
+				<p class="text-xs">Sub-curator</p>
+				<button
+					on:click={() => (unassignSubCuratorOpen = true)}
+					class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+				>
+					UNASSIGN
+				</button>
+			</div>
+		{/if}
+
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+			<button
+				on:click={() => (awardChildBountyOpen = true)}
+				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+			>
+				AWARD
+			</button>
+		{/if}
+
+		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
+			<button
+				on:click={() => (claimChildBountyOpen = true)}
+				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+			>
+				CLAIM
+			</button>
+		{/if}
+	</div>
+
+	{#if !closeDownExpended}
+		<div class="flex items-center justify-center bg-backgroundChildBountyCloseDown rounded-b-md">
+			<button class="text-xs" on:click={initiateCloseDownToggleClick}>
+				initiate child bounty closedown
+			</button>
+
+			<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
+				keyboard_arrow_down
+			</button>
+		</div>
+	{/if}
+
+	{#if closeDownExpended}
+		{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
+			<p class="text-xs">initiate child bounty closedown</p>
+			<div class="flex gap-2">
+				<button
+					on:click={() => (closeDownChildBountyOpen = true)}
+					class="bg-backgroundCloseChildBountyButton text-white rounded-[10px] w-2/3 h-10"
+				>
+					CLOSE DOWN
+				</button>
+
+				<button
+					on:click={initiateCloseDownToggleClick}
+					class="bg-backgroundButtonDark text-white rounded-[10px] w-1/3 h-10"
+				>
+					CANCEL
+				</button>
+			</div>
+		{/if}
+	{/if}
 </div>
 
 {#if assignSubCuratorOpen}

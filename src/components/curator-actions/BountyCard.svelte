@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { type Bounty } from '../../types/bounty';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import BountyOperations from './BountyOperations.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
 	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
 	import { currentBlockchain } from '../app-bar/blockchains';
@@ -63,10 +62,7 @@
 		<!-- Details Section -->
 		<BountyCardDetails {bounty} {description} {remainingBalance} />
 
-		<!-- Actions -->
-		<BountyOperations {bounty} />
-
-		<div class="pr-6">
+		<div class="p-[5px]">
 			<!-- Child Bounties -->
 			{#if bounty.status === 'Active'}
 				<ChildBountiesSection {bounty} />
@@ -77,10 +73,10 @@
 			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
 			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
-				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
-					<p class="pt-2 text-sm">Award bounty</p>
+				<div class="flex flex-col">
+					<p class="text-xs">Award bounty</p>
 					<button
-						class="w-full h-12 button-popup font-bold rounded-md lg:h-auto lg:pt-1 lg:w-[128px] lg:px-4"
+						class="w-1/2 h-10 text-white bg-backgroundButtonDark rounded-[10px]"
 						on:click={() => {
 							awardBountyDialogOpen = true;
 						}}
@@ -92,10 +88,10 @@
 		</div>
 
 		<!-- Footer -->
-		<div class="flex justify-end px-5 my-4 lg:px-10">
-			<button class="flex items-center pt-5 pb-1" on:click={toggleExpanded}>
-				<p class="text-xs">Close bounty view</p>
-				<span class="material-symbols-outlined text-3xl">keyboard_arrow_up</span>
+		<div class="flex justify-center items-center rounded-b-md">
+			<button class="flex items-center py-2" on:click={toggleExpanded}>
+				<p class="text-xs">close bounty view</p>
+				<span class="material-symbols-outlined">keyboard_arrow_up</span>
 			</button>
 		</div>
 	{/if}

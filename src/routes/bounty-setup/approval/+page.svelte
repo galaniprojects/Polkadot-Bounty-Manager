@@ -89,16 +89,17 @@
 		<div>
 			<div class="space-y-1 sm:space-y-3">
 				<p class="text-xs mb-1">Treasury track</p>
-				<div class="border">
-					<DropdownMenu
-						bind:selectedItem={selectedTreasuryTrack}
-						items={treasuryTracks}
-						widthContainer="w-56 lg:w-80"
-						widthDropdown="w-56 lg:w-80"
-						textAlign="text-center"
-						bgColor="lilac"
-					/>
-				</div>
+				<DropdownMenu
+					bind:selectedItem={selectedTreasuryTrack}
+					items={treasuryTracks}
+					widthContainer="w-56 lg:w-80"
+					widthDropdown="w-56 lg:w-80"
+					textAlign="text-center"
+					bgColor="grey"
+					backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+					height="h-10"
+					positionOverlay="-mt-[40px]"
+				/>
 				<p class="text-xs">(preselected based on Bounty value)</p>
 			</div>
 
