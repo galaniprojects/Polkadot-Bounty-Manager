@@ -27,7 +27,7 @@
 	</h2>
 
 	<div class="text-center">
-		<p>This might take a moment</p>
+		<p class={modalStyles.output}>This might take a moment</p>
 		<span class="loader mt-3"></span>
 	</div>
 </dialog>

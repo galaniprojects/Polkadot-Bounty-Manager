@@ -8,8 +8,6 @@
 	max-width: 98%;
 	background: #fcfcfc; /* bg-backgroundApp */
 	outline: none;
-	font-size: 1.25rem;
-	line-height: 1.75rem;
 
 	@media (min-width: 375px) {
 		width: 400px;
@@ -51,4 +49,9 @@
 	@media (min-width: 768px) {
 		padding-top: 0;
 	}
+}
+
+.output {
+	font-size: 1.25rem;
+	line-height: 1.75rem;
 }
