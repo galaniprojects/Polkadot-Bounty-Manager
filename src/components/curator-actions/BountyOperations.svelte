@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { activeAccount, showAllCuratorOptions } from '../../stores';
+	import { showAllCuratorOptions } from '../../stores';
 	import { type Bounty } from '../../types/bounty';
-	import { getRelevantMultisig } from '../../utils/getRelevantMultisig';
 	import { isCurator } from '../../utils/isCurator';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
 	import ClaimBounty from './operations/ClaimBounty.svelte';

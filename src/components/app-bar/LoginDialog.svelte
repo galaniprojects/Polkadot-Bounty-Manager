@@ -208,8 +208,8 @@
 						{#each accounts as account}
 							<button
 								class="w-full"
-								on:click={() => {
-									selectAccount(account);
+								on:click={async () => {
+									await selectAccount(account);
 								}}
 							>
 								<AccountItem name={account.name} address={account.address} />
