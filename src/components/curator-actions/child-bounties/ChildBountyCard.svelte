@@ -117,6 +117,24 @@
 		{/if}
 	</div>
 	<div class="space-y-3 mx-[8px] my-[15px]">
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+			<button
+				on:click={() => (awardChildBountyOpen = true)}
+				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+			>
+				AWARD
+			</button>
+		{/if}
+
+		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
+			<button
+				on:click={() => (claimChildBountyOpen = true)}
+				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
+			>
+				CLAIM
+			</button>
+		{/if}
+
 		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator</p>
@@ -162,56 +180,50 @@
 				</button>
 			</div>
 		{/if}
-
-		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
-			<button
-				on:click={() => (awardChildBountyOpen = true)}
-				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
-			>
-				AWARD
-			</button>
-		{/if}
-
-		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
-			<button
-				on:click={() => (claimChildBountyOpen = true)}
-				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
-			>
-				CLAIM
-			</button>
-		{/if}
 	</div>
 
-	{#if !closeDownExpended}
-		<div class="flex items-center justify-center bg-backgroundChildBountyCloseDown rounded-b-md">
-			<button class="text-xs" on:click={initiateCloseDownToggleClick}>
-				initiate child bounty closedown
-			</button>
-
-			<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
-				keyboard_arrow_down
-			</button>
-		</div>
-	{/if}
-
-	{#if closeDownExpended}
-		{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
-			<p class="text-xs">initiate child bounty closedown</p>
-			<div class="flex gap-2">
-				<button
-					on:click={() => (closeDownChildBountyOpen = true)}
-					class="bg-backgroundCloseChildBountyButton text-white rounded-[10px] w-2/3 h-10"
-				>
-					CLOSE DOWN
+	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+		{#if !closeDownExpended}
+			<div class="flex items-center justify-center bg-backgroundChildBountyCloseDown rounded-b-md">
+				<button class="text-xs" on:click={initiateCloseDownToggleClick}>
+					initiate child bounty closedown
 				</button>
 
-				<button
-					on:click={initiateCloseDownToggleClick}
-					class="bg-backgroundButtonDark text-white rounded-[10px] w-1/3 h-10"
-				>
-					CANCEL
+				<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
+					keyboard_arrow_down
 				</button>
 			</div>
+		{/if}
+
+		{#if closeDownExpended}
+			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
+				<div class="flex-col gap-2 bg-backgroundChildBountyCloseDown rounded-b-md">
+					<div class="flex items-center justify-center">
+						<button class="text-xs" on:click={initiateCloseDownToggleClick}>
+							initiate child bounty closedown
+						</button>
+
+						<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
+							keyboard_arrow_up
+						</button>
+					</div>
+					<div class="flex gap-2 p-2">
+						<button
+							on:click={() => (closeDownChildBountyOpen = true)}
+							class="bg-backgroundCloseChildBountyButton text-white rounded-[10px] w-2/3 h-10"
+						>
+							CLOSE DOWN
+						</button>
+
+						<button
+							on:click={initiateCloseDownToggleClick}
+							class="bg-backgroundButtonDark text-white rounded-[10px] w-1/3 h-10"
+						>
+							CANCEL
+						</button>
+					</div>
+				</div>
+			{/if}
 		{/if}
 	{/if}
 </div>
