@@ -51,7 +51,8 @@ export function parseChildBounty(raw: ChildBountyRaw, id: number) {
 		parentBounty,
 		curatorDeposit,
 		status: type,
-		curator
+		curator,
+		curatorMultisigAccount: undefined
 	};
 
 	if (type !== 'PendingPayout') {

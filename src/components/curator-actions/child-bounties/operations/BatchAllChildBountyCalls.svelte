@@ -76,7 +76,7 @@
 			return;
 		}
 
-		await submitTransaction(transaction, undefined, bounty.curator, bounty.curatorMultisigAccount);
+		await submitTransaction(transaction, undefined, bounty);
 
 		bountyValue = '';
 		bountyTitle = '';

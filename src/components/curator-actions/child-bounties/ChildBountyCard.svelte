@@ -229,7 +229,7 @@
 {/if}
 
 {#if closeDownChildBountyOpen}
-	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} />
+	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if awardChildBountyOpen}
@@ -241,11 +241,11 @@
 {/if}
 
 {#if batchOpen}
-	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} />
+	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if unassignSubCuratorOpen}
-	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} />
+	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} {parentBounty} />
 {/if}
 
 <style>

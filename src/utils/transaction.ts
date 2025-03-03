@@ -38,6 +38,8 @@ export async function submitTransaction(
 		let calldata = undefined;
 
 		const source = get(activeAccount)?.source;
+
+		// In case it's multisig transaction.
 		if (proxyAddress && multisigAddress && source !== 'mimir') {
 			const matchingMultisig: MultisigInfo | undefined = get(activeAccount)?.multisigs?.find(
 				(multisig) => multisig.address === multisigAddress
