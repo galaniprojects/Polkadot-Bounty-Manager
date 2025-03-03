@@ -62,7 +62,7 @@
 			: 'Bounties'}
 	</p>
 
-	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
 		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">Add new child bounty</p>

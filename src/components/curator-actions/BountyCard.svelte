@@ -73,7 +73,7 @@
 		<div
 			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
-			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && isCurator(bounty))}
 				<div class="flex flex-col">
 					<p class="text-xs">Award bounty</p>
 					<button

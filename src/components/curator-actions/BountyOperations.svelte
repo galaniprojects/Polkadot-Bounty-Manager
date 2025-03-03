@@ -23,7 +23,7 @@
 	</a>
 {/if}
 
-{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && bounty.curator === $activeAccount?.address)}
+{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty))}
 	<button
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {
@@ -34,7 +34,7 @@
 	</button>
 {/if}
 
-{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
+{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
 	<button
 		class="bg-extendButtonBackground text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {

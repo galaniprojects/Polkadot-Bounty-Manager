@@ -140,7 +140,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator role</p>
 				<button
@@ -152,7 +152,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator</p>
 				<button
@@ -164,7 +164,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
 			<button
 				on:click={() => (awardChildBountyOpen = true)}
 				class="text-white bg-backgroundButtonDark rounded-[10px] w-full h-10"
@@ -196,7 +196,7 @@
 	{/if}
 
 	{#if closeDownExpended}
-		{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
+		{#if $showAllCuratorOptions || (isCurator(parentBounty) && childBounty.status !== 'PendingPayout')}
 			<p class="text-xs">initiate child bounty closedown</p>
 			<div class="flex gap-2">
 				<button
