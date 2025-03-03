@@ -39,8 +39,7 @@
 			await submitTransaction(
 				transaction,
 				'Your bounty has been awarded and can now be claimed',
-				bounty.curator,
-				bounty.curatorMultisigAccount
+				bounty,
 			);
 		} catch (e) {
 			console.error(e);

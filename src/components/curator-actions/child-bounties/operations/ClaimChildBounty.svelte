@@ -11,6 +11,7 @@
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(

@@ -242,7 +242,7 @@
 </div>
 
 {#if assignSubCuratorOpen}
-	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
+	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} {parentBounty} />
 {/if}
 {#if acceptSubCuratorRuleOpen}
 	<AcceptSubCuratorRule
@@ -257,7 +257,7 @@
 {/if}
 
 {#if awardChildBountyOpen}
-	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} />
+	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if claimChildBountyOpen}

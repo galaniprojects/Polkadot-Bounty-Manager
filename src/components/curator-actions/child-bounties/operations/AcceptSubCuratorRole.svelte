@@ -21,7 +21,7 @@
 
 	async function acceptCuratorRole() {
 		open = false;
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, childBounty);
 	}
 
 	function calculateChildBountyDeposit(parent: string | undefined, child: ChildBounty) {

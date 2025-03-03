@@ -7,6 +7,8 @@ import { truncateString } from './common';
 import { getMultisigSigner, getProxySigner } from '@polkadot-api/meta-signers';
 import type { MultisigInfo } from '../types/account';
 import { MultiAddress } from '@polkadot-api/descriptors';
+import type { Bounty } from "../types/bounty";
+import type { ChildBounty } from "../types/child-bounty";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTransaction = Transaction<any, string, string, unknown>;
@@ -21,9 +23,10 @@ export type AnyTransaction = Transaction<any, string, string, unknown>;
 export async function submitTransaction(
 	transaction: AnyTransaction,
 	successMessage?: string,
-	proxyAddress?: string,
-	multisigAddress?: string
+	tryUseMultisig?: Bounty | ChildBounty,
 ): Promise<TxFinalizedPayload | undefined> {
+	const proxyAddress =  tryUseMultisig?.curator;
+	const multisigAddress = tryUseMultisig?.curatorMultisigAccount;
 	try {
 		let signer = get(polkadotSigner);
 		if (!signer) {
