@@ -100,8 +100,8 @@
 	async function  selectAccount(account: AccountWithSigner) {
 		open = false;
 		showLoadingDialog("Fetching multisig accounts");
-		let multisigs = await fetchMultisigAccount(account.address);
-		activeAccount.set({...account, multisigs});
+		account.multisigs = await fetchMultisigAccount(account.address);
+		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
 		setActiveAccountBounties();

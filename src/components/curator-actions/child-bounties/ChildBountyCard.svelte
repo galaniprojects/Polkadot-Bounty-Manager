@@ -12,6 +12,7 @@
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
 	import Currency from '../../Currency.svelte';
+	import { isCurator } from "../../../utils/isCurator";
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -153,7 +154,7 @@
 					<ChildBountyExternalLinks dimension={6} childBountyId={childBounty.id} />
 				</div>
 			</div>
-			{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator</p>
 
@@ -176,7 +177,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end lg:gap-3">
 					<p class="text-xs lg:text-base lg:pt-2">Sub-curator role</p>
 					<button
@@ -188,7 +189,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
+			{#if $showAllCuratorOptions || (isCurator(parentBounty) && childBounty.status !== 'PendingPayout')}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -201,7 +202,7 @@
 				</div>
 			{/if}
 
-			{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
 				<div
 					class="flex flex-col items-center space-y-2 lg:flex-row lg:items-center lg:justify-end"
 				>
@@ -215,7 +216,7 @@
 			{/if}
 
 			<!-- TODO: only when active?  -->
-			{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
 				<div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-end">
 					<button
 						on:click={() => (awardChildBountyOpen = true)}

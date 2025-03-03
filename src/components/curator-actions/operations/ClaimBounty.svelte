@@ -15,7 +15,7 @@
 
 	async function claimBounty() {
 		open = false;
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, bounty.curator, bounty.curatorMultisigAccount);
 	}
 </script>
 

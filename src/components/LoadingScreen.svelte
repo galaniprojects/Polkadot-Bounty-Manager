@@ -17,14 +17,35 @@
 				<span class="loader"></span>
 			</div>
 		{/if}
-		{#if dialogState.status === 'success'}
-			<p>{dialogState.successMessage}</p>
-		{/if}
 
 		{#if dialogState.status === 'error'}
 			<span>{dialogState.errorMessage}</span>
 		{/if}
 	</div>
+
+	{#if dialogState.status === 'success'}
+		<p class="mb-3 text-xl">{dialogState.successMessage}</p>
+		{#if dialogState.callData}
+			<div class="flex items-center">
+				<p>Call Data:</p>
+				<button
+					onclick={async () => {
+						if (dialogState.callData) await navigator.clipboard.writeText(dialogState.callData);
+					}}
+					class="ml-2"
+				>
+					<span class="material-symbols-outlined place-self-center mb-1 text-lg">
+						content_copy
+					</span>
+				</button>
+			</div>
+			<div
+				class="mt-1 bg-lightGray max-w-[400px] max-h-[100px] overflow-y-scroll break-all rounded-md p-2"
+			>
+				<p>{dialogState.callData}</p>
+			</div>
+		{/if}
+	{/if}
 </Dialog>
 
 <style>

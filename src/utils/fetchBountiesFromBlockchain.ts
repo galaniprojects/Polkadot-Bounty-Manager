@@ -19,7 +19,8 @@ export function parseBounty(raw: BountyRaw, id: number) {
 		fee,
 		status: type,
 		curator,
-		childBounties: []
+		childBounties: [],
+		curatorMultisigAccount: undefined
 	};
 
 	if (type === 'PendingPayout') {

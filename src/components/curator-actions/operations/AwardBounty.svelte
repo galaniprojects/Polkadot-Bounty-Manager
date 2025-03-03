@@ -36,7 +36,12 @@
 				return;
 			}
 
-			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
+			await submitTransaction(
+				transaction,
+				'Your bounty has been awarded and can now be claimed',
+				bounty.curator,
+				bounty.curatorMultisigAccount
+			);
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(String(e));

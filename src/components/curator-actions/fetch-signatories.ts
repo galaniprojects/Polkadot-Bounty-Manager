@@ -1,16 +1,26 @@
 import { get } from 'svelte/store';
-import { dotApi } from '../../stores';
+import { dotApi, proxies } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
 
-export async function fetchCuratorProxyAddress(accountId: string) {
-	const api = get(dotApi);
-	const proxy = await api.query.Proxy.Proxies.getValue(accountId);
-
-	try {
-		return proxy[0][0].delegate;
-	} catch {
-		return undefined;
+export async function fetchAllProxies() {
+	if(get(proxies) !== undefined){
+		return;
 	}
+
+	const api = get(dotApi);
+
+	const fetchedProxies = await api.query.Proxy.Proxies.getEntries();
+
+	const proxyMap = new Map<string, string>();
+
+	fetchedProxies.forEach((proxy) => {
+		// Only consider proxies that have a single entry and that entry is of type 'Any'.
+		if (proxy.value[0].length === 1 && proxy.value[0][0].proxy_type.type === 'Any') {
+			proxyMap.set(proxy.keyArgs[0], proxy.value[0][0].delegate);
+		}
+	});
+
+	proxies.set(proxyMap);
 }
 
 type GraphQLResponse = {
@@ -33,10 +43,10 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 	const graphqlEndpoint = 'https://statescan.rilt.kilt.io/graphql';
 
 	try {
-		const proxyAddress = await fetchCuratorProxyAddress(curatorAddress);
+		const proxyAddress = get(proxies)?.get(curatorAddress);
 
-		if(!proxyAddress){
-			return []
+		if (!proxyAddress) {
+			return [];
 		}
 
 		const query = `

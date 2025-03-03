@@ -29,7 +29,7 @@
 
 	async function submit() {
 		open = false;
-		await submitTransaction(transaction, 'Your bounty has been extended');
+		await submitTransaction(transaction, 'Your bounty has been extended', bounty.curator, bounty.curatorMultisigAccount);
 	}
 </script>
 

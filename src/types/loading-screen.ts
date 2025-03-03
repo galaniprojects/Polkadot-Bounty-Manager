@@ -3,5 +3,6 @@ export interface LoadingDialogState {
 	status: 'loading' | 'success' | 'error';
 	title: string;
 	successMessage: string;
+	callData: string | undefined;
 	errorMessage: string;
 }

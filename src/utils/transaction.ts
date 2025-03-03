@@ -1,9 +1,12 @@
-import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { SS58String, Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
-import { activeAccount, polkadotSigner } from '../stores';
+import { activeAccount, dotApi, polkadotSigner } from '../stores';
 import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
+import { getMultisigSigner, getProxySigner } from '@polkadot-api/meta-signers';
+import type { MultisigInfo } from '../types/account';
+import { MultiAddress } from '@polkadot-api/descriptors';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTransaction = Transaction<any, string, string, unknown>;
@@ -17,20 +20,59 @@ export type AnyTransaction = Transaction<any, string, string, unknown>;
  **/
 export async function submitTransaction(
 	transaction: AnyTransaction,
-	successMessage?: string
+	successMessage?: string,
+	proxyAddress?: string,
+	multisigAddress?: string
 ): Promise<TxFinalizedPayload | undefined> {
 	try {
-		const signer = get(polkadotSigner);
+		let signer = get(polkadotSigner);
 		if (!signer) {
 			showErrorDialog('Internal Error, signer is undefined.');
 			return;
 		}
 
-		showLoadingDialog('Submitting transaction');
+		const typedApi = get(dotApi);
+		let calldata = undefined;
 
+		const source = get(activeAccount)?.source;
+		if (proxyAddress && multisigAddress && source !== 'mimir') {
+			const matchingMultisig: MultisigInfo | undefined = get(activeAccount)?.multisigs?.find(
+				(multisig) => multisig.address === multisigAddress
+			);
+			if (!matchingMultisig) {
+				showErrorDialog('Internal Error, multisig not found.');
+				return;
+			}
+
+			const multisigSigner = getMultisigSigner(
+				{
+					threshold: matchingMultisig.threshold,
+					signatories: matchingMultisig.signatories
+				},
+				typedApi.query.Multisig.Multisigs.getValue,
+				typedApi.apis.TransactionPaymentApi.query_info,
+				signer,
+				{
+					method: () => 'as_multi'
+				}
+			);
+
+			signer = getProxySigner({ real: proxyAddress as SS58String }, multisigSigner);
+
+			const transactionWithProxy = get(dotApi).tx.Proxy.proxy({
+				real: MultiAddress.Id(proxyAddress),
+				force_proxy_type: undefined,
+				call: transaction.decodedCall
+			});
+
+			calldata = (await transactionWithProxy.getEncodedData()).asHex();
+		}
+
+		showLoadingDialog('Submitting transaction');
 		const result = await transaction.signAndSubmit(signer);
+
 		if (!result.dispatchError) {
-			showSuccessDialog('Transaction', successMessage || 'Operation success.');
+			showSuccessDialog('Transaction', successMessage || 'Operation success.', calldata);
 			await fetchBountiesAndChildBounties(false);
 			return result;
 		}

@@ -1,8 +1,6 @@
 import { get } from 'svelte/store';
 import { activeAccount, activeAccountBounties, bounties } from '../stores';
-import { type Bounty, type BountyRaw } from '../types/bounty';
-import { type ChildBounty, type ChildBountyRaw } from '../types/child-bounty';
-import { calculateExpirationDate, formatDate } from './common';
+import { type Bounty } from '../types/bounty';
 import { getRelevantMultisig } from "./getRelevantMultisig";
 
 /**

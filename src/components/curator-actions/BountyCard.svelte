@@ -3,10 +3,11 @@
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import BountyOperations from './BountyOperations.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
+	import { dotApi, showAllCuratorOptions } from '../../stores';
 	import { currentBlockchain } from '../app-bar/blockchains';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
+	import { isCurator } from '../../utils/isCurator';
 
 	export let bounty: Bounty;
 	export let expanded: boolean;
@@ -76,7 +77,7 @@
 		<div
 			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
-			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && isCurator(bounty))}
 				<div class="flex flex-col space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 					<p class="pt-2 text-sm">Award bounty</p>
 					<button

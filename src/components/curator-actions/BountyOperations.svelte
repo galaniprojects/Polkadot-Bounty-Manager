@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import { type Bounty } from '../../types/bounty';
+	import { getRelevantMultisig } from "../../utils/getRelevantMultisig";
+	import { isCurator } from "../../utils/isCurator";
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
 	import ClaimBounty from './operations/ClaimBounty.svelte';
 	import ExtendBounty from './operations/ExtendBounty.svelte';
@@ -40,7 +42,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && (isCurator(bounty)|| getRelevantMultisig(bounty, $activeAccount) !== undefined ))}
 		<div class="flex flex-col items-baseline space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="text-sm">Curator Role</p>
 			<button
@@ -54,7 +56,7 @@
 		</div>
 	{/if}
 
-	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
 		<div class="flex flex-col items-baseline space-y-1 lg:flex-row lg:space-x-3 lg:justify-end">
 			<p class="text-sm">Extend Bounty</p>
 			<button
