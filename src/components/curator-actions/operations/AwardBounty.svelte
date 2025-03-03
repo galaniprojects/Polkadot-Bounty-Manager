@@ -10,7 +10,7 @@
 	import Input from '../../Input/Input.module.css';
 	import Currency from '../../Currency.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let beneficiary = '';
@@ -39,7 +39,9 @@
 				transaction,
 				'Your bounty has been awarded and can now be claimed'
 			);
-			open = !successful;
+			if (successful) {
+				dialog.close();
+			}
 		} catch (e) {
 			console.error(e);
 			showErrorModal(String(e));
@@ -47,7 +49,7 @@
 	}
 </script>
 
-<Dialog bind:open title="AWARD BOUNTY">
+<Dialog bind:dialog title="AWARD BOUNTY">
 	<div class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

@@ -6,7 +6,7 @@
 	import { submitTransaction } from '../../../utils/transaction';
 	import Fee from '../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	$: transaction = $dotApi.tx.Bounties.claim_bounty({
@@ -14,11 +14,14 @@
 	});
 
 	async function claimBounty() {
-		open = !(await submitTransaction(transaction));
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="CLAIM BOUNTY AWARD">
+<Dialog bind:dialog title="CLAIM BOUNTY AWARD">
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

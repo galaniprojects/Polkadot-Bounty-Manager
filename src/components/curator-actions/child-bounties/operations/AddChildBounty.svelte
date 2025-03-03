@@ -12,7 +12,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let bountyValue = '';
@@ -49,7 +49,7 @@
 
 		const successful = await submitTransaction(transaction);
 		if (successful) {
-			open = false;
+			dialog.close();
 			bountyValue = '';
 			bountyTitle = '';
 			extend = false;
@@ -59,7 +59,7 @@
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<Dialog bind:open title="ADD NEW CHILD BOUNTY">
+<Dialog bind:dialog title="ADD NEW CHILD BOUNTY">
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

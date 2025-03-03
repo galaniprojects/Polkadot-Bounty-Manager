@@ -12,7 +12,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 
 	let curatorAddress = '';
@@ -50,11 +50,14 @@
 			return;
 		}
 
-		open = !(await submitTransaction(transaction));
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="ASSIGN SUB-CURATOR">
+<Dialog bind:dialog title="ASSIGN SUB-CURATOR">
 	<div>
 		<p class="p-1">
 			#{childBounty.id}

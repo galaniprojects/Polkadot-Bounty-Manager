@@ -15,6 +15,7 @@
 	import { endpoints } from '../../utils/endpoints';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
+	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
@@ -87,4 +88,5 @@
 	</div>
 </header>
 
+<LoadingModal />
 <LoginModal />

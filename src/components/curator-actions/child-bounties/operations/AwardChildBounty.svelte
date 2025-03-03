@@ -12,7 +12,7 @@
 	import Input from '../../../Input/Input.module.css';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 
 	let beneficiary = '';
@@ -45,11 +45,13 @@
 			transaction,
 			'Child bounty has been awarded and can now be claimed'
 		);
-		open = !successful;
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="AWARD CHILD BOUNTY">
+<Dialog bind:dialog title="AWARD CHILD BOUNTY">
 	<div class="grid">
 		<p class="space-x-1 mb-7 p-1">
 			#{childBounty.id}

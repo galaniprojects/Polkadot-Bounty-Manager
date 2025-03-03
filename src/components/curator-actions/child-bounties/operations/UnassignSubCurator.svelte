@@ -9,7 +9,7 @@
 	import Fee from '../../../Fee.svelte';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	let extend = false;
 
@@ -24,11 +24,14 @@
 	let isToggled = false;
 
 	async function unassignSubCurator() {
-		open = !(await submitTransaction(transaction));
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="UNASSIGN SUB-CURATOR">
+<Dialog bind:dialog title="UNASSIGN SUB-CURATOR">
 	<div>
 		<p class="p-1">
 			#{childBounty.id}

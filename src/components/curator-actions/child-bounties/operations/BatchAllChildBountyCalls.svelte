@@ -12,7 +12,7 @@
 	import { Binary } from 'polkadot-api';
 	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let bountyValue = '';
@@ -77,7 +77,7 @@
 
 		const successful = await submitTransaction(transaction);
 		if (successful) {
-			open = false;
+			dialog.close();
 			bountyValue = '';
 			bountyTitle = '';
 			curatorFee = '';
@@ -87,7 +87,7 @@
 	}
 </script>
 
-<Dialog bind:open title="BATCH ALL CHILD BOUNTY CALLS">
+<Dialog bind:dialog title="BATCH ALL CHILD BOUNTY CALLS">
 	<div>
 		<p class="p-1">
 			#{bounty.id}

@@ -5,7 +5,7 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 	export let curatorAddress = '';
 
@@ -20,7 +20,7 @@
 	});
 </script>
 
-<Dialog bind:open title="CURATORS LIST">
+<Dialog bind:dialog title="CURATORS LIST">
 	<div class="modal mt-5">
 		<div class="space-y-3">
 			<div class="space-y-1">

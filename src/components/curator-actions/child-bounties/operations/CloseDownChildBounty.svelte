@@ -8,7 +8,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	let extend = false;
 
@@ -23,11 +23,14 @@
 	let isToggled = false;
 
 	async function submit() {
-		open = !(await submitTransaction(transaction));
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="Close Down Child Bounty">
+<Dialog bind:dialog title="Close Down Child Bounty">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{childBounty.id}</span>

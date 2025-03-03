@@ -14,19 +14,19 @@
 	export let url: string;
 	export let dimension: number = 10;
 
-	let externalLinksDialogOpen = false;
+	let externalLinksDialog: HTMLDialogElement;
 
 	function openExternalLinksDialog() {
-		externalLinksDialogOpen = true;
+		externalLinksDialog.showModal();
 	}
 
 	function proceed() {
 		openLinkNewTab(url);
-		externalLinksDialogOpen = false;
+		externalLinksDialog.close();
 	}
 </script>
 
-<ExternalLinksModal bind:open={externalLinksDialogOpen} {url} {proceed} />
+<ExternalLinksModal bind:dialog={externalLinksDialog} {url} {proceed} />
 
 <button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
 	<img src={icon} alt="" />

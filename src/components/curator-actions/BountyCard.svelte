@@ -12,7 +12,7 @@
 
 	let description: string | undefined;
 	let remainingBalance: bigint | undefined;
-	let awardBountyDialogOpen = false;
+	let awardBountyDialog: HTMLDialogElement;
 
 	// Handle description and balance fetch
 	$: if (expanded) {
@@ -78,7 +78,7 @@
 					<button
 						class="w-1/2 h-10 text-white bg-backgroundButtonDark rounded-[10px]"
 						on:click={() => {
-							awardBountyDialogOpen = true;
+							awardBountyDialog.showModal();
 						}}
 					>
 						READ FIRST
@@ -96,6 +96,5 @@
 		</div>
 	{/if}
 </div>
-{#if awardBountyDialogOpen}
-	<AwardBounty bind:open={awardBountyDialogOpen} {bounty} />
-{/if}
+
+<AwardBounty bind:dialog={awardBountyDialog} {bounty} />

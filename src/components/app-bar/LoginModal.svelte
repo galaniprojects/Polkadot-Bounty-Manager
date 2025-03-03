@@ -9,7 +9,7 @@
 	import LogoMimir from '../svg/wallet-logo/LogoMimir.svg';
 	import { onMount } from 'svelte';
 	import CloseModalButton from '../Modal/CloseModalButton.svelte';
-	import { clickAway, modalStyles, showModal } from '../Modal/tools';
+	import { clickAway, modalStyles } from '../Modal/tools';
 	import { activeAccount, polkadotSigner } from '../../stores';
 	import { setActiveAccountBounties } from '../../utils/bounties';
 	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
@@ -17,7 +17,7 @@
 	import { showErrorModal } from '../modals';
 	import { getAccounts } from './getAccounts';
 	import { maybeInjectMimir } from './maybeInjectMimir';
-	import { open } from './loginModalStores';
+	import { dialog as ref } from './loginModalStores';
 
 	let wallets: WalletInfo[] = [];
 	let accounts: AccountWithSigner[] = [];
@@ -85,7 +85,7 @@
 				);
 				if (hasWCModal) {
 					// do not cover Wallet Connect "modal"
-					$open = false;
+					$ref.close();
 				}
 			});
 
@@ -100,10 +100,10 @@
 
 			if (isWalletConnect) {
 				observer.disconnect();
-				$open = true;
+				$ref.showModal();
 			}
 		} catch (e) {
-			$open = false;
+			$ref.close();
 			currentPhase = 'walletSelection';
 			showErrorModal(
 				'Wallet connection failed. Make sure the Bounty Manager has access to your wallet accounts.'
@@ -113,7 +113,7 @@
 		}
 
 		if (accounts.length === 0) {
-			$open = false;
+			$ref.close();
 			currentPhase = 'walletSelection';
 			showErrorModal(
 				'No accounts found. Make sure the Bounty Manager has access to your wallet accounts.'
@@ -129,7 +129,7 @@
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
 		setActiveAccountBounties();
-		$open = false;
+		$ref.close();
 	}
 
 	function backToWalletSelection() {
@@ -139,7 +139,7 @@
 </script>
 
 <!-- Base Modal Layout -->
-<dialog use:showModal={open} use:clickAway class={modalStyles.dialog}>
+<dialog bind:this={$ref} use:clickAway class={modalStyles.dialog}>
 	<!-- Header -->
 	<div class="flex flex-row-reverse justify-between items-center sm:mb-0">
 		<CloseModalButton />

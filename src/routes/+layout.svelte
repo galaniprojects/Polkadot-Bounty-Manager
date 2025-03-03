@@ -3,7 +3,6 @@
 	import '../app.css';
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import SuccessModal from '../components/SuccessModal/SuccessModal.svelte';
-	import LoadingModal from '../components/LoadingModal/LoadingModal.svelte';
 	import ErrorModal from '../components/ErrorModal/ErrorModal.svelte';
 	import { dotApi } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
@@ -23,7 +22,6 @@
 </div>
 <AppBar />
 
-<LoadingModal />
 <SuccessModal />
 <ErrorModal />
 

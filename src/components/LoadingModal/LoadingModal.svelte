@@ -1,27 +1,9 @@
 <script lang="ts">
-	import { modalStyles, showModal } from '../Modal/tools';
-	import { title, open } from './loadingModalStores';
-
-	function preventCloseOnEscKey(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			event.preventDefault();
-		}
-	}
-
-	$effect(() => {
-		if ($open) {
-			document.addEventListener('keydown', preventCloseOnEscKey);
-		} else {
-			document.removeEventListener('keydown', preventCloseOnEscKey);
-		}
-
-		return () => {
-			document.removeEventListener('keydown', preventCloseOnEscKey);
-		};
-	});
+	import { modalStyles } from '../Modal/tools';
+	import { dialog as ref, title } from './loadingModalStores';
 </script>
 
-<dialog use:showModal={open} class={modalStyles.dialog}>
+<dialog bind:this={$ref} class={modalStyles.dialog}>
 	<h2 class={modalStyles.title}>
 		{$title}
 	</h2>

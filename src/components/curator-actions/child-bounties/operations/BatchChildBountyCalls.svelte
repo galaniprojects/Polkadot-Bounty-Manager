@@ -12,7 +12,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	let extend = false;
 
@@ -81,11 +81,14 @@
 			return;
 		}
 
-		open = !(await submitTransaction(transaction));
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="BATCH CHILD BOUNTY CALLS">
+<Dialog bind:dialog title="BATCH CHILD BOUNTY CALLS">
 	<div>
 		<p class="p-1">
 			#{childBounty.id}
