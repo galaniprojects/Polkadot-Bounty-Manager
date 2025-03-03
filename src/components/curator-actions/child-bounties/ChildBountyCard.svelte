@@ -12,7 +12,7 @@
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
 	import Currency from '../../Currency.svelte';
-	import { isCurator } from "../../../utils/isCurator";
+	import { isCurator } from '../../../utils/isCurator';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;

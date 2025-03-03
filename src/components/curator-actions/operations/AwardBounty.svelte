@@ -39,7 +39,7 @@
 			await submitTransaction(
 				transaction,
 				'Your bounty has been awarded and can now be claimed',
-				bounty,
+				bounty
 			);
 		} catch (e) {
 			console.error(e);

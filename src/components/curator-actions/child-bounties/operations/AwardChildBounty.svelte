@@ -11,7 +11,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Input from '../../../Input/Input.module.css';
 	import Fee from '../../../Fee.svelte';
-	import type { Bounty } from "../../../../types/bounty";
+	import type { Bounty } from '../../../../types/bounty';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
@@ -44,7 +44,11 @@
 			return;
 		}
 
-		await submitTransaction(transaction, 'Child bounty has been awarded and can now be claimed', parentBounty);
+		await submitTransaction(
+			transaction,
+			'Child bounty has been awarded and can now be claimed',
+			parentBounty
+		);
 	}
 </script>
 

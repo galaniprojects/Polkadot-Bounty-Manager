@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { activeAccount, activeAccountBounties, bounties } from '../stores';
 import { type Bounty } from '../types/bounty';
-import { getRelevantMultisig } from "./getRelevantMultisig";
+import { getRelevantMultisig } from './getRelevantMultisig';
 
 /**
  * Sets the store's `activeAccountBounties` value to filtered bounties
@@ -17,7 +17,11 @@ export function setActiveAccountBounties() {
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {
-		if (bounty.proposer === address || bounty.curator === address || getRelevantMultisig(bounty, account)!== undefined) { 
+		if (
+			bounty.proposer === address ||
+			bounty.curator === address ||
+			getRelevantMultisig(bounty, account) !== undefined
+		) {
 			filteredBounties.push(bounty);
 			continue;
 		}

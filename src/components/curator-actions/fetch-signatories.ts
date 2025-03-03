@@ -3,7 +3,7 @@ import { dotApi, proxies } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
 
 export async function fetchAllProxies() {
-	if(get(proxies) !== undefined){
+	if (get(proxies) !== undefined) {
 		return;
 	}
 
