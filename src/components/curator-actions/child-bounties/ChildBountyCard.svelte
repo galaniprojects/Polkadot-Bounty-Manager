@@ -4,7 +4,7 @@
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
-	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+	import { showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import ClaimChildBounty from './operations/ClaimChildBounty.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
@@ -118,7 +118,7 @@
 		{/if}
 	</div>
 	<div class="space-y-3 mx-[8px] my-[15px]">
-		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator</p>
 				<button
