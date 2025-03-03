@@ -24,7 +24,7 @@
 	let totalPages = 1;
 
 	const filters: Array<{ value: Filter; label: string }> = [
-		{ value: 'all', label: 'all' },
+		{ value: 'all', label: 'all statuses' },
 		...childBountyStatuses.map((value) => ({ value, label: statusLabels[value] }))
 	];
 	let selectedFilter = filters[0];
@@ -53,93 +53,64 @@
 	}
 </script>
 
-<div data-pagination-scroll="bounty-{bounty.id}" class="bg-backgroundApp p-3 m-3 w-full lg:w-full">
+<div data-pagination-scroll class="bg-backgroundApp px-[7px] py-[10px] space-y-[18px]">
 	<!-- Header section -->
-	<section class="flex flex-col space-y-3 lg:flex-row justify-between">
-		<div class="flex flex-col gap-2 lg:w-1/2 lg:px-3">
-			<p class="text-xs">Child Bounties</p>
-			<p class="text-2xl">
-				{bounty.childBounties.length} Child {bounty.childBounties.length === 1
-					? 'Bounty'
-					: 'Bounties'}
-			</p>
-		</div>
 
-		<div class="flex flex-col space-y-3 lg:space-y-1 lg:mt-0 lg:pr-3 xl:mt-4 2xl:pr-0 2xl:flex-row">
-			<div class="space-y-3 lg:space-y-1">
-				{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
-					<div
-						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:pt-3 {bounty
-							.childBounties.length > 0
-							? 'lg:mr-0'
-							: '2xl:mr-36'}"
-					>
-						<p class="lg:mr-3 text-xs lg:text-base">Add new child bounty</p>
-						<button
-							on:click={() => (createChildBountyOpen = true)}
-							class="bg-backgroundButtonLight rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-						>
-							ADD
-						</button>
-					</div>
-					<div
-						class="flex flex-col justify-end space-y-1 lg:flex-row lg:items-center lg:py-3 {bounty
-							.childBounties.length > 0
-							? 'lg:mr-0'
-							: '2xl:mr-36'}"
-					>
-						<p class="lg:mr-3 text-xs lg:text-base">All operations</p>
-						<button
-							on:click={() => (createChildBatchOpen = true)}
-							class="bg-backgroundButtonLight rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-						>
-							BATCH
-						</button>
-					</div>
-				{/if}
-				<!-- TODO: salary child bounties -->
-				{#if false}
-					<div
-						class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center lg:pb-3"
-					>
-						<p class="lg:mr-3 text-xs lg:text-base">Add new salary child bounties</p>
-						<button
-							class="bg-accent text-white rounded-md font-bold pt-1 w-full h-12 lg:w-fit lg:h-fit lg:mr-6 lg:min-w-32"
-						>
-							ADD
-						</button>
-					</div>
-				{/if}
-			</div>
-			{#if bounty.childBounties.length > 0}
-				<div
-					class="flex flex-col justify-start space-y-1 lg:flex-row lg:justify-end lg:items-center 2xl:items-start lg:pb-3 lg:mr-6 2xl:mr-0"
+	<p class="text-lg">
+		{bounty.childBounties.length} Active Child {bounty.childBounties.length === 1
+			? 'Bounty'
+			: 'Bounties'}
+	</p>
+
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
+		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
+			<div class="flex flex-col w-full sm:w-1/2">
+				<p class="text-xs">Add new child bounty</p>
+				<button
+					on:click={() => (createChildBountyOpen = true)}
+					class="bg-backgroundButtonLight rounded-[10px] h-10"
 				>
-					<p class="text-xs 2xl:hidden lg:mr-3 lg:text-base">Filter child bounties</p>
-					<div class="flex justify-between">
-						<p class="mt-2 lg:hidden">by status</p>
-						<div>
-							<DropdownMenu
-								bind:selectedItem={selectedFilter}
-								items={filters}
-								widthContainer="w-44 lg:w-32 2xl:w-36"
-								widthDropdown="w-44 lg:w-32 2xl:w-36"
-								textAlign="text-center"
-								truncate={true}
-								bgColor="lilac"
-							/>
-						</div>
-					</div>
-				</div>
-			{/if}
+					NEW CHILD BOUNTY
+				</button>
+			</div>
+			<div class="flex flex-col w-full sm:w-1/2">
+				<p class="text-xs">All child bounty operations</p>
+				<button
+					on:click={() => (createChildBatchOpen = true)}
+					class="bg-backgroundButtonLight rounded-[10px] h-10"
+				>
+					COMPLETE PAYOUT
+				</button>
+			</div>
 		</div>
-	</section>
+	{/if}
+	{#if bounty.childBounties.length > 0}
+		<div class="w-1/2">
+			<p class="text-xs">Show</p>
+			<div>
+				<DropdownMenu
+					bind:selectedItem={selectedFilter}
+					items={filters}
+					widthContainer="w-[250px] sm:w-[350px]"
+					widthDropdown="w-[250p] sm:w-[350px]"
+					textAlign="text-center"
+					truncate={false}
+					bgColor="grey"
+					backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+					height="h-10"
+					positionOverlay="-mt-[40px]"
+				/>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Child bounty list section -->
 	<div>
-		{#each paginatedChildBounties as childBounty}
-			<ChildBountyCard {childBounty} parentBounty={bounty} />
-		{/each}
+		<div class="cards">
+			{#each paginatedChildBounties as childBounty (childBounty.id)}
+				<ChildBountyCard {childBounty} parentBounty={bounty} />
+			{/each}
+		</div>
 
 		{#if bounty.childBounties.length === 0}
 			<div class="childContainer lg:w-full shadow-lg mt-6">
@@ -178,5 +149,18 @@
 
 	.pagination {
 		--pagination-arrow-color: theme('colors.textPrimary');
+	}
+
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 30px;
+		padding: 0px 3px;
+	}
+
+	@media (max-width: 640px) {
+		.cards {
+			grid-template-columns: repeat(1, 1fr);
+		}
 	}
 </style>

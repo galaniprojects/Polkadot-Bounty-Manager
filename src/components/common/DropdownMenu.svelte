@@ -11,6 +11,9 @@
 	export let change: (item: Labeled) => void = () => {};
 	export let useLogos: boolean = false;
 	export let bgColor: string;
+	export let backgroundColorContainer: string;
+	export let height: string;
+	export let positionOverlay: string;
 
 	let dropdownOpen = false;
 	let dropdownContainer: HTMLDivElement | null = null;
@@ -44,9 +47,8 @@
 	}
 
 	const bgColorVariants: Record<string, string> = {
-		pink: 'bg-accent hover:bg-accent hover:bg-opacity-30 focus:bg-accent focus:bg-opacity-30 hover:text-primary',
-		lilac:
-			'bg-curatorMainBackground hover:bg-curatorMainBackground hover:bg-opacity-30 focus:bg-curatorMainBackground focus:bg-opacity-30 hover:text-primary'
+		pink: 'bg-accent hover:bg-accent hover:bg-opacity-30 focus:bg-accent focus:bg-opacity-30 hover:text-textPrimary',
+		grey: 'bg-backgroundButtonDark hover:bg-backgroundButtonDark hover:bg-opacity-30 focus:bg-backgroundButtonDark focus:bg-opacity-30 hover:text-textPrimary'
 	};
 
 	$: selectedBgColor = bgColorVariants[bgColor];
@@ -57,7 +59,7 @@
 		<button
 			on:click={dropdownOnClick}
 			type="button"
-			class="inline-flex {widthContainer} justify-between items-center rounded-md bg-cloudGray px-2 py-2 text-primary"
+			class="inline-flex {widthContainer} {height} justify-between items-center rounded-[10px] {backgroundColorContainer} p-2 text-textPrimary"
 			id="menu-button"
 			aria-expanded="true"
 			aria-haspopup="true"
@@ -79,7 +81,7 @@
 	</div>
 	{#if dropdownOpen}
 		<div
-			class="absolute {widthDropdown} rounded-md overflow-hidden -mt-[48px] z-10 bg-lightGray shadow-lg ring-1 ring-black ring-opacity-20"
+			class="absolute {widthDropdown} rounded-[10px] overflow-hidden {positionOverlay} z-10 bg-lightGray shadow-lg ring-1 ring-black ring-opacity-20"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="menu-button"
@@ -92,7 +94,7 @@
 							{selectedItem === item
 							? `${selectedBgColor} text-white`
 							: `bg-backgroundApp hover:${selectedBgColor}`}
-							hover:bg-backgroundButtonLight hover:text-textPrimary focus:bg-backgroundButtonLight focus:text-textPrimary hover:bg-opacity-30 focus:bg-opacity-30"
+							"
 						role="menuitem"
 						tabindex="-1"
 						on:click={() => {
