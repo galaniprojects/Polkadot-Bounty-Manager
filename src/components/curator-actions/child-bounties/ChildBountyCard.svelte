@@ -233,7 +233,7 @@
 {/if}
 
 {#if awardChildBountyOpen}
-	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} {parentBounty} />
+	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} />
 {/if}
 
 {#if claimChildBountyOpen}
