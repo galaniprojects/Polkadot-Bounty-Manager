@@ -4,11 +4,8 @@ import type { ChildBounty } from '../types/child-bounty';
 
 export function getRelevantMultisig(
 	bounty: Bounty | ChildBounty,
-	account: AccountInfo | undefined
+	account: AccountInfo
 ): MultisigInfo | undefined {
-	if (!account) {
-		return undefined;
-	}
 	const multisigs = account.multisigs?.filter(
 		(multisig) => multisig.address === bounty.curatorMultisigAccount
 	);

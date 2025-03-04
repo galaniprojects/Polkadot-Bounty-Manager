@@ -9,8 +9,8 @@ import type { ChildBounty } from '../types/child-bounty';
  * Returns whether the given account is the curator of the given bounty or child bounty
  * directly or through a multisig.
  */
-export function isCurator(bounty: Bounty | ChildBounty, account?: AccountInfo): boolean {
-	account = account || get(activeAccount);
+export function isCurator(bounty: Bounty | ChildBounty): boolean {
+	const account = get(activeAccount);
 	if (!account) return false;
 
 	return account.address === bounty.curator || !!getRelevantMultisig(bounty, account);

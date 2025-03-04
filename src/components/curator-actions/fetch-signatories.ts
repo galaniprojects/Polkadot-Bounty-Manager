@@ -14,10 +14,10 @@ export async function fetchAllProxies() {
 
 	const proxyMap = new Map<string, string>();
 
-	fetchedProxies.forEach((proxy) => {
+	fetchedProxies.forEach(({ keyArgs: [address], value: [value] }) => {
 		// Only consider proxies that have a single entry and that entry is of type 'Any'.
-		if (proxy.value[0].length === 1 && proxy.value[0][0].proxy_type.type === 'Any') {
-			proxyMap.set(proxy.keyArgs[0], proxy.value[0][0].delegate);
+		if (value.length === 1 && value[0].proxy_type.type === 'Any') {
+			proxyMap.set(address, value[0].delegate);
 		}
 	});
 
@@ -32,7 +32,7 @@ type GraphQLResponse = {
 	};
 };
 
-type MultisigAccountResponse = {
+interface MultisigAccountResponse {
 	data: {
 		multisigAddresses: {
 			multisigAddresses: MultisigInfo[];
@@ -95,21 +95,19 @@ export async function fetchMultisigAccount(signatory: string): Promise<MultisigI
 
 	try {
 		const query = `
-        query {
-			multisigAddresses(
-				signatory: "${signatory}" 
-				offset: 0
-				limit: 1000
-			) {
-				multisigAddresses {
-				threshold
-				signatories
-				address
-				}
-				total
-				offset
-			}
-        }`;
+      query {
+			  multisigAddresses(
+				  signatory: "${signatory}" 
+				  offset: 0
+				  limit: 1000
+			  ) {
+				  multisigAddresses {
+				    threshold
+				    signatories
+				    address
+				  }
+			  }
+      }`;
 
 		const response = await fetch(graphqlEndpoint, {
 			method: 'POST',

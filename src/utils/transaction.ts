@@ -50,10 +50,7 @@ export async function submitTransaction(
 			}
 
 			const multisigSigner = getMultisigSigner(
-				{
-					threshold: matchingMultisig.threshold,
-					signatories: matchingMultisig.signatories
-				},
+				matchingMultisig,
 				typedApi.query.Multisig.Multisigs.getValue,
 				typedApi.apis.TransactionPaymentApi.query_info,
 				signer,
