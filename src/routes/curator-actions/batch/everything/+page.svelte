@@ -245,7 +245,7 @@
 				<label class="inline-flex gap-4 items-center cursor-pointer">
 					<input type="checkbox" bind:checked={includeClaim} class={Input.switch} />
 					<span class="text-xs">
-						Include the <strong>Claim</strong> extrinsic in your transaction.
+						Include the <strong>Claim Child Bounty</strong> extrinsic in your transaction.
 					</span>
 				</label>
 			</p>
