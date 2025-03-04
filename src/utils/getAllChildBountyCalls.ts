@@ -11,7 +11,8 @@ export function getAllChildBountyCalls({
 	value,
 	curator,
 	beneficiary,
-	fee
+	fee,
+	includeClaim = true
 }: {
 	parent_bounty_id: number;
 	child_bounty_id: number;
@@ -20,6 +21,7 @@ export function getAllChildBountyCalls({
 	curator: string;
 	beneficiary: string;
 	fee: string;
+	includeClaim?: boolean;
 }) {
 	const $dotApi = get(dotApi);
 
@@ -52,5 +54,7 @@ export function getAllChildBountyCalls({
 		child_bounty_id
 	});
 
-	return [add, propose, accept, award, claim].map(({ decodedCall }) => decodedCall);
+	const transactions = [add, propose, accept, award, ...(includeClaim ? [claim] : [])];
+
+	return transactions.map(({ decodedCall }) => decodedCall);
 }
