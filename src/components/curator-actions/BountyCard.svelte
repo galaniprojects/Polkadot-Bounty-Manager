@@ -16,38 +16,36 @@
 	let awardBountyDialogOpen = false;
 
 	// Handle description and balance fetch
-	$: if (expanded) {
-		const bountyId = bounty.id;
+	$: if (expanded) getRemainingBalance(bounty.id).catch(() => {});
 
-		(async () => {
+	async function getRemainingBalance(bountyId: number) {
+		try {
+			const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
+			const response = await fetch(url);
+			if (!response.ok) throw new Error('Failed to fetch bounty details.');
+
+			const data = (await response.json()) as { onchainData: { address: string } };
+			// TODO: don't show description for now.
+			// import { parse } from 'marked';
+			// try {
+			// 	description = await parse(data.content);
+			// } catch {
+			// 	description = undefined;
+			// 	console.error('No description found.');
+			// }
+
 			try {
-				const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
-				const response = await fetch(url);
-				if (!response.ok) throw new Error('Failed to fetch bounty details.');
-
-				const data = (await response.json()) as { onchainData: { address: string } };
-				// TODO: don't show description for now.
-				// import { parse } from 'marked';
-				// try {
-				// 	description = await parse(data.content);
-				// } catch {
-				// 	description = undefined;
-				// 	console.error('No description found.');
-				// }
-
-				try {
-					const fundsAddress = data.onchainData.address;
-					const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-					remainingBalance = account.data.free;
-				} catch {
-					console.error('Error fetching remaining balance.');
-					remainingBalance = undefined;
-				}
+				const fundsAddress = data.onchainData.address;
+				const account = await $dotApi.query.System.Account.getValue(fundsAddress);
+				remainingBalance = account.data.free;
 			} catch {
-				description = undefined;
+				console.error('Error fetching remaining balance.');
 				remainingBalance = undefined;
 			}
-		})();
+		} catch {
+			description = undefined;
+			remainingBalance = undefined;
+		}
 	}
 
 	function toggleExpanded() {

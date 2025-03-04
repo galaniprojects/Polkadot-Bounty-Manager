@@ -6,19 +6,19 @@
 	export let transaction: AnyTransaction | undefined;
 	let fee: string | bigint = '-';
 
-	$: {
-		(async (oldTransaction) => {
-			fee = '-';
-			if (!$activeAccount || !oldTransaction) return;
+	$: getFee(transaction).catch(() => {});
 
-			fee = 'Calculating…';
-			const value = await oldTransaction.getPaymentInfo($activeAccount.address);
+	async function getFee(oldTransaction: typeof transaction) {
+		fee = '-';
+		if (!$activeAccount || !oldTransaction) return;
 
-			const transactionHasChangedMeanwhile = oldTransaction !== transaction;
-			if (transactionHasChangedMeanwhile) return;
+		fee = 'Calculating…';
+		const value = await oldTransaction.getPaymentInfo($activeAccount.address);
 
-			fee = value.partial_fee;
-		})(transaction);
+		const transactionHasChangedMeanwhile = oldTransaction !== transaction;
+		if (transactionHasChangedMeanwhile) return;
+
+		fee = value.partial_fee;
 	}
 </script>
 
