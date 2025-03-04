@@ -58,7 +58,7 @@
 			arrow_back_ios
 		</button>
 
-		{#each pageNumbers as page}
+		{#each pageNumbers as page (page)}
 			{#if typeof page === 'number'}
 				<button
 					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-backgroundButtonLight'}`}
