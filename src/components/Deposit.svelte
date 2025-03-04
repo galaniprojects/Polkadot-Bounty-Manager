@@ -4,22 +4,22 @@
 	export let getter: (() => bigint) | (() => Promise<bigint>);
 	let deposit: bigint | string = '-';
 
-	$: {
-		(async (input) => {
-			try {
-				deposit = 'Calculating…';
+	$: getDeposit(getter).catch(() => {});
 
-				const value = await input();
+	async function getDeposit(input: typeof getter) {
+		try {
+			deposit = 'Calculating…';
 
-				const hasInputChangedMeanwhile = input !== getter;
-				if (hasInputChangedMeanwhile) return;
+			const value = await input();
 
-				deposit = value;
-			} catch (exception) {
-				deposit = '-';
-				console.error(exception);
-			}
-		})(getter);
+			const hasInputChangedMeanwhile = input !== getter;
+			if (hasInputChangedMeanwhile) return;
+
+			deposit = value;
+		} catch (exception) {
+			deposit = '-';
+			console.error(exception);
+		}
 	}
 </script>
 
