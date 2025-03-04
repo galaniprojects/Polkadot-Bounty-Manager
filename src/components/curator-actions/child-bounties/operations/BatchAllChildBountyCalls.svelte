@@ -75,7 +75,7 @@
 			return;
 		}
 
-		const successful = await submitTransaction(transaction);
+		const successful = await submitTransaction(transaction, undefined, bounty);
 		if (successful) {
 			dialog.close();
 			bountyValue = '';

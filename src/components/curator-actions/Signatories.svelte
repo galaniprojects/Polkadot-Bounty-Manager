@@ -33,7 +33,7 @@
 					<p>Loading...</p>
 				{:else if signatories.length > 0}
 					<ul>
-						{#each signatories as address}
+						{#each signatories as address (address)}
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>

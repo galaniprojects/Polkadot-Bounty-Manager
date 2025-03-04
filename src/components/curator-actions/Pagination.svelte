@@ -5,14 +5,14 @@
 
 	export let currentPage = 1;
 	export let totalPages = 5;
-	export let activeButtonColor = 'text-textPrimary border border-textPrimary';
+	export let activeButtonColor = 'active';
 	export let itemsPerPage = 10;
 	export let perPageOptions = [5, 10, 15, 20].map((value) => ({ value, label: value.toString() }));
 	let selectedItem = perPageOptions.filter(({ value }) => value === itemsPerPage)[0];
 	export let pageChange: (page: number) => void;
 	export let itemsPerPageChange: (itemsPerPage: number) => void;
 
-	$: pageNumbers = generate(currentPage, totalPages, 1, 1);
+	$: pageNumbers = generate(currentPage, totalPages, 1, 0);
 
 	let paginationContainer: HTMLElement | null = null;
 
@@ -32,8 +32,8 @@
 	}
 </script>
 
-<div bind:this={paginationContainer} class="flex-col items-center space-y-[18px]">
-	<div class="flex justify-center">
+<div bind:this={paginationContainer} class="pagination-container">
+	<div class="dropdown-container">
 		<DropdownMenu
 			items={perPageOptions}
 			bind:selectedItem
@@ -47,7 +47,7 @@
 			positionOverlay="-mt-[40px]"
 		/>
 	</div>
-	<div class="flex justify-center space-x-[6px]">
+	<div class="pagination">
 		<button
 			class="pagination-arrows material-symbols-outlined"
 			disabled={currentPage === 1}
@@ -58,10 +58,10 @@
 			arrow_back_ios
 		</button>
 
-		{#each pageNumbers as page}
+		{#each pageNumbers as page (page)}
 			{#if typeof page === 'number'}
 				<button
-					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-backgroundButtonDark text-backgroundApp '}`}
+					class={`page-number ${page === currentPage ? activeButtonColor : 'bg-backgroundButtonLight'}`}
 					disabled={page === currentPage}
 					on:click={async () => {
 						await changePage(page);
@@ -70,7 +70,7 @@
 					{page}
 				</button>
 			{:else}
-				<span class="page-number {activeButtonColor} text-center border-0">
+				<span class="page-number {activeButtonColor}">
 					{page}
 				</span>
 			{/if}
@@ -89,22 +89,63 @@
 </div>
 
 <style>
-	.pagination-arrows,
+	.pagination-container {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.dropdown-container {
+		flex-shrink: 0;
+	}
+
+	.pagination {
+		display: flex;
+		gap: 6px;
+		flex-grow: 1;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.pagination-arrows {
+		width: 20px;
+		background: none;
+		border: none;
+		font-size: 16px;
+	}
+
 	.page-number {
 		width: 40px;
+		border-radius: 10px;
+	}
+
+	.page-number,
+	.pagination-arrows {
 		height: 40px;
 		line-height: 40px;
 		align-items: center;
 		text-align: center;
 		cursor: pointer;
-		border-radius: 10px;
-	}
-
-	.pagination-arrows {
-		color: var(--pagination-arrow-color, theme('colors.textPrimary'));
 	}
 
 	.pagination-arrows:disabled {
 		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.page-number.active {
+		border: 1px solid theme('colors.textPrimary');
+	}
+
+	@media (max-width: 640px) {
+		.pagination-container {
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.dropdown-container {
+			margin-bottom: 10px;
+		}
 	}
 </style>

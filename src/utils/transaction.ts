@@ -1,6 +1,6 @@
-import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { SS58String, Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
-import { activeAccount, polkadotSigner } from '../stores';
+import { activeAccount, dotApi, polkadotSigner } from '../stores';
 import {
 	hideLoadingModal,
 	showErrorModal,
@@ -9,6 +9,11 @@ import {
 } from '../components/modals';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
+import { getMultisigSigner, getProxySigner } from '@polkadot-api/meta-signers';
+import type { MultisigInfo } from '../types/account';
+import { MultiAddress } from '@polkadot-api/descriptors';
+import type { Bounty } from '../types/bounty';
+import type { ChildBounty } from '../types/child-bounty';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTransaction = Transaction<any, string, string, unknown>;
@@ -22,26 +27,63 @@ export type AnyTransaction = Transaction<any, string, string, unknown>;
  **/
 export async function submitTransaction(
 	transaction: AnyTransaction,
-	successMessage?: string
+	successMessage?: string,
+	tryUseMultisig?: Bounty | ChildBounty
 ): Promise<TxFinalizedPayload | undefined> {
+	const proxyAddress = tryUseMultisig?.curator;
+	const multisigAddress = tryUseMultisig?.curatorMultisigAccount;
 	try {
-		const signer = get(polkadotSigner);
+		let signer = get(polkadotSigner);
 		if (!signer) {
 			showErrorModal('Internal Error, signer is undefined.');
 			return;
 		}
 
+		const typedApi = get(dotApi);
+		let calldata = undefined;
+
+		// In case it's multisig transaction.
+		if (proxyAddress && multisigAddress) {
+			const matchingMultisig: MultisigInfo | undefined = get(activeAccount)?.multisigs?.find(
+				(multisig) => multisig.address === multisigAddress
+			);
+			if (!matchingMultisig) {
+				showErrorModal('Internal Error, multisig not found.');
+				return;
+			}
+
+			const multisigSigner = getMultisigSigner(
+				matchingMultisig,
+				typedApi.query.Multisig.Multisigs.getValue,
+				typedApi.apis.TransactionPaymentApi.query_info,
+				signer,
+				{
+					method: () => 'as_multi'
+				}
+			);
+
+			signer = getProxySigner({ real: proxyAddress as SS58String }, multisigSigner);
+
+			const transactionWithProxy = get(dotApi).tx.Proxy.proxy({
+				real: MultiAddress.Id(proxyAddress),
+				force_proxy_type: undefined,
+				call: transaction.decodedCall
+			});
+
+			calldata = (await transactionWithProxy.getEncodedData()).asHex();
+		}
+
 		showLoadingModal('Submitting transaction…');
 
 		const result = await transaction.signAndSubmit(signer);
+
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', successMessage || 'Operation success.');
+			showSuccessModal('Transaction', successMessage || 'Operation success.', calldata);
 
 			(async () => {
 				// trigger update in the background but return immediately
 				await fetchBountiesAndChildBounties(false);
 			})();
-
 			return result;
 		}
 

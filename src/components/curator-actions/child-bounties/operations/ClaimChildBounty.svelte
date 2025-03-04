@@ -11,6 +11,7 @@
 
 	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(
@@ -49,10 +50,13 @@
 			</div>
 		{/if}
 
-		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switch} />
-			<ExtendBountyLabel />
-		</label>
+		{#if false}
+			<!-- TODO: extending requires the curator address which can be a multisig, while submitting the transaction now is done with a normal address -->
+			<label class="space-y-2 flex gap-4 items-center cursor-pointer">
+				<input type="checkbox" bind:checked={extend} class={Input.switch} />
+				<ExtendBountyLabel />
+			</label>
+		{/if}
 
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>

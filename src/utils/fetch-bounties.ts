@@ -5,6 +5,7 @@ import { get } from 'svelte/store';
 import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';
 import { addBountiesFromDoTreasury } from './addBountiesFromDoTreasury';
 import { calculateExpirationDate, formatDate } from './common';
+import { fetchAllProxies } from '../components/curator-actions/fetch-signatories';
 
 /**
  * Fetches all bounties, child bounties and their descriptions, sorts them,
@@ -30,6 +31,20 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		bounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 		bounties.forEach(({ childBounties }) => {
 			childBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
+		});
+
+		const proxies = await fetchAllProxies();
+
+		bounties.forEach((bounty) => {
+			if (bounty.curator) {
+				bounty.curatorMultisigAccount = proxies.get(bounty.curator);
+			}
+
+			bounty.childBounties.forEach((childBounty) => {
+				if (childBounty.curator) {
+					childBounty.curatorMultisigAccount = proxies.get(childBounty.curator);
+				}
+			});
 		});
 
 		const api = get(dotApi);

@@ -28,7 +28,7 @@
 	});
 
 	async function submit() {
-		const successful = await submitTransaction(transaction, 'Your bounty has been extended');
+		const successful = await submitTransaction(transaction, undefined, bounty);
 		if (successful) {
 			dialog.close();
 		}

@@ -2,7 +2,6 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { dotApi } from '../../../stores';
 	import Deposit from '../../Deposit.svelte';
-	import { showErrorModal } from '../../modals';
 	import Input from '../../../components/Input/Input.module.css';
 	import Dialog from '../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../utils/transaction';
@@ -19,12 +18,9 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		const successful = await submitTransaction(transaction);
-
+		const successful = await submitTransaction(transaction, undefined, bounty);
 		if (successful) {
 			dialog.close();
-		} else {
-			showErrorModal('Internal error');
 		}
 	}
 </script>

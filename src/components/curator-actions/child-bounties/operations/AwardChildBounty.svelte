@@ -41,10 +41,7 @@
 			return;
 		}
 
-		const successful = await submitTransaction(
-			transaction,
-			'Child bounty has been awarded and can now be claimed'
-		);
+		const successful = await submitTransaction(transaction, undefined, childBounty);
 		if (successful) {
 			dialog.close();
 		}

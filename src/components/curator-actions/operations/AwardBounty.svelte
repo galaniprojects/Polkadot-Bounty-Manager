@@ -37,7 +37,8 @@
 
 			const successful = await submitTransaction(
 				transaction,
-				'Your bounty has been awarded and can now be claimed'
+				'Your bounty has been awarded and can now be claimed',
+				bounty
 			);
 			if (successful) {
 				dialog.close();

@@ -11,9 +11,11 @@
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
 	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
 
 	let curatorAddress = '';
 	let curatorFee = '';
@@ -50,7 +52,7 @@
 			return;
 		}
 
-		const successful = await submitTransaction(transaction);
+		const successful = await submitTransaction(transaction, undefined, parentBounty);
 		if (successful) {
 			dialog.close();
 		}

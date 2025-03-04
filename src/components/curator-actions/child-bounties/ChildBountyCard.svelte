@@ -4,7 +4,7 @@
 	import AcceptSubCuratorRule from './operations/AcceptSubCuratorRole.svelte';
 	import CloseDownChildBounty from './operations/CloseDownChildBounty.svelte';
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
-	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+	import { showAllCuratorOptions } from '../../../stores';
 	import type { Bounty } from '../../../types/bounty';
 	import ClaimChildBounty from './operations/ClaimChildBounty.svelte';
 	import ChildBountyExternalLinks from './ChildBountyExternalLinks.svelte';
@@ -12,6 +12,7 @@
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
 	import Currency from '../../Currency.svelte';
+	import { isCurator } from '../../../utils/isCurator';
 
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
@@ -117,7 +118,7 @@
 		{/if}
 	</div>
 	<div class="space-y-3 mx-[8px] my-[15px]">
-		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator</p>
 				<button
@@ -143,7 +144,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator role</p>
 				<button
@@ -157,7 +158,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
 			<div class="flex flex-col gap-[8px]">
 				<p class="text-xs">Sub-curator</p>
 				<button
@@ -171,7 +172,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
 			<button
 				on:click={() => {
 					awardChildBountyDialog.showModal();
@@ -207,7 +208,7 @@
 	{/if}
 
 	{#if closeDownExpended}
-		{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
+		{#if $showAllCuratorOptions || (isCurator(parentBounty) && childBounty.status !== 'PendingPayout')}
 			<p class="text-xs">initiate child bounty closedown</p>
 			<div class="flex gap-2">
 				<button
@@ -230,17 +231,23 @@
 	{/if}
 </div>
 
-<AssignSubCurator bind:dialog={assignSubCuratorDialog} {childBounty} />
+<AssignSubCurator bind:dialog={assignSubCuratorDialog} {childBounty} {parentBounty} />
+
 <AcceptSubCuratorRule
 	bind:dialog={acceptSubCuratorRuleDialog}
 	{childBounty}
 	parentCurator={parentBounty.curator}
 />
-<CloseDownChildBounty bind:dialog={closeDownChildBountyDialog} {childBounty} />
+
+<CloseDownChildBounty bind:dialog={closeDownChildBountyDialog} {childBounty} {parentBounty} />
+
 <AwardChildBounty bind:dialog={awardChildBountyDialog} {childBounty} />
+
 <ClaimChildBounty bind:dialog={claimChildBountyDialog} {childBounty} />
-<BatchChildBountyCalls bind:dialog={batchDialog} {childBounty} />
-<UnassignSubCurator bind:dialog={unassignSubCuratorDialog} {childBounty} />
+
+<BatchChildBountyCalls bind:dialog={batchDialog} {childBounty} {parentBounty} />
+
+<UnassignSubCurator bind:dialog={unassignSubCuratorDialog} {childBounty} {parentBounty} />
 
 <style>
 	.status {

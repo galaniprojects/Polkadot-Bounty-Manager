@@ -19,7 +19,8 @@ export function parseBounty(raw: BountyRaw, id: number) {
 		fee,
 		status: type,
 		curator,
-		childBounties: []
+		childBounties: [],
+		curatorMultisigAccount: undefined
 	};
 
 	if (type === 'PendingPayout') {
@@ -50,7 +51,8 @@ export function parseChildBounty(raw: ChildBountyRaw, id: number) {
 		parentBounty,
 		curatorDeposit,
 		status: type,
-		curator
+		curator,
+		curatorMultisigAccount: undefined
 	};
 
 	if (type !== 'PendingPayout') {

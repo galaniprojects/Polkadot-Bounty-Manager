@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+	import { showAllCuratorOptions } from '../../../stores';
 	import { type Bounty } from '../../../types/bounty';
 	import { type ChildBounty, childBountyStatuses, statusLabels } from '../../../types/child-bounty';
 	import AddChildBounty from './operations/AddChildBounty.svelte';
@@ -8,6 +8,7 @@
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
 	import Pagination from '../Pagination.svelte';
+	import { isCurator } from '../../../utils/isCurator';
 
 	export let bounty: Bounty;
 
@@ -61,7 +62,7 @@
 			: 'Bounties'}
 	</p>
 
-	{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
 		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">Add new child bounty</p>

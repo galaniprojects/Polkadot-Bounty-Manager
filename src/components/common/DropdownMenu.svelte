@@ -88,7 +88,7 @@
 			tabindex="-1"
 		>
 			<div role="none">
-				{#each items as item, index}
+				{#each items as item, index (item)}
 					<button
 						class="block {widthDropdown} px-2 py-2.5 text-[16px] text-primary cursor-pointer {textAlign}
 							{selectedItem === item
