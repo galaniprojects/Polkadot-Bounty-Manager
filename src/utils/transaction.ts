@@ -37,10 +37,8 @@ export async function submitTransaction(
 		const typedApi = get(dotApi);
 		let calldata = undefined;
 
-		const source = get(activeAccount)?.source;
-
 		// In case it's multisig transaction.
-		if (proxyAddress && multisigAddress && source !== 'mimir') {
+		if (proxyAddress && multisigAddress) {
 			const matchingMultisig: MultisigInfo | undefined = get(activeAccount)?.multisigs?.find(
 				(multisig) => multisig.address === multisigAddress
 			);
