@@ -23,17 +23,6 @@
 	let awardChildBountyOpen = false;
 	let claimChildBountyOpen = false;
 	let batchOpen = false;
-
-	let detailsExpanded = false;
-	let closeDownExpanded = false;
-
-	function handleMoreDetailsToggleClick() {
-		detailsExpanded = !detailsExpanded;
-	}
-
-	function initiateCloseDownToggleClick() {
-		closeDownExpanded = !closeDownExpanded;
-	}
 </script>
 
 <div class="child-container">
@@ -73,20 +62,12 @@
 			</div>
 		</section>
 
-		{#if !detailsExpanded}
-			<div class="expand-details">
-				<button class="text" on:click={handleMoreDetailsToggleClick}>
-					all child bounty details
-				</button>
-
-				<button class="material-symbols-outlined" on:click={handleMoreDetailsToggleClick}>
-					keyboard_arrow_down
-				</button>
-			</div>
-		{/if}
-
-		{#if detailsExpanded}
-			<div class="all-details">
+		<details class="all-details">
+			<summary>
+				<span>all child bounty details</span>
+				<span class="material-symbols-outlined icon">keyboard_arrow_down</span>
+			</summary>
+			<div>
 				<div>
 					<p class="text">Award date:</p>
 					<p>{childBounty.dateOfPayout || '-'}</p>
@@ -96,13 +77,7 @@
 					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
 				</div>
 			</div>
-			<div class="expand-details">
-				<button class="text" on:click={handleMoreDetailsToggleClick}> show less details </button>
-				<button class="material-symbols-outlined" on:click={handleMoreDetailsToggleClick}>
-					keyboard_arrow_up
-				</button>
-			</div>
-		{/if}
+		</details>
 	</div>
 	<div class="actions-container">
 		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
@@ -141,34 +116,15 @@
 	</div>
 
 	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
-		{#if !closeDownExpanded}
-			<div class="close-down-expand">
-				<button class="text" on:click={initiateCloseDownToggleClick}> close child bounty </button>
-
-				<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
-					keyboard_arrow_down
-				</button>
-			</div>
-		{/if}
-
-		{#if closeDownExpanded}
-			{#if $showAllCuratorOptions || (parentBounty.curator === $activeAccount?.address && childBounty.status !== 'PendingPayout')}
-				<div class="close-down-expanded">
-					<div class="close-down">
-						<button class="text" on:click={initiateCloseDownToggleClick}>
-							close child bounty
-						</button>
-
-						<button class="material-symbols-outlined" on:click={initiateCloseDownToggleClick}>
-							keyboard_arrow_up
-						</button>
-					</div>
-					<button on:click={() => (closeDownChildBountyOpen = true)} class="close-down-button">
-						CLOSE DOWN
-					</button>
-				</div>
-			{/if}
-		{/if}
+		<details class="close-child-bounty">
+			<summary>
+				<span>close child bounty</span>
+				<span class="material-symbols-outlined icon">keyboard_arrow_down</span>
+			</summary>
+			<button on:click={() => (closeDownChildBountyOpen = true)} class="close-down-button">
+				CLOSE DOWN
+			</button>
+		</details>
 	{/if}
 </div>
 
@@ -205,6 +161,45 @@
 {/if}
 
 <style>
+	details {
+		text-align: center;
+		border-radius: 0px 0px 6px 6px;
+	}
+
+	summary {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		cursor: pointer;
+		font-size: 12px;
+		margin: -8px -8px 0px;
+		padding-top: 8px;
+	}
+
+	details[open],
+	summary {
+		padding: 8px;
+	}
+
+	details[open] summary {
+		margin-bottom: 8px;
+	}
+
+	.icon {
+		font-size: 18px;
+		transition: transform 0.3s ease;
+	}
+
+	details[open] .icon {
+		transform: rotate(180deg);
+	}
+
+	.close-child-bounty {
+		background-color: theme('colors.backgroundChildBountyCloseDown');
+		padding: 8px 8px 0;
+	}
+
 	.child-container {
 		background-color: theme('colors.backgroundBounty');
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
@@ -237,17 +232,18 @@
 		padding: 3px 8px;
 	}
 
-	.card-content,
-	.all-details {
+	.card-content {
 		display: flex;
 		flex-direction: column;
-		background-color: theme('colors.backgroundChildBountyDetails');
 		margin: 8px 10px 0px;
 		gap: 12px;
+		border-radius: 0px 0px 6px 6px;
+		background-color: theme('colors.backgroundChildBountyDetails');
 	}
 
-	.card-content {
-		border-radius: 0px 0px 6px 6px;
+	.all-details {
+		background-color: theme('colors.backgroundChildBountyExpand');
+		padding-top: 8px;
 	}
 
 	.card-details {
@@ -269,32 +265,6 @@
 
 	.value {
 		font-weight: 700;
-		line-height: normal;
-	}
-
-	.expand-details,
-	.close-down-expand,
-	.close-down-expanded,
-	.close-down {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 0px 0px 6px 6px;
-	}
-
-	.expand-details {
-		background-color: theme('colors.backgroundChildBountyExpand');
-	}
-
-	.close-down-expand,
-	.close-down-expanded {
-		background-color: theme('colors.backgroundChildBountyCloseDown');
-	}
-
-	.close-down-expanded {
-		flex-direction: column;
-		gap: 8px;
-		padding: 0px 8px 8px;
 	}
 
 	.external-links {
