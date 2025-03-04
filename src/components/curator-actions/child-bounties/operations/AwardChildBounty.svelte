@@ -42,11 +42,7 @@
 			return;
 		}
 
-		await submitTransaction(
-			transaction,
-			undefined,
-			childBounty
-		);
+		await submitTransaction(transaction, undefined, childBounty);
 	}
 </script>
 

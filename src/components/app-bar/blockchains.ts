@@ -5,7 +5,7 @@ import logoPaseo from './LogoPaseo.svg';
 import paseoInverted from './LogoPaseoInverted.svg';
 import { PUBLIC_STATESCAN_API_URL } from '$env/static/public';
 
-const statescanUrl = PUBLIC_STATESCAN_API_URL as string;
+const statescanUrl: string = PUBLIC_STATESCAN_API_URL;
 
 export const blockchains = [
 	{

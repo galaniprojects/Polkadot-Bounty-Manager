@@ -1,8 +1,7 @@
 import { get } from 'svelte/store';
 import { dotApi, proxies } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
-import { currentBlockchain } from "../app-bar/blockchains";
-import { PUBLIC_STATESCAN_API_URL as statescanUrl } from '$env/static/public';
+import { currentBlockchain } from '../app-bar/blockchains';
 
 export async function fetchAllProxies() {
 	if (get(proxies) !== undefined) {
@@ -43,7 +42,7 @@ type MultisigAccountResponse = {
 
 export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
-	if(!graphqlEndpoint){
+	if (!graphqlEndpoint) {
 		return [];
 	}
 
@@ -90,7 +89,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
  */
 export async function fetchMultisigAccount(signatory: string): Promise<MultisigInfo[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
-	if(!graphqlEndpoint){
+	if (!graphqlEndpoint) {
 		return [];
 	}
 
