@@ -36,7 +36,11 @@
 				return;
 			}
 
-			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
+			await submitTransaction(
+				transaction,
+				'Your bounty has been awarded and can now be claimed',
+				bounty
+			);
 		} catch (e) {
 			console.error(e);
 			showErrorDialog(String(e));

@@ -8,9 +8,12 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(
@@ -25,7 +28,7 @@
 
 	async function unassignSubCurator() {
 		open = false;
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, parentBounty);
 	}
 </script>
 

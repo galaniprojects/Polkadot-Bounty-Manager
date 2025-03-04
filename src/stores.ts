@@ -29,7 +29,8 @@ const state: LoadingDialogState = {
 	status: 'loading',
 	title: '',
 	successMessage: '',
-	errorMessage: ''
+	errorMessage: '',
+	callData: undefined
 };
 export const loadingDialogState = writable(state);
 
@@ -38,6 +39,8 @@ export const bounties = writable<Bounty[]>([]);
 
 // Bounties and child bounties that are related to the active account.
 export const activeAccountBounties = writable<Bounty[]>([]);
+
+export const proxies = writable<Map<string, string> | undefined>(undefined);
 
 // For testing.
 export const showAllBounties = writable<boolean>(false);

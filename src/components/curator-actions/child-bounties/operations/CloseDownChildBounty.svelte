@@ -7,9 +7,12 @@
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
 	export let open = false;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(
@@ -24,7 +27,7 @@
 
 	async function submit() {
 		open = false;
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, parentBounty);
 	}
 </script>
 

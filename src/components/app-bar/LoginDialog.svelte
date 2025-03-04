@@ -12,9 +12,14 @@
 	import { setActiveAccountBounties } from '../../utils/bounties';
 	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
 	import { type AccountWithSigner } from '../../types/account';
-	import { showErrorDialog } from '../../utils/loading-screen';
+	import {
+		hideLoadingDialog,
+		showErrorDialog,
+		showLoadingDialog
+	} from '../../utils/loading-screen';
 	import { getAccounts } from './getAccounts';
 	import { maybeInjectMimir } from './maybeInjectMimir';
+	import { fetchMultisigInfo } from '../curator-actions/fetch-signatories';
 
 	export let title = '';
 	export let open;
@@ -96,12 +101,15 @@
 		currentPhase = 'accountSelection';
 	}
 
-	function selectAccount(account: AccountWithSigner) {
+	async function selectAccount(account: AccountWithSigner) {
+		open = false;
+		showLoadingDialog('Fetching multisig accounts');
+		account.multisigs = await fetchMultisigInfo(account.address);
 		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
 		setActiveAccountBounties();
-		open = false;
+		hideLoadingDialog();
 	}
 
 	function backToWalletSelection() {
@@ -200,8 +208,8 @@
 						{#each accounts as account}
 							<button
 								class="w-full"
-								on:click={() => {
-									selectAccount(account);
+								on:click={async () => {
+									await selectAccount(account);
 								}}
 							>
 								<AccountItem name={account.name} address={account.address} />

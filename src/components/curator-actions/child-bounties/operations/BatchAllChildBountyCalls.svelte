@@ -76,7 +76,7 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, bounty);
 
 		bountyValue = '';
 		bountyTitle = '';
