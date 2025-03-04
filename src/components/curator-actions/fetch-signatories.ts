@@ -4,10 +4,6 @@ import type { MultisigInfo } from '../../types/account';
 import { currentBlockchain } from '../app-bar/blockchains';
 
 export async function fetchAllProxies() {
-	if (get(proxies) !== undefined) {
-		return;
-	}
-
 	const api = get(dotApi);
 
 	const fetchedProxies = await api.query.Proxy.Proxies.getEntries();
@@ -22,6 +18,7 @@ export async function fetchAllProxies() {
 	});
 
 	proxies.set(proxyMap);
+	return proxyMap;
 }
 
 type GraphQLResponse = {
@@ -38,7 +35,7 @@ interface MultisigAccountResponse {
 			multisigAddresses: MultisigInfo[];
 		};
 	};
-};
+}
 
 export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
@@ -87,7 +84,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
  * @param signatory signatory address.
  * @returns array of multisig accounts that the signatory is part of, an empty array in case of error.
  */
-export async function fetchMultisigAccount(signatory: string): Promise<MultisigInfo[]> {
+export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
 	if (!graphqlEndpoint) {
 		return [];

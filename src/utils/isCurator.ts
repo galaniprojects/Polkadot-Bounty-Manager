@@ -1,7 +1,6 @@
 import { activeAccount } from '../stores';
 import { get } from 'svelte/store';
 import type { Bounty } from '../types/bounty';
-import type { AccountInfo } from '../types/account';
 import { getRelevantMultisig } from './getRelevantMultisig';
 import type { ChildBounty } from '../types/child-bounty';
 

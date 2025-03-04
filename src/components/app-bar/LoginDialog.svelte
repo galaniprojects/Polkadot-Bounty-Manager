@@ -19,7 +19,7 @@
 	} from '../../utils/loading-screen';
 	import { getAccounts } from './getAccounts';
 	import { maybeInjectMimir } from './maybeInjectMimir';
-	import { fetchMultisigAccount } from '../curator-actions/fetch-signatories';
+	import { fetchMultisigInfo } from '../curator-actions/fetch-signatories';
 
 	export let title = '';
 	export let open;
@@ -104,7 +104,7 @@
 	async function selectAccount(account: AccountWithSigner) {
 		open = false;
 		showLoadingDialog('Fetching multisig accounts');
-		account.multisigs = await fetchMultisigAccount(account.address);
+		account.multisigs = await fetchMultisigInfo(account.address);
 		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
