@@ -24,7 +24,6 @@ export function setActiveAccountBounties() {
 		const filteredChildBounties = bounty.childBounties.filter((childBounty) =>
 			isCurator(childBounty)
 		);
-		console.log(filteredChildBounties);
 		if (filteredChildBounties.length > 0) {
 			bounty.childBounties = filteredChildBounties;
 			filteredBounties.push(bounty);

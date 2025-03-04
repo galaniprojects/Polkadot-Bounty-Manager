@@ -29,7 +29,7 @@
 
 	async function submit() {
 		open = false;
-		await submitTransaction(transaction, 'Your bounty has been extended', bounty);
+		await submitTransaction(transaction, undefined, bounty);
 	}
 </script>
 

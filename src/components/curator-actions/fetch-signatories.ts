@@ -1,6 +1,8 @@
 import { get } from 'svelte/store';
 import { dotApi, proxies } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
+import { currentBlockchain } from "../app-bar/blockchains";
+import { PUBLIC_STATESCAN_API_URL as statescanUrl } from '$env/static/public';
 
 export async function fetchAllProxies() {
 	if (get(proxies) !== undefined) {
@@ -40,7 +42,10 @@ type MultisigAccountResponse = {
 };
 
 export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
-	const graphqlEndpoint = 'https://statescan.rilt.kilt.io/graphql';
+	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
+	if(!graphqlEndpoint){
+		return [];
+	}
 
 	try {
 		const proxyAddress = get(proxies)?.get(curatorAddress);
@@ -84,7 +89,11 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
  * @returns array of multisig accounts that the signatory is part of, an empty array in case of error.
  */
 export async function fetchMultisigAccount(signatory: string): Promise<MultisigInfo[]> {
-	const graphqlEndpoint = 'https://statescan.rilt.kilt.io/graphql';
+	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
+	if(!graphqlEndpoint){
+		return [];
+	}
+
 	try {
 		const query = `
         query {

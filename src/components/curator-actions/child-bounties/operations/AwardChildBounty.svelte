@@ -44,7 +44,7 @@
 
 		await submitTransaction(
 			transaction,
-			'Child bounty has been awarded and can now be claimed',
+			undefined,
 			childBounty
 		);
 	}

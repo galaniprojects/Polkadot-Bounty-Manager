@@ -3,6 +3,9 @@ import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
 import logoPaseo from './LogoPaseo.svg';
 import paseoInverted from './LogoPaseoInverted.svg';
+import { PUBLIC_STATESCAN_API_URL } from '$env/static/public';
+
+const statescanUrl = PUBLIC_STATESCAN_API_URL as string;
 
 export const blockchains = [
 	{
@@ -14,6 +17,7 @@ export const blockchains = [
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
 			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
+			statescanGraphqlApi: statescanUrl,
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
