@@ -26,44 +26,44 @@
 	let batchOpen = false;
 </script>
 
-<div class="child-container">
+<div class="childContainer">
 	<!-- Header Section -->
-	<div class="header">
+	<section class="header">
 		<h2 class="title">#{childBounty.id} {childBounty.description}</h2>
-		<div class="status-container">
+		<div class="statusContainer">
 			<span class="status" data-status={childBounty.status}>
 				{statusLabels[childBounty.status]}
 			</span>
 		</div>
-	</div>
+	</section>
 
 	<!-- Child Bounty Card Content -->
-	<div class="card-content">
-		<section class="card-details">
+	<div class="cardContent">
+		<div class="cardDetails">
 			<div class="elements">
 				<div>
-					<p class="text">Sub-Curator</p>
-					<CopyableAddress address={childBounty.curator || '-'} />
+					<p class="text">Sub-curator</p>
+					<CopyableAddress address={childBounty.curator} />
 				</div>
 				<div>
 					<p class="text">Beneficiary</p>
-					<CopyableAddress address={childBounty.beneficiary || '-'} />
+					<CopyableAddress address={childBounty.beneficiary} />
 				</div>
 			</div>
 
 			<div class="elements">
 				<div>
-					<p class="text">Sub-curator Fee</p>
-					<p><Currency value={childBounty.fee} />DOT</p>
+					<p class="text">Sub-curator fee</p>
+					<p><Currency value={childBounty.fee} /></p>
 				</div>
 				<div>
 					<p class="text">Value</p>
-					<p class="value"><Currency value={childBounty.value} />DOT</p>
+					<p class="value"><Currency value={childBounty.value} /></p>
 				</div>
 			</div>
-		</section>
+		</div>
 
-		<details class="all-details">
+		<details class="allDetails">
 			<summary>
 				<span>all child bounty details</span>
 				<span class="material-symbols-outlined icon">keyboard_arrow_down</span>
@@ -74,14 +74,14 @@
 					<p>{childBounty.dateOfPayout || '-'}</p>
 				</div>
 
-				<div class="external-links">
+				<div class="externalLinks">
 					<ChildBountyExternalLinks dimension={10} childBountyId={childBounty.id} />
 				</div>
 			</div>
 		</details>
 	</div>
 
-	<div class="actions-container">
+	<div class="actionsContainer">
 		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
 			<button on:click={() => (awardChildBountyOpen = true)} class="buttons"> AWARD </button>
 		{/if}
@@ -118,12 +118,12 @@
 	</div>
 
 	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && isCurator(parentBounty))}
-		<details class="close-child-bounty">
+		<details class="closeChildBounty">
 			<summary>
 				<span>close child bounty</span>
 				<span class="material-symbols-outlined icon">keyboard_arrow_down</span>
 			</summary>
-			<button on:click={() => (closeDownChildBountyOpen = true)} class="close-down-button">
+			<button on:click={() => (closeDownChildBountyOpen = true)} class="closeDownButton">
 				CLOSE DOWN
 			</button>
 		</details>
@@ -197,12 +197,12 @@
 		transform: rotate(180deg);
 	}
 
-	.close-child-bounty {
+	.closeChildBounty {
 		background-color: theme('colors.backgroundChildBountyCloseDown');
 		padding: 8px 8px 0;
 	}
 
-	.child-container {
+	.childContainer {
 		background-color: theme('colors.backgroundBounty');
 		box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
 	}
@@ -219,7 +219,7 @@
 		word-break: break-word;
 	}
 
-	.status-container {
+	.statusContainer {
 		display: flex;
 		justify-content: end;
 		background-color: theme('colors.backgroundChildBountyDetails');
@@ -234,7 +234,7 @@
 		padding: 3px 8px;
 	}
 
-	.card-content {
+	.cardContent {
 		display: flex;
 		flex-direction: column;
 		margin: 8px 10px 0px;
@@ -243,12 +243,12 @@
 		background-color: theme('colors.backgroundChildBountyDetails');
 	}
 
-	.all-details {
+	.allDetails {
 		background-color: theme('colors.backgroundChildBountyExpand');
 		padding-top: 8px;
 	}
 
-	.card-details {
+	.cardDetails {
 		display: flex;
 		justify-content: space-between;
 		padding: 12px 6px 0px;
@@ -269,26 +269,26 @@
 		font-weight: 700;
 	}
 
-	.external-links {
+	.externalLinks {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 	}
 
-	.actions-container,
+	.actionsContainer,
 	.action {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 	}
 
-	.actions-container {
+	.actionsContainer {
 		margin: 15px 8px;
 		gap: 18px;
 	}
 
 	.buttons,
-	.close-down-button {
+	.closeDownButton {
 		color: white;
 		border-radius: 10px;
 		width: 100%;
@@ -296,19 +296,19 @@
 		background-color: theme('colors.backgroundButtonDark');
 	}
 
-	.close-down-button {
+	.closeDownButton {
 		background-color: theme('colors.backgroundCloseChildBountyButton');
 	}
 
 	.buttons,
-	.close-down-button {
+	.closeDownButton {
 		transition:
 			background-color 0.3s ease,
 			transform 0.2s ease;
 	}
 
 	.buttons:hover,
-	.close-down-button:hover {
+	.closeDownButton:hover {
 		transform: scale(1.02);
 	}
 
