@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
-	import { activeAccount, bounties, dotApi } from '../../../../stores';
+	import { bounties, dotApi } from '../../../../stores';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
@@ -14,7 +14,7 @@
 
 	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
-	$: error = getBountyCuratorError(bountyId, $bounties, bounty, $activeAccount?.address);
+	$: error = getBountyCuratorError(bountyId, $bounties, bounty);
 
 	let childBounties = [{ value: '', title: '' }];
 
