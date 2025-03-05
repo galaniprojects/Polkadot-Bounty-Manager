@@ -7,7 +7,7 @@
 	import Dialog from '../common/Dialog.svelte';
 	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 	export let curatorAddress = '';
 
@@ -23,7 +23,7 @@
 	});
 </script>
 
-<Dialog bind:open title="CURATORS LIST">
+<Dialog bind:dialog title="CURATORS LIST">
 	<div class="modal mt-5">
 		<div class="space-y-5">
 			<div class="space-y-1">
@@ -36,7 +36,7 @@
 					<p>Loading...</p>
 				{:else if signatories.length > 0}
 					<ul>
-						{#each signatories as address}
+						{#each signatories as address (address)}
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>

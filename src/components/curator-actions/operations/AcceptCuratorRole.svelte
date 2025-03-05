@@ -2,14 +2,13 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { dotApi } from '../../../stores';
 	import Deposit from '../../Deposit.svelte';
-	import { showErrorDialog } from '../../../utils/loading-screen';
 	import Input from '../../../components/Input/Input.module.css';
 	import Dialog from '../../common/Dialog.svelte';
 	import { submitTransaction } from '../../../utils/transaction';
 	import Fee from '../../Fee.svelte';
 	import { calculateDeposit } from './calculateDeposit';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	$: transaction = $dotApi.tx.Bounties.accept_curator({
@@ -19,16 +18,14 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		open = false;
-		const result = await submitTransaction(transaction);
-
-		if (result === undefined) {
-			showErrorDialog('Internal error');
+		const successful = await submitTransaction(transaction, undefined, bounty);
+		if (successful) {
+			dialog.close();
 		}
 	}
 </script>
 
-<Dialog bind:open title="ACCEPT CURATOR ROLE">
+<Dialog bind:dialog title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>
@@ -48,10 +45,12 @@
 				<p class="text-xs">Estimated basic fee</p>
 				<p><Fee {transaction} /></p>
 			</div>
-			<div>
-				<p class="text-xs">Estimated deposit</p>
-				<p><Deposit getter={() => calculateDeposit(bounty.fee)} /></p>
-			</div>
+			{#if bounty.fee}
+				<div>
+					<p class="text-xs">Estimated deposit</p>
+					<p><Deposit getter={() => calculateDeposit(bounty.fee ?? 0n)} /></p>
+				</div>
+			{/if}
 		</div>
 	</section>
 

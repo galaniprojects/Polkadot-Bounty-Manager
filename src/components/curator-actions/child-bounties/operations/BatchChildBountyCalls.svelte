@@ -2,7 +2,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../modals';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
@@ -11,9 +11,12 @@
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
+
 	let extend = false;
 
 	let curatorFee = '';
@@ -62,33 +65,35 @@
 	});
 
 	async function submit() {
-		open = false;
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 
 		if (!isPositiveNumber(curatorFee)) {
-			showErrorDialog('Curator fee value is invalid');
+			showErrorModal('Curator fee value is invalid');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		await submitTransaction(transaction);
+		const successful = await submitTransaction(transaction, undefined, parentBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="BATCH CHILD BOUNTY CALLS" backgroundColor="white" textColor="primary">
+<Dialog bind:dialog title="BATCH CHILD BOUNTY CALLS">
 	<div>
-		<p class="p-1 text-white bg-childBountyGray">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -109,7 +114,7 @@
 		</div>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+			<input type="checkbox" bind:checked={extend} class={Input.switch} />
 			<ExtendBountyLabel />
 		</label>
 
@@ -122,10 +127,8 @@
 	<button
 		on:click={submit}
 		disabled={!beneficiary.length || !curatorFee.length}
-		class="w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button
-		{beneficiary.length === 0 || curatorFee.length === 0
-			? 'basic-button opacity-50'
-			: 'cursor-allowed'}"
+		class="w-full md:w-fit mt-10 h-12 button-popup
+		{beneficiary.length === 0 || curatorFee.length === 0 ? 'opacity-50' : 'cursor-allowed'}"
 	>
 		SIGN
 	</button>

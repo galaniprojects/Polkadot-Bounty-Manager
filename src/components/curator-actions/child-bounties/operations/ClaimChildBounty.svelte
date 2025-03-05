@@ -9,8 +9,9 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Input from '../../../Input/Input.module.css';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(
@@ -22,14 +23,16 @@
 	);
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction, 'Child bounty successfully claimed');
+		const successful = await submitTransaction(transaction, 'Child bounty successfully claimed');
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD" backgroundColor="white" textColor="primary">
+<Dialog bind:dialog title="CLAIM CHILD BOUNTY AWARD">
 	<div class="space-y-8">
-		<p class="p-1 text-white bg-curatorMainBackground">
+		<p class="p-1">
 			#{childBounty.id}
 			{childBounty.description ?? ''}
 		</p>
@@ -47,10 +50,13 @@
 			</div>
 		{/if}
 
-		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
-			<ExtendBountyLabel />
-		</label>
+		{#if false}
+			<!-- TODO: extending requires the curator address which can be a multisig, while submitting the transaction now is done with a normal address -->
+			<label class="space-y-2 flex gap-4 items-center cursor-pointer">
+				<input type="checkbox" bind:checked={extend} class={Input.switch} />
+				<ExtendBountyLabel />
+			</label>
+		{/if}
 
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>
@@ -58,10 +64,5 @@
 		</div>
 	</div>
 
-	<button
-		on:click={submit}
-		class="w-full md:w-fit mt-10 h-12 basic-button bg-curatorMainBackground"
-	>
-		SIGN
-	</button>
+	<button on:click={submit} class="w-full md:w-fit mt-10 h-12 button-popup"> SIGN </button>
 </Dialog>

@@ -1,29 +1,32 @@
 <script lang="ts">
-	import LogoSubsquarePink from '../../svg/curator-actions-logos/LogoSubsquarePink.svg';
-	import LogoTreasuryPink from '../../svg/curator-actions-logos/LogoTreasuryPink.svg';
-	import LogoPolkassemblyPink from '../../svg/curator-actions-logos/LogoPolkassemblyPink.svg';
 	import ExternalLinksButton from '../../ExternalLinksButton.svelte';
+	import LogoTreasuryWhite from '../../svg/curator-actions-logos/LogoTreasuryWhite.svg';
+	import LogoSubsquareWhite from '../../svg/curator-actions-logos/LogoSubsquareWhite.svg';
+	import LogoPolkassemblyWhite from '../../svg/curator-actions-logos/LogoPolkassemblyWhite.svg';
+	import { currentBlockchain } from '../../app-bar/blockchains';
 
 	export let dimension = 5;
 	export let childBountyId: number;
 </script>
 
 <div class="space-x-3.5">
+	{#if $currentBlockchain.baseUrls.doTreasury}
+		<ExternalLinksButton
+			url="{$currentBlockchain.baseUrls.doTreasury}/#/child-bounties/{childBountyId}"
+			icon={LogoTreasuryWhite}
+			{dimension}
+		/>
+	{/if}
+
 	<ExternalLinksButton
-		url={`https://polkadot.dotreasury.com/#/child-bounties/${childBountyId}`}
-		icon={LogoTreasuryPink}
+		url="{$currentBlockchain.baseUrls.subSquare}/treasury/child-bounties/{childBountyId}"
+		icon={LogoSubsquareWhite}
 		{dimension}
 	/>
 
 	<ExternalLinksButton
-		url={`https://polkadot.subsquare.io/treasury/child-bounties/${childBountyId}`}
-		icon={LogoSubsquarePink}
-		{dimension}
-	/>
-
-	<ExternalLinksButton
-		url={`https://polkadot.polkassembly.io/child_bounty/${childBountyId}`}
-		icon={LogoPolkassemblyPink}
+		url="{$currentBlockchain.baseUrls.polkAssembly}/child_bounty/{childBountyId}"
+		icon={LogoPolkassemblyWhite}
 		{dimension}
 	/>
 </div>

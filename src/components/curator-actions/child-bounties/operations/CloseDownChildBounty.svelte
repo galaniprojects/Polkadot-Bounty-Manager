@@ -7,9 +7,12 @@
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
+
 	let extend = false;
 
 	$: transaction = batchExtendBounty(
@@ -23,12 +26,14 @@
 	let isToggled = false;
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction);
+		const successful = await submitTransaction(transaction, undefined, parentBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="Close Down Child Bounty">
+<Dialog bind:dialog title="Close Down Child Bounty">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{childBounty.id}</span>
@@ -65,7 +70,7 @@
 	<button
 		on:click={submit}
 		disabled={!isToggled}
-		class="{`w-full md:w-fit mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
+		class="{`w-full md:w-fit h-12 mt-10 ${isToggled ? 'button-popup' : 'opacity-50 cursor-not-allowed'}`}
   {!isToggled ? 'button-popup' : 'cursor-allowed'}"
 	>
 		SIGN

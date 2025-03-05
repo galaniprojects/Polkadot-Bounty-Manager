@@ -17,6 +17,6 @@
 	</p>
 
 	<div class="mt-7 sm:mt-24 mb-2 flex">
-		<a href="/curator-actions" class="button-cancel mr-5">RETURN HOME</a>
+		<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center">RETURN HOME</a>
 	</div>
 {/if}

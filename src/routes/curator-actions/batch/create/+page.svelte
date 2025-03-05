@@ -6,7 +6,7 @@
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/modals';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import Input from '../../../../components/Input/Input.module.css';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
@@ -64,18 +64,18 @@
 		event.preventDefault();
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		const success = await submitTransaction(transaction);
+		const success = await submitTransaction(transaction, undefined, bounty);
 		if (success) {
 			await goto('/curator-actions');
 		}
 	}
 </script>
 
-<div class="bg-childBountyBackground p-5 m-3 rounded-md">
+<div class="bg-backgroundBounty p-5 m-3 rounded-md">
 	<h1 class="text-2xl">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
 
 	{#if error}
@@ -85,14 +85,14 @@
 	{/if}
 
 	{#if bounty && !error}
-		<p class="my-2 p-1 text-white bg-childBountyGray">
+		<p class="my-2 p-1">
 			#{bounty.id}
 			{bounty.description ?? ''}
 		</p>
 
 		<form onsubmit={submit} class="mt-4 flex flex-col gap-6">
 			<div class="grid cardsGrid gap-6">
-				{#each childBounties as child, index}
+				{#each childBounties as child, index (child)}
 					<fieldset class="bg-white -mt-3 p-5 lg:w-full rounded-md shadow-lg">
 						<legend class="relative top-7">Child bounty #{index + 1}</legend>
 
@@ -138,7 +138,7 @@
 					<p class="bg-white p-5 rounded-md shadow-lg grid place-items-center">
 						<button
 							type="button"
-							class="py-2 px-4 rounded-md border border-childBountyGray text-childBountyGray font-bold"
+							class="py-2 px-4 rounded-md border border-backgroundButtonDark text-backgroundButtonDark font-bold"
 							onclick={() => {
 								childBounties = [...childBounties, { value: '', title: '' }];
 							}}

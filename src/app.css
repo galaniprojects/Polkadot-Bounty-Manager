@@ -5,7 +5,12 @@
 @tailwind utilities;
 
 body {
-	color: theme('colors.primary');
+	color: theme('colors.textPrimary');
+	background-color: theme('colors.backgroundApp');
+}
+
+body:has(dialog[open]) {
+	overflow: hidden;
 }
 
 .basic-button {
@@ -23,16 +28,16 @@ body {
 
 .button-cancel {
 	@apply basic-button;
-	background-color: theme('colors.darkgray');
+	background-color: theme('colors.backgroundButtonDark');
 }
 
 .button-cancel:disabled {
 	@apply basic-button;
-	background-color: rgba(138, 124, 151, 0.5);
+	background-color: theme('colors.backgroundButtonLight');
 }
 
 .button-popup {
-	@apply px-10 rounded-md bg-white text-accent;
+	@apply px-10 rounded-md bg-backgroundButtonDark text-white;
 }
 
 .link-button {

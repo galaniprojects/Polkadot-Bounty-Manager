@@ -5,7 +5,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Deposit from '../../../../components/Deposit.svelte';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/modals';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
@@ -46,22 +46,22 @@
 
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
-			showErrorDialog('Curator address is invalid');
+			showErrorModal('Curator address is invalid');
 			return;
 		}
 
 		if (!curatorFee || !isPositiveNumber(curatorFee)) {
-			showErrorDialog('Invalid value of curator fee');
+			showErrorModal('Invalid value of curator fee');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
@@ -90,20 +90,24 @@
 
 		<div class="mt-5 space-y-1 sm:space-y-3">
 			<p class="text-xs mb-1">Treasury track</p>
-			<div class="border">
-				<DropdownMenu
-					bind:selectedItem={selectedTreasuryTrack}
-					items={treasuryTracks}
-					width="w-56 lg:w-80"
-				/>
-			</div>
+			<DropdownMenu
+				bind:selectedItem={selectedTreasuryTrack}
+				items={treasuryTracks}
+				widthContainer="w-56 lg:w-80"
+				widthDropdown="w-56 lg:w-80"
+				textAlign="text-center"
+				bgColor="grey"
+				backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+				height="h-10"
+				positionOverlay="-mt-[40px]"
+			/>
 			<p class="text-xs mt-1">
 				(please select the same or higher treasury track that was used in the Bounty Approval
 				referendum)
 			</p>
 		</div>
 
-		<hr class="border-white w-full sm:w-1/2 my-5 sm:my-10" />
+		<hr class="border-backgroundButtonLight w-full sm:w-1/2 my-5 sm:my-10" />
 
 		<div class="my-5 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
@@ -119,8 +123,8 @@
 		</div>
 	</div>
 	<div class="flex-col space-y-2 sm:flex-row my-3 sm:mt-10 sm:mb-5">
-		<a href="/curator-actions" class="button-cancel mr-5">CANCEL</a>
-		<button type="submit" class="button-active">SUBMIT</button>
+		<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2">CANCEL</a>
+		<button type="submit" class="button-active h-12">SUBMIT</button>
 	</div>
 </form>
 
