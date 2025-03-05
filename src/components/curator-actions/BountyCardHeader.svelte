@@ -50,8 +50,6 @@
 <style>
 	.header {
 		padding: 18px 12px 25px;
-		width: full;
-		height: fit-content;
 	}
 	.title {
 		display: flex;
@@ -78,7 +76,7 @@
 		display: flex;
 		justify-content: space-between;
 		font-size: 12px;
-		padding: 0px 2px;
+		padding-left: 2px;
 		background-color: theme('colors.backgroundChildBountyDetails');
 		height: 20px;
 	}
@@ -87,7 +85,6 @@
 		color: white;
 		flex-shrink: 0;
 		width: 120px;
-		height: 20px;
 		padding: 3px 8px;
 	}
 
