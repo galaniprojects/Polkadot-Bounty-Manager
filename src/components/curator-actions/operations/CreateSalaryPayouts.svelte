@@ -8,11 +8,11 @@
 	import ExtendBountyLabel from '../../ExtendBountyLabel.svelte';
 	import Fee from '../../Fee.svelte';
 	import { Binary } from 'polkadot-api';
-	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { showErrorModal } from '../../modals';
 	import { names } from '../../../utils/people';
 	import type { Bounty } from '../../../types/bounty';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 	export let signatories: string[];
 
@@ -47,6 +47,7 @@
 
 	function applyEqualSalary() {
 		if (equalSalary !== null && equalSalary > 0) {
+			// eslint-disable-next-line svelte/no-reactive-reassign
 			salaries = salaries.map((salary) => ({ ...salary, salary: equalSalary }));
 		}
 	}
@@ -107,22 +108,23 @@
 		if (!isFormValid) return;
 
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		open = false;
-
-		await submitTransaction(transaction);
+		const successul = await submitTransaction(transaction);
+		if (successul) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="SALARY PAYOUTS" backgroundColor="white" textColor="primary">
+<Dialog bind:dialog title="SALARY PAYOUTS">
 	<p>#{bounty.id} {bounty.description ?? ''}</p>
 
 	<form class="mt-5 space-y-4" on:submit={submit}>
@@ -155,6 +157,7 @@
 				/>
 				<p class="whitespace-nowrap">each =</p>
 
+				<!--	eslint-disable svelte/no-reactive-reassign	-->
 				<input
 					class={[Input.polkadot, 'grow shrink']}
 					type="number"
@@ -165,12 +168,13 @@
 					placeholder="Total"
 					on:input={calculateEqualSalariesFromTotal}
 				/>
+				<!--	eslint-enable svelte/no-reactive-reassign	-->
 				<p>total</p>
 			</div>
 		</div>
 
 		<ul class="space-y-1.5">
-			{#each salaries as { address, salary }}
+			{#each salaries as { address, salary } (address)}
 				<li class="flex gap-4">
 					<input
 						class={[Input.polkadot, 'max-w-36']}

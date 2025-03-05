@@ -12,7 +12,7 @@
 	export let curatorAddress = '';
 
 	let signatories: string[] | undefined;
-	let salariesDialogOpen = false;
+	let salariesDialog: HTMLDialogElement;
 
 	onMount(async () => {
 		if (curatorAddress) {
@@ -43,8 +43,8 @@
 					{#if bounty.curator && bounty.curator === $activeAccount?.address}
 						<button
 							on:click={() => {
-								open = false;
-								salariesDialogOpen = true;
+								dialog.close();
+								salariesDialog.showModal();
 							}}
 							class="w-full md:w-fit h-12 button-popup"
 						>
@@ -60,5 +60,5 @@
 </Dialog>
 
 {#if signatories !== undefined}
-	<CreateSalaryPayouts {bounty} {signatories} bind:open={salariesDialogOpen} />
+	<CreateSalaryPayouts {bounty} {signatories} bind:dialog={salariesDialog} />
 {/if}
