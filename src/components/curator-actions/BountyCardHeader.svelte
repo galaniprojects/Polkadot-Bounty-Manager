@@ -17,14 +17,12 @@
 	};
 </script>
 
-<div class="max-h-fit px-3 pt-[18px] pb-[25px] w-full">
-	<div class="flex justify-between">
-		<div class="flex flex-col lg:flex-row lg:justify-start">
-			<span class="text-xl break-word">
-				<span class="font-light">#{bounty.id}</span>
-				<span class="font-extrabold"> {bounty.description}</span>
-			</span>
-		</div>
+<div class="header">
+	<div class="title">
+		<h2 class="bountyTitle">
+			<span class="bountyId">#{bounty.id}</span>
+			<span class="bountyName"> {bounty.description}</span>
+		</h2>
 
 		<button
 			on:click={() => (isParentExpanded = !isParentExpanded)}
@@ -37,52 +35,76 @@
 			{/if}
 		</button>
 	</div>
-	<div class="flex justify-between text-xs items-baseline px-[2px] bg-backgroundChildBountyDetails">
-		<section class="flex items-center space-x-1">
+
+	<div class="statusContainer">
+		<div class="proposer">
 			<p>Proposer:</p>
 			<CopyableAddress address={bounty.proposer} />
-		</section>
-		<p class="w-1/6 text-white py-1 rounded-md text-center" data-status={bounty.status}>
+		</div>
+		<p class="status" data-status={bounty.status}>
 			{statusLabels[bounty.status]}
 		</p>
 	</div>
 </div>
 
 <style>
+	.header {
+		padding: 18px 12px 25px;
+	}
+	.title {
+		display: flex;
+		justify-content: space-between;
+	}
+	.bountyTitle {
+		font-size: 20px;
+		word-break: break-word;
+	}
+	.bountyId {
+		font-weight: 300;
+	}
+
+	.bountyName {
+		font-weight: 800;
+	}
+
+	.proposer {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+	.statusContainer {
+		display: flex;
+		justify-content: space-between;
+		font-size: 12px;
+		padding-left: 2px;
+		background-color: theme('colors.backgroundChildBountyDetails');
+		height: 20px;
+	}
+	.status {
+		font-size: 10px;
+		color: theme('colors.textPrimary');
+		flex-shrink: 0;
+		width: 120px;
+		padding: 3px 8px;
+	}
+
 	/* ToDo: double check if the colors are updated, or any changes are necessary  */
-	[data-status='Proposed'] {
-		background-color: theme('colors.statusProposedFunded');
-	}
-	[data-status='CuratorProposed'] {
-		background-color: theme('colors.statusProposedFunded');
-	}
-
-	[data-status='Active'] {
-		background-color: theme('colors.statusActive');
-	}
-
-	[data-status='PendingPayout'] {
-		background-color: theme('colors.statusPendingPayout');
-	}
-
-	[data-status='Approved'] {
-		background-color: theme('colors.statusApprovedRejected');
-	}
-
+	[data-status='Proposed'],
+	[data-status='CuratorProposed'],
 	[data-status='Funded'] {
 		background-color: theme('colors.statusProposedFunded');
 	}
-	[data-status='Claimed'] {
-		background-color: theme('colors.statusApprovedRejected');
+	[data-status='Active'] {
+		background-color: theme('colors.statusActive');
 	}
-	[data-status='Canceled'] {
-		background-color: theme('colors.statusApprovedRejected');
+	[data-status='PendingPayout'] {
+		background-color: theme('colors.statusPendingPayout');
 	}
+	[data-status='Approved'],
+	[data-status='Claimed'],
+	[data-status='Canceled'],
 	[data-status='Rejected'] {
 		background-color: theme('colors.statusApprovedRejected');
-	}
-
-	.break-word {
-		word-break: break-word;
+		color: white;
 	}
 </style>

@@ -12,18 +12,11 @@
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
-	const { searchParams } = page.url;
-	const bountyId = parseInt(searchParams.get('bounty-id') ?? '');
+	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
 	$: error = getBountyCuratorError(bountyId, $bounties, bounty);
 
-	let childBounties = [
-		{
-			value: searchParams.get('value') ?? '',
-			title: searchParams.get('title') ?? ''
-		},
-		{ value: '', title: '' }
-	];
+	let childBounties = [{ value: '', title: '' }];
 
 	$: isFormValid =
 		childBounties.length > 0 &&
