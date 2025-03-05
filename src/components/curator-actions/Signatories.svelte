@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
 	import { fetchMultisigSignatories } from './fetch-signatories';
-	import { activeAccount } from '../../stores';
+	import { isCurator } from '../../utils/isCurator';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
 	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
@@ -40,7 +40,7 @@
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>
-					{#if bounty.curator && bounty.curator === $activeAccount?.address}
+					{#if isCurator(bounty)}
 						<button
 							on:click={() => {
 								dialog.close();
