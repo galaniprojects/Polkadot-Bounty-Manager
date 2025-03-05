@@ -76,7 +76,7 @@
 	$: transaction = maybeTransaction(
 		() =>
 			isFormValid &&
-			$activeAccount?.address &&
+			bounty.curator &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...payouts.flatMap(({ address, salary, name = address }, index) =>
@@ -85,7 +85,7 @@
 							child_bounty_id: childBountyId + index,
 							title: `${description} for ${name}`,
 							value: String(salary),
-							curator: $activeAccount.address,
+							curator: bounty.curator as string,
 							beneficiary: address,
 							fee: '0'
 						})
