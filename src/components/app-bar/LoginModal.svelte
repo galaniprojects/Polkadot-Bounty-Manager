@@ -14,8 +14,8 @@
 	import { setActiveAccountBounties } from '../../utils/bounties';
 	import { getInjectedExtensions } from 'polkadot-api/pjs-signer';
 	import { type AccountWithSigner } from '../../types/account';
-	import { hideLoadingModal, showErrorModal, showLoadingModal } from '../modals';
-	import { fetchMultisigInfo } from '../curator-actions/fetch-signatories';
+	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
+	import { showErrorModal } from '../modals';
 	import { getAccounts } from './getAccounts';
 	import { maybeInjectMimir } from './maybeInjectMimir';
 	import { dialog as ref } from './loginModalStores';
@@ -127,13 +127,11 @@
 
 	async function selectAccount(account: AccountWithSigner) {
 		$ref.close();
-		showLoadingModal('Fetching multisig accounts…');
-		account.multisigs = await fetchMultisigInfo(account.address);
 		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
 		setActiveAccountBounties();
-		hideLoadingModal();
+		await updateAccountMultisigsOnBlockchain();
 	}
 
 	function backToWalletSelection() {

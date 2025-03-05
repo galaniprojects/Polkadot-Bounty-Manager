@@ -3,6 +3,7 @@
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
 	import { getEndpoint } from '../../utils/endpoints';
+	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import Dropdown from '../common/DropdownMenu.svelte';
 	import type { Labeled } from '../common/labeled';
 	import { type Blockchain, blockchains, currentBlockchain } from './blockchains';
@@ -20,6 +21,7 @@
 		sessionStorage.setItem('node', $currentBlockchain.endpoint);
 		await initializeApi([getEndpoint()]);
 		await fetchBountiesAndChildBounties();
+		await updateAccountMultisigsOnBlockchain();
 	}
 </script>
 
