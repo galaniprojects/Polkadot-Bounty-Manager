@@ -8,7 +8,7 @@
 	import Fee from '../../Fee.svelte';
 	import { calculateDeposit } from './calculateDeposit';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	$: transaction = $dotApi.tx.Bounties.accept_curator({
@@ -18,12 +18,14 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		open = false;
-		await submitTransaction(transaction, undefined, bounty);
+		const successful = await submitTransaction(transaction, undefined, bounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="ACCEPT CURATOR ROLE">
+<Dialog bind:dialog title="ACCEPT CURATOR ROLE">
 	<section class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

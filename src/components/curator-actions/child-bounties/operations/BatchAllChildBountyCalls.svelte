@@ -3,7 +3,7 @@
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../modals';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
@@ -12,7 +12,7 @@
 	import { Binary } from 'polkadot-api';
 	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let bountyValue = '';
@@ -56,37 +56,38 @@
 	});
 
 	async function submit() {
-		open = false;
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 
 		if (!isPositiveNumber(curatorFee)) {
-			showErrorDialog('Curator fee value is invalid');
+			showErrorModal('Curator fee value is invalid');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		await submitTransaction(transaction, undefined, bounty);
-
-		bountyValue = '';
-		bountyTitle = '';
-		curatorFee = '';
-		beneficiary = '';
-		extend = false;
+		const successful = await submitTransaction(transaction, undefined, bounty);
+		if (successful) {
+			dialog.close();
+			bountyValue = '';
+			bountyTitle = '';
+			curatorFee = '';
+			beneficiary = '';
+			extend = false;
+		}
 	}
 </script>
 
-<Dialog bind:open title="BATCH ALL CHILD BOUNTY CALLS">
+<Dialog bind:dialog title="BATCH ALL CHILD BOUNTY CALLS">
 	<div>
 		<p class="p-1">
 			#{bounty.id}

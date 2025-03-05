@@ -1,7 +1,12 @@
 import type { SS58String, Transaction, TxFinalizedPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, dotApi, polkadotSigner } from '../stores';
-import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
+import {
+	hideLoadingModal,
+	showErrorModal,
+	showLoadingModal,
+	showSuccessModal
+} from '../components/modals';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
 import { getMultisigSigner, getProxySigner } from '@polkadot-api/meta-signers';
@@ -30,7 +35,7 @@ export async function submitTransaction(
 	try {
 		let signer = get(polkadotSigner);
 		if (!signer) {
-			showErrorDialog('Internal Error, signer is undefined.');
+			showErrorModal('Internal Error, signer is undefined.');
 			return;
 		}
 
@@ -43,7 +48,7 @@ export async function submitTransaction(
 				(multisig) => multisig.address === multisigAddress
 			);
 			if (!matchingMultisig) {
-				showErrorDialog('Internal Error, multisig not found.');
+				showErrorModal('Internal Error, multisig not found.');
 				return;
 			}
 
@@ -68,34 +73,41 @@ export async function submitTransaction(
 			calldata = (await transactionWithProxy.getEncodedData()).asHex();
 		}
 
-		showLoadingDialog('Submitting transaction');
+		showLoadingModal('Submitting transaction…');
+
 		const result = await transaction.signAndSubmit(signer);
 
 		if (!result.dispatchError) {
-			showSuccessDialog('Transaction', successMessage || 'Operation success.', calldata);
-			await fetchBountiesAndChildBounties(false);
+			showSuccessModal('Transaction', successMessage || 'Operation success.', calldata);
+
+			(async () => {
+				// trigger update in the background but return immediately
+				await fetchBountiesAndChildBounties(false);
+			})();
 			return result;
 		}
 
-		showErrorDialog(readableError(result.dispatchError));
+		showErrorModal(readableError(result.dispatchError));
 	} catch (e) {
 		const account = get(activeAccount);
 		if (!account) {
-			showErrorDialog('Internal error, active account not found.');
+			showErrorModal('Internal error, active account not found.');
 			return;
 		}
 
 		if (account.source !== 'WalletConnect') {
-			showErrorDialog(readableError(e));
+			showErrorModal(readableError(e));
 			return;
 		}
 
 		console.error(e);
-		showErrorDialog(
+		showErrorModal(
 			`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
 				readableError(e) +
 				')'
 		);
+	} finally {
+		hideLoadingModal();
 	}
 }
 

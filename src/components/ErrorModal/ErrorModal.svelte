@@ -1,0 +1,11 @@
+<script lang="ts">
+	import Dialog from '../common/Dialog.svelte';
+	import { modalStyles } from '../Modal/tools';
+	import { dialog, message } from './showErrorModal';
+</script>
+
+<Dialog bind:dialog={$dialog} title="Error">
+	<output class={modalStyles.output}>
+		{$message}
+	</output>
+</Dialog>

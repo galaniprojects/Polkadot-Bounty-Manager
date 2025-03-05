@@ -10,7 +10,7 @@
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
@@ -27,12 +27,14 @@
 	let isToggled = false;
 
 	async function unassignSubCurator() {
-		open = false;
-		await submitTransaction(transaction, undefined, parentBounty);
+		const successful = await submitTransaction(transaction, undefined, parentBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="UNASSIGN SUB-CURATOR">
+<Dialog bind:dialog title="UNASSIGN SUB-CURATOR">
 	<div>
 		<p class="p-1">
 			#{childBounty.id}

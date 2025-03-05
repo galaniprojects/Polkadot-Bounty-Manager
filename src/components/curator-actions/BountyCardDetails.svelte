@@ -13,7 +13,7 @@
 	export let description: string | undefined;
 	export let remainingBalance: bigint | undefined;
 
-	let curatorsDialogOpen = false;
+	let curatorsDialog: HTMLDialogElement;
 </script>
 
 <div class="bg-backgroundBounty w-full px-3">
@@ -30,7 +30,7 @@
 				<button
 					class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full sm:w-1/2"
 					on:click={() => {
-						curatorsDialogOpen = true;
+						curatorsDialog.showModal();
 					}}
 				>
 					SHOW CURATORS
@@ -77,4 +77,4 @@
 	</div>
 </div>
 
-<Signatories bind:open={curatorsDialogOpen} {bounty} curatorAddress={bounty.curator} />
+<Signatories bind:dialog={curatorsDialog} {bounty} curatorAddress={bounty.curator} />

@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store';
-import type { LoadingDialogState } from './types/loading-screen';
 import type { Bounty } from './types/bounty';
 import { type ApiType } from './utils/createTypedApi';
 import type { AccountInfo } from './types/account';
@@ -22,17 +21,6 @@ export const activeAccount = writable<AccountInfo | undefined>();
 export const walletConnect = writable<WalletConnect | undefined>();
 
 export const polkadotSigner = writable<PolkadotSigner | undefined>();
-
-// Loading Dialog.
-const state: LoadingDialogState = {
-	open: false,
-	status: 'loading',
-	title: '',
-	successMessage: '',
-	errorMessage: '',
-	callData: undefined
-};
-export const loadingDialogState = writable(state);
 
 // All bounties.
 export const bounties = writable<Bounty[]>([]);

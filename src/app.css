@@ -9,6 +9,10 @@ body {
 	background-color: theme('colors.backgroundApp');
 }
 
+body:has(dialog[open]) {
+	overflow: hidden;
+}
+
 .basic-button {
 	@apply px-10 pt-1 rounded-md text-white;
 }

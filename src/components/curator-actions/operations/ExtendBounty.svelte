@@ -9,7 +9,7 @@
 	import { extendedExpiry } from '../../../utils/batchExtendBounty';
 	import Fee from '../../Fee.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	$: transaction = $dotApi.tx.Bounties.extend_bounty_expiry({
@@ -28,12 +28,14 @@
 	});
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction, undefined, bounty);
+		const successful = await submitTransaction(transaction, undefined, bounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="EXTEND BOUNTY">
+<Dialog bind:dialog title="EXTEND BOUNTY">
 	<section class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

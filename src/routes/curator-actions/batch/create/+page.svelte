@@ -6,7 +6,7 @@
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/modals';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import Input from '../../../../components/Input/Input.module.css';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
@@ -64,7 +64,7 @@
 		event.preventDefault();
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 

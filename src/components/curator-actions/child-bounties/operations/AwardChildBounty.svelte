@@ -3,7 +3,7 @@
 	import Currency from '../../../Currency.svelte';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../modals';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
@@ -12,7 +12,7 @@
 	import Input from '../../../Input/Input.module.css';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 
 	let beneficiary = '';
@@ -32,21 +32,23 @@
 	);
 
 	async function submit() {
-		open = false;
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		await submitTransaction(transaction, undefined, childBounty);
+		const successful = await submitTransaction(transaction, undefined, childBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="AWARD CHILD BOUNTY">
+<Dialog bind:dialog title="AWARD CHILD BOUNTY">
 	<div class="grid">
 		<p class="space-x-1 mb-7 p-1">
 			#{childBounty.id}

@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../../types/bounty';
 	import { convertFormattedDotToPlanck } from '../../../../utils/polkadot';
 	import { dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../modals';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
 	import Dialog from '../../../common/Dialog.svelte';
@@ -12,7 +12,7 @@
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let bountyValue = '';
@@ -34,32 +34,32 @@
 	);
 
 	async function submit() {
-		open = false;
-
 		if (bountyTitle.length === 0) {
-			showErrorDialog('Bounty title is empty');
+			showErrorModal('Bounty title is empty');
 			return;
 		}
 		if (!isPositiveNumber(bountyValue)) {
-			showErrorDialog('Bounty value is invalid');
+			showErrorModal('Bounty value is invalid');
 			return;
 		}
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		await submitTransaction(transaction, undefined, bounty);
-
-		bountyValue = '';
-		bountyTitle = '';
-		extend = false;
+		const successful = await submitTransaction(transaction, undefined, bounty);
+		if (successful) {
+			dialog.close();
+			bountyValue = '';
+			bountyTitle = '';
+			extend = false;
+		}
 	}
 
 	$: isFormValid = bountyValue && bountyValue.trim() !== '' && bountyTitle.trim() !== '';
 </script>
 
-<Dialog bind:open title="ADD NEW CHILD BOUNTY">
+<Dialog bind:dialog title="ADD NEW CHILD BOUNTY">
 	<div class="space-y-5">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

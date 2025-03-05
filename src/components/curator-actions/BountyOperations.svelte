@@ -8,9 +8,9 @@
 
 	export let bounty: Bounty;
 
-	let extendBountyDialogOpen = false;
-	let acceptCuratorRoleDialogOpen = false;
-	let claimBountyDialogOpen = false;
+	let extendBountyDialog: HTMLDialogElement;
+	let acceptCuratorRoleDialog: HTMLDialogElement;
+	let claimBountyDialog: HTMLDialogElement;
 </script>
 
 {#if $showAllCuratorOptions || ['Proposed', 'Approved', 'Funded'].includes(bounty.status)}
@@ -26,7 +26,7 @@
 	<button
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {
-			acceptCuratorRoleDialogOpen = true;
+			acceptCuratorRoleDialog.showModal();
 		}}
 	>
 		ACCEPT CURATOR
@@ -37,7 +37,7 @@
 	<button
 		class="bg-extendButtonBackground text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {
-			extendBountyDialogOpen = true;
+			extendBountyDialog.showModal();
 		}}
 	>
 		EXTEND BOUNTY
@@ -46,19 +46,15 @@
 
 {#if $showAllCuratorOptions || bounty.status === 'PendingPayout'}
 	<button
-		on:click={() => (claimBountyDialogOpen = true)}
+		on:click={() => {
+			claimBountyDialog.showModal();
+		}}
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 	>
 		CLAIM
 	</button>
 {/if}
 
-{#if acceptCuratorRoleDialogOpen}
-	<AcceptCuratorRole bind:open={acceptCuratorRoleDialogOpen} {bounty} />
-{/if}
-{#if extendBountyDialogOpen}
-	<ExtendBounty bind:open={extendBountyDialogOpen} {bounty} />
-{/if}
-{#if claimBountyDialogOpen}
-	<ClaimBounty bind:open={claimBountyDialogOpen} {bounty} />
-{/if}
+<AcceptCuratorRole bind:dialog={acceptCuratorRoleDialog} {bounty} />
+<ExtendBounty bind:dialog={extendBountyDialog} {bounty} />
+<ClaimBounty bind:dialog={claimBountyDialog} {bounty} />

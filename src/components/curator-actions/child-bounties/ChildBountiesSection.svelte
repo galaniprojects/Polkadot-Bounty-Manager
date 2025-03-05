@@ -14,8 +14,8 @@
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
-	let createChildBountyOpen = false;
-	let createChildBatchOpen = false;
+	let createChildBountyDialog: HTMLDialogElement;
+	let createChildBatchDialog: HTMLDialogElement;
 
 	type Filter = ChildBounty['status'] | 'all';
 
@@ -67,7 +67,9 @@
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">Add new child bounty</p>
 				<button
-					on:click={() => (createChildBountyOpen = true)}
+					on:click={() => {
+						createChildBountyDialog.showModal();
+					}}
 					class="bg-backgroundButtonLight rounded-[10px] h-10"
 				>
 					NEW CHILD BOUNTY
@@ -76,7 +78,9 @@
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">All child bounty operations</p>
 				<button
-					on:click={() => (createChildBatchOpen = true)}
+					on:click={() => {
+						createChildBatchDialog.showModal();
+					}}
 					class="bg-backgroundButtonLight rounded-[10px] h-10"
 				>
 					COMPLETE PAYOUT
@@ -138,9 +142,9 @@
 	</div>
 </div>
 
-<AddChildBounty {bounty} bind:open={createChildBountyOpen} />
+<AddChildBounty {bounty} bind:dialog={createChildBountyDialog} />
 
-<BatchAllChildBountyCalls {bounty} bind:open={createChildBatchOpen} />
+<BatchAllChildBountyCalls {bounty} bind:dialog={createChildBatchDialog} />
 
 <style>
 	.childContainer {

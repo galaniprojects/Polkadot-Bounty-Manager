@@ -17,13 +17,13 @@
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
-	let assignSubCuratorOpen = false;
-	let unassignSubCuratorOpen = false;
-	let AcceptSubCuratorRoleOpen = false;
-	let closeDownChildBountyOpen = false;
-	let awardChildBountyOpen = false;
-	let claimChildBountyOpen = false;
-	let batchOpen = false;
+	let assignSubCuratorDialog: HTMLDialogElement;
+	let unassignSubCuratorDialog: HTMLDialogElement;
+	let acceptSubCuratorRuleDialog: HTMLDialogElement;
+	let closeDownChildBountyDialog: HTMLDialogElement;
+	let awardChildBountyDialog: HTMLDialogElement;
+	let claimChildBountyDialog: HTMLDialogElement;
+	let batchDialog: HTMLDialogElement;
 </script>
 
 <div class="childContainer">
@@ -83,36 +83,78 @@
 
 	<div class="actionsContainer">
 		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
-			<button on:click={() => (awardChildBountyOpen = true)} class="buttons"> AWARD </button>
+			<button
+				on:click={() => {
+					awardChildBountyDialog.showModal();
+				}}
+				class="buttons"
+			>
+				AWARD
+			</button>
 		{/if}
 
 		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
-			<button on:click={() => (claimChildBountyOpen = true)} class="buttons"> CLAIM </button>
+			<button
+				on:click={() => {
+					claimChildBountyDialog.showModal();
+				}}
+				class="buttons"
+			>
+				CLAIM
+			</button>
 		{/if}
 
 		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
-				<button on:click={() => (assignSubCuratorOpen = true)} class="buttons"> ASSIGN </button>
+				<button
+					on:click={() => {
+						assignSubCuratorDialog.showModal();
+					}}
+					class="buttons"
+				>
+					ASSIGN
+				</button>
 			</div>
 			<div class="action">
 				<p class="text">Child bounty operations</p>
 
-				<button on:click={() => (batchOpen = true)} class="buttons"> BATCH CALL </button>
+				<button
+					on:click={() => {
+						batchDialog.showModal();
+					}}
+					class="buttons"
+				>
+					BATCH CALL
+				</button>
 			</div>
 		{/if}
 
 		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
 			<div class="action">
 				<p class="text">Sub-curator role</p>
-				<button on:click={() => (AcceptSubCuratorRoleOpen = true)} class="buttons"> ACCEPT </button>
+				<button
+					on:click={() => {
+						acceptSubCuratorRuleDialog.showModal();
+					}}
+					class="buttons"
+				>
+					ACCEPT
+				</button>
 			</div>
 		{/if}
 
 		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
-				<button on:click={() => (unassignSubCuratorOpen = true)} class="buttons"> UNASSIGN </button>
+				<button
+					on:click={() => {
+						unassignSubCuratorDialog.showModal();
+					}}
+					class="buttons"
+				>
+					UNASSIGN
+				</button>
 			</div>
 		{/if}
 	</div>
@@ -123,44 +165,35 @@
 				<span>close child bounty</span>
 				<span class="material-symbols-outlined icon">keyboard_arrow_down</span>
 			</summary>
-			<button on:click={() => (closeDownChildBountyOpen = true)} class="closeDownButton">
+			<button
+				on:click={() => {
+					closeDownChildBountyDialog.showModal();
+				}}
+				class="closeDownButton"
+			>
 				CLOSE DOWN
 			</button>
 		</details>
 	{/if}
 </div>
 
-{#if assignSubCuratorOpen}
-	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} {parentBounty} />
-{/if}
+<AssignSubCurator bind:dialog={assignSubCuratorDialog} {childBounty} {parentBounty} />
 
-{#if AcceptSubCuratorRoleOpen}
-	<AcceptSubCuratorRole
-		bind:open={AcceptSubCuratorRoleOpen}
-		{childBounty}
-		parentCurator={parentBounty.curator}
-	/>
-{/if}
+<AcceptSubCuratorRole
+	bind:dialog={acceptSubCuratorRuleDialog}
+	{childBounty}
+	parentCurator={parentBounty.curator}
+/>
 
-{#if closeDownChildBountyOpen}
-	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} {parentBounty} />
-{/if}
+<CloseDownChildBounty bind:dialog={closeDownChildBountyDialog} {childBounty} {parentBounty} />
 
-{#if awardChildBountyOpen}
-	<AwardChildBounty bind:open={awardChildBountyOpen} {childBounty} />
-{/if}
+<AwardChildBounty bind:dialog={awardChildBountyDialog} {childBounty} />
 
-{#if claimChildBountyOpen}
-	<ClaimChildBounty bind:open={claimChildBountyOpen} {childBounty} />
-{/if}
+<ClaimChildBounty bind:dialog={claimChildBountyDialog} {childBounty} />
 
-{#if batchOpen}
-	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} {parentBounty} />
-{/if}
+<BatchChildBountyCalls bind:dialog={batchDialog} {childBounty} {parentBounty} />
 
-{#if unassignSubCuratorOpen}
-	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} {parentBounty} />
-{/if}
+<UnassignSubCurator bind:dialog={unassignSubCuratorDialog} {childBounty} {parentBounty} />
 
 <style>
 	details {

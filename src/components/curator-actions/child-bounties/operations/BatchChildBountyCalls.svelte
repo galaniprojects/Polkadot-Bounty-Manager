@@ -2,7 +2,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import Dialog from '../../../common/Dialog.svelte';
 	import { activeAccount, dotApi } from '../../../../stores';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../modals';
 	import type { ChildBounty } from '../../../../types/child-bounty';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Input from '../../../Input/Input.module.css';
@@ -13,7 +13,7 @@
 	import Fee from '../../../Fee.svelte';
 	import type { Bounty } from '../../../../types/bounty';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
@@ -65,31 +65,33 @@
 	});
 
 	async function submit() {
-		open = false;
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 		if (!isValidAddress(beneficiary)) {
-			showErrorDialog('Beneficiary address is invalid');
+			showErrorModal('Beneficiary address is invalid');
 			return;
 		}
 
 		if (!isPositiveNumber(curatorFee)) {
-			showErrorDialog('Curator fee value is invalid');
+			showErrorModal('Curator fee value is invalid');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		await submitTransaction(transaction, undefined, parentBounty);
+		const successful = await submitTransaction(transaction, undefined, parentBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="BATCH CHILD BOUNTY CALLS">
+<Dialog bind:dialog title="BATCH CHILD BOUNTY CALLS">
 	<div>
 		<p class="p-1">
 			#{childBounty.id}
