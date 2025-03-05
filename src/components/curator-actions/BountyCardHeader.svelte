@@ -82,7 +82,7 @@
 	}
 	.status {
 		font-size: 10px;
-		color: white;
+		color: theme('colors.textPrimary');
 		flex-shrink: 0;
 		width: 120px;
 		padding: 3px 8px;
@@ -105,5 +105,6 @@
 	[data-status='Canceled'],
 	[data-status='Rejected'] {
 		background-color: theme('colors.statusApprovedRejected');
+		color: white;
 	}
 </style>

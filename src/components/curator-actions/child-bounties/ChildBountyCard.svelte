@@ -260,7 +260,7 @@
 
 	.status {
 		font-size: 10px;
-		color: white;
+		color: theme('colors.textPrimary');
 		flex-shrink: 0;
 		width: 120px;
 		height: 20px;
@@ -361,5 +361,6 @@
 	[data-status='Claimed'],
 	[data-status='Canceled'] {
 		background-color: theme('colors.statusApprovedRejected');
+		color: white;
 	}
 </style>
