@@ -16,7 +16,7 @@
 	const { searchParams } = page.url;
 	const bountyId = parseInt(searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
-	$: error = getBountyCuratorError(bountyId, $bounties, bounty, $activeAccount?.address);
+	$: error = getBountyCuratorError(bountyId, $bounties, bounty);
 
 	let childBountyId: number;
 	let nextAvailableChildBountyId: number;
