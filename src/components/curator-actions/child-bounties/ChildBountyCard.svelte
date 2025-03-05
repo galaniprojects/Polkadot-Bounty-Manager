@@ -345,18 +345,21 @@
 		transform: scale(1.02);
 	}
 
-	[data-status='Active'] {
-		background-color: theme('colors.childBountyGreen');
+	[data-status='Active'],
+	[data-status='Added'] {
+		background-color: theme('colors.statusActive');
 	}
 
 	[data-status='PendingPayout'] {
-		background-color: theme('colors.curatorMainBackground');
+		background-color: theme('colors.statusPendingPayout');
 	}
 
-	[data-status='CuratorProposed'],
-	[data-status='Added'],
+	[data-status='CuratorProposed'] {
+		background-color: theme('colors.statusProposedFunded');
+	}
+
 	[data-status='Claimed'],
 	[data-status='Canceled'] {
-		background-color: theme('colors.childBountyGray');
+		background-color: theme('colors.statusApprovedRejected');
 	}
 </style>
