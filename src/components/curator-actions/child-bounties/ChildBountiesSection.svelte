@@ -156,6 +156,7 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 30px;
 		padding: 0px 3px;
+		align-items: start;
 	}
 
 	@media (max-width: 640px) {
