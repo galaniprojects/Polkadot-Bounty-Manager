@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
 	import { type ChildBounty, statusLabels } from '../../../types/child-bounty';
-	import { activeAccount, showAllCuratorOptions } from '../../../stores';
-  import { isCurator } from '../../../utils/isCurator';
+	import { showAllCuratorOptions } from '../../../stores';
+	import { isCurator } from '../../../utils/isCurator';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRole from './operations/AcceptSubCuratorRole.svelte';
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
@@ -13,7 +13,7 @@
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import Currency from '../../Currency.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
-	
+
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
@@ -117,7 +117,7 @@
 		{/if}
 	</div>
 
-	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && (isCurator(parentBounty)}
+	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && isCurator(parentBounty))}
 		<details class="close-child-bounty">
 			<summary>
 				<span>close child bounty</span>
