@@ -18,12 +18,12 @@
 		}
 
 		if ($names[address]) {
-				label = $names[address];
-				return;
-			}
+			label = $names[address];
+			return;
+		}
 
-			const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
-			if (!result || address !== input) return;
+		const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
+		if (!result || address !== input) return;
 
 		const value = result[0].info.display.value as Binary | undefined;
 		const text = value?.asText();
