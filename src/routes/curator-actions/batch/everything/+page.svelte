@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
-	import { activeAccount, bounties, dotApi } from '../../../../stores';
+	import { bounties, dotApi } from '../../../../stores';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { isValidAddress } from '../../../../utils/polkadot';
@@ -68,7 +68,7 @@
 	$: transaction = maybeTransaction(
 		() =>
 			isFormValid &&
-			$activeAccount?.address &&
+			bounty?.curator &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...childBounties.flatMap(({ title, value, fee, beneficiary }, index) =>
@@ -77,7 +77,7 @@
 							child_bounty_id: childBountyId + index,
 							title,
 							value,
-							curator: $activeAccount.address,
+							curator: bounty.curator as string,
 							beneficiary,
 							fee
 						})

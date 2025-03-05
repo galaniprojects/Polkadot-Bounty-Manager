@@ -23,12 +23,13 @@
 	let beneficiary: string = '';
 
 	$: transaction = maybeTransaction(() => {
-		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
+		if (!parentBounty.curator || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee))
+			return;
 
 		const propose = $dotApi.tx.ChildBounties.propose_curator({
 			parent_bounty_id: childBounty.parentBounty,
 			child_bounty_id: childBounty.id,
-			curator: MultiAddress.Id($activeAccount.address),
+			curator: MultiAddress.Id(parentBounty.curator),
 			fee: convertFormattedDotToPlanck(curatorFee)
 		});
 

@@ -34,15 +34,16 @@
 	})();
 
 	$: transaction = maybeTransaction(() => {
-		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
+		const { curator } = bounty;
+		if (!curator || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
 
 		const batch = getAllChildBountyCalls({
 			parent_bounty_id: bounty.id,
 			child_bounty_id: childBountyId,
 			title: bountyTitle,
 			value: bountyValue,
-			curator: $activeAccount.address,
-			beneficiary: beneficiary,
+			curator,
+			beneficiary,
 			fee: curatorFee
 		});
 
