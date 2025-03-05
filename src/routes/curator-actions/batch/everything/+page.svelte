@@ -13,8 +13,7 @@
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
-	const { searchParams } = page.url;
-	const bountyId = parseInt(searchParams.get('bounty-id') ?? '');
+	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
 	$: error = getBountyCuratorError(bountyId, $bounties, bounty, $activeAccount?.address);
 
@@ -27,19 +26,10 @@
 			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
 		});
 		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
-		const external = parseInt(searchParams.get('child-bounty-id') ?? '');
-		childBountyId = Math.max(!Number.isNaN(external) ? external : 0, nextAvailableChildBountyId);
+		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	let childBounties = [
-		{
-			value: searchParams.get('value') ?? '',
-			title: searchParams.get('title') ?? '',
-			fee: searchParams.get('fee') ?? '',
-			beneficiary: searchParams.get('beneficiary') ?? ''
-		},
-		{ value: '', title: '', fee: '', beneficiary: '' }
-	];
+	let childBounties = [{ value: '', title: '', fee: '', beneficiary: '' }];
 
 	$: isFormValid =
 		childBounties.length > 0 &&

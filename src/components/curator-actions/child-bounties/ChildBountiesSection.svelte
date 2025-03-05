@@ -2,8 +2,6 @@
 	import { showAllCuratorOptions } from '../../../stores';
 	import { type Bounty } from '../../../types/bounty';
 	import { type ChildBounty, childBountyStatuses, statusLabels } from '../../../types/child-bounty';
-	import AddChildBounty from './operations/AddChildBounty.svelte';
-	import BatchAllChildBountyCalls from './operations/BatchAllChildBountyCalls.svelte';
 
 	import ChildBountyCard from './ChildBountyCard.svelte';
 	import DropdownMenu from '../../common/DropdownMenu.svelte';
@@ -14,8 +12,6 @@
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
-	let createChildBountyDialog: HTMLDialogElement;
-	let createChildBatchDialog: HTMLDialogElement;
 
 	type Filter = ChildBounty['status'] | 'all';
 
@@ -66,25 +62,25 @@
 		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">Add new child bounty</p>
-				<button
-					on:click={() => {
-						createChildBountyDialog.showModal();
-					}}
-					class="bg-backgroundButtonLight rounded-[10px] h-10"
+				<a
+					href="/curator-actions/batch/create?{new URLSearchParams({
+						'bounty-id': String(bounty.id)
+					}).toString()}"
+					class="inline-grid place-items-center bg-backgroundButtonLight rounded-[10px] h-10"
 				>
 					NEW CHILD BOUNTY
-				</button>
+				</a>
 			</div>
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">All child bounty operations</p>
-				<button
-					on:click={() => {
-						createChildBatchDialog.showModal();
-					}}
-					class="bg-backgroundButtonLight rounded-[10px] h-10"
+				<a
+					href="/curator-actions/batch/everything?{new URLSearchParams({
+						'bounty-id': String(bounty.id)
+					}).toString()}"
+					class="inline-grid place-items-center bg-backgroundButtonLight rounded-[10px] h-10"
 				>
 					COMPLETE PAYOUT
-				</button>
+				</a>
 			</div>
 		</div>
 	{/if}
@@ -141,10 +137,6 @@
 		</div>
 	</div>
 </div>
-
-<AddChildBounty {bounty} bind:dialog={createChildBountyDialog} />
-
-<BatchAllChildBountyCalls {bounty} bind:dialog={createChildBatchDialog} />
 
 <style>
 	.childContainer {
