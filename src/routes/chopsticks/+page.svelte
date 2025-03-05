@@ -119,6 +119,7 @@
 
 	<div class="m-5 gap-3">
 		<p class="text-sm block">{current} is the current block</p>
+		<!--	eslint-disable-next-line svelte/no-reactive-reassign	-->
 		<input class="border pt-1 pl-2 w-1/4 rounded-md min-w-40" bind:value={target} />
 		<button on:click={handleGoToBlock} class="button-active min-w-40">TO BLOCK</button>
 	</div>

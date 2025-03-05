@@ -77,7 +77,9 @@
 		await goto('/bounty-setup/success');
 	}
 
-	$: (async () => {
+	$: getBondValue(bountyTitle).catch(() => {});
+
+	async function getBondValue(bountyTitle: string) {
 		try {
 			bondValue = '-';
 			if (!bountyTitle) return;
@@ -90,7 +92,7 @@
 		} catch {
 			bondValue = '-';
 		}
-	})();
+	}
 </script>
 
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">

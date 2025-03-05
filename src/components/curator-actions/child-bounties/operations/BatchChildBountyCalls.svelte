@@ -11,9 +11,12 @@
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
 	import Fee from '../../../Fee.svelte';
+	import type { Bounty } from '../../../../types/bounty';
 
 	export let open = true;
 	export let childBounty: ChildBounty;
+	export let parentBounty: Bounty;
+
 	let extend = false;
 
 	let curatorFee = '';
@@ -82,7 +85,7 @@
 			return;
 		}
 
-		await submitTransaction(transaction);
+		await submitTransaction(transaction, undefined, parentBounty);
 	}
 </script>
 

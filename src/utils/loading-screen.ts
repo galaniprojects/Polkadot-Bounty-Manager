@@ -7,6 +7,7 @@ export function showLoadingDialog(title: string) {
 		status: 'loading',
 		title: title,
 		successMessage: '',
+		callData: undefined,
 		errorMessage: ''
 	};
 	loadingDialogState.set(state);
@@ -18,6 +19,7 @@ export function hideLoadingDialog() {
 		status: 'loading',
 		title: '',
 		successMessage: '',
+		callData: undefined,
 		errorMessage: ''
 	};
 	loadingDialogState.set(state);
@@ -29,17 +31,19 @@ export function showErrorDialog(message: string) {
 		status: 'error',
 		title: 'Error',
 		successMessage: '',
+		callData: undefined,
 		errorMessage: message
 	};
 	loadingDialogState.set(state);
 }
 
-export function showSuccessDialog(title: string, message: string) {
+export function showSuccessDialog(title: string, message: string, callData?: string) {
 	const state: LoadingDialogState = {
 		open: true,
 		status: 'success',
 		title: title,
 		successMessage: message,
+		callData,
 		errorMessage: ''
 	};
 	loadingDialogState.set(state);

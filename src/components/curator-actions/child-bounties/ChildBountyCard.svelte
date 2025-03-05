@@ -2,6 +2,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { type ChildBounty, statusLabels } from '../../../types/child-bounty';
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
+  import { isCurator } from '../../../utils/isCurator';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRole from './operations/AcceptSubCuratorRole.svelte';
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
@@ -12,7 +13,7 @@
 	import CopyableAddress from '../../common/CopyableAddress.svelte';
 	import Currency from '../../Currency.svelte';
 	import UnassignSubCurator from './operations/UnassignSubCurator.svelte';
-
+	
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
@@ -79,8 +80,9 @@
 			</div>
 		</details>
 	</div>
+
 	<div class="actions-container">
-		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
 			<button on:click={() => (awardChildBountyOpen = true)} class="buttons"> AWARD </button>
 		{/if}
 
@@ -88,7 +90,7 @@
 			<button on:click={() => (claimChildBountyOpen = true)} class="buttons"> CLAIM </button>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && $activeAccount?.address === parentBounty.curator)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
 				<button on:click={() => (assignSubCuratorOpen = true)} class="buttons"> ASSIGN </button>
@@ -100,14 +102,14 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && childBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
 			<div class="action">
 				<p class="text">Sub-curator role</p>
 				<button on:click={() => (AcceptSubCuratorRoleOpen = true)} class="buttons"> ACCEPT </button>
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
 				<button on:click={() => (unassignSubCuratorOpen = true)} class="buttons"> UNASSIGN </button>
@@ -115,7 +117,7 @@
 		{/if}
 	</div>
 
-	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && parentBounty.curator === $activeAccount?.address)}
+	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && (isCurator(parentBounty)}
 		<details class="close-child-bounty">
 			<summary>
 				<span>close child bounty</span>
@@ -129,7 +131,7 @@
 </div>
 
 {#if assignSubCuratorOpen}
-	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} />
+	<AssignSubCurator bind:open={assignSubCuratorOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if AcceptSubCuratorRoleOpen}
@@ -141,7 +143,7 @@
 {/if}
 
 {#if closeDownChildBountyOpen}
-	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} />
+	<CloseDownChildBounty bind:open={closeDownChildBountyOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if awardChildBountyOpen}
@@ -153,11 +155,11 @@
 {/if}
 
 {#if batchOpen}
-	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} />
+	<BatchChildBountyCalls bind:open={batchOpen} {childBounty} {parentBounty} />
 {/if}
 
 {#if unassignSubCuratorOpen}
-	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} />
+	<UnassignSubCurator bind:open={unassignSubCuratorOpen} {childBounty} {parentBounty} />
 {/if}
 
 <style>

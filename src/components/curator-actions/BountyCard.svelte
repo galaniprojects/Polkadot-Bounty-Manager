@@ -2,10 +2,11 @@
 	import { type Bounty } from '../../types/bounty';
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { activeAccount, dotApi, showAllCuratorOptions } from '../../stores';
+	import { dotApi, showAllCuratorOptions } from '../../stores';
 	import { currentBlockchain } from '../app-bar/blockchains';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
+	import { isCurator } from '../../utils/isCurator';
 
 	export let bounty: Bounty;
 	export let expanded: boolean;
@@ -15,38 +16,36 @@
 	let awardBountyDialogOpen = false;
 
 	// Handle description and balance fetch
-	$: if (expanded) {
-		const bountyId = bounty.id;
+	$: if (expanded) getRemainingBalance(bounty.id).catch(() => {});
 
-		(async () => {
+	async function getRemainingBalance(bountyId: number) {
+		try {
+			const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
+			const response = await fetch(url);
+			if (!response.ok) throw new Error('Failed to fetch bounty details.');
+
+			const data = (await response.json()) as { onchainData: { address: string } };
+			// TODO: don't show description for now.
+			// import { parse } from 'marked';
+			// try {
+			// 	description = await parse(data.content);
+			// } catch {
+			// 	description = undefined;
+			// 	console.error('No description found.');
+			// }
+
 			try {
-				const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
-				const response = await fetch(url);
-				if (!response.ok) throw new Error('Failed to fetch bounty details.');
-
-				const data = (await response.json()) as { onchainData: { address: string } };
-				// TODO: don't show description for now.
-				// import { parse } from 'marked';
-				// try {
-				// 	description = await parse(data.content);
-				// } catch {
-				// 	description = undefined;
-				// 	console.error('No description found.');
-				// }
-
-				try {
-					const fundsAddress = data.onchainData.address;
-					const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-					remainingBalance = account.data.free;
-				} catch {
-					console.error('Error fetching remaining balance.');
-					remainingBalance = undefined;
-				}
+				const fundsAddress = data.onchainData.address;
+				const account = await $dotApi.query.System.Account.getValue(fundsAddress);
+				remainingBalance = account.data.free;
 			} catch {
-				description = undefined;
+				console.error('Error fetching remaining balance.');
 				remainingBalance = undefined;
 			}
-		})();
+		} catch {
+			description = undefined;
+			remainingBalance = undefined;
+		}
 	}
 
 	function toggleExpanded() {
@@ -72,7 +71,7 @@
 		<div
 			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
 		>
-			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && bounty.curator === $activeAccount?.address)}
+			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.length === 0 && isCurator(bounty))}
 				<div class="flex flex-col">
 					<p class="text-xs">Award bounty</p>
 					<button

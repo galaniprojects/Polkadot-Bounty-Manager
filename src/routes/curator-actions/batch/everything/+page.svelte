@@ -102,7 +102,7 @@
 			return;
 		}
 
-		const success = await submitTransaction(transaction);
+		const success = await submitTransaction(transaction, undefined, bounty);
 		if (success) {
 			await goto('/curator-actions');
 		}
@@ -157,7 +157,7 @@
 			</label>
 
 			<div class="grid cardsGrid gap-6">
-				{#each childBounties as child, index}
+				{#each childBounties as child, index (child)}
 					<fieldset class="bg-white -mt-3 p-5 lg:w-full rounded-md shadow-lg">
 						<legend class="relative top-7">Child bounty #{index + 1}</legend>
 

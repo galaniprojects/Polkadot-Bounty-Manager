@@ -11,7 +11,7 @@
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg"
 >
-	{#each polkadotIcon(address, { isAlternative: false }) as icon}
+	{#each polkadotIcon(address, { isAlternative: false }) as icon (icon)}
 		<circle cx={icon.cx} cy={icon.cy} fill={icon.fill} r={icon.r}></circle>
 	{/each}
 </svg>
