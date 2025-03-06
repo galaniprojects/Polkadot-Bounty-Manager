@@ -2,22 +2,23 @@
 	import type { WalletInfo } from './walletInfo';
 
 	export let wallet: WalletInfo;
-	const opacity = wallet.available ? 'bg-opacity-30' : 'bg-opacity-20';
 </script>
 
 <span
-	class="cursor-pointer flex flex-col p-2 s:flex-row s:justify-between s:items-center s:p-4 rounded-lg bg-backgroundButtonDark {opacity}"
+	class="walletContainer"
+	class:walletAvailable={wallet.available}
+	class:walletUnavailable={!wallet.available}
 >
 	<!-- Wallet Icon and Name -->
-	<span class="flex items-center space-x-1 sm:space-x-2">
-		<span class="w-10 h-10">
+	<span class="walletInfo">
+		<span class="walletIcon">
 			<img src={wallet.icon} alt="Logo" />
 		</span>
-		<span class="text-2xl">{wallet.name}</span>
+		<span class="walletName">{wallet.name}</span>
 	</span>
 
 	<!-- Action Button -->
-	<span class="flex justify-end items-center sm:space-x-2">
+	<span class="walletAction">
 		<span>
 			{#if wallet.available}
 				Connect
@@ -25,6 +26,67 @@
 				Download
 			{/if}
 		</span>
-		<span class="material-symbols-outlined mb-1"> arrow_forward_ios </span>
+		<span class="material-symbols-outlined walletIconArrow"> arrow_forward_ios </span>
 	</span>
 </span>
+
+<style>
+	.walletContainer {
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		padding: 8px;
+		border-radius: 8px;
+	}
+
+	.walletAvailable {
+		background-color: theme('colors.backgroundButtonDark');
+		color: theme('colors.backgroundApp');
+	}
+
+	.walletUnavailable {
+		background-color: theme('colors.backgroundButtonLight');
+	}
+
+	@media (min-width: 375px) {
+		.walletContainer {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			padding: 16px;
+		}
+	}
+
+	.walletInfo {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	@media (min-width: 375px) {
+		.walletInfo {
+			gap: 8px;
+		}
+	}
+
+	.walletIcon {
+		width: 40px;
+		height: 40px;
+	}
+
+	.walletName {
+		font-size: 1.5rem;
+	}
+
+	.walletAction {
+		display: flex;
+		justify-content: end;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.walletIconArrow {
+		margin-bottom: 4px;
+		font-size: 16px;
+	}
+</style>
