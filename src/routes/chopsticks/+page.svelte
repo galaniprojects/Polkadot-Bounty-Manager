@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../../app.css';
-	import { customEndpoint } from '../../utils/endpoints';
+	import { endpointOverride } from '../../components/app-bar/blockchains';
 	import { showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
@@ -17,7 +17,7 @@
 	let current = 0;
 	$: target = String(current + (((days * 24 + hours) * 60 + mins) * 60) / 6);
 
-	let nodeEndpoint = customEndpoint;
+	let nodeEndpoint = endpointOverride;
 	$: client = createClient(getWsProvider(nodeEndpoint));
 
 	let nodeEndpointInput = '';

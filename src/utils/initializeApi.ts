@@ -3,11 +3,11 @@ import { currentBlockchain } from '../components/app-bar/blockchains';
 import { showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { blockChainMeta, dotApi } from '../stores';
 
-export async function initializeApi(endpoints: string[]) {
+export async function initializeApi(endpoints: readonly string[]) {
 	showLoadingModal(`Connecting to ${get(currentBlockchain).label}…`);
 
 	const { createTypedApi } = await import('./createTypedApi');
-	const { client, api } = createTypedApi(endpoints);
+	const { client, api } = createTypedApi(endpoints as string[]);
 
 	const compatibilityToken = await api.compatibilityToken;
 	const ss58Format = api.constants.System.SS58Prefix(compatibilityToken);

@@ -12,14 +12,14 @@
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
 	import { initializeApi } from '../../utils/initializeApi';
-	import { endpoints } from '../../utils/endpoints';
+	import { currentBlockchain } from './blockchains';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
 	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
-			await initializeApi(endpoints);
+			await initializeApi($currentBlockchain.endpoints);
 			await connectStoredAccount();
 		}
 

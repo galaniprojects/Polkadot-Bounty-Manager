@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
-	import { getEndpoint } from '../../utils/endpoints';
 	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import Dropdown from '../common/DropdownMenu.svelte';
 	import type { Labeled } from '../common/labeled';
@@ -11,15 +10,21 @@
 	let visible = false;
 
 	onMount(() => {
-		const isPaseoSelected = sessionStorage.getItem('node') === blockchains[1].endpoint;
-		$currentBlockchain = isPaseoSelected ? blockchains[1] : blockchains[0];
 		visible = true;
 	});
 
 	async function handleChainChange(chain: Labeled) {
-		$currentBlockchain = chain as Blockchain;
-		sessionStorage.setItem('node', $currentBlockchain.endpoint);
-		await initializeApi([getEndpoint()]);
+		const blockchain = chain as Blockchain;
+		const { standard, endpoints } = blockchain;
+
+		if (standard) {
+			sessionStorage.removeItem('node');
+		} else {
+			sessionStorage.setItem('node', endpoints[0]);
+		}
+
+		$currentBlockchain = blockchain;
+		await initializeApi(endpoints);
 		await fetchBountiesAndChildBounties();
 		await updateAccountMultisigsOnBlockchain();
 	}

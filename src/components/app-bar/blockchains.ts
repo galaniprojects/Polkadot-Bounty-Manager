@@ -3,10 +3,8 @@ import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
 import logoPaseo from './LogoPaseo.svg';
 import paseoInverted from './LogoPaseoInverted.svg';
-import { PUBLIC_STATESCAN_API_URL } from '$env/static/public';
+import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import { hideTestBar } from '../../utils/hideTestBar';
-
-const stateScanUrl: string = PUBLIC_STATESCAN_API_URL;
 
 export const blockchains = [
 	{
@@ -14,11 +12,19 @@ export const blockchains = [
 		label: 'Polkadot',
 		logo: coin,
 		invertedLogo: coinInverted,
-		endpoint: '',
+		standard: true,
+		endpoints: [
+			'wss://polkadot-rpc.publicnode.com/',
+			'wss://rpc.ibp.network/polkadot',
+			'wss://polkadot-rpc.dwellir.com',
+			'wss://rpc-polkadot.luckyfriday.io',
+			'wss://dot-rpc.stakeworld.io',
+			'wss://polkadot.api.onfinality.io/public-ws'
+		].sort(() => Math.sign(Math.random() - 0.5)),
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
 			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-			stateScanGraphqlApi: stateScanUrl,
+			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
@@ -29,7 +35,7 @@ export const blockchains = [
 		label: 'Paseo',
 		logo: logoPaseo,
 		invertedLogo: paseoInverted,
-		endpoint: 'wss://paseo-rpc.dwellir.com',
+		endpoints: ['wss://paseo-rpc.dwellir.com'],
 		baseUrls: {
 			subScan: 'https://paseo.subscan.io',
 			subSquare: 'https://paseo.subsquare.io',
@@ -44,7 +50,7 @@ export const blockchains = [
 					label: 'ZombieNet',
 					logo: coin,
 					invertedLogo: coinInverted,
-					endpoint: 'wss://rilt.kilt.io',
+					endpoints: ['wss://rilt.kilt.io'],
 					baseUrls: {
 						doTreasury: 'https://polkadot.dotreasury.com',
 						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
@@ -59,7 +65,7 @@ export const blockchains = [
 					label: 'Local',
 					logo: coin,
 					invertedLogo: coinInverted,
-					endpoint: 'ws://localhost:8000',
+					endpoints: ['ws://localhost:8000'],
 					baseUrls: {
 						doTreasury: 'https://polkadot.dotreasury.com',
 						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
@@ -74,4 +80,19 @@ export const blockchains = [
 
 export type Blockchain = (typeof blockchains)[number];
 
-export const currentBlockchain = writable(blockchains[0]);
+// exported only for chopsticks
+export const endpointOverride = (() => {
+	if (hideTestBar || typeof sessionStorage === 'undefined') {
+		return PUBLIC_NODE_ENDPOINT;
+	}
+
+	return sessionStorage.getItem('node') || PUBLIC_NODE_ENDPOINT;
+})();
+
+const current = blockchains.find(({ endpoints: [known] }) => endpointOverride.startsWith(known));
+
+if (!current && endpointOverride !== 'RANDOM') {
+	console.warn(`Connecting to Polkadot instead of PUBLIC_NODE_ENDPOINT="${endpointOverride}"`);
+}
+
+export const currentBlockchain = writable(current ?? blockchains[0]);
