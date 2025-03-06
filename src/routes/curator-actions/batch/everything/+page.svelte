@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
-	import { activeAccount, bounties, dotApi } from '../../../../stores';
+	import { bounties, dotApi } from '../../../../stores';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { isValidAddress } from '../../../../utils/polkadot';
@@ -58,7 +58,7 @@
 	$: transaction = maybeTransaction(
 		() =>
 			isFormValid &&
-			$activeAccount?.address &&
+			bounty?.curator &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...childBounties.flatMap(({ title, value, fee, beneficiary }, index) =>
@@ -67,7 +67,7 @@
 							child_bounty_id: childBountyId + index,
 							title,
 							value,
-							curator: $activeAccount.address,
+							curator: bounty.curator as string,
 							beneficiary,
 							fee
 						})
@@ -120,7 +120,7 @@
 
 				<ol class="text-xs mt-2 ml-4 list-decimal">
 					<li>Create a new child bounty.</li>
-					<li>Assign the connected account as sub-curator.</li>
+					<li>Assign the curator proxy as sub-curator.</li>
 					<li>Accept the sub-curator role.</li>
 					<li>Award the child bounty to the provided beneficiary.</li>
 					<li>Claim the child bounty.</li>

@@ -23,12 +23,13 @@
 	let beneficiary: string = '';
 
 	$: transaction = maybeTransaction(() => {
-		if (!$activeAccount || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee)) return;
+		if (!parentBounty.curator || !isValidAddress(beneficiary) || !isPositiveNumber(curatorFee))
+			return;
 
 		const propose = $dotApi.tx.ChildBounties.propose_curator({
 			parent_bounty_id: childBounty.parentBounty,
 			child_bounty_id: childBounty.id,
-			curator: MultiAddress.Id($activeAccount.address),
+			curator: MultiAddress.Id(parentBounty.curator),
 			fee: convertFormattedDotToPlanck(curatorFee)
 		});
 
@@ -98,7 +99,7 @@
 			{childBounty.description ?? ''}
 		</p>
 		<ol class="text-xs mt-6 ml-4 list-decimal">
-			<li>Assign the connected account as sub-curator.</li>
+			<li>Assign the curator proxy as sub-curator.</li>
 			<li>Accept sub-curator role.</li>
 			<li>Award child bounty to the provided beneficiary.</li>
 			<li>Claim child bounty.</li>
