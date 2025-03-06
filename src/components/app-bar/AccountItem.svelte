@@ -6,16 +6,14 @@
 	export let address: string;
 </script>
 
-<!-- Account Identicon and Name -->
 <div class="info">
 	<div class="identicon">
 		<PolkadotIcon {address} />
 	</div>
 	<div class="details">
-		<span>{name}</span>
-		<span class="address">
-			<PeopleChainName {address}>{address}</PeopleChainName>
-		</span>
+		{name}
+		<br />
+		<PeopleChainName {address}>{address}</PeopleChainName>
 	</div>
 </div>
 
@@ -38,18 +36,10 @@
 	}
 
 	.details {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-		max-width: calc(100% - 48px);
-	}
-
-	.address {
-		font-size: 14px;
-		white-space: nowrap;
+		flex-grow: 1;
 		overflow: hidden;
+		white-space: nowrap;
 		text-overflow: ellipsis;
-		max-width: 100%;
-		flex-shrink: 1;
+		text-align: left;
 	}
 </style>
