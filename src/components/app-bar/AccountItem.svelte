@@ -34,19 +34,14 @@
 	.identicon {
 		width: 40px;
 		height: 40px;
+		flex-shrink: 0;
 	}
 
 	.details {
 		display: flex;
 		flex-direction: column;
 		align-items: start;
-		max-width: 350px;
-	}
-
-	@media (max-width: 768px) {
-		.details {
-			max-width: 250px;
-		}
+		max-width: calc(100% - 48px);
 	}
 
 	.address {
@@ -55,5 +50,6 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		max-width: 100%;
+		flex-shrink: 1;
 	}
 </style>
