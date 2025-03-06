@@ -53,6 +53,7 @@
 		this.setCustomValidity(isValidAddress(this.value) ? '' : 'Beneficiary address is invalid');
 	}
 
+	let includeClaim = true;
 	let extend = false;
 
 	$: transaction = maybeTransaction(
@@ -69,7 +70,8 @@
 							value,
 							curator: bounty.curator as string,
 							beneficiary,
-							fee
+							fee,
+							includeClaim
 						})
 					),
 					...(!extend
@@ -228,6 +230,15 @@
 					</p>
 				{/if}
 			</div>
+
+			<p>
+				<label class="inline-flex gap-4 items-center cursor-pointer">
+					<input type="checkbox" bind:checked={includeClaim} class={Input.switch} />
+					<span class="text-xs">
+						Include the <strong>Claim Child Bounty</strong> extrinsic in your transaction.
+					</span>
+				</label>
+			</p>
 
 			<p>
 				<label class="inline-flex gap-4 items-center cursor-pointer">

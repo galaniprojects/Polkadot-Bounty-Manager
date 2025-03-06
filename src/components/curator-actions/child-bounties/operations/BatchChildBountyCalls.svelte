@@ -17,6 +17,7 @@
 	export let childBounty: ChildBounty;
 	export let parentBounty: Bounty;
 
+	let includeClaim = true;
 	let extend = false;
 
 	let curatorFee = '';
@@ -59,7 +60,7 @@
 				propose.decodedCall,
 				accept.decodedCall,
 				award.decodedCall,
-				claim.decodedCall,
+				...(includeClaim ? [claim.decodedCall] : []),
 				...(extend ? [extendTx.decodedCall] : [])
 			]
 		});
@@ -113,6 +114,13 @@
 			<p class="text-xs">Beneficiary account address</p>
 			<input bind:value={beneficiary} class={Input.input} />
 		</div>
+
+		<label class="mt-5 flex gap-4 items-center cursor-pointer">
+			<input type="checkbox" bind:checked={includeClaim} class={Input.switch} />
+			<span class="text-xs">
+				Include the <strong>Claim Child Bounty</strong> extrinsic in your transaction.
+			</span>
+		</label>
 
 		<label class="mt-5 flex gap-4 items-center cursor-pointer">
 			<input type="checkbox" bind:checked={extend} class={Input.switch} />
