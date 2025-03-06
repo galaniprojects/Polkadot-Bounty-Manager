@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Binary } from 'polkadot-api';
-	import { peopleApi } from '../utils/people';
+	import { names, peopleApi } from '../utils/people';
 	import Checkmark from './common/Checkmark.svg';
 
 	export let address: string;
@@ -17,6 +17,11 @@
 			$peopleApi = createPeopleTypedApi();
 		}
 
+		if ($names[address]) {
+			label = $names[address];
+			return;
+		}
+
 		const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
 		if (!result || address !== input) return;
 
@@ -25,6 +30,7 @@
 		if (!text) return;
 
 		label = text.substring(0, 20);
+		$names[address] = label;
 	}
 </script>
 
