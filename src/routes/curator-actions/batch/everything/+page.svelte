@@ -120,7 +120,7 @@
 
 				<ol class="text-xs mt-2 ml-4 list-decimal">
 					<li>Create a new child bounty.</li>
-					<li>Assign the connected account as sub-curator.</li>
+					<li>Assign the curator proxy as sub-curator.</li>
 					<li>Accept the sub-curator role.</li>
 					<li>Award the child bounty to the provided beneficiary.</li>
 					<li>Claim the child bounty.</li>

@@ -99,7 +99,7 @@
 			{childBounty.description ?? ''}
 		</p>
 		<ol class="text-xs mt-6 ml-4 list-decimal">
-			<li>Assign the connected account as sub-curator.</li>
+			<li>Assign the curator proxy as sub-curator.</li>
 			<li>Accept sub-curator role.</li>
 			<li>Award child bounty to the provided beneficiary.</li>
 			<li>Claim child bounty.</li>
