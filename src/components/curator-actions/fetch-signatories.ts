@@ -38,7 +38,7 @@ interface MultisigAccountResponse {
 }
 
 export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
-	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
+	const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
 	if (!graphqlEndpoint) {
 		return [];
 	}
@@ -85,7 +85,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
  * @returns array of multisig accounts that the signatory is part of, an empty array in case of error.
  */
 export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo[]> {
-	const graphqlEndpoint = get(currentBlockchain).baseUrls.statescanGraphqlApi;
+	const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
 	if (!graphqlEndpoint) {
 		return [];
 	}

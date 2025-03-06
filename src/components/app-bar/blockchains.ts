@@ -6,7 +6,7 @@ import paseoInverted from './LogoPaseoInverted.svg';
 import { PUBLIC_STATESCAN_API_URL } from '$env/static/public';
 import { hideTestBar } from '../../utils/hideTestBar';
 
-const statescanUrl: string = PUBLIC_STATESCAN_API_URL;
+const stateScanUrl: string = PUBLIC_STATESCAN_API_URL;
 
 export const blockchains = [
 	{
@@ -18,7 +18,7 @@ export const blockchains = [
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
 			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-			statescanGraphqlApi: statescanUrl,
+			stateScanGraphqlApi: stateScanUrl,
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
@@ -48,7 +48,7 @@ export const blockchains = [
 					baseUrls: {
 						doTreasury: 'https://polkadot.dotreasury.com',
 						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-						statescanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
+						stateScanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
 						subScan: 'https://polkadot.subscan.io',
 						subSquare: 'https://polkadot.subsquare.io',
 						polkAssembly: 'https://polkadot.polkassembly.io'
