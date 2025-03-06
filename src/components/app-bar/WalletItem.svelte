@@ -4,21 +4,17 @@
 	export let wallet: WalletInfo;
 </script>
 
-<span
-	class="walletContainer"
-	class:walletAvailable={wallet.available}
-	class:walletUnavailable={!wallet.available}
->
+<span class="container" class:available={wallet.available} class:unavailable={!wallet.available}>
 	<!-- Wallet Icon and Name -->
-	<span class="walletInfo">
-		<span class="walletIcon">
+	<span class="info">
+		<span class="icon">
 			<img src={wallet.icon} alt="Logo" />
 		</span>
-		<span class="walletName">{wallet.name}</span>
+		<span class="name">{wallet.name}</span>
 	</span>
 
 	<!-- Action Button -->
-	<span class="walletAction">
+	<span class="action">
 		<span>
 			{#if wallet.available}
 				Connect
@@ -26,12 +22,12 @@
 				Download
 			{/if}
 		</span>
-		<span class="material-symbols-outlined walletIconArrow"> arrow_forward_ios </span>
+		<span class="material-symbols-outlined arrow"> arrow_forward_ios </span>
 	</span>
 </span>
 
 <style>
-	.walletContainer {
+	.container {
 		cursor: pointer;
 		display: flex;
 		flex-direction: column;
@@ -39,17 +35,17 @@
 		border-radius: 8px;
 	}
 
-	.walletAvailable {
+	.available {
 		background-color: theme('colors.backgroundButtonLight');
 	}
 
-	.walletUnavailable {
+	.unavailable {
 		background-color: theme('colors.backgroundButtonDark');
 		color: theme('colors.backgroundApp');
 	}
 
 	@media (min-width: 375px) {
-		.walletContainer {
+		.container {
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
@@ -57,35 +53,34 @@
 		}
 	}
 
-	.walletInfo {
+	.info {
 		display: flex;
 		align-items: center;
 		gap: 4px;
 	}
 
 	@media (min-width: 375px) {
-		.walletInfo {
+		.info {
 			gap: 8px;
 		}
 	}
 
-	.walletIcon {
+	.icon {
 		width: 40px;
 		height: 40px;
 	}
 
-	.walletName {
+	.name {
 		font-size: 1.5rem;
 	}
 
-	.walletAction {
+	.action {
 		display: flex;
-		justify-content: end;
 		align-items: center;
 		gap: 8px;
 	}
 
-	.walletIconArrow {
+	.arrow {
 		margin-bottom: 4px;
 		font-size: 16px;
 	}

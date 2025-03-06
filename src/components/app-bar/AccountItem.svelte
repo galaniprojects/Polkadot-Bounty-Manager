@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { truncateString } from '../../utils/common';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import PeopleChainName from '../PeopleChainName.svelte';
 
@@ -8,20 +7,20 @@
 </script>
 
 <!-- Account Identicon and Name -->
-<div class="accountInfo">
+<div class="info">
 	<div class="identicon">
 		<PolkadotIcon {address} />
 	</div>
-	<div class="accountDetails">
+	<div class="details">
 		<span>{name}</span>
-		<span class="accountAddress">
-			<PeopleChainName {address}>{truncateString(address, 20)}</PeopleChainName>
+		<span class="address">
+			<PeopleChainName {address}>{address}</PeopleChainName>
 		</span>
 	</div>
 </div>
 
 <style>
-	.accountInfo {
+	.info {
 		display: flex;
 		align-items: center;
 		cursor: pointer;
@@ -37,12 +36,24 @@
 		height: 40px;
 	}
 
-	.accountDetails {
+	.details {
 		display: flex;
 		flex-direction: column;
 		align-items: start;
+		max-width: 350px;
 	}
-	.accountAddress {
+
+	@media (max-width: 768px) {
+		.details {
+			max-width: 250px;
+		}
+	}
+
+	.address {
 		font-size: 14px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
 	}
 </style>
