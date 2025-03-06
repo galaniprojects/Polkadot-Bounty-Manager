@@ -40,12 +40,12 @@
 	}
 
 	.walletAvailable {
-		background-color: theme('colors.backgroundButtonDark');
-		color: theme('colors.backgroundApp');
+		background-color: theme('colors.backgroundButtonLight');
 	}
 
 	.walletUnavailable {
-		background-color: theme('colors.backgroundButtonLight');
+		background-color: theme('colors.backgroundButtonDark');
+		color: theme('colors.backgroundApp');
 	}
 
 	@media (min-width: 375px) {
