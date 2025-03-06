@@ -117,8 +117,8 @@
 			return;
 		}
 
-		const successul = await submitTransaction(transaction);
-		if (successul) {
+		const successful = await submitTransaction(transaction);
+		if (successful) {
 			dialog.close();
 		}
 	}
