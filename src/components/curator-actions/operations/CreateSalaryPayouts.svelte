@@ -209,7 +209,7 @@
 		<button
 			type="submit"
 			class={[
-				'w-full md:w-fit mt-10 h-12 bg-childBountyGray basic-button',
+				'w-full md:w-fit mt-10 h-12 bg-backgroundButtonDark px-10 pt-1 rounded-md text-white',
 				!isFormValid && 'cursor-not-allowed opacity-50'
 			]}
 		>
