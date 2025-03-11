@@ -19,12 +19,17 @@
 <div class="bg-backgroundBounty w-full px-3">
 	<!-- Desktop design -->
 	<div class="space-y-5">
-		{#if remainingBalance}
-			<div>
-				<p class="text-xs">Remaining Balance</p>
-				<p class="text-2xl"><Currency value={remainingBalance} /></p>
-			</div>
-		{/if}
+		<div>
+			<p class="text-xs">Remaining Balance</p>
+			<p class="text-2xl">
+				{#if remainingBalance}
+					<Currency value={remainingBalance} />
+				{:else}
+					-
+				{/if}
+			</p>
+		</div>
+
 		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
 			{#if bounty.curator}
 				<button
