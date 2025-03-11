@@ -28,6 +28,6 @@
 
 <ExternalLinksModal bind:dialog={externalLinksDialog} {url} {proceed} />
 
-<button on:click={openExternalLinksDialog} class={`w-${dimension} h-${dimension}`}>
-	<img src={icon} alt="" />
+<button on:click={openExternalLinksDialog}>
+	<img class={`w-${dimension} h-${dimension}`} src={icon} alt="" />
 </button>
