@@ -79,14 +79,8 @@ export const blockchains = [
 
 export type Blockchain = (typeof blockchains)[number];
 
-// exported only for chopsticks
-export const endpointOverride = (() => {
-	if (hideTestBar || typeof sessionStorage === 'undefined') {
-		return null;
-	}
-
-	return sessionStorage.getItem('node');
-})();
+const endpointOverride =
+	hideTestBar || typeof sessionStorage === 'undefined' ? null : sessionStorage.getItem('node');
 
 const current = blockchains.find(({ endpoints: [known] }) => endpointOverride?.startsWith(known));
 
