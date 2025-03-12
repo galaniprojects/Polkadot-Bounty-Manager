@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import { activeAccount } from '../../stores';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
 	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
@@ -25,8 +27,13 @@
 
 		$currentBlockchain = blockchain;
 		await initializeApi(endpoints);
+
+		const account = get(activeAccount);
+		if (account) {
+			await updateAccountMultisigsOnBlockchain(account);
+		}
+
 		await fetchBountiesAndChildBounties();
-		await updateAccountMultisigsOnBlockchain();
 	}
 </script>
 

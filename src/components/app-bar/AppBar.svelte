@@ -5,7 +5,7 @@
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
 	import LoginModal from './LoginModal.svelte';
 	import { showLoginModal } from './loginModalStores';
-	import { setActiveAccountBounties } from '../../utils/bounties';
+	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
@@ -24,7 +24,6 @@
 		}
 
 		await fetchBountiesAndChildBounties();
-		setActiveAccountBounties();
 	});
 
 	async function connectStoredAccount() {
@@ -32,19 +31,17 @@
 		const storedAccount = sessionStorage.getItem('account');
 		if (!storedAccount) return;
 
-		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-		activeAccount.set(parsedAccount);
-
-		const { address, source } = parsedAccount;
+		const { address, source } = JSON.parse(storedAccount) as AccountInfo;
 
 		const accounts = await getAccounts(source);
 		const account = accounts.find((account) => account.address === address);
 		if (!account) {
-			activeAccount.set(undefined);
 			sessionStorage.removeItem('account');
-			console.error('something went wrong while trying to restore session.');
-			return;
+			throw new Error('Something went wrong while trying to restore session.');
 		}
+
+		await updateAccountMultisigsOnBlockchain(account);
+		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 	}
 </script>
