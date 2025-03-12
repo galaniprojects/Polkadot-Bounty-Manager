@@ -31,7 +31,9 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	let childBounties = [{ value: '', title: '', fee: '', beneficiary: '', claim: false }];
+	let childBounties = [
+		{ value: '', title: '', fee: '', beneficiary: '', claim: false, template: false }
+	];
 
 	$: isFormValid =
 		childBounties.length > 0 &&
@@ -103,7 +105,7 @@
 	}
 </script>
 
-<div class="flex justify-center items-center overflow-y-hidden">
+<div class="containerWrapper">
 	<div class="container">
 		{#if error}
 			{error}
@@ -130,7 +132,6 @@
 					<h2 class="headerForm">Complete Payout</h2>
 				</section>
 				<div class="contentForm">
-					<!-- Will be substitued by link to user manuals -->
 					<section class="stepsList">
 						<h3 class="textContent">Batch all child bounty operations in one transaction:</h3>
 
@@ -144,91 +145,101 @@
 					</section>
 
 					<div class="cardsGrid">
-						{#each childBounties as child, index (child)}
+						{#each childBounties.concat( { value: '', title: '', fee: '', beneficiary: '', claim: false, template: true } ) as child, index (child)}
 							<fieldset class="card">
-								<legend class="cardIndex"
-									>Child Bounty <span class="index">{index + 1}</span></legend
-								>
-
-								<div class="inputFields">
-									<label>
-										<input
-											bind:value={child.title}
-											class={Input.input}
-											placeholder="Child bounty title"
-											required
-										/>
-									</label>
-									<label>
-										<span class="text">Child bounty value</span>
-										<input
-											bind:value={child.value}
-											class={Input.polkadot}
-											placeholder="00.00"
-											required
-											oninput={validateBountyValue}
-											inputmode="decimal"
-										/>
-									</label>
-
-									<label>
-										<span class="text">Beneficiary</span>
-										<input
-											bind:value={child.beneficiary}
-											class={Input.input}
-											placeholder="Beneficiary account address"
-											required
-											oninput={validateAddress}
-										/>
-									</label>
-
-									<label>
-										<span class="text">Sub-curator fee</span>
-										<input
-											bind:value={child.fee}
-											class={Input.polkadot}
-											placeholder="00.00"
-											required
-											oninput={validateFee}
-											inputmode="decimal"
-										/>
-									</label>
-
-									<label class="claimChildBounty">
-										<strong>Claim Child Bounty</strong>
-										<input type="checkbox" bind:checked={child.claim} class={Input.switch} />
-									</label>
-
-									<button
-										type="button"
-										class="deleteButton material-symbols-outlined"
-										onclick={() => {
-											childBounties = childBounties.toSpliced(index, 1);
-										}}
+								<div class={child.template ? 'blurred' : ''}>
+									<legend class="cardIndex"
+										>Child Bounty <span class="index">{index + 1}</span></legend
 									>
-										delete
-									</button>
+
+									<div class="inputFields">
+										<label>
+											<input
+												bind:value={child.title}
+												class={Input.input}
+												placeholder="Child bounty title"
+												required
+												disabled={child.template}
+											/>
+										</label>
+										<label>
+											<span class="text">Child bounty value</span>
+											<input
+												bind:value={child.value}
+												class={Input.polkadot}
+												placeholder="00.00"
+												required
+												oninput={validateBountyValue}
+												inputmode="decimal"
+											/>
+										</label>
+
+										<label>
+											<span class="text">Beneficiary</span>
+											<input
+												bind:value={child.beneficiary}
+												class={Input.input}
+												placeholder="Beneficiary account address"
+												required
+												oninput={validateAddress}
+											/>
+										</label>
+
+										<label>
+											<span class="text">Sub-curator fee</span>
+											<input
+												bind:value={child.fee}
+												class={Input.polkadot}
+												placeholder="00.00"
+												required
+												oninput={validateFee}
+												inputmode="decimal"
+											/>
+										</label>
+
+										<label class="claimChildBounty">
+											<strong>Claim Child Bounty</strong>
+											<input type="checkbox" bind:checked={child.claim} class={Input.switch} />
+										</label>
+
+										<button
+											type="button"
+											class="deleteButton material-symbols-outlined"
+											onclick={() => {
+												childBounties = childBounties.toSpliced(index, 1);
+											}}
+										>
+											delete
+										</button>
+									</div>
 								</div>
+
+								{#if child.template}
+									<p class="overlay">
+										<button
+											type="button"
+											class="addButton"
+											onclick={() => {
+												childBounties = [
+													...childBounties,
+													{
+														value: '',
+														title: '',
+														fee: '',
+														beneficiary: '',
+														claim: false,
+														template: false
+													}
+												];
+											}}
+										>
+											+
+										</button>
+										Add another child bounty to the batch
+									</p>
+								{/if}
 							</fieldset>
 						{/each}
-
-						{#if childBounties.length < 10}
-							<p class="addChildBountyContainer text">
-								<button
-									type="button"
-									class="addButton"
-									onclick={() => {
-										childBounties = [
-											...childBounties,
-											{ value: '', title: '', fee: '', beneficiary: '', claim: false }
-										];
-									}}
-								>
-									+
-								</button>
-								Add another child bounty to the batch
-							</p>
-						{/if}
 					</div>
 
 					<div class="restContainer">
@@ -237,7 +248,6 @@
 							<input type="checkbox" bind:checked={extend} class={Input.switch} />
 						</label>
 
-						<!-- To do: remove tailwind, update to new UI and functionality -->
 						<div class="flex-col justify-items-center">
 							<p class="text-xs border border-red text-red rounded-[3px] p-2 max-w-lg mb-2">
 								Currently, the child bounty’s index is estimated by incrementing the highest
@@ -279,44 +289,22 @@
 </div>
 
 <style>
+	.containerWrapper {
+		display: flex;
+		justify-content: center;
+		overflow-y: hidden;
+	}
 	.container {
 		margin-top: 13px;
 		background-color: theme('colors.backgroundBounty');
 		border-radius: 10px 10px 0px 0px;
 		width: 754px;
 	}
-	@media (max-width: 640px) {
-		.container {
-			width: 100%;
-		}
-	}
-	.cardsGrid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 24px;
-		padding: 10px 0px 30px;
-	}
-	@media (max-width: 640px) {
-		.cardsGrid {
-			grid-template-columns: repeat(1, 1fr);
-		}
-	}
 	.header {
 		display: flex;
 		flex-direction: column;
 		gap: 7px;
 		margin: 18px 12px;
-	}
-	.form {
-		display: flex;
-		flex-direction: column;
-		padding: 0px 5px 5px;
-	}
-	.headerForm {
-		font-size: 18px;
-		font-weight: 800;
-		background-color: theme('colors.backgroundButtonLight');
-		padding: 9px 7px;
 	}
 	.bountyTitle {
 		font-size: 20px;
@@ -329,10 +317,16 @@
 	.text {
 		font-size: 12px;
 	}
-	.textContent {
-		font-size: 14px;
-		list-style-type: decimal;
-		list-style-position: inside;
+	.form {
+		display: flex;
+		flex-direction: column;
+		padding: 0px 5px 5px;
+	}
+	.headerForm {
+		font-size: 18px;
+		font-weight: 800;
+		background-color: theme('colors.backgroundButtonLight');
+		padding: 9px 7px;
 	}
 	.contentForm {
 		background-color: theme('colors.backgroundApp');
@@ -342,22 +336,35 @@
 		display: flex;
 		gap: 60px;
 	}
+	.textContent {
+		font-size: 14px;
+		list-style-type: decimal;
+		list-style-position: inside;
+	}
+	.cardsGrid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 24px;
+		padding: 10px 0px 30px;
+	}
+	.card {
+		background-color: theme('colors.backgroundBounty');
+		padding: 15px 10px;
+		border-radius: 2px;
+		border: 1px solid theme('colors.backgroundButtonDark');
+		position: relative;
+		min-height: 452px;
+	}
+	.blurred {
+		filter: blur(3px);
+		pointer-events: none;
+		position: absolute;
+	}
 	.balance,
 	.cardIndex {
 		font-weight: 800;
 	}
-	.card {
-		background-color: theme('colors.backgroundBounty');
-		padding: 20px 10px;
-		border-radius: 2px;
-		border: 1px solid theme('colors.backgroundButtonDark');
-		position: relative;
-	}
-	.cardIndex {
-		position: absolute;
-		top: 5px;
-		font-size: 16px;
-	}
+
 	.index {
 		font-size: 24px;
 	}
@@ -365,27 +372,30 @@
 		display: flex;
 		flex-direction: column;
 		gap: 18px;
-		margin-top: 24px;
-	}
-	.addChildBountyContainer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 5px;
-	}
-	.addButton {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background-color: theme('colors.backgroundButtonLight');
-		font-size: 30px;
-		font-weight: 200;
-		text-align: center;
 	}
 	.deleteButton {
 		opacity: 0.4;
 		align-self: self-start;
+	}
+	.overlay {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, 200%);
+		align-self: center;
+		display: flex;
+		flex-direction: column;
+		font-size: 12px;
+		align-items: center;
+		justify-self: center;
+		gap: 5px;
+	}
+	.addButton {
+		background-color: theme('colors.backgroundButtonLight');
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		font-size: 30px;
+		font-weight: 200;
 	}
 	.restContainer {
 		width: 360px;
@@ -418,5 +428,13 @@
 	.signButton:disabled {
 		cursor: not-allowed;
 		opacity: 30%;
+	}
+	@media (max-width: 640px) {
+		.container {
+			width: 100%;
+		}
+		.cardsGrid {
+			grid-template-columns: repeat(1, 1fr);
+		}
 	}
 </style>
