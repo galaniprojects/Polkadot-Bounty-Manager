@@ -41,7 +41,7 @@
 		const account = accounts.find((account) => account.address === address);
 		if (!account) {
 			activeAccount.set(undefined);
-			sessionStorage.clear();
+			sessionStorage.removeItem('account');
 			console.error('something went wrong while trying to restore session.');
 			return;
 		}
