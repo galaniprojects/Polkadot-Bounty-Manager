@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../../app.css';
-	import { customEndpoint } from '../../utils/endpoints';
+	import { currentBlockchain } from '../../components/app-bar/blockchains';
 	import { showAllBounties, showAllCuratorOptions } from '../../stores';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
@@ -17,7 +17,7 @@
 	let current = 0;
 	$: target = String(current + (((days * 24 + hours) * 60 + mins) * 60) / 6);
 
-	let nodeEndpoint = customEndpoint;
+	$: nodeEndpoint = $currentBlockchain.endpoints[0];
 	$: client = createClient(getWsProvider(nodeEndpoint));
 
 	let nodeEndpointInput = '';
@@ -85,6 +85,7 @@
 	}
 
 	async function changeEndpoint() {
+		// eslint-disable-next-line svelte/no-reactive-reassign
 		nodeEndpoint = nodeEndpointInput;
 		sessionStorage.setItem('node', nodeEndpointInput);
 		await initializeApi([nodeEndpointInput]);

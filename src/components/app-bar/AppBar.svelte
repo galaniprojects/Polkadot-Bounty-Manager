@@ -5,26 +5,25 @@
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
 	import LoginModal from './LoginModal.svelte';
 	import { showLoginModal } from './loginModalStores';
-	import { setActiveAccountBounties } from '../../utils/bounties';
+	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
 	import { initializeApi } from '../../utils/initializeApi';
-	import { endpoints } from '../../utils/endpoints';
+	import { currentBlockchain } from './blockchains';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
 	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
-			await initializeApi(endpoints);
+			await initializeApi($currentBlockchain.endpoints);
 			await connectStoredAccount();
 		}
 
 		await fetchBountiesAndChildBounties();
-		setActiveAccountBounties();
 	});
 
 	async function connectStoredAccount() {
@@ -32,19 +31,17 @@
 		const storedAccount = sessionStorage.getItem('account');
 		if (!storedAccount) return;
 
-		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-		activeAccount.set(parsedAccount);
-
-		const { address, source } = parsedAccount;
+		const { address, source } = JSON.parse(storedAccount) as AccountInfo;
 
 		const accounts = await getAccounts(source);
 		const account = accounts.find((account) => account.address === address);
 		if (!account) {
-			activeAccount.set(undefined);
-			sessionStorage.clear();
-			console.error('something went wrong while trying to restore session.');
-			return;
+			sessionStorage.removeItem('account');
+			throw new Error('Something went wrong while trying to restore session.');
 		}
+
+		await updateAccountMultisigsOnBlockchain(account);
+		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 	}
 </script>

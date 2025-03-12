@@ -127,11 +127,11 @@
 
 	async function selectAccount(account: AccountWithSigner) {
 		$ref.close();
+		await updateAccountMultisigsOnBlockchain(account);
 		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 		sessionStorage.setItem('account', JSON.stringify(account));
 		setActiveAccountBounties();
-		await updateAccountMultisigsOnBlockchain();
 	}
 
 	function backToWalletSelection() {

@@ -3,10 +3,7 @@ import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
 import logoPaseo from './LogoPaseo.svg';
 import paseoInverted from './LogoPaseoInverted.svg';
-import { PUBLIC_STATESCAN_API_URL } from '$env/static/public';
 import { hideTestBar } from '../../utils/hideTestBar';
-
-const statescanUrl: string = PUBLIC_STATESCAN_API_URL;
 
 export const blockchains = [
 	{
@@ -14,11 +11,19 @@ export const blockchains = [
 		label: 'Polkadot',
 		logo: coin,
 		invertedLogo: coinInverted,
-		endpoint: '',
+		standard: true,
+		endpoints: [
+			'wss://polkadot-rpc.publicnode.com/',
+			'wss://rpc.ibp.network/polkadot',
+			'wss://polkadot-rpc.dwellir.com',
+			'wss://rpc-polkadot.luckyfriday.io',
+			'wss://dot-rpc.stakeworld.io',
+			'wss://polkadot.api.onfinality.io/public-ws'
+		].sort(() => Math.sign(Math.random() - 0.5)),
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
 			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-			statescanGraphqlApi: statescanUrl,
+			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
@@ -29,7 +34,7 @@ export const blockchains = [
 		label: 'Paseo',
 		logo: logoPaseo,
 		invertedLogo: paseoInverted,
-		endpoint: 'wss://paseo-rpc.dwellir.com',
+		endpoints: ['wss://paseo-rpc.dwellir.com'],
 		baseUrls: {
 			subScan: 'https://paseo.subscan.io',
 			subSquare: 'https://paseo.subsquare.io',
@@ -44,11 +49,11 @@ export const blockchains = [
 					label: 'ZombieNet',
 					logo: coin,
 					invertedLogo: coinInverted,
-					endpoint: 'wss://rilt.kilt.io',
+					endpoints: ['wss://rilt.kilt.io'],
 					baseUrls: {
 						doTreasury: 'https://polkadot.dotreasury.com',
 						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-						statescanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
+						stateScanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
 						subScan: 'https://polkadot.subscan.io',
 						subSquare: 'https://polkadot.subsquare.io',
 						polkAssembly: 'https://polkadot.polkassembly.io'
@@ -59,10 +64,11 @@ export const blockchains = [
 					label: 'Local',
 					logo: coin,
 					invertedLogo: coinInverted,
-					endpoint: 'ws://localhost:8000',
+					endpoints: ['ws://localhost:8000'],
 					baseUrls: {
 						doTreasury: 'https://polkadot.dotreasury.com',
 						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
+						stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 						subScan: 'https://polkadot.subscan.io',
 						subSquare: 'https://polkadot.subsquare.io',
 						polkAssembly: 'https://polkadot.polkassembly.io'
@@ -73,4 +79,13 @@ export const blockchains = [
 
 export type Blockchain = (typeof blockchains)[number];
 
-export const currentBlockchain = writable(blockchains[0]);
+const endpointOverride =
+	hideTestBar || typeof sessionStorage === 'undefined' ? null : sessionStorage.getItem('node');
+
+const current = blockchains.find(({ endpoints: [known] }) => endpointOverride?.startsWith(known));
+
+if (endpointOverride && !current) {
+	console.warn(`Connecting to Polkadot instead of stored "${endpointOverride}"`);
+}
+
+export const currentBlockchain = writable(current ?? blockchains[0]);

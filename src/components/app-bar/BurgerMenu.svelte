@@ -20,7 +20,7 @@
 
 	async function logOut() {
 		activeAccount.set(undefined);
-		sessionStorage.clear();
+		sessionStorage.removeItem('account');
 		activeAccountBounties.set([]);
 		if ($wcConnection) {
 			await $wcConnection.disconnect();
