@@ -1,7 +1,9 @@
-import { get } from 'svelte/store';
-import { dotApi, proxies } from '../../stores';
+import { get, writable } from 'svelte/store';
+import { dotApi } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
 import { currentBlockchain } from '../app-bar/blockchains';
+
+const proxies = writable<Map<string, string>>(new Map());
 
 export async function fetchAllProxies() {
 	const api = get(dotApi);
@@ -44,7 +46,7 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 	}
 
 	try {
-		const proxyAddress = get(proxies)?.get(curatorAddress);
+		const proxyAddress = get(proxies).get(curatorAddress);
 
 		if (!proxyAddress) {
 			return [];
@@ -94,7 +96,7 @@ export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo
 		const query = `
       query {
 			  multisigAddresses(
-				  signatory: "${signatory}" 
+				  signatory: "${signatory}"
 				  offset: 0
 				  limit: 1000
 			  ) {
