@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { activeAccount } from '../../stores';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import { initializeApi } from '../../utils/initializeApi';
+	import { activeAccount } from '../../stores';
 	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import Dropdown from '../common/DropdownMenu.svelte';
 	import type { Labeled } from '../common/labeled';
