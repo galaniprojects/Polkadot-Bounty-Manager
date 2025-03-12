@@ -3,7 +3,6 @@ import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
 import logoPaseo from './LogoPaseo.svg';
 import paseoInverted from './LogoPaseoInverted.svg';
-import { PUBLIC_NODE_ENDPOINT } from '$env/static/public';
 import { hideTestBar } from '../../utils/hideTestBar';
 
 export const blockchains = [
@@ -83,16 +82,16 @@ export type Blockchain = (typeof blockchains)[number];
 // exported only for chopsticks
 export const endpointOverride = (() => {
 	if (hideTestBar || typeof sessionStorage === 'undefined') {
-		return PUBLIC_NODE_ENDPOINT;
+		return null;
 	}
 
-	return sessionStorage.getItem('node') || PUBLIC_NODE_ENDPOINT;
+	return sessionStorage.getItem('node');
 })();
 
-const current = blockchains.find(({ endpoints: [known] }) => endpointOverride.startsWith(known));
+const current = blockchains.find(({ endpoints: [known] }) => endpointOverride?.startsWith(known));
 
-if (!current && endpointOverride !== 'RANDOM') {
-	console.warn(`Connecting to Polkadot instead of PUBLIC_NODE_ENDPOINT="${endpointOverride}"`);
+if (endpointOverride && !current) {
+	console.warn(`Connecting to Polkadot instead of stored "${endpointOverride}"`);
 }
 
 export const currentBlockchain = writable(current ?? blockchains[0]);
