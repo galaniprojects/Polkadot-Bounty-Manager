@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { currentBlockchain } from '../components/app-bar/blockchains';
-import { showLoadingModal } from '../components/LoadingModal/loadingModalStores';
+import { hideLoadingModal, showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { blockChainMeta, dotApi } from '../stores';
 
 export async function initializeApi(endpoints: readonly string[]) {
@@ -28,4 +28,6 @@ export async function initializeApi(endpoints: readonly string[]) {
 
 	blockChainMeta.set({ ss58Format, decimals, multiplier, symbol });
 	dotApi.set(api);
+
+	hideLoadingModal();
 }
