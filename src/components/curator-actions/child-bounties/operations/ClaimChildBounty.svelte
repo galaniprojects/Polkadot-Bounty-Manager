@@ -6,16 +6,12 @@
 	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
-	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import Input from '../../../Input/Input.module.css';
 
 	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 
-	let extend = false;
-
 	$: transaction = batchExtendBounty(
-		extend && childBounty.parentBounty,
+		childBounty.parentBounty,
 		$dotApi.tx.ChildBounties.claim_child_bounty({
 			child_bounty_id: childBounty.id,
 			parent_bounty_id: childBounty.parentBounty
@@ -48,14 +44,6 @@
 				<p class="text-xs">Beneficiary account</p>
 				<CopyableAddress address={childBounty.beneficiary} />
 			</div>
-		{/if}
-
-		{#if false}
-			<!-- TODO: extending requires the curator address which can be a multisig, while submitting the transaction now is done with a normal address -->
-			<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-				<input type="checkbox" bind:checked={extend} class={Input.switch} />
-				<ExtendBountyLabel />
-			</label>
 		{/if}
 
 		<div class="space-y-2">

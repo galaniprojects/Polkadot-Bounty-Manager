@@ -3,12 +3,10 @@ import type { Bounty } from '../types/bounty';
 import type { ChildBounty } from '../types/child-bounty';
 
 export function getRelevantMultisig(
-	bounty: Bounty | ChildBounty,
+	{ curatorMultisigAccount }: Bounty | ChildBounty,
 	account: AccountInfo
 ): MultisigInfo | undefined {
-	const multisigs = account.multisigs?.filter(
-		(multisig) => multisig.address === bounty.curatorMultisigAccount
-	);
+	const multisigs = account.multisigs?.filter(({ address }) => address === curatorMultisigAccount);
 	if (multisigs?.length !== 1) {
 		return undefined;
 	}

@@ -9,11 +9,10 @@ import { isCurator } from './isCurator';
  */
 export function setActiveAccountBounties() {
 	const allBounties: Bounty[] = get(bounties);
-	const account = get(activeAccount);
-	if (!account) {
+	const address = get(activeAccount)?.address;
+	if (!address) {
 		return;
 	}
-	const address = account.address;
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {

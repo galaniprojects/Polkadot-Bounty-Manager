@@ -24,7 +24,7 @@ export interface Bounty {
 		| 'Rejected';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
-	curatorMultisigAccount: string | undefined;
+	curatorMultisigAccount?: string;
 	updateDue?: number;
 	expiryDate?: Date | undefined;
 }

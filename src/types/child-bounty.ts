@@ -22,7 +22,7 @@ export interface ChildBounty {
 	status: (typeof childBountyStatuses)[number];
 	description?: string;
 	curator?: string;
-	curatorMultisigAccount: string | undefined;
+	curatorMultisigAccount?: string;
 	beneficiary?: string;
 	unlockAt?: number;
 	dateOfPayout?: string;

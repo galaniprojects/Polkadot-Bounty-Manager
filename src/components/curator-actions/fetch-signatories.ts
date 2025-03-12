@@ -1,21 +1,21 @@
-import { get } from 'svelte/store';
-import { dotApi, proxies } from '../../stores';
+import { get, writable } from 'svelte/store';
+import { dotApi } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
 import { currentBlockchain } from '../app-bar/blockchains';
+
+const proxies = writable<Map<string, string>>(new Map());
 
 export async function fetchAllProxies() {
 	const api = get(dotApi);
 
 	const fetchedProxies = await api.query.Proxy.Proxies.getEntries();
 
-	const proxyMap = new Map<string, string>();
-
-	fetchedProxies.forEach(({ keyArgs: [address], value: [value] }) => {
-		// Only consider proxies that have a single entry and that entry is of type 'Any'.
-		if (value.length === 1 && value[0].proxy_type.type === 'Any') {
-			proxyMap.set(address, value[0].delegate);
-		}
-	});
+	// Only consider proxies that have a single entry and that entry is of type 'Any'.
+	const proxyMap = new Map(
+		fetchedProxies
+			.filter(({ value: [value] }) => value.length === 1 && value[0].proxy_type.type === 'Any')
+			.map(({ keyArgs: [address], value: [value] }) => [address, value[0].delegate])
+	);
 
 	proxies.set(proxyMap);
 	return proxyMap;
@@ -44,18 +44,18 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 	}
 
 	try {
-		const proxyAddress = get(proxies)?.get(curatorAddress);
+		const proxyAddress = get(proxies).get(curatorAddress);
 
 		if (!proxyAddress) {
 			return [];
 		}
 
 		const query = `
-        query {
-            multisigAddress(account: "${proxyAddress}") {
-                signatories
-            }
-        }`;
+				query {
+						multisigAddress(account: "${proxyAddress}") {
+								signatories
+						}
+				}`;
 
 		const response = await fetch(graphqlEndpoint, {
 			method: 'POST',
@@ -92,19 +92,19 @@ export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo
 
 	try {
 		const query = `
-      query {
-			  multisigAddresses(
-				  signatory: "${signatory}" 
-				  offset: 0
-				  limit: 1000
-			  ) {
-				  multisigAddresses {
-				    threshold
-				    signatories
-				    address
-				  }
-			  }
-      }`;
+			query {
+				multisigAddresses(
+					signatory: "${signatory}"
+					offset: 0
+					limit: 1000
+				) {
+					multisigAddresses {
+						threshold
+						signatories
+						address
+					}
+				}
+			}`;
 
 		const response = await fetch(graphqlEndpoint, {
 			method: 'POST',
