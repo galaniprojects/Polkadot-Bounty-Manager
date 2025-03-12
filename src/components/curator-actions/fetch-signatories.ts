@@ -10,14 +10,12 @@ export async function fetchAllProxies() {
 
 	const fetchedProxies = await api.query.Proxy.Proxies.getEntries();
 
-	const proxyMap = new Map<string, string>();
-
-	fetchedProxies.forEach(({ keyArgs: [address], value: [value] }) => {
-		// Only consider proxies that have a single entry and that entry is of type 'Any'.
-		if (value.length === 1 && value[0].proxy_type.type === 'Any') {
-			proxyMap.set(address, value[0].delegate);
-		}
-	});
+	// Only consider proxies that have a single entry and that entry is of type 'Any'.
+	const proxyMap = new Map(
+		fetchedProxies
+			.filter(({ value: [value] }) => value.length === 1 && value[0].proxy_type.type === 'Any')
+			.map(({ keyArgs: [address], value: [value] }) => [address, value[0].delegate])
+	);
 
 	proxies.set(proxyMap);
 	return proxyMap;
