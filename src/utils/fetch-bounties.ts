@@ -48,7 +48,6 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 		});
 
 		const api = get(dotApi);
-		await api.query.System.BlockWeight.getValue(); // somehow makes the next query work
 		const currentBlock = await api.query.System.Number.getValue();
 		bounties.forEach((bounty) => {
 			if (bounty.updateDue) {
