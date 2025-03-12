@@ -141,7 +141,7 @@
 </script>
 
 <!-- Base Modal Layout -->
-<dialog bind:this={$ref} use:clickAway class={modalStyles.dialog}>
+<dialog bind:this={$ref} on:click={clickAway} class={modalStyles.dialog}>
 	<!-- Header -->
 	<div class="flex flex-row-reverse justify-between items-center sm:mb-0">
 		<CloseModalButton />

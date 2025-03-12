@@ -2,18 +2,8 @@ import styles from './Modal.module.css';
 
 export const modalStyles = styles;
 
-export function clickAway(element: HTMLDialogElement) {
-	function handleClick({ target }: MouseEvent) {
-		if (target === element) {
-			element.close();
-		}
+export function clickAway({ target, currentTarget }: MouseEvent) {
+	if (target === currentTarget && target instanceof HTMLDialogElement) {
+		target.close();
 	}
-
-	element.addEventListener('click', handleClick);
-
-	return {
-		destroy() {
-			element.removeEventListener('click', handleClick);
-		}
-	};
 }
