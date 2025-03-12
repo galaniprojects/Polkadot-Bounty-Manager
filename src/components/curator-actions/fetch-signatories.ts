@@ -51,11 +51,11 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
 		}
 
 		const query = `
-        query {
-            multisigAddress(account: "${proxyAddress}") {
-                signatories
-            }
-        }`;
+				query {
+						multisigAddress(account: "${proxyAddress}") {
+								signatories
+						}
+				}`;
 
 		const response = await fetch(graphqlEndpoint, {
 			method: 'POST',
@@ -92,19 +92,19 @@ export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo
 
 	try {
 		const query = `
-      query {
-			  multisigAddresses(
-				  signatory: "${signatory}"
-				  offset: 0
-				  limit: 1000
-			  ) {
-				  multisigAddresses {
-				    threshold
-				    signatories
-				    address
-				  }
-			  }
-      }`;
+			query {
+				multisigAddresses(
+					signatory: "${signatory}"
+					offset: 0
+					limit: 1000
+				) {
+					multisigAddresses {
+						threshold
+						signatories
+						address
+					}
+				}
+			}`;
 
 		const response = await fetch(graphqlEndpoint, {
 			method: 'POST',
