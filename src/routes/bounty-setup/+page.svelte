@@ -50,7 +50,7 @@
 			return;
 		}
 
-		const result = await submitTransaction(transaction, 'Bounty creation success.');
+		const result = await submitTransaction(transaction);
 		if (!result) {
 			return;
 		}

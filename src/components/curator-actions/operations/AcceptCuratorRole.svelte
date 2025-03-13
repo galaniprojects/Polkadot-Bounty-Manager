@@ -18,7 +18,7 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		const successful = await submitTransaction(transaction, undefined, bounty);
+		const successful = await submitTransaction(transaction, bounty);
 		if (successful) {
 			dialog.close();
 		}
