@@ -7,7 +7,6 @@
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { isCurator } from '../../utils/isCurator';
-	import { onMount } from "svelte";
 
 	export let bounty: Bounty;
 
@@ -16,7 +15,7 @@
 	let awardBountyDialog: HTMLDialogElement;
 
 	// Handle description and balance fetch
-	$: if (bounty) getRemainingBalance(bounty.id).catch(() => {});
+	$: getRemainingBalance(bounty.id).catch(() => {});
 
 	async function getRemainingBalance(bountyId: number) {
 		try {
@@ -47,40 +46,39 @@
 			remainingBalance = undefined;
 		}
 	}
-
 </script>
 
 <div class="bg-backgroundBounty overflow-hidden rounded-md my-6">
 	<!-- Header -->
 	<BountyCardHeader {bounty} />
 
-		<!-- Details Section -->
-		<BountyCardDetails {bounty} {description} {remainingBalance} />
+	<!-- Details Section -->
+	<BountyCardDetails {bounty} {description} {remainingBalance} />
 
-		<div class="p-[5px]">
-			<!-- Child Bounties -->
-			{#if bounty.status === 'Active'}
-				<ChildBountiesSection {bounty} />
-			{/if}
-		</div>
+	<div class="p-[5px]">
+		<!-- Child Bounties -->
+		{#if bounty.status === 'Active'}
+			<ChildBountiesSection {bounty} />
+		{/if}
+	</div>
 
-		<div
-			class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
-		>
-			{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty))}
-				<div class="flex flex-col">
-					<p class="text-xs">Award bounty</p>
-					<button
-						class="w-1/2 h-10 text-white bg-backgroundButtonDark rounded-[10px]"
-						on:click={() => {
-							awardBountyDialog.showModal();
-						}}
-					>
-						READ FIRST
-					</button>
-				</div>
-			{/if}
-		</div>
+	<div
+		class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
+	>
+		{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty))}
+			<div class="flex flex-col">
+				<p class="text-xs">Award bounty</p>
+				<button
+					class="w-1/2 h-10 text-white bg-backgroundButtonDark rounded-[10px]"
+					on:click={() => {
+						awardBountyDialog.showModal();
+					}}
+				>
+					READ FIRST
+				</button>
+			</div>
+		{/if}
+	</div>
 </div>
 
 <AwardBounty bind:dialog={awardBountyDialog} {bounty} />
