@@ -61,12 +61,15 @@
 			width: 150px;
 			padding: 2px;
 		}
+
 		.toggleSlider {
 			width: 70px;
 		}
+
 		.curatorViewActive {
 			transform: translateX(70px);
 		}
+
 		.active,
 		.inactive {
 			font-size: 12px;

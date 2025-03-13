@@ -48,18 +48,15 @@
 </script>
 
 <header class="header">
-	<!-- First Element -->
-	<div class="first">
+	<div class="logoChainMenuContainer">
 		<a href="/curator-actions">
 			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
 		</a>
 		<ChainMenu />
 	</div>
 
-	<!-- Second Element -->
 	<AllBountiesToggle />
 
-	<!-- Third Element -->
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
@@ -67,7 +64,7 @@
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
-			<div class="third">
+			<div class="accountContainer">
 				<button
 					type="button"
 					class="account"
@@ -103,19 +100,21 @@
 		width: 100%;
 		margin-top: 10px;
 	}
-	.first {
+
+	.logoChainMenuContainer {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 12px;
 	}
 
-	.third {
+	.accountContainer {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 20px;
 	}
+
 	.account {
 		display: flex;
 		gap: 8px;
