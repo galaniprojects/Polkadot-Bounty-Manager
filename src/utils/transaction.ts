@@ -70,7 +70,6 @@ async function getSignerAndCallData(
  **/
 export async function submitTransaction(
 	transaction: AnyTransaction,
-	successMessage?: string,
 	tryUseMultisig?: Bounty | ChildBounty
 ): Promise<TxFinalizedPayload | undefined> {
 	try {
@@ -80,12 +79,15 @@ export async function submitTransaction(
 			tryUseMultisig?.curatorMultisigAccount
 		);
 
-		showLoadingModal('Submitting transaction…');
+		showLoadingModal(
+			'Submitting transaction…',
+			'Waiting for transaction to be included in finalized block.'
+		);
 
 		const result = await transaction.signAndSubmit(signer);
 
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', successMessage || 'Operation success.', callData);
+			showSuccessModal('Transaction', 'Transaction finalized.', callData);
 
 			(async () => {
 				// trigger update in the background but return immediately

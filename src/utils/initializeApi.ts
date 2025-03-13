@@ -4,7 +4,7 @@ import { hideLoadingModal, showLoadingModal } from '../components/LoadingModal/l
 import { blockChainMeta, dotApi } from '../stores';
 
 export async function initializeApi(endpoints: readonly string[]) {
-	showLoadingModal(`Connecting to ${get(currentBlockchain).label}…`);
+	showLoadingModal(`Connecting to ${get(currentBlockchain).label}…`, 'This might take a moment.');
 
 	const { createTypedApi } = await import('./createTypedApi');
 	const { client, api } = createTypedApi(endpoints as string[]);

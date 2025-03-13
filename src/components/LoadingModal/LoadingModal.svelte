@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { modalStyles } from '../Modal/tools';
-	import { dialog as ref, title } from './loadingModalStores';
+	import { dialog as ref, title, message } from './loadingModalStores';
 </script>
 
 <dialog bind:this={$ref} class={modalStyles.dialog}>
@@ -9,7 +9,8 @@
 	</h2>
 
 	<div class="text-center">
-		<p class={modalStyles.output}>This might take a moment</p>
+		<!-- message gotta change according to where the dialog is called -->
+		<p class={modalStyles.output}>{$message}</p>
 		<span class="loader mt-3"></span>
 	</div>
 </dialog>
