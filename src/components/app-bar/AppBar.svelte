@@ -16,6 +16,7 @@
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
 	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
+	import AllBountiesToggle from './AllBountiesToggle.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
@@ -46,16 +47,16 @@
 	}
 </script>
 
-<header class="relative flex justify-between items-center min-h-20 p-2 md:p-0 md:w-[754px] mx-auto">
-	<!-- First Element -->
-	<div class="flex flex-col items-center space-y-3">
+<header class="header">
+	<div class="logoChainMenuContainer">
 		<a href="/curator-actions">
 			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
 		</a>
 		<ChainMenu />
 	</div>
 
-	<!-- Second Element -->
+	<AllBountiesToggle />
+
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
@@ -63,16 +64,15 @@
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
-			<!-- User Address -->
-			<div class="flex flex-col items-center space-y-[23px] mt-1">
+			<div class="accountContainer">
 				<button
 					type="button"
-					class="flex gap-2 items-center"
+					class="account"
 					on:click={async () => {
 						await navigator.clipboard.writeText($activeAccount.address);
 					}}
 				>
-					<span class="w-5 h-5">
+					<span class="identicon">
 						<PolkadotIcon address={$activeAccount.address} />
 					</span>
 					<PeopleChainName address={$activeAccount.address}>
@@ -87,3 +87,49 @@
 
 <LoadingModal />
 <LoginModal />
+
+<style>
+	.header {
+		position: relative;
+		display: flex;
+		justify-self: center;
+		justify-content: space-between;
+		align-items: end;
+		min-height: 80px;
+		padding: 8px;
+		width: 100%;
+		margin-top: 10px;
+	}
+
+	.logoChainMenuContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.accountContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.account {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.identicon {
+		width: 20px;
+		height: 20px;
+	}
+
+	@media (min-width: 768px) {
+		.header {
+			width: 754px;
+			padding: 0px;
+		}
+	}
+</style>

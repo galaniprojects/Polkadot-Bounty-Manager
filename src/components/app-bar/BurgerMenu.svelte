@@ -44,6 +44,7 @@
 <div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
 	<button
+		class="h-[42px]"
 		on:click={() => {
 			open = !open;
 		}}
