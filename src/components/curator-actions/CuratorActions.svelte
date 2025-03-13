@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Bounty } from '../../types/bounty';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
-	import BountyCard from './BountyCard.svelte';
 	import Pagination from './Pagination.svelte';
+	import BountyCardHeader from './BountyCardHeader.svelte';
+	import { goto } from '$app/navigation';
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
@@ -95,8 +96,19 @@
 				</div>
 			</div>
 		{:else}
-			{#each paginatedBounties as bounty, index (bounty.id)}
-				<BountyCard {bounty} expanded={index === 0} />
+			{#each paginatedBounties as bounty (bounty.id)}
+				<!-- TODO change this to use custom component. -->
+				<div>
+					<button
+						type="button"
+						class="bg-backgroundBounty my-2 cursor-pointer w-full"
+						onclick={async () => {
+							await goto(`/bounty?id=${bounty.id}`);
+						}}
+					>
+						<BountyCardHeader {bounty} />
+					</button>
+				</div>
 			{/each}
 			{#if activeBounties.length !== 0}
 				<Pagination

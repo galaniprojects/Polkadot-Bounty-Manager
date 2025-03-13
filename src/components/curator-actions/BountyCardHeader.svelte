@@ -2,7 +2,6 @@
 	import type { Bounty } from '../../types/bounty';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	export let bounty: Bounty;
-	export let isParentExpanded: boolean;
 
 	const statusLabels = {
 		Proposed: 'proposed',
@@ -23,17 +22,6 @@
 			<span class="bountyId">#{bounty.id}</span>
 			<span class="bountyName"> {bounty.description}</span>
 		</h2>
-
-		<button
-			on:click={() => (isParentExpanded = !isParentExpanded)}
-			class="material-symbols-outlined text-2xl self-start"
-		>
-			{#if isParentExpanded}
-				keyboard_arrow_up
-			{:else}
-				keyboard_arrow_down
-			{/if}
-		</button>
 	</div>
 
 	<div class="statusContainer">
