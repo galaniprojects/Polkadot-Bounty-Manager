@@ -4,7 +4,7 @@
 	import AppBar from '../components/app-bar/AppBar.svelte';
 	import SuccessModal from '../components/SuccessModal/SuccessModal.svelte';
 	import ErrorModal from '../components/ErrorModal/ErrorModal.svelte';
-	import { dotApi } from '../stores';
+	import { bounties, dotApi } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
 	import Footer from '../components/Footer/Footer.svelte';
 	import { page } from '$app/state';
@@ -25,7 +25,7 @@
 <SuccessModal />
 <ErrorModal />
 
-{#if renderChildren && $dotApi}<slot />{/if}
+{#if renderChildren && $dotApi && $bounties.length > 0}<slot />{/if}
 
 <Footer />
 

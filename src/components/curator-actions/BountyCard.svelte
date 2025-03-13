@@ -7,16 +7,16 @@
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { isCurator } from '../../utils/isCurator';
+	import { onMount } from "svelte";
 
 	export let bounty: Bounty;
-	export let expanded: boolean;
 
 	let description: string | undefined;
 	let remainingBalance: bigint | undefined;
 	let awardBountyDialog: HTMLDialogElement;
 
 	// Handle description and balance fetch
-	$: if (expanded) getRemainingBalance(bounty.id).catch(() => {});
+	$: if (bounty) getRemainingBalance(bounty.id).catch(() => {});
 
 	async function getRemainingBalance(bountyId: number) {
 		try {
@@ -48,16 +48,12 @@
 		}
 	}
 
-	function toggleExpanded() {
-		expanded = !expanded;
-	}
 </script>
 
 <div class="bg-backgroundBounty overflow-hidden rounded-md my-6">
 	<!-- Header -->
-	<BountyCardHeader {bounty} bind:isParentExpanded={expanded} />
+	<BountyCardHeader {bounty} />
 
-	{#if expanded}
 		<!-- Details Section -->
 		<BountyCardDetails {bounty} {description} {remainingBalance} />
 
@@ -85,15 +81,6 @@
 				</div>
 			{/if}
 		</div>
-
-		<!-- Footer -->
-		<div class="flex justify-center items-center rounded-b-md">
-			<button class="flex items-center py-2" on:click={toggleExpanded}>
-				<p class="text-xs">close bounty view</p>
-				<span class="material-symbols-outlined">keyboard_arrow_up</span>
-			</button>
-		</div>
-	{/if}
 </div>
 
 <AwardBounty bind:dialog={awardBountyDialog} {bounty} />
