@@ -28,11 +28,11 @@
 		position: absolute;
 		top: 5px;
 		left: 5px;
-		width: 110px;
+		width: 100px;
 		height: 40px;
 		background: theme('colors.backgroundButtonDark');
 		border-radius: 12px;
-		transition: transform 0.3s ease-in-out;
+		transition: transform 0.2s ease-in-out;
 	}
 
 	.toggleOption {
@@ -40,11 +40,12 @@
 		text-align: center;
 		user-select: none;
 		position: relative;
-		transition: color 0.3s ease-in-out 0.05s;
+		transition: color 0.2s ease-in-out 0.025s;
+		width: 109px;
 	}
 
 	.curatorViewActive {
-		transform: translateX(98px);
+		transform: translateX(108px);
 	}
 
 	.active {
@@ -53,7 +54,6 @@
 
 	.inactive {
 		color: theme('colors.textPrimary');
-		font-size: 14px;
 	}
 
 	@media (max-width: 375px) {
