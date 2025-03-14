@@ -71,7 +71,7 @@ async function getSignerAndCallData(
 export async function submitTransaction(
 	transaction: AnyTransaction,
 	tryUseMultisig?: Bounty | ChildBounty
-): Promise<TxFinalizedPayload | undefined> {
+): Promise<TxEventsPayload | undefined> {
 	try {
 		const { signer, callData } = await getSignerAndCallData(
 			transaction,
@@ -81,7 +81,7 @@ export async function submitTransaction(
 
 		showLoadingModal(
 			'Submitting transaction…',
-			'Waiting for transaction to be included in finalized block.'
+			'Waiting for transaction to be included in best block.'
 		);
 
 		const result = await new Promise<TxEventsPayload>((resolve, reject) => {
@@ -95,7 +95,7 @@ export async function submitTransaction(
 			});
 		});
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', 'Transaction finalized.', callData);
+			showSuccessModal('Transaction', 'Transaction in included in best block.', callData);
 
 			(async () => {
 				// trigger update in the background but return immediately
