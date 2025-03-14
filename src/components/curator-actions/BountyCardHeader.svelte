@@ -17,12 +17,12 @@
 </script>
 
 <div class="header">
-	<div class="title">
+	<section class="title">
 		<h2 class="bountyTitle">
 			<span class="bountyId">#{bounty.id}</span>
 			<span class="bountyName"> {bounty.description}</span>
 		</h2>
-	</div>
+	</section>
 
 	<div class="statusContainer">
 		<div class="proposer">
@@ -37,7 +37,10 @@
 
 <style>
 	.header {
+		display: flex;
+		flex-direction: column;
 		padding: 18px 12px 25px;
+		gap: 6px;
 	}
 	.title {
 		display: flex;
@@ -76,7 +79,6 @@
 		padding: 3px 8px;
 	}
 
-	/* ToDo: double check if the colors are updated, or any changes are necessary  */
 	[data-status='Proposed'],
 	[data-status='CuratorProposed'],
 	[data-status='Funded'] {
