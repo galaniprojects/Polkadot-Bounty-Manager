@@ -94,7 +94,7 @@
 			return;
 		}
 
-		const success = await submitTransaction(transaction, undefined, bounty);
+		const success = await submitTransaction(transaction, bounty);
 		if (success) {
 			await goto('/curator-actions');
 		}

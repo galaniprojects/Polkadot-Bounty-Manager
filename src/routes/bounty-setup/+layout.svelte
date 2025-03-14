@@ -22,7 +22,7 @@
 		const bountyId = page.url.searchParams.get('bounty-id');
 		if (!bountyId) return;
 
-		showLoadingModal('Loading bounty info…');
+		showLoadingModal('Loading bounty info…', 'This might take a moment.');
 		try {
 			const bountyDescription = await $dotApi.query.Bounties.BountyDescriptions.getValue(
 				Number(bountyId)

@@ -35,11 +35,7 @@
 				return;
 			}
 
-			const successful = await submitTransaction(
-				transaction,
-				'Your bounty has been awarded and can now be claimed',
-				bounty
-			);
+			const successful = await submitTransaction(transaction, bounty);
 			if (successful) {
 				dialog.close();
 			}

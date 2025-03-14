@@ -28,7 +28,7 @@
 	});
 
 	async function submit() {
-		const successful = await submitTransaction(transaction, undefined, bounty);
+		const successful = await submitTransaction(transaction, bounty);
 		if (successful) {
 			dialog.close();
 		}

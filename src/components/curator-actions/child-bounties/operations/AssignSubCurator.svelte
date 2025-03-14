@@ -52,7 +52,7 @@
 			return;
 		}
 
-		const successful = await submitTransaction(transaction, undefined, parentBounty);
+		const successful = await submitTransaction(transaction, parentBounty);
 		if (successful) {
 			dialog.close();
 		}

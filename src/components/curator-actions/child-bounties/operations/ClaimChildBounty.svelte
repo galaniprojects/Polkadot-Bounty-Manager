@@ -19,7 +19,7 @@
 	);
 
 	async function submit() {
-		const successful = await submitTransaction(transaction, 'Child bounty successfully claimed');
+		const successful = await submitTransaction(transaction);
 		if (successful) {
 			dialog.close();
 		}

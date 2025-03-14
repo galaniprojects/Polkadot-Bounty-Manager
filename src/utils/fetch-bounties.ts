@@ -15,7 +15,7 @@ import { addCuratorMultisigAccounts } from './addCuratorMultisigAccounts';
 export async function fetchBountiesAndChildBounties(showProgress = true) {
 	try {
 		if (showProgress) {
-			showLoadingModal('Loading…');
+			showLoadingModal('Loading…', 'This might take a moment.');
 		}
 
 		const bounties = await fetchBountiesFromBlockchain();
