@@ -79,23 +79,20 @@ export async function submitTransaction(
 			tryUseMultisig?.curatorMultisigAccount
 		);
 
-		showLoadingModal(
-			'Submitting transaction…',
-			'Waiting for transaction to be included in best block.'
-		);
+		showLoadingModal('Submitting transaction…', 'This might take a moment.');
 
 		const result = await new Promise<TxEventsPayload>((resolve, reject) => {
 			transaction.signSubmitAndWatch(signer).subscribe({
 				error: reject,
 				next: (event) => {
-					if (event.type === 'txBestBlocksState' && event.found) {
+					if (event.type === 'finalized' || (event.type === 'txBestBlocksState' && event.found)) {
 						resolve(event);
 					}
 				}
 			});
 		});
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', 'Transaction in included in best block.', callData);
+			showSuccessModal('Transaction', 'Transaction was included in block.', callData);
 
 			(async () => {
 				// trigger update in the background but return immediately
