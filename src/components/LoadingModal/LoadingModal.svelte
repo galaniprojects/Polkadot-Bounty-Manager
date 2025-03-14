@@ -9,7 +9,6 @@
 	</h2>
 
 	<div class="text-center">
-		<!-- message gotta change according to where the dialog is called -->
 		<p class={modalStyles.output}>{$message}</p>
 		<span class="loader mt-3"></span>
 	</div>
