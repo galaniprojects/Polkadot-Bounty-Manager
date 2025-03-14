@@ -68,25 +68,27 @@ export function parseChildBounty(raw: ChildBountyRaw, id: number) {
 
 export async function fetchBountiesFromBlockchain() {
 	const api = get(dotApi);
+	const inBlock = { at: 'best' };
 
-	const rawBounties = await api.query.Bounties.Bounties.getEntries();
+	const rawBounties = await api.query.Bounties.Bounties.getEntries(inBlock);
 	const bounties = rawBounties.map(({ value, keyArgs: [id] }) => parseBounty(value, id));
 
 	const bountiesMap = keyBy(bounties, 'id');
-	const descriptions = await api.query.Bounties.BountyDescriptions.getEntries();
+	const descriptions = await api.query.Bounties.BountyDescriptions.getEntries(inBlock);
 	descriptions.forEach(({ value, keyArgs: [id] }) => {
 		if (id in bountiesMap) {
 			bountiesMap[id].description = value.asText();
 		}
 	});
 
-	const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries();
+	const rawChildBounties = await api.query.ChildBounties.ChildBounties.getEntries(inBlock);
 	const childBounties = rawChildBounties.map(({ value, keyArgs: [, id] }) =>
 		parseChildBounty(value, id)
 	);
 
 	const childBountiesMap = keyBy(childBounties, 'id');
-	const childDescriptions = await api.query.ChildBounties.ChildBountyDescriptions.getEntries();
+	const childDescriptions =
+		await api.query.ChildBounties.ChildBountyDescriptions.getEntries(inBlock);
 	childDescriptions.forEach(({ value, keyArgs: [id] }) => {
 		if (id in childBountiesMap) {
 			childBountiesMap[id].description = value.asText();

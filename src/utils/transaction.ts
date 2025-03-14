@@ -1,4 +1,4 @@
-import type { Transaction, TxFinalizedPayload } from 'polkadot-api';
+import type { Transaction, TxEventsPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
 import { activeAccount, dotApi, polkadotSigner } from '../stores';
 import {
@@ -71,7 +71,7 @@ async function getSignerAndCallData(
 export async function submitTransaction(
 	transaction: AnyTransaction,
 	tryUseMultisig?: Bounty | ChildBounty
-): Promise<TxFinalizedPayload | undefined> {
+): Promise<TxEventsPayload | undefined> {
 	try {
 		const { signer, callData } = await getSignerAndCallData(
 			transaction,
@@ -79,15 +79,20 @@ export async function submitTransaction(
 			tryUseMultisig?.curatorMultisigAccount
 		);
 
-		showLoadingModal(
-			'Submitting transaction…',
-			'Waiting for transaction to be included in finalized block.'
-		);
+		showLoadingModal('Submitting transaction…', 'This might take a moment.');
 
-		const result = await transaction.signAndSubmit(signer);
-
+		const result = await new Promise<TxEventsPayload>((resolve, reject) => {
+			transaction.signSubmitAndWatch(signer).subscribe({
+				error: reject,
+				next: (event) => {
+					if (event.type === 'finalized' || (event.type === 'txBestBlocksState' && event.found)) {
+						resolve(event);
+					}
+				}
+			});
+		});
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', 'Transaction finalized.', callData);
+			showSuccessModal('Transaction', 'Transaction was included in block.', callData);
 
 			(async () => {
 				// trigger update in the background but return immediately
