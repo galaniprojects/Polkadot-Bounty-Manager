@@ -7,7 +7,7 @@
 	import { currentBlockchain } from '../app-bar/blockchains';
 
 	export let bountyId: number;
-	export let dimension = 6;
+	export let dimension: number;
 </script>
 
 <div class="space-x-2">
@@ -30,7 +30,6 @@
 		icon={LogoSubsquareWhite}
 		{dimension}
 	/>
-
 	<ExternalLinksButton
 		url="{$currentBlockchain.baseUrls.polkAssembly}/bounty/{bountyId}"
 		icon={LogoPolkassemblyWhite}

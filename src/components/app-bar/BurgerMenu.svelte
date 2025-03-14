@@ -5,6 +5,7 @@
 		walletConnect as wcConnection
 	} from '../../stores';
 	import { onMount } from 'svelte';
+	import modalStyles from '../Modal/Modal.module.css';
 
 	let open = false;
 	let container: HTMLDivElement | null = null;
@@ -19,7 +20,7 @@
 
 	async function logOut() {
 		activeAccount.set(undefined);
-		sessionStorage.clear();
+		sessionStorage.removeItem('account');
 		activeAccountBounties.set([]);
 		if ($wcConnection) {
 			await $wcConnection.disconnect();
@@ -43,12 +44,13 @@
 <div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
 	<button
+		class="h-[42px]"
 		on:click={() => {
 			open = !open;
 		}}
 	>
 		<span
-			class="material-symbols-rounded items-center rounded-md bg-cloudGray px-[23px] py-2 text-charcoal"
+			class="material-symbols-rounded items-center rounded-[10px] bg-backgroundButtonLight px-[23px] py-[11px] text-textPrimary"
 		>
 			menu
 		</span>
@@ -56,9 +58,9 @@
 
 	<!-- Menu Overlay -->
 	{#if open}
-		<div class="flex justify-center fixed inset-0 w-screen z-10 bg-black bg-opacity-60"></div>
+		<div class={modalStyles.backdrop}></div>
 		<div
-			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-md w-[210px]"
+			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-[10px] w-[210px]"
 		>
 			<button
 				on:click={() => {
@@ -67,7 +69,7 @@
 				class="self-end mt-[5px] mb-[13px]"
 			>
 				<span
-					class="material-symbols-rounded text-charcoal rounded-md border border-cloudGray px-[17px] py-1"
+					class="material-symbols-rounded text-textPrimary rounded-md border border-cloudGray px-[17px] py-1"
 				>
 					close
 				</span>
@@ -77,7 +79,7 @@
 					open = false;
 				}}
 				href="/bounty-setup"
-				class="bg-backgroundBounty p-3 mb-2 rounded-[10px] flex w-full justify-between items-center"
+				class="bg-accent text-white p-3 mb-2 rounded-[10px] flex w-full justify-between items-center"
 			>
 				<span class="mt-1">CREATE NEW BOUNTY</span>
 			</a>

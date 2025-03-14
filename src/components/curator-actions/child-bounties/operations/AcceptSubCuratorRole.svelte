@@ -8,7 +8,7 @@
 	import Fee from '../../../Fee.svelte';
 	import Deposit from '../../../Deposit.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 	export let parentCurator: string | undefined;
 
@@ -20,8 +20,10 @@
 	let isToggled = false;
 
 	async function acceptCuratorRole() {
-		open = false;
-		await submitTransaction(transaction);
+		const successful = await submitTransaction(transaction, childBounty);
+		if (successful) {
+			dialog.close();
+		}
 	}
 
 	function calculateChildBountyDeposit(parent: string | undefined, child: ChildBounty) {
@@ -32,7 +34,7 @@
 	}
 </script>
 
-<Dialog bind:open title="ACCEPT SUB-CURATOR ROLE">
+<Dialog bind:dialog title="ACCEPT SUB-CURATOR ROLE">
 	<section class="space-y-5">
 		<p class="p-1">
 			#{childBounty.id}

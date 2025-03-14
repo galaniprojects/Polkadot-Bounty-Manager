@@ -2,22 +2,19 @@
 	import type { WalletInfo } from './walletInfo';
 
 	export let wallet: WalletInfo;
-	const opacity = wallet.available ? 'bg-opacity-30' : 'bg-opacity-20';
 </script>
 
-<span
-	class="cursor-pointer flex flex-col p-2 s:flex-row s:justify-between s:items-center s:p-4 rounded-lg bg-backgroundButtonDark {opacity}"
->
+<span class="container" class:available={wallet.available} class:unavailable={!wallet.available}>
 	<!-- Wallet Icon and Name -->
-	<span class="flex items-center space-x-1 sm:space-x-2">
-		<span class="w-10 h-10">
+	<span class="info">
+		<span class="icon">
 			<img src={wallet.icon} alt="Logo" />
 		</span>
-		<span class="text-2xl">{wallet.name}</span>
+		<span class="name">{wallet.name}</span>
 	</span>
 
 	<!-- Action Button -->
-	<span class="flex justify-end items-center sm:space-x-2">
+	<span class="action">
 		<span>
 			{#if wallet.available}
 				Connect
@@ -25,6 +22,66 @@
 				Download
 			{/if}
 		</span>
-		<span class="material-symbols-outlined mb-1"> arrow_forward_ios </span>
+		<span class="material-symbols-outlined arrow"> arrow_forward_ios </span>
 	</span>
 </span>
+
+<style>
+	.container {
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		padding: 8px;
+		border-radius: 8px;
+	}
+
+	.available {
+		background-color: theme('colors.backgroundButtonLight');
+	}
+
+	.unavailable {
+		background-color: theme('colors.backgroundButtonDark');
+		color: theme('colors.backgroundApp');
+	}
+
+	@media (min-width: 375px) {
+		.container {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			padding: 16px;
+		}
+	}
+
+	.info {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	@media (min-width: 375px) {
+		.info {
+			gap: 8px;
+		}
+	}
+
+	.icon {
+		width: 40px;
+		height: 40px;
+	}
+
+	.name {
+		font-size: 1.5rem;
+	}
+
+	.action {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.arrow {
+		margin-bottom: 4px;
+		font-size: 16px;
+	}
+</style>

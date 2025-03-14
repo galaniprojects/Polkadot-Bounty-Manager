@@ -5,43 +5,33 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		colors: {
-			// ToDo: remove colors under here which are no longer necessary
-
+			// ToDo: substitute and remove colors under here which are no longer necessary
 			primary: '#28123E',
-			secondary: '#431B5E',
 			accent: '#E6007A',
-			backgroundContent: '#E5E3EE',
-			backgroundContentWrapper: '#BFACBF',
-			borderColor: '#695592',
 			black: colors.black,
 			childBountyOrange: '#DD700D',
-			childBountyGray: '#65708B',
-			childBountyGreen: '#087C2B',
-			childBountyBackground: '#D7D5E2',
-			childBountyHeaderBackground: '#F4F4F4',
-			curatorMainBackground: '#836FAC',
-			curatorCarousel: '#6B598C',
-			darkgray: '#94889F',
 			extendButtonBackground: '#660000',
 			gray: colors.gray,
-			notifications: '#FFAA35',
 			red: '#E6003D',
 			transparent: colors.transparent,
 			white: colors.white,
 
 			// colors in the new design
-			charcoal: '#131313',
 			cloudGray: '#C4C4C4',
 			lightGray: '#E4E4E4',
-
-			// New colors for lighter design
 			backgroundApp: '#FCFCFC',
 			backgroundBounty: '#DDD',
 			backgroundChildBountyDetails: '#E7E7E7',
+			backgroundChildBountyExpand: '#EEE',
+			backgroundChildBountyCloseDown: '#CCC',
 			backgroundButtonDark: '#606060',
 			backgroundButtonLight: '#B2B2B2',
 			borderDropdown: '#9A9A9A',
-			backgroundCloseChildBounty: '#B23434',
+			backgroundCloseChildBountyButton: '#B23434',
+			statusActive: '#009C5D',
+			statusApprovedRejected: '#00746A',
+			statusProposedFunded: '#B4A900',
+			statusPendingPayout: '#836FAC',
 			textPrimary: '#131313'
 		},
 		extend: {

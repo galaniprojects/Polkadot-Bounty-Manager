@@ -1,6 +1,7 @@
 import { get } from 'svelte/store';
 import { activeAccount, activeAccountBounties, bounties } from '../stores';
 import { type Bounty } from '../types/bounty';
+import { isCurator } from './isCurator';
 
 /**
  * Sets the store's `activeAccountBounties` value to filtered bounties
@@ -15,11 +16,11 @@ export function setActiveAccountBounties() {
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {
-		if (bounty.proposer === address || bounty.curator === address) {
+		if (bounty.proposer === address || isCurator(bounty)) {
 			filteredBounties.push(bounty);
 			continue;
 		}
-		const filteredChildBounties = bounty.childBounties.filter(({ curator }) => curator === address);
+		const filteredChildBounties = bounty.childBounties.filter(isCurator);
 		if (filteredChildBounties.length > 0) {
 			bounty.childBounties = filteredChildBounties;
 			filteredBounties.push(bounty);

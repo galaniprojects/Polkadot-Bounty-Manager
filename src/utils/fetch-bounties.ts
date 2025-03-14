@@ -1,10 +1,11 @@
 import { bounties as bountiesStore, dotApi } from '../stores';
-import { hideLoadingDialog, showErrorDialog, showLoadingDialog } from './loading-screen';
+import { hideLoadingModal, showErrorModal, showLoadingModal } from '../components/modals';
 import { setActiveAccountBounties } from './bounties';
 import { get } from 'svelte/store';
 import { fetchBountiesFromBlockchain } from './fetchBountiesFromBlockchain';
 import { addBountiesFromDoTreasury } from './addBountiesFromDoTreasury';
 import { calculateExpirationDate, formatDate } from './common';
+import { addCuratorMultisigAccounts } from './addCuratorMultisigAccounts';
 
 /**
  * Fetches all bounties, child bounties and their descriptions, sorts them,
@@ -14,13 +15,12 @@ import { calculateExpirationDate, formatDate } from './common';
 export async function fetchBountiesAndChildBounties(showProgress = true) {
 	try {
 		if (showProgress) {
-			showLoadingDialog('Loading...');
+			showLoadingModal('Loading…', 'This might take a moment.');
 		}
 
 		const bounties = await fetchBountiesFromBlockchain();
 
 		try {
-			// TODO: skip for Paseo
 			// get optional data about inactive bounties from doTreasury API
 			await addBountiesFromDoTreasury(bounties);
 		} catch (exception) {
@@ -28,13 +28,14 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 			console.error(exception);
 		}
 
+		await addCuratorMultisigAccounts(bounties);
+
 		bounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 		bounties.forEach(({ childBounties }) => {
 			childBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 		});
 
 		const api = get(dotApi);
-		await api.query.System.BlockWeight.getValue(); // somehow makes the next query work
 		const currentBlock = await api.query.System.Number.getValue();
 		bounties.forEach((bounty) => {
 			if (bounty.updateDue) {
@@ -50,14 +51,14 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 
 		bountiesStore.set(bounties);
 		setActiveAccountBounties();
-
+	} catch (error) {
+		console.error(error);
 		if (showProgress) {
-			hideLoadingDialog();
+			showErrorModal('Error while loading bounty details');
 		}
-	} catch (e) {
-		console.error(e);
+	} finally {
 		if (showProgress) {
-			showErrorDialog('Error while loading bounty details');
+			hideLoadingModal();
 		}
 	}
 }

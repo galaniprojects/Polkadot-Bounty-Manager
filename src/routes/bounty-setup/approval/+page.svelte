@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Deposit from '../../../components/Deposit.svelte';
-	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { showErrorModal } from '../../../components/modals';
 	import {
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
@@ -49,11 +49,11 @@
 	async function submit() {
 		try {
 			if (!$activeAccount) {
-				showErrorDialog('Wallet is not connected');
+				showErrorModal('Wallet is not connected');
 				return;
 			}
 			if (!transaction) {
-				showErrorDialog('Unexpected error, bounty id is not set.');
+				showErrorModal('Unexpected error, bounty id is not set.');
 				return;
 			}
 
@@ -63,7 +63,7 @@
 			}
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(`Something went wrong, ${String(e)}`);
+			showErrorModal(`Something went wrong, ${String(e)}`);
 		}
 	}
 </script>
@@ -89,16 +89,17 @@
 		<div>
 			<div class="space-y-1 sm:space-y-3">
 				<p class="text-xs mb-1">Treasury track</p>
-				<div class="border">
-					<DropdownMenu
-						bind:selectedItem={selectedTreasuryTrack}
-						items={treasuryTracks}
-						widthContainer="w-56 lg:w-80"
-						widthDropdown="w-56 lg:w-80"
-						textAlign="text-center"
-						bgColor="lilac"
-					/>
-				</div>
+				<DropdownMenu
+					bind:selectedItem={selectedTreasuryTrack}
+					items={treasuryTracks}
+					widthContainer="w-56 lg:w-80"
+					widthDropdown="w-56 lg:w-80"
+					textAlign="text-center"
+					bgColor="grey"
+					backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+					height="h-10"
+					positionOverlay="-mt-[40px]"
+				/>
 				<p class="text-xs">(preselected based on Bounty value)</p>
 			</div>
 

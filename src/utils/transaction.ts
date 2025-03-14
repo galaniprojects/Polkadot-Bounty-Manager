@@ -1,12 +1,65 @@
 import type { Transaction, TxEventsPayload } from 'polkadot-api';
 import { get } from 'svelte/store';
-import { activeAccount, polkadotSigner } from '../stores';
-import { showErrorDialog, showLoadingDialog, showSuccessDialog } from './loading-screen';
+import { activeAccount, dotApi, polkadotSigner } from '../stores';
+import {
+	hideLoadingModal,
+	showErrorModal,
+	showLoadingModal,
+	showSuccessModal
+} from '../components/modals';
 import { fetchBountiesAndChildBounties } from './fetch-bounties';
 import { truncateString } from './common';
+import { getMultisigSigner, getProxySigner } from '@polkadot-api/meta-signers';
+import { MultiAddress } from '@polkadot-api/descriptors';
+import type { Bounty } from '../types/bounty';
+import type { ChildBounty } from '../types/child-bounty';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTransaction = Transaction<any, string, string, unknown>;
+
+class InternalError extends Error {}
+
+async function getSignerAndCallData(
+	transaction: AnyTransaction,
+	proxyAddress?: string,
+	multisigAddress?: string
+) {
+	const signer = get(polkadotSigner);
+	if (!signer) {
+		throw new InternalError('Internal Error, signer is undefined.');
+	}
+
+	if (!proxyAddress || !multisigAddress) {
+		// multisig not required
+		return { signer };
+	}
+
+	const multisigs = get(activeAccount)?.multisigs;
+	const multisigInfo = multisigs?.find(({ address }) => address === multisigAddress);
+	if (!multisigInfo) {
+		throw new InternalError('Internal Error, multisig not found.');
+	}
+
+	const api = get(dotApi);
+	const multisigSigner = getMultisigSigner(
+		multisigInfo,
+		api.query.Multisig.Multisigs.getValue,
+		api.apis.TransactionPaymentApi.query_info,
+		signer,
+		{ method: () => 'as_multi' }
+	);
+
+	const transactionWithProxy = api.tx.Proxy.proxy({
+		real: MultiAddress.Id(proxyAddress),
+		force_proxy_type: undefined,
+		call: transaction.decodedCall
+	});
+
+	return {
+		signer: getProxySigner({ real: proxyAddress }, multisigSigner),
+		callData: (await transactionWithProxy.getEncodedData()).asHex()
+	};
+}
 
 /**
  * Signs and submits a transaction using an extension or Wallet Connect.
@@ -17,16 +70,19 @@ export type AnyTransaction = Transaction<any, string, string, unknown>;
  **/
 export async function submitTransaction(
 	transaction: AnyTransaction,
-	successMessage?: string
-): Promise<TxEventsPayload | undefined> {
+	tryUseMultisig?: Bounty | ChildBounty
+): Promise<TxFinalizedPayload | undefined> {
 	try {
-		const signer = get(polkadotSigner);
-		if (!signer) {
-			showErrorDialog('Internal Error, signer is undefined.');
-			return;
-		}
+		const { signer, callData } = await getSignerAndCallData(
+			transaction,
+			tryUseMultisig?.curator,
+			tryUseMultisig?.curatorMultisigAccount
+		);
 
-		showLoadingDialog('Submitting transaction');
+		showLoadingModal(
+			'Submitting transaction…',
+			'Waiting for transaction to be included in finalized block.'
+		);
 
 		const result = await new Promise<TxEventsPayload>((resolve, reject) => {
 			transaction.signSubmitAndWatch(signer).subscribe({
@@ -39,30 +95,40 @@ export async function submitTransaction(
 			});
 		});
 		if (!result.dispatchError) {
-			showSuccessDialog('Transaction', successMessage || 'Operation success.');
-			await fetchBountiesAndChildBounties(false);
+			showSuccessModal('Transaction', 'Transaction finalized.', callData);
+
+			(async () => {
+				// trigger update in the background but return immediately
+				await fetchBountiesAndChildBounties(false);
+			})();
 			return result;
 		}
 
-		showErrorDialog(readableError(result.dispatchError));
-	} catch (e) {
+		showErrorModal(readableError(result.dispatchError));
+	} catch (exception) {
+		if (exception instanceof InternalError) {
+			showErrorModal(exception.message);
+			return;
+		}
+
 		const account = get(activeAccount);
 		if (!account) {
-			showErrorDialog('Internal error, active account not found.');
+			showErrorModal('Internal error, active account not found.');
 			return;
 		}
 
+		const readable = readableError(exception);
 		if (account.source !== 'WalletConnect') {
-			showErrorDialog(readableError(e));
+			showErrorModal(readable);
 			return;
 		}
 
-		console.error(e);
-		showErrorDialog(
-			`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (` +
-				readableError(e) +
-				')'
+		console.error(exception);
+		showErrorModal(
+			`Note: If you are using Multix, please disregard this message and proceed directly to Multix. (${readable})`
 		);
+	} finally {
+		hideLoadingModal();
 	}
 }
 

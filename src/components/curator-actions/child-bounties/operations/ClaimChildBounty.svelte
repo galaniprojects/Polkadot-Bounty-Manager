@@ -6,15 +6,12 @@
 	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
 	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
-	import ExtendBountyLabel from '../../../ExtendBountyLabel.svelte';
-	import Input from '../../../Input/Input.module.css';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
-	let extend = false;
 
 	$: transaction = batchExtendBounty(
-		extend && childBounty.parentBounty,
+		childBounty.parentBounty,
 		$dotApi.tx.ChildBounties.claim_child_bounty({
 			child_bounty_id: childBounty.id,
 			parent_bounty_id: childBounty.parentBounty
@@ -22,12 +19,14 @@
 	);
 
 	async function submit() {
-		open = false;
-		await submitTransaction(transaction, 'Child bounty successfully claimed');
+		const successful = await submitTransaction(transaction);
+		if (successful) {
+			dialog.close();
+		}
 	}
 </script>
 
-<Dialog bind:open title="CLAIM CHILD BOUNTY AWARD">
+<Dialog bind:dialog title="CLAIM CHILD BOUNTY AWARD">
 	<div class="space-y-8">
 		<p class="p-1">
 			#{childBounty.id}
@@ -46,11 +45,6 @@
 				<CopyableAddress address={childBounty.beneficiary} />
 			</div>
 		{/if}
-
-		<label class="space-y-2 flex gap-4 items-center cursor-pointer">
-			<input type="checkbox" bind:checked={extend} class={Input.switch} />
-			<ExtendBountyLabel />
-		</label>
 
 		<div class="space-y-2">
 			<p class="text-xs">Estimated basic fee:</p>

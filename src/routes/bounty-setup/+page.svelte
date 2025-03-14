@@ -4,7 +4,7 @@
 	import { activeAccount, dotApi } from '../../stores';
 	import { convertFormattedDotToPlanck } from '../../utils/polkadot';
 	import { isPositiveNumber } from '../../utils/common';
-	import { showErrorDialog } from '../../utils/loading-screen';
+	import { showErrorModal } from '../../components/modals';
 	import { Binary } from 'polkadot-api';
 	import Fee from '../../components/Fee.svelte';
 	import Input from '../../components/Input/Input.module.css';
@@ -29,28 +29,28 @@
 
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 
 		if (bountyTitle.length === 0) {
-			showErrorDialog('Bounty title is empty');
+			showErrorModal('Bounty title is empty');
 			return;
 		}
 		if (!bountyValue) {
-			showErrorDialog('Bounty value is invalid');
+			showErrorModal('Bounty value is invalid');
 			return;
 		}
 		if (!isPositiveNumber(bountyValue)) {
-			showErrorDialog('Bounty value is invalid');
+			showErrorModal('Bounty value is invalid');
 			return;
 		}
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		const result = await submitTransaction(transaction, 'Bounty creation success.');
+		const result = await submitTransaction(transaction);
 		if (!result) {
 			return;
 		}
@@ -77,7 +77,9 @@
 		await goto('/bounty-setup/success');
 	}
 
-	$: (async () => {
+	$: getBondValue(bountyTitle).catch(() => {});
+
+	async function getBondValue(bountyTitle: string) {
 		try {
 			bondValue = '-';
 			if (!bountyTitle) return;
@@ -90,7 +92,7 @@
 		} catch {
 			bondValue = '-';
 		}
-	})();
+	}
 </script>
 
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">

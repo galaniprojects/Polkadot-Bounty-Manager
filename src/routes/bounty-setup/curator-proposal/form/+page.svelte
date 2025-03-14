@@ -5,7 +5,7 @@
 	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import Deposit from '../../../../components/Deposit.svelte';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/modals';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
@@ -46,22 +46,22 @@
 
 	async function submit() {
 		if (!$activeAccount) {
-			showErrorDialog('Wallet is not connected');
+			showErrorModal('Wallet is not connected');
 			return;
 		}
 
 		if (!curatorAddress || !isValidAddress(curatorAddress)) {
-			showErrorDialog('Curator address is invalid');
+			showErrorModal('Curator address is invalid');
 			return;
 		}
 
 		if (!curatorFee || !isPositiveNumber(curatorFee)) {
-			showErrorDialog('Invalid value of curator fee');
+			showErrorModal('Invalid value of curator fee');
 			return;
 		}
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
@@ -90,16 +90,17 @@
 
 		<div class="mt-5 space-y-1 sm:space-y-3">
 			<p class="text-xs mb-1">Treasury track</p>
-			<div>
-				<DropdownMenu
-					bind:selectedItem={selectedTreasuryTrack}
-					items={treasuryTracks}
-					widthContainer="w-56 lg:w-80"
-					widthDropdown="w-56 lg:w-80"
-					textAlign="text-center"
-					bgColor="lilac"
-				/>
-			</div>
+			<DropdownMenu
+				bind:selectedItem={selectedTreasuryTrack}
+				items={treasuryTracks}
+				widthContainer="w-56 lg:w-80"
+				widthDropdown="w-56 lg:w-80"
+				textAlign="text-center"
+				bgColor="grey"
+				backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+				height="h-10"
+				positionOverlay="-mt-[40px]"
+			/>
 			<p class="text-xs mt-1">
 				(please select the same or higher treasury track that was used in the Bounty Approval
 				referendum)

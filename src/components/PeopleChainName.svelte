@@ -1,30 +1,36 @@
 <script lang="ts">
 	import type { Binary } from 'polkadot-api';
-	import { peopleApi } from '../utils/people';
+	import { names, peopleApi } from '../utils/people';
 	import Checkmark from './common/Checkmark.svg';
 
 	export let address: string;
 
 	let label: string | undefined;
-	$: {
+	$: getLabel(address).catch(() => {});
+
+	async function getLabel(address: string) {
 		label = undefined;
-		(async () => {
-			const input = address;
+		const input = address;
 
-			if (!$peopleApi) {
-				const { createPeopleTypedApi } = await import('../utils/createPeopleTypedApi');
-				$peopleApi = createPeopleTypedApi();
-			}
+		if (!$peopleApi) {
+			const { createPeopleTypedApi } = await import('../utils/createPeopleTypedApi');
+			$peopleApi = createPeopleTypedApi();
+		}
 
-			const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
-			if (!result || address !== input) return;
+		if ($names[address]) {
+			label = $names[address];
+			return;
+		}
 
-			const value = result[0].info.display.value as Binary | undefined;
-			const text = value?.asText();
-			if (!text) return;
+		const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
+		if (!result || address !== input) return;
 
-			label = text.substring(0, 20);
-		})();
+		const value = result[0].info.display.value as Binary | undefined;
+		const text = value?.asText();
+		if (!text) return;
+
+		label = text.substring(0, 20);
+		$names[address] = label;
 	}
 </script>
 

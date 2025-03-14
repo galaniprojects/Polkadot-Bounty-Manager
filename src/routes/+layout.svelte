@@ -2,8 +2,9 @@
 	import { hideTestBar } from '../utils/hideTestBar';
 	import '../app.css';
 	import AppBar from '../components/app-bar/AppBar.svelte';
-	import LoadingScreen from '../components/LoadingScreen.svelte';
-	import { dotApi, loadingDialogState } from '../stores';
+	import SuccessModal from '../components/SuccessModal/SuccessModal.svelte';
+	import ErrorModal from '../components/ErrorModal/ErrorModal.svelte';
+	import { bounties } from '../stores';
 	import TestBar from '../components/TestBar.svelte';
 	import Footer from '../components/Footer/Footer.svelte';
 	import { page } from '$app/state';
@@ -21,9 +22,10 @@
 </div>
 <AppBar />
 
-<LoadingScreen bind:dialogState={$loadingDialogState} />
+<SuccessModal />
+<ErrorModal />
 
-{#if renderChildren && $dotApi}<slot />{/if}
+{#if renderChildren && $bounties.length > 0}<slot />{/if}
 
 <Footer />
 

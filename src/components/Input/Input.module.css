@@ -16,6 +16,11 @@
 		url(coin.svg) no-repeat center right 7px/20px,
 		url(bar.svg) no-repeat center right 35px;
 	background-color: white;
+	-moz-appearance: textfield;
+}
+
+.polkadot::-webkit-inner-spin-button {
+	display: none;
 }
 
 .switch {

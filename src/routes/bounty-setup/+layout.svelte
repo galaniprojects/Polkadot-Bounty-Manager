@@ -4,11 +4,7 @@
 	import { page } from '$app/state';
 
 	import BountySetupTab from '../../components/bounty-setup/BountySetupTab.svelte';
-	import {
-		hideLoadingDialog,
-		showErrorDialog,
-		showLoadingDialog
-	} from '../../utils/loading-screen';
+	import { hideLoadingModal, showErrorModal, showLoadingModal } from '../../components/modals';
 	import { dotApi } from '../../stores';
 	import { bountyInfo } from './_bountyInfo';
 
@@ -26,13 +22,13 @@
 		const bountyId = page.url.searchParams.get('bounty-id');
 		if (!bountyId) return;
 
-		showLoadingDialog('Loading bounty info');
+		showLoadingModal('Loading bounty info…', 'This might take a moment.');
 		try {
 			const bountyDescription = await $dotApi.query.Bounties.BountyDescriptions.getValue(
 				Number(bountyId)
 			);
 			if (!bountyDescription) {
-				showErrorDialog('Failed to load bounty info');
+				showErrorModal('Failed to load bounty info');
 				return;
 			}
 
@@ -41,9 +37,10 @@
 				description: bountyDescription.asText(),
 				value: undefined
 			};
-			hideLoadingDialog();
 		} catch {
-			showErrorDialog('Failed to load bounty info');
+			showErrorModal('Failed to load bounty info');
+		} finally {
+			hideLoadingModal();
 		}
 	});
 </script>

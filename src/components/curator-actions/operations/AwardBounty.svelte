@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../../types/bounty';
 	import { isValidAddress } from '../../../utils/polkadot';
 	import { dotApi } from '../../../stores';
-	import { showErrorDialog } from '../../../utils/loading-screen';
+	import { showErrorModal } from '../../modals';
 	import Dialog from '../../common/Dialog.svelte';
 	import { MultiAddress } from '@polkadot-api/descriptors';
 	import { maybeTransaction, submitTransaction } from '../../../utils/transaction';
@@ -10,7 +10,7 @@
 	import Input from '../../Input/Input.module.css';
 	import Currency from '../../Currency.svelte';
 
-	export let open = true;
+	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
 
 	let beneficiary = '';
@@ -25,26 +25,28 @@
 	);
 
 	async function submit() {
-		open = false;
 		try {
 			if (!isValidAddress(beneficiary)) {
-				showErrorDialog('Beneficiary address is invalid');
+				showErrorModal('Beneficiary address is invalid');
 				return;
 			}
 			if (!transaction) {
-				showErrorDialog('An internal error has happened');
+				showErrorModal('An internal error has happened');
 				return;
 			}
 
-			await submitTransaction(transaction, 'Your bounty has been awarded and can now be claimed');
+			const successful = await submitTransaction(transaction, bounty);
+			if (successful) {
+				dialog.close();
+			}
 		} catch (e) {
 			console.error(e);
-			showErrorDialog(String(e));
+			showErrorModal(String(e));
 		}
 	}
 </script>
 
-<Dialog bind:open title="AWARD BOUNTY">
+<Dialog bind:dialog title="AWARD BOUNTY">
 	<div class="space-y-10">
 		<div class="space-x-1">
 			<span>#{bounty.id}</span>

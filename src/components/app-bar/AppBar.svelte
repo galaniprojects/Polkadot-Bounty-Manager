@@ -3,35 +3,28 @@
 	import { activeAccount, dotApi, polkadotSigner } from '../../stores';
 	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
-	import LoginDialog from './LoginDialog.svelte';
-	import { setActiveAccountBounties } from '../../utils/bounties';
+	import LoginModal from './LoginModal.svelte';
+	import { showLoginModal } from './loginModalStores';
+	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
 	import { page } from '$app/state';
-	import { hideLoadingDialog, showLoadingDialog } from '../../utils/loading-screen';
 	import { initializeApi } from '../../utils/initializeApi';
-	import { endpoints } from '../../utils/endpoints';
+	import { currentBlockchain } from './blockchains';
 	import { fetchBountiesAndChildBounties } from '../../utils/fetch-bounties';
 	import ChainMenu from './ChainMenu.svelte';
-
-	let loginDialogOpen = false;
-
-	function showLoginDialog() {
-		loginDialogOpen = true;
-	}
+	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
+	import AllBountiesToggle from './AllBountiesToggle.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
-			showLoadingDialog('Connecting to Polkadot...');
-			await initializeApi(endpoints);
+			await initializeApi($currentBlockchain.endpoints);
 			await connectStoredAccount();
-			hideLoadingDialog();
 		}
 
 		await fetchBountiesAndChildBounties();
-		setActiveAccountBounties();
 	});
 
 	async function connectStoredAccount() {
@@ -39,54 +32,104 @@
 		const storedAccount = sessionStorage.getItem('account');
 		if (!storedAccount) return;
 
-		const parsedAccount = JSON.parse(storedAccount) as AccountInfo;
-		activeAccount.set(parsedAccount);
-
-		const { address, source } = parsedAccount;
+		const { address, source } = JSON.parse(storedAccount) as AccountInfo;
 
 		const accounts = await getAccounts(source);
 		const account = accounts.find((account) => account.address === address);
 		if (!account) {
-			activeAccount.set(undefined);
-			sessionStorage.clear();
-			console.error('something went wrong while trying to restore session.');
-			return;
+			sessionStorage.removeItem('account');
+			throw new Error('Something went wrong while trying to restore session.');
 		}
+
+		await updateAccountMultisigsOnBlockchain(account);
+		activeAccount.set(account);
 		polkadotSigner.set(account.polkadotSigner);
 	}
 </script>
 
-<header class="relative flex items-center justify-between min-h-20 px-4 sm:px-12 py-4">
-	<div class="flex flex-col items-center space-y-3">
+<header class="header">
+	<div class="logoChainMenuContainer">
 		<a href="/curator-actions">
 			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
 		</a>
 		<ChainMenu />
 	</div>
 
+	<AllBountiesToggle />
+
 	<div>
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button on:click={showLoginDialog}>Connect Wallet</button>
+				<button on:click={showLoginModal}>Connect Wallet</button>
 			{/if}
 			<w3m-button></w3m-button>
 		{:else}
-			<!-- User Address -->
-			<div class="flex flex-col items-center align-top space-y-5">
-				<div class="flex gap-2 items-center">
-					<div class="w-5 h-5">
+			<div class="accountContainer">
+				<button
+					type="button"
+					class="account"
+					on:click={async () => {
+						await navigator.clipboard.writeText($activeAccount.address);
+					}}
+				>
+					<span class="identicon">
 						<PolkadotIcon address={$activeAccount.address} />
-					</div>
+					</span>
 					<PeopleChainName address={$activeAccount.address}>
 						{$activeAccount.name || 'Account'}
 					</PeopleChainName>
-				</div>
+				</button>
 				<BurgerMenu />
 			</div>
 		{/if}
 	</div>
 </header>
 
-{#if loginDialogOpen}
-	<LoginDialog title="CHOOSE YOUR WALLET" bind:open={loginDialogOpen} />
-{/if}
+<LoadingModal />
+<LoginModal />
+
+<style>
+	.header {
+		position: relative;
+		display: flex;
+		justify-self: center;
+		justify-content: space-between;
+		align-items: end;
+		min-height: 80px;
+		padding: 8px;
+		width: 100%;
+		margin-top: 10px;
+	}
+
+	.logoChainMenuContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.accountContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.account {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.identicon {
+		width: 20px;
+		height: 20px;
+	}
+
+	@media (min-width: 768px) {
+		.header {
+			width: 754px;
+			padding: 0px;
+		}
+	}
+</style>

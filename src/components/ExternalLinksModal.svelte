@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Dialog from './common/Dialog.svelte';
 
-	export let open = false;
+	export let dialog: HTMLDialogElement;
 	export let url: string;
 	export let proceed: () => void;
 </script>
 
-<Dialog bind:open title="EXTERNAL LINK">
+<Dialog bind:dialog title="EXTERNAL LINK">
 	<div class="space-y-10">
 		<p>You are now leaving the Bounty Manager</p>
 		<div>

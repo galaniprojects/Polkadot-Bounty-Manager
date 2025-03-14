@@ -2,21 +2,20 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { Binary } from 'polkadot-api';
-	import { activeAccount, bounties, dotApi } from '../../../../stores';
+	import { bounties, dotApi } from '../../../../stores';
 	import { isPositiveNumber } from '../../../../utils/common';
 	import { maybeTransaction, submitTransaction } from '../../../../utils/transaction';
 	import { isValidAddress } from '../../../../utils/polkadot';
-	import { showErrorDialog } from '../../../../utils/loading-screen';
+	import { showErrorModal } from '../../../../components/modals';
 	import { getBountyCuratorError } from '../getBountyCuratorError';
 	import { getAllChildBountyCalls } from '../../../../utils/getAllChildBountyCalls';
 	import Input from '../../../../components/Input/Input.module.css';
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 
-	const { searchParams } = page.url;
-	const bountyId = parseInt(searchParams.get('bounty-id') ?? '');
+	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
-	$: error = getBountyCuratorError(bountyId, $bounties, bounty, $activeAccount?.address);
+	$: error = getBountyCuratorError(bountyId, $bounties, bounty);
 
 	let childBountyId: number;
 	let nextAvailableChildBountyId: number;
@@ -27,19 +26,10 @@
 			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
 		});
 		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
-		const external = parseInt(searchParams.get('child-bounty-id') ?? '');
-		childBountyId = Math.max(!Number.isNaN(external) ? external : 0, nextAvailableChildBountyId);
+		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	let childBounties = [
-		{
-			value: searchParams.get('value') ?? '',
-			title: searchParams.get('title') ?? '',
-			fee: searchParams.get('fee') ?? '',
-			beneficiary: searchParams.get('beneficiary') ?? ''
-		},
-		{ value: '', title: '', fee: '', beneficiary: '' }
-	];
+	let childBounties = [{ value: '', title: '', fee: '', beneficiary: '' }];
 
 	$: isFormValid =
 		childBounties.length > 0 &&
@@ -63,12 +53,13 @@
 		this.setCustomValidity(isValidAddress(this.value) ? '' : 'Beneficiary address is invalid');
 	}
 
+	let includeClaim = true;
 	let extend = false;
 
 	$: transaction = maybeTransaction(
 		() =>
 			isFormValid &&
-			$activeAccount?.address &&
+			bounty?.curator &&
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...childBounties.flatMap(({ title, value, fee, beneficiary }, index) =>
@@ -77,9 +68,10 @@
 							child_bounty_id: childBountyId + index,
 							title,
 							value,
-							curator: $activeAccount.address,
+							curator: bounty.curator as string,
 							beneficiary,
-							fee
+							fee,
+							includeClaim
 						})
 					),
 					...(!extend
@@ -98,11 +90,11 @@
 		event.preventDefault();
 
 		if (!transaction) {
-			showErrorDialog('An internal error has happened');
+			showErrorModal('An internal error has happened');
 			return;
 		}
 
-		const success = await submitTransaction(transaction);
+		const success = await submitTransaction(transaction, bounty);
 		if (success) {
 			await goto('/curator-actions');
 		}
@@ -130,7 +122,7 @@
 
 				<ol class="text-xs mt-2 ml-4 list-decimal">
 					<li>Create a new child bounty.</li>
-					<li>Assign the connected account as sub-curator.</li>
+					<li>Assign the curator proxy as sub-curator.</li>
 					<li>Accept the sub-curator role.</li>
 					<li>Award the child bounty to the provided beneficiary.</li>
 					<li>Claim the child bounty.</li>
@@ -157,7 +149,7 @@
 			</label>
 
 			<div class="grid cardsGrid gap-6">
-				{#each childBounties as child, index}
+				{#each childBounties as child, index (child)}
 					<fieldset class="bg-white -mt-3 p-5 lg:w-full rounded-md shadow-lg">
 						<legend class="relative top-7">Child bounty #{index + 1}</legend>
 
@@ -238,6 +230,15 @@
 					</p>
 				{/if}
 			</div>
+
+			<p>
+				<label class="inline-flex gap-4 items-center cursor-pointer">
+					<input type="checkbox" bind:checked={includeClaim} class={Input.switch} />
+					<span class="text-xs">
+						Include the <strong>Claim Child Bounty</strong> extrinsic in your transaction.
+					</span>
+				</label>
+			</p>
 
 			<p>
 				<label class="inline-flex gap-4 items-center cursor-pointer">

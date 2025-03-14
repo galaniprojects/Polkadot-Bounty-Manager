@@ -1,3 +1,5 @@
+import { get } from 'svelte/store';
+import { currentBlockchain } from '../components/app-bar/blockchains';
 import { fetchAllWithPagination } from './fetchAllWithPagination';
 import type { ChildBounty, childBountyStatuses } from '../types/child-bounty';
 import type { Bounty } from '../types/bounty';
@@ -66,29 +68,31 @@ function parseBounty(input: DoTreasuryBounty) {
 	};
 }
 
-const bountiesApi = 'https://polkadot-api.dotreasury.com/bounties';
-
 /** Some bounties are not delivered by blockchain nodes and can only be fetched from indexers like doTreasury.
  * This function modifies existing list because it also needs to modify childBounties property. */
 export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
-	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(new URL(bountiesApi), 20);
-	const doTreasuryBounties = rawBounties.map(parseBounty);
+	const { doTreasuryApi } = get(currentBlockchain).baseUrls;
+	if (!doTreasuryApi) return;
 
-	const childBounties = bounties.flatMap(({ childBounties }) => childBounties);
+	const url = new URL(`${doTreasuryApi}/bounties`);
+	const rawBounties = await fetchAllWithPagination<DoTreasuryBounty>(url, 20);
+	const doTreasuryBounties = rawBounties.map(parseBounty);
 	const doTreasuryChildBounties = doTreasuryBounties.flatMap(({ childBounties }) => childBounties);
 
 	const bountiesMap = keyBy(bounties, 'id');
-	const childBountiesMap = keyBy(childBounties, 'id');
 
 	// merge parent bounties
 	const missingBounties = doTreasuryBounties.filter(({ id }) => !(id in bountiesMap));
 	bounties.push(...missingBounties);
 
 	// merge child bounties
-	const missingChildBounties = doTreasuryChildBounties.filter(
-		({ id }) => !(id in childBountiesMap)
-	);
 	bounties.forEach(({ id, childBounties }) => {
-		childBounties.push(...missingChildBounties.filter(({ parentBounty }) => id === parentBounty));
+		const childBountiesMap = keyBy(childBounties, 'id');
+
+		const missingChildBounties = doTreasuryChildBounties
+			.filter(({ parentBounty }) => id === parentBounty)
+			.filter(({ id }) => !(id in childBountiesMap));
+
+		childBounties.push(...missingChildBounties);
 	});
 }
