@@ -44,7 +44,6 @@
 
 .switch::before {
 	content: '';
-	display: block;
 	inline-size: var(--width);
 	block-size: var(--height);
 	border-radius: calc(var(--height));
@@ -59,12 +58,8 @@
 }
 
 .switch::after {
-	content: '✕';
-	font-size: 14px;
-	color: white;
-	display: block;
-	text-align: center;
-	padding: 2px 0px 0px;
+	content: '';
+	padding: 0px 0px 2px;
 	background-color: var(--switch-background, theme('colors.backgroundButtonDark'));
 	inline-size: var(--knob);
 	block-size: var(--knob);
@@ -79,6 +74,7 @@
 .switch:checked::after {
 	content: '✔';
 	color: theme('colors.accent');
+	text-align: center;
 	background-color: var(--switch-checked-background, theme('colors.white'));
 	inset-inline-start: calc(var(--width) - var(--knob) - var(--offset));
 	border: 1px solid theme('colors.accent');
