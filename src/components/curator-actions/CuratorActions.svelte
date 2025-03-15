@@ -137,7 +137,7 @@
 		cursor: pointer;
 	}
 
-	@media (max-width: 640px) {
+	@media (width <= 756px) {
 		.cards {
 			grid-template-columns: repeat(1, 1fr);
 		}

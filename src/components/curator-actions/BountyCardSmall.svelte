@@ -10,7 +10,6 @@
 
 	let remainingBalance: bigint | undefined;
 
-	// Handle description and balance fetch
 	$: getRemainingBalance(bounty.id).catch(() => {});
 
 	async function getRemainingBalance(bountyId: number) {
@@ -111,7 +110,7 @@
 			0px 6px 12px 3px rgba(0, 0, 0, 0.1);
 	}
 
-	@media (max-width: 765px) {
+	@media (width <= 756px) {
 		.card {
 			width: 100%;
 		}
