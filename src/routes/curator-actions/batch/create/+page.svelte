@@ -68,7 +68,7 @@
 	}
 </script>
 
-<div class="bg-backgroundBounty p-5 m-3 rounded-md">
+<div class="container bg-backgroundBounty p-5 m-3 rounded-md">
 	<h1 class="text-2xl">ADD MULTIPLE NEW CHILD BOUNTIES</h1>
 
 	{#if error}
@@ -170,6 +170,12 @@
 </div>
 
 <style>
+	.container {
+		width: 754px;
+		margin: auto;
+		margin-top: 13px;
+	}
+
 	.cardsGrid {
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		grid-auto-rows: 1fr;
