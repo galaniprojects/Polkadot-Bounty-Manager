@@ -2,7 +2,7 @@
 	import type { Bounty } from '../../types/bounty';
 	import { bounties } from '../../stores';
 	import { showErrorModal } from '../../components/modals';
-	import BountyCard from '../../components/curator-actions/BountyCard.svelte';
+	import BountyPage from '../../components/curator-actions/BountyPage.svelte';
 
 	let bounty: Bounty | undefined;
 	$: bounty = (() => {
@@ -28,7 +28,7 @@
 		data-pagination-scroll
 	>
 		<div class="w-full md:w-[754px] p-2 md:p-0">
-			<BountyCard {bounty} />
+			<BountyPage {bounty} />
 		</div>
 	</div>
 {/if}

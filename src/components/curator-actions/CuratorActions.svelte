@@ -3,7 +3,7 @@
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import Pagination from './Pagination.svelte';
 	import { goto } from '$app/navigation';
-	import BountyCardSmall from './BountyCardSmall.svelte';
+	import BountyCard from './BountyCard.svelte';
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
@@ -104,7 +104,7 @@
 							await goto(`/bounty?id=${bounty.id}`);
 						}}
 					>
-						<BountyCardSmall {bounty} />
+						<BountyCard {bounty} />
 					</button>
 				{/each}
 			</div>
