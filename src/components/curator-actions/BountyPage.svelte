@@ -35,7 +35,7 @@
 	</div>
 
 	<div
-		class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
+		class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36 pb-3"
 	>
 		{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty))}
 			<div class="flex flex-col">
