@@ -5,33 +5,16 @@
 	import { currentBlockchain } from '../app-bar/blockchains';
 	import Currency from '../Currency.svelte';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
+	import { getRemainingBalance } from '../../utils/getRemainingBalance';
+	import { onMount } from 'svelte';
 
 	export let bounty: Bounty;
 
 	let remainingBalance: bigint | undefined;
 
-	$: getRemainingBalance(bounty.id).catch(() => {});
-
-	async function getRemainingBalance(bountyId: number) {
-		try {
-			const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
-			const response = await fetch(url);
-			if (!response.ok) throw new Error('Failed to fetch bounty details.');
-
-			const data = (await response.json()) as { onchainData: { address: string } };
-
-			try {
-				const fundsAddress = data.onchainData.address;
-				const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-				remainingBalance = account.data.free;
-			} catch {
-				console.error('Error fetching remaining balance.');
-				remainingBalance = undefined;
-			}
-		} catch {
-			remainingBalance = undefined;
-		}
-	}
+	onMount(async () => {
+		remainingBalance = await getRemainingBalance(bounty.id);
+	});
 </script>
 
 <div class="card">

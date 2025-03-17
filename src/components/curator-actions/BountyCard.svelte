@@ -7,6 +7,8 @@
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { isCurator } from '../../utils/isCurator';
+	import { getRemainingBalance } from '../../utils/getRemainingBalance';
+	import { onMount } from 'svelte';
 
 	export let bounty: Bounty;
 
@@ -14,38 +16,9 @@
 	let remainingBalance: bigint | undefined;
 	let awardBountyDialog: HTMLDialogElement;
 
-	// Handle description and balance fetch
-	$: getRemainingBalance(bounty.id).catch(() => {});
-
-	async function getRemainingBalance(bountyId: number) {
-		try {
-			const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
-			const response = await fetch(url);
-			if (!response.ok) throw new Error('Failed to fetch bounty details.');
-
-			const data = (await response.json()) as { onchainData: { address: string } };
-			// TODO: don't show description for now.
-			// import { parse } from 'marked';
-			// try {
-			// 	description = await parse(data.content);
-			// } catch {
-			// 	description = undefined;
-			// 	console.error('No description found.');
-			// }
-
-			try {
-				const fundsAddress = data.onchainData.address;
-				const account = await $dotApi.query.System.Account.getValue(fundsAddress, { at: 'best' });
-				remainingBalance = account.data.free;
-			} catch {
-				console.error('Error fetching remaining balance.');
-				remainingBalance = undefined;
-			}
-		} catch {
-			description = undefined;
-			remainingBalance = undefined;
-		}
-	}
+	onMount(async () => {
+		remainingBalance = await getRemainingBalance(bounty.id);
+	});
 </script>
 
 <div class="bg-backgroundBounty overflow-hidden rounded-md my-6">
