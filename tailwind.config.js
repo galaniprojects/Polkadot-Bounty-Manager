@@ -21,6 +21,7 @@ export default {
 			lightGray: '#E4E4E4',
 			backgroundApp: '#FCFCFC',
 			backgroundBounty: '#DDD',
+			backgroundBountyCards: '#E0E0E0',
 			backgroundChildBountyDetails: '#E7E7E7',
 			backgroundChildBountyExpand: '#EEE',
 			backgroundChildBountyCloseDown: '#CCC',

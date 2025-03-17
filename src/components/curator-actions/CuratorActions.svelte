@@ -2,8 +2,8 @@
 	import type { Bounty } from '../../types/bounty';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import Pagination from './Pagination.svelte';
-	import BountyCardHeader from './BountyCardHeader.svelte';
 	import { goto } from '$app/navigation';
+	import BountyCard from './BountyCard.svelte';
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
@@ -96,20 +96,19 @@
 				</div>
 			</div>
 		{:else}
-			{#each paginatedBounties as bounty (bounty.id)}
-				<!-- TODO change this to use custom component. -->
-				<div>
+			<div class="cards">
+				{#each paginatedBounties as bounty (bounty.id)}
 					<button
 						type="button"
-						class="bg-backgroundBounty my-2 cursor-pointer w-full"
 						onclick={async () => {
 							await goto(`/bounty?id=${bounty.id}`);
 						}}
 					>
-						<BountyCardHeader {bounty} />
+						<BountyCard {bounty} />
 					</button>
-				</div>
-			{/each}
+				{/each}
+			</div>
+
 			{#if activeBounties.length !== 0}
 				<Pagination
 					{currentPage}
@@ -127,3 +126,20 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 25px;
+		margin: 25px 0px;
+		align-items: start;
+		cursor: pointer;
+	}
+
+	@media (width <= 756px) {
+		.cards {
+			grid-template-columns: repeat(1, 1fr);
+		}
+	}
+</style>

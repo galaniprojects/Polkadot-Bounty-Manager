@@ -53,9 +53,7 @@
 	<!-- Header section -->
 
 	<p class="text-lg">
-		{bounty.childBounties.length} Active Child {bounty.childBounties.length === 1
-			? 'Bounty'
-			: 'Bounties'}
+		{bounty.childBounties.length} Child {bounty.childBounties.length === 1 ? 'Bounty' : 'Bounties'}
 	</p>
 
 	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
@@ -149,15 +147,15 @@
 
 	.cards {
 		display: grid;
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(1, 1fr);
 		gap: 30px;
 		padding: 0px 3px;
 		align-items: start;
 	}
 
-	@media (max-width: 640px) {
+	@media (min-width: 765px) {
 		.cards {
-			grid-template-columns: repeat(1, 1fr);
+			grid-template-columns: repeat(2, 1fr);
 		}
 	}
 </style>
