@@ -55,7 +55,9 @@
 		<ChainMenu />
 	</div>
 
-	<AllBountiesToggle />
+	{#if page.url.pathname.startsWith('/curator-actions')}
+		<AllBountiesToggle />
+	{/if}
 
 	<div>
 		{#if !$activeAccount}

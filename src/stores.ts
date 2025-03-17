@@ -28,6 +28,7 @@ export const bounties = writable<Bounty[]>([]);
 // Bounties and child bounties that are related to the active account.
 export const activeAccountBounties = writable<Bounty[]>([]);
 
+export const showAllBounties = writable<boolean>(true);
+
 // For testing.
-export const showAllBounties = writable<boolean>(false);
 export const showAllCuratorOptions = writable<boolean>(false);
