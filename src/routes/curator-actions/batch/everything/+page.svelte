@@ -93,17 +93,17 @@
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...childBounties.flatMap(({ title, value, fee, beneficiary, includeClaim }, index) =>
-						getAllChildBountyCalls({
-							parent_bounty_id: bountyId,
-							child_bounty_id: childBountyId + index,
-							title,
-							value,
-							curator: bounty.curator as string,
-							beneficiary,
-							fee,
-							includeClaim
-						})
-					),
+							getAllChildBountyCalls({
+								parent_bounty_id: bountyId,
+								child_bounty_id: childBountyId + index,
+								title,
+								value,
+								curator: bounty.curator as string,
+								beneficiary,
+								fee,
+								includeClaim
+							})
+						),
 					...(!extend
 						? []
 						: [
@@ -253,7 +253,7 @@
 								</div>
 							</div>
 
-							{#if child.template && childBounties.length < 3}
+							{#if child.template && childBounties.length < 10}
 								<p class="overlay">
 									<button
 										type="button"
@@ -265,8 +265,10 @@
 									</button>
 									Add another child bounty to the batch
 								</p>
-							{:else if child.template && childBounties.length === 3}
-								<p class="overlay">Only possible to add 10 child bounties at once</p>
+							{:else if child.template && childBounties.length === 10}
+								<p class="overlay">
+									You have reached the maximum number of child bounties per transaction
+								</p>
 							{/if}
 						</fieldset>
 					{/each}
@@ -278,21 +280,21 @@
 						<input type="checkbox" bind:checked={extend} class={Input.switch} />
 					</label>
 
-					<div class="flex-col justify-items-center">
-						<p class="text-xs border border-red text-red rounded-[3px] p-2 max-w-lg mb-2">
+					<div class="indexContainer">
+						<p class="text note">
 							Currently, the child bounty’s index is estimated by incrementing the highest available
 							on the blockchain. To create multiple bounties in one batch transaction, Bounty
 							Manager increments this index by 1 for each additional bounty. <br /> Please note: if another
 							bounty creates a child between this transaction’s creation and confirmation, this transaction
 							will fail.
 						</p>
-						<label class="block w-full sm:max-w-40">
-							<span class="text-xs block">Starting Child Bounty Index</span>
+						<label class="index">
+							<span class="text">Starting Child Bounty Index</span>
 							<input
 								type="number"
 								min={nextAvailableChildBountyId}
 								bind:value={childBountyId}
-								class="border border-black rounded-[3px] bg-white pl-2 pt-1 h-10 w-full"
+								class="indexField"
 								required
 							/>
 						</label>
@@ -305,15 +307,11 @@
 
 					<p class="text">
 						For the highest likelihood of success, ensure that the signatories confirm the
-						transaction as soon as possible
+						transaction as soon as possible.
 					</p>
 
-					{#if !isFormValid}
-						<p class="text">Please fill out all form fields to enable the submit button.</p>
-					{/if}
-
 					<p>
-						<button type="submit" class="signButton" disabled={!isFormValid}> SIGN </button>
+						<button type="submit" class="signButton"> SIGN </button>
 					</p>
 				</div>
 			</div>
@@ -409,7 +407,7 @@
 	}
 
 	.blurred {
-		filter: blur(3px);
+		filter: blur(5px);
 		pointer-events: none;
 		position: absolute;
 	}
@@ -438,7 +436,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		font-size: 12px;
+		font-size: 14px;
 		align-items: center;
 		gap: 5px;
 		margin-top: 160px;
@@ -451,10 +449,6 @@
 		height: 40px;
 		font-size: 30px;
 		font-weight: 200;
-	}
-
-	.message {
-		margin-top: 200px;
 	}
 
 	.restContainer {
@@ -474,6 +468,33 @@
 		align-items: center;
 	}
 
+	.indexContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.note {
+		border: 1px solid red;
+		border-radius: 3px;
+		color: red;
+		padding: 8px;
+	}
+
+	.index {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.indexField {
+		border: 1px solid theme('colors.textPrimary');
+		border-radius: 3px;
+		background-color: white;
+		padding: 4px 0px 0px 4px;
+		height: 40px;
+		font-size: 18px;
+	}
+
 	.signButton {
 		width: 100%;
 		height: 40px;
@@ -489,7 +510,7 @@
 		transform: scale(1.02);
 	}
 
-	.signButton:disabled {
+	form:invalid .signButton {
 		cursor: not-allowed;
 		opacity: 30%;
 	}
