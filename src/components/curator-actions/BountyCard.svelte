@@ -1,57 +1,99 @@
 <script lang="ts">
 	import { type Bounty } from '../../types/bounty';
 	import BountyCardHeader from './BountyCardHeader.svelte';
-	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { dotApi, showAllCuratorOptions } from '../../stores';
-	import { currentBlockchain } from '../app-bar/blockchains';
-	import BountyCardDetails from './BountyCardDetails.svelte';
-	import AwardBounty from './operations/AwardBounty.svelte';
-	import { isCurator } from '../../utils/isCurator';
+	import Currency from '../Currency.svelte';
+	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import { getRemainingBalance } from '../../utils/getRemainingBalance';
 	import { onMount } from 'svelte';
 
 	export let bounty: Bounty;
 
-	let description: string | undefined;
 	let remainingBalance: bigint | undefined;
-	let awardBountyDialog: HTMLDialogElement;
 
 	onMount(async () => {
 		remainingBalance = await getRemainingBalance(bounty.id);
 	});
 </script>
 
-<div class="bg-backgroundBounty overflow-hidden rounded-md my-6">
-	<!-- Header -->
+<div class="card">
 	<BountyCardHeader {bounty} />
-
-	<!-- Details Section -->
-	<BountyCardDetails {bounty} {description} {remainingBalance} />
-
-	<div class="p-[5px]">
-		<!-- Child Bounties -->
-		{#if bounty.status === 'Active'}
-			<ChildBountiesSection {bounty} />
-		{/if}
-	</div>
-
-	<div
-		class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36"
-	>
-		{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty))}
-			<div class="flex flex-col">
-				<p class="text-xs">Award bounty</p>
-				<button
-					class="w-1/2 h-10 text-white bg-backgroundButtonDark rounded-[10px]"
-					on:click={() => {
-						awardBountyDialog.showModal();
-					}}
-				>
-					READ FIRST
-				</button>
-			</div>
-		{/if}
+	<div class="details">
+		<div>
+			<p class="text">Remaining Balance</p>
+			<p class="value">
+				{#if remainingBalance}
+					<Currency value={remainingBalance} />
+				{:else}
+					-
+				{/if}
+			</p>
+		</div>
+		<div>
+			<p class="text">Curator</p>
+			<CopyableAddress address={bounty.curator} />
+		</div>
+		<div class="childBountiesWrapper">
+			<p class="childBountiesText">
+				{bounty.childBounties.length} Child {bounty.childBounties.length === 1
+					? 'Bounty'
+					: 'Bounties'}
+			</p>
+			<span class="material-symbols-outlined"> arrow_forward_ios </span>
+		</div>
 	</div>
 </div>
 
-<AwardBounty bind:dialog={awardBountyDialog} {bounty} />
+<style>
+	.card {
+		background-color: theme('colors.backgroundBountyCards');
+		width: 363px;
+		min-height: 240px;
+		border-radius: 10px;
+		display: flex;
+		flex-direction: column;
+		text-align: left;
+		border: 1px solid theme('colors.backgroundBountyCards');
+	}
+
+	.details {
+		display: flex;
+		flex-direction: column;
+		padding: 0px 12px 15px;
+		gap: 12px;
+	}
+
+	.text {
+		font-size: 12px;
+	}
+
+	.value {
+		font-weight: 700;
+	}
+
+	.childBountiesWrapper {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 13px;
+	}
+
+	.childBountiesText {
+		background-color: theme('colors.backgroundApp');
+		flex-grow: 1;
+		padding: 0px 8px;
+		font-size: 18px;
+		font-weight: 700;
+	}
+	.card:hover {
+		border: 1px solid theme('colors.borderDropdown');
+		box-shadow:
+			0px 4px 4px 0px rgba(0, 0, 0, 0.12),
+			0px 6px 12px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	@media (width <= 756px) {
+		.card {
+			width: 100%;
+		}
+	}
+</style>
