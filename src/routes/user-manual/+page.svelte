@@ -17,6 +17,18 @@
 			}
 		}
 	}
+
+	let showButton = false;
+
+	function handleScroll() {
+		showButton = window.scrollY > 200;
+	}
+
+	function scrollToTop() {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
+	window.addEventListener('scroll', handleScroll);
 </script>
 
 <div class="container">
@@ -442,6 +454,10 @@
 			<a href="bountymanager@galaniprojects.com" class="link"> Email </a>.
 		</p>
 	</section>
+
+	<button on:click={scrollToTop} class="toTop" style="display: {showButton ? 'block' : 'none'};">
+		↑ top of page
+	</button>
 </div>
 
 <style>
@@ -491,5 +507,22 @@
 
 	.note {
 		font-style: italic;
+	}
+
+	.toTop {
+		position: fixed;
+		bottom: 20px;
+		right: 20px;
+		background-color: theme('colors.backgroundButtonLight');
+		color: theme('colors.textPrimary');
+		padding: 10px 15px;
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+	}
+
+	.toTop:hover {
+		transform: scale(1.02);
 	}
 </style>

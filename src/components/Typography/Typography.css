@@ -63,8 +63,7 @@
 	font-optical-sizing: auto;
 }
 
-/* https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,close,logout,menu */
-
+/* https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add,close,lightbulb_2,logout,menu */
 @font-face {
 	font-family: 'Material Symbols Rounded';
 	font-style: normal;
@@ -80,6 +79,7 @@
 	line-height: 1;
 	letter-spacing: normal;
 	text-transform: none;
+	display: inline-block;
 	white-space: nowrap;
 	word-wrap: normal;
 	direction: ltr;

@@ -69,7 +69,7 @@
 				class="self-end mt-[5px] mb-[13px]"
 			>
 				<span
-					class="material-symbols-rounded text-textPrimary rounded-md border border-cloudGray px-[17px] py-1"
+					class="material-symbols-rounded text-textPrimary rounded-md border border-cloudGray px-[17px] py-2"
 				>
 					close
 				</span>
@@ -79,11 +79,27 @@
 					open = false;
 				}}
 				href="/bounty-setup"
-				class="bg-accent text-white p-3 mb-2 rounded-[10px] flex w-full justify-between items-center"
+				class="bg-accent text-white p-3 mb-3 rounded-[10px] flex w-full justify-between items-center"
 			>
 				<span class="mt-1">CREATE NEW BOUNTY</span>
 			</a>
-			<hr class="border-cloudGray my-3 w-full" />
+
+			<hr class="border-cloudGray mb-3 w-full" />
+
+			<a
+				on:click={() => {
+					open = false;
+				}}
+				href="/user-manual"
+				class="rounded-md flex space-x-2 items-center mb-2"
+			>
+				<span class="material-symbols-rounded bg-accent rounded-full p-2 text-white">
+					lightbulb_2
+				</span>
+				<span class="mt-1">User manual</span>
+			</a>
+
+			<hr class="border-cloudGray mb-3 w-full" />
 
 			<button on:click={logOut} class="rounded-md flex space-x-2 items-center mb-2">
 				<span class="material-symbols-rounded bg-accent rounded-full p-2 text-white"> logout </span>
