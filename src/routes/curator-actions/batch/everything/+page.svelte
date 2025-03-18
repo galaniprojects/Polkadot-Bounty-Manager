@@ -151,11 +151,17 @@
 				<h2 class="formHeader">Complete Payout</h2>
 			</section>
 			<div class="formContent">
-				<p class="hint">
-					For comprehensive instructions, please refer to the <a href="/user-manual" class="link">
-						user manual
-					</a>.
-				</p>
+				<section class="stepsList">
+					<h3 class="textContent">Batch all child bounty operations in one transaction:</h3>
+
+					<ol class="textContent">
+						<li>Create a new child bounty</li>
+						<li>Assign the curator proxy as sub-curator</li>
+						<li>Accept the sub-curator role</li>
+						<li>Award the child bounty to the provided beneficiary</li>
+						<li>Claim the child bounty (optional)</li>
+					</ol>
+				</section>
 
 				<div class="cardsGrid">
 					{#each childBounties.concat(childBountyTemplate) as child, index (child)}
@@ -349,12 +355,15 @@
 		padding: 6px 8px;
 	}
 
-	.hint {
-		font-size: 14px;
+	.stepsList {
+		display: flex;
+		gap: 60px;
 	}
 
-	.link {
-		text-decoration-line: underline;
+	.textContent {
+		font-size: 14px;
+		list-style-type: decimal;
+		list-style-position: inside;
 	}
 
 	.cardsGrid {
