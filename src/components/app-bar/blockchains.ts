@@ -51,12 +51,7 @@ export const blockchains = [
 					invertedLogo: coinInverted,
 					endpoints: ['wss://rilt.kilt.io'],
 					baseUrls: {
-						doTreasury: 'https://polkadot.dotreasury.com',
-						doTreasuryApi: 'https://polkadot-api.dotreasury.com',
 						stateScanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
-						subScan: 'https://polkadot.subscan.io',
-						subSquare: 'https://polkadot.subsquare.io',
-						polkAssembly: 'https://polkadot.polkassembly.io'
 					}
 				} as const,
 				{
