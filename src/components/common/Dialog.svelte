@@ -8,18 +8,18 @@
 
 <dialog bind:this={dialog} on:click={clickAway} class="dialogStyle">
 	<div class={styles.dialog}>
-	<CloseModalButton />
+		<CloseModalButton />
 
-	<h2 class={styles.title}>
-		{title}
-	</h2>
+		<h2 class={styles.title}>
+			{title}
+		</h2>
 
-	<slot />
-</div>
+		<slot />
+	</div>
 </dialog>
 
 <style>
-	.dialogStyle{
+	.dialogStyle {
 		border-radius: 0.375rem;
 	}
 </style>
