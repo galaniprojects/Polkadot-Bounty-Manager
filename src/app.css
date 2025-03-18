@@ -13,6 +13,10 @@ body:has(dialog[open]) {
 	overflow: hidden;
 }
 
+.dialog {
+	border-radius: 0.375rem;
+}
+
 .basic-button {
 	@apply px-10 pt-1 rounded-md text-white;
 }
