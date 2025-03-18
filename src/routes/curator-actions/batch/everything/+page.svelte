@@ -13,7 +13,8 @@
 	import ExtendBountyLabel from '../../../../components/ExtendBountyLabel.svelte';
 	import Fee from '../../../../components/Fee.svelte';
 	import Currency from '../../../../components/Currency.svelte';
-	import { currentBlockchain } from '../../../../components/app-bar/blockchains';
+	import { onMount } from 'svelte';
+	import { getRemainingBalance } from '../../../../utils/getRemainingBalance';
 
 	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
@@ -23,31 +24,9 @@
 	let nextAvailableChildBountyId: number;
 	let remainingBalance: bigint | undefined;
 
-	async function getRemainingBalance(bountyId: number) {
-		try {
-			const url = `${$currentBlockchain.baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
-			const response = await fetch(url);
-			if (!response.ok) throw new Error('Failed to fetch bounty details.');
-
-			const data = (await response.json()) as { onchainData: { address: string } };
-
-			try {
-				const fundsAddress = data.onchainData.address;
-				const account = await $dotApi.query.System.Account.getValue(fundsAddress);
-				remainingBalance = account.data.free;
-			} catch {
-				console.error('Error fetching remaining balance.');
-				remainingBalance = undefined;
-			}
-		} catch {
-			remainingBalance = undefined;
-			console.error('Error fetching bounty data.');
-		}
-	}
-
-	$: if (bounty) {
-		getRemainingBalance(bounty.id).catch(() => {});
-	}
+	onMount(async () => {
+		remainingBalance = await getRemainingBalance(bountyId);
+	});
 
 	(async () => {
 		void $dotApi.query.ChildBounties.ChildBountyCount.watchValue().forEach((value) => {
@@ -59,7 +38,7 @@
 	})();
 
 	let childBounties = [
-		{ value: '', title: '', fee: '', beneficiary: '', includeClaim: false, template: false }
+		{ value: '', title: '', fee: '', beneficiary: '', includeClaim: true, template: false }
 	];
 
 	$: isFormValid =
@@ -135,7 +114,7 @@
 		title: '',
 		fee: '',
 		beneficiary: '',
-		includeClaim: false,
+		includeClaim: true,
 		template: true
 	};
 
@@ -199,7 +178,7 @@
 										placeholder="Child bounty title"
 										required
 										disabled={child.template}
-										aria-label="Child bounty title input field"
+										aria-label="Child bounty title"
 									/>
 									<label>
 										<span class="text">Child bounty value</span>
@@ -392,10 +371,7 @@
 		grid-template-columns: repeat(2, 1fr);
 		gap: 24px;
 		padding: 10px 0px 30px;
-	}
-
-	@media (width <= 640px) {
-		.cardsGrid {
+		@media (width <= 640px) {
 			grid-template-columns: repeat(1, 1fr);
 		}
 	}
