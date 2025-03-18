@@ -1,15 +1,15 @@
 <script lang="ts">
-	let isCuratorViewActive = false;
+	import { showAllBounties } from '../../stores';
 
 	function toggleView() {
-		isCuratorViewActive = !isCuratorViewActive;
+		showAllBounties.set(!$showAllBounties);
 	}
 </script>
 
 <button class="toggleContainer" on:click={toggleView}>
-	<div class="toggleSlider {isCuratorViewActive ? 'curatorViewActive' : ''}"></div>
-	<div class="toggleOption {isCuratorViewActive ? 'inactive' : 'active'}">All bounties</div>
-	<div class="toggleOption {isCuratorViewActive ? 'active' : 'inactive'}">Curator view</div>
+	<div class="toggleSlider {!$showAllBounties ? 'curatorViewActive' : ''}"></div>
+	<div class="toggleOption {$showAllBounties ? 'active' : 'inactive'}">All bounties</div>
+	<div class="toggleOption {$showAllBounties ? 'inactive' : 'active'}">Curator view</div>
 </button>
 
 <style>

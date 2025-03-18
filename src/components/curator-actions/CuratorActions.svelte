@@ -31,7 +31,7 @@
 
 <div class="flex justify-center items-center overflow-y-hidden min-h-[70vh]" data-pagination-scroll>
 	<div class="w-full md:w-[754px] p-2 md:p-0">
-		{#if !$activeAccount}
+		{#if !$activeAccount && !$showAllBounties}
 			<div class="flex justify-center my-20">
 				<div class="justify-start space-y-8 max-w-4xl">
 					<h3 class="text-2xl md:text-3xl">Log in Instructions for Curators</h3>
