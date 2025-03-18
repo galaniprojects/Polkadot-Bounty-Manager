@@ -93,17 +93,17 @@
 			$dotApi.tx.Utility.batch_all({
 				calls: [
 					...childBounties.flatMap(({ title, value, fee, beneficiary, includeClaim }, index) =>
-							getAllChildBountyCalls({
-								parent_bounty_id: bountyId,
-								child_bounty_id: childBountyId + index,
-								title,
-								value,
-								curator: bounty.curator as string,
-								beneficiary,
-								fee,
-								includeClaim
-							})
-						),
+						getAllChildBountyCalls({
+							parent_bounty_id: bountyId,
+							child_bounty_id: childBountyId + index,
+							title,
+							value,
+							curator: bounty.curator as string,
+							beneficiary,
+							fee,
+							includeClaim
+						})
+					),
 					...(!extend
 						? []
 						: [
@@ -208,6 +208,7 @@
 											class={Input.polkadot}
 											placeholder="00.00"
 											required
+											disabled={child.template}
 											oninput={validateBountyValue}
 											inputmode="decimal"
 										/>
@@ -220,6 +221,7 @@
 											class={Input.input}
 											placeholder="Beneficiary account address"
 											required
+											disabled={child.template}
 											oninput={validateAddress}
 										/>
 									</label>
@@ -231,6 +233,7 @@
 											class={Input.polkadot}
 											placeholder="00.00"
 											required
+											disabled={child.template}
 											oninput={validateFee}
 											inputmode="decimal"
 										/>
