@@ -451,7 +451,7 @@
 				Telegram
 			</a>
 			or
-			<a href="bountymanager@galaniprojects.com" class="link"> Email </a>.
+			<a href="mailto:bountymanager@galaniprojects.com" class="link"> Email </a>.
 		</p>
 	</section>
 
