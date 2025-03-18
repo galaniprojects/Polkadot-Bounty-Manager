@@ -1,4 +1,4 @@
-<div class="rounded-lg m-0 mb-3 sm:my-5 sm:mx-12 px-5 py-5 flex-col space-y-5">
+<div class="container m-0 mb-3 sm:my-5 sm:mx-12">
 	<h2 class="text-xl">Imprint</h2>
 	<p>
 		INFORMATION IN ACCORDANCE WITH SECTION 5 <br />
@@ -169,6 +169,14 @@
 </div>
 
 <style>
+	.container {
+		width: 765px;
+		margin: auto;
+		padding: 25px 0px;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
 	.bold {
 		font-weight: 700;
 	}
