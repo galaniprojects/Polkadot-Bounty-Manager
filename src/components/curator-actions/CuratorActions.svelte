@@ -118,7 +118,7 @@
 					itemsPerPageChange={handleItemsPerPageChange}
 				/>
 			{/if}
-			{#if $activeAccountBounties.length === 0}
+			{#if $activeAccount && $activeAccountBounties.length === 0}
 				<div class="lg:mt-40 mt-10 flex justify-center">
 					Connected Address does not have any bounties or child bounties
 				</div>
