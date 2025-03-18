@@ -2,8 +2,14 @@
 	import { extendedExpiry } from '../utils/batchExtendBounty';
 </script>
 
-<span class="text-xs">
-	Include the <strong>Extend Parent Bounty</strong> extrinsic in your transaction.
+<span>
+	Include <strong>Extend Bounty</strong>
 	<br />
-	New expiry date: {extendedExpiry()}
+	<span class="expiryDate">to {extendedExpiry()}</span>
 </span>
+
+<style>
+	.expiryDate {
+		font-size: 12px;
+	}
+</style>

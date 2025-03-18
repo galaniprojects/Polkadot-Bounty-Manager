@@ -191,7 +191,7 @@
 
 		<p>
 			<label class="inline-flex gap-4 items-center cursor-pointer">
-				<input type="checkbox" bind:checked={extend} class={Input.switchInverted} />
+				<input type="checkbox" bind:checked={extend} class={Input.switch} />
 				<ExtendBountyLabel />
 			</label>
 		</p>

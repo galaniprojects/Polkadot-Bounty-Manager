@@ -26,7 +26,7 @@
 
 {#if address}
 	<button
-		class="flex space-x-2 justify-center items-center"
+		class="flex space-x-1 justify-center"
 		type="button"
 		on:click={async () => {
 			await copyToClipboard(address);
