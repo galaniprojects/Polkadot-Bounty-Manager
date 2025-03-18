@@ -2,11 +2,9 @@
 	margin: revert !important;
 	padding: 0.75rem;
 	padding-top: 0.5rem;
-	border-radius: 0.375rem;
 	min-height: 13rem;
 	max-height: 100svh;
 	width: 100%;
-	max-width: 98%;
 	background: #fcfcfc; /* bg-backgroundApp */
 	outline: none;
 

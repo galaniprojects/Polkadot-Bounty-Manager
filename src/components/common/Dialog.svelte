@@ -6,7 +6,8 @@
 	export let title = '';
 </script>
 
-<dialog bind:this={dialog} on:click={clickAway} class={styles.dialog}>
+<dialog bind:this={dialog} on:click={clickAway} class="dialogStyle">
+	<div class={styles.dialog}>
 	<CloseModalButton />
 
 	<h2 class={styles.title}>
@@ -14,4 +15,11 @@
 	</h2>
 
 	<slot />
+</div>
 </dialog>
+
+<style>
+	.dialogStyle{
+		border-radius: 0.375rem;
+	}
+</style>
