@@ -5,18 +5,14 @@
 	import Fee from '../../../Fee.svelte';
 	import { submitTransaction } from '../../../../utils/transaction';
 	import CopyableAddress from '../../../common/CopyableAddress.svelte';
-	import { batchExtendBounty } from '../../../../utils/batchExtendBounty';
 
 	export let dialog: HTMLDialogElement;
 	export let childBounty: ChildBounty;
 
-	$: transaction = batchExtendBounty(
-		childBounty.parentBounty,
-		$dotApi.tx.ChildBounties.claim_child_bounty({
-			child_bounty_id: childBounty.id,
-			parent_bounty_id: childBounty.parentBounty
-		})
-	);
+	$: transaction = $dotApi.tx.ChildBounties.claim_child_bounty({
+		child_bounty_id: childBounty.id,
+		parent_bounty_id: childBounty.parentBounty
+	});
 
 	async function submit() {
 		const successful = await submitTransaction(transaction);
