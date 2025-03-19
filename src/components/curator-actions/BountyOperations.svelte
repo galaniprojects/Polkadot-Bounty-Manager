@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { showAllCuratorOptions } from '../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import { type Bounty } from '../../types/bounty';
 	import { isCurator } from '../../utils/isCurator';
 	import AcceptCuratorRole from './operations/AcceptCuratorRole.svelte';
@@ -31,7 +31,7 @@
 	</a>
 {/if} -->
 
-{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty))}
+{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty, $activeAccount))}
 	<button
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {
@@ -42,7 +42,7 @@
 	</button>
 {/if}
 
-{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
+{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty, $activeAccount))}
 	<button
 		class="bg-extendButtonBackground text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {

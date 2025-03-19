@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { showAllCuratorOptions } from '../../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import { type Bounty } from '../../../types/bounty';
 	import { type ChildBounty, childBountyStatuses, statusLabels } from '../../../types/child-bounty';
 
@@ -56,7 +56,7 @@
 		{bounty.childBounties.length} Child {bounty.childBounties.length === 1 ? 'Bounty' : 'Bounties'}
 	</p>
 
-	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty))}
+	{#if $showAllCuratorOptions || (bounty.status === 'Active' && isCurator(bounty, $activeAccount))}
 		<div class="flex flex-col space-y-[25px] sm:flex-row sm:space-x-[25px] sm:space-y-0">
 			<div class="flex flex-col w-full sm:w-1/2">
 				<p class="text-xs">Add new child bounty</p>

@@ -16,11 +16,13 @@ export function setActiveAccountBounties() {
 
 	const filteredBounties: Bounty[] = [];
 	for (const bounty of allBounties) {
-		if (bounty.proposer === address || isCurator(bounty)) {
+		if (bounty.proposer === address || isCurator(bounty, get(activeAccount))) {
 			filteredBounties.push(bounty);
 			continue;
 		}
-		const filteredChildBounties = bounty.childBounties.filter(isCurator);
+		const filteredChildBounties = bounty.childBounties.filter((cb) =>
+			isCurator(cb, get(activeAccount))
+		);
 		if (filteredChildBounties.length > 0) {
 			bounty.childBounties = filteredChildBounties;
 			filteredBounties.push(bounty);
