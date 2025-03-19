@@ -22,14 +22,14 @@
 	</a>
 {/if}
 
-{#if $showAllCuratorOptions || bounty.status === 'Proposed'}
+<!-- {#if $showAllCuratorOptions || bounty.status === 'Proposed'}
 	<a
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2 text-center pt-2"
 		href={`/bounty-setup/approval?bounty-id=${bounty.id}`}
 	>
 		APPROVE BOUNTY
 	</a>
-{/if}
+{/if} -->
 
 {#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty))}
 	<button
