@@ -93,7 +93,7 @@
 			</button>
 		{/if}
 
-		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
+		{#if $showAllCuratorOptions || (childBounty.status === 'PendingPayout' && $activeAccount !== undefined)}
 			<button
 				on:click={() => {
 					claimChildBountyDialog.showModal();

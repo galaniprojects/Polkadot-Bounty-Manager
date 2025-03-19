@@ -53,7 +53,7 @@
 	</button>
 {/if}
 
-{#if $showAllCuratorOptions || bounty.status === 'PendingPayout'}
+{#if $showAllCuratorOptions || (bounty.status === 'PendingPayout' && $activeAccount !== undefined)}
 	<button
 		on:click={() => {
 			claimBountyDialog.showModal();
