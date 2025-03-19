@@ -11,6 +11,8 @@
 	import { showErrorModal } from '../../modals';
 	import { names } from '../../../utils/people';
 	import type { Bounty } from '../../../types/bounty';
+	import { convertFormattedDotToPlanck, formatPlanckToDot } from '../../../utils/polkadot';
+	import { onMount } from 'svelte';
 
 	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
@@ -18,44 +20,51 @@
 
 	interface Salary {
 		address: string;
-		salary: number | null;
+		salary: string;
 		name: string;
 	}
 
-	interface Payout extends Salary {
-		salary: number;
-	}
+	let salaries = [] as Salary[];
 
-	$: salaries = signatories.map((address) => ({
-		address,
-		salary: null,
-		name: $names[address]
-	})) as Salary[];
+	onMount(() => {
+		salaries = signatories.map((address) => ({
+			address,
+			salary: '',
+			name: $names[address]
+		}));
+	});
 
-	$: payouts = salaries.filter(({ salary }) => salary !== null && salary > 0) as Payout[];
+	$: payouts = salaries.filter(({ salary }) => {
+		try {
+			convertFormattedDotToPlanck(salary);
+		} catch {
+			return false;
+		}
+		return salary !== '' && convertFormattedDotToPlanck(salary) > 0n;
+	});
 
-	$: totalSalary = salaries.reduce((sum, { salary }) => sum + (salary || 0), 0) || null;
+	$: totalSalary = formatPlanckToDot(
+		salaries.reduce((sum, { salary }) => {
+			try {
+				return sum + convertFormattedDotToPlanck(salary || '0');
+			} catch {
+				return sum;
+			}
+		}, 0n)
+	);
 
 	$: isSalaryCustom = salaries.some(({ salary }) => salary !== salaries[0]?.salary);
 
-	let equalSalary: number | null = null;
+	let equalSalary: string = '';
 	$: if (isSalaryCustom) {
-		equalSalary = null;
-	} else if (totalSalary !== null) {
+		equalSalary = '';
+	} else {
 		equalSalary = salaries[0]?.salary;
 	}
 
 	function applyEqualSalary() {
-		if (equalSalary !== null && equalSalary > 0) {
-			// eslint-disable-next-line svelte/no-reactive-reassign
+		if (equalSalary !== '' && convertFormattedDotToPlanck(equalSalary) > 0) {
 			salaries = salaries.map((salary) => ({ ...salary, salary: equalSalary }));
-		}
-	}
-
-	function calculateEqualSalariesFromTotal() {
-		if (totalSalary !== null && totalSalary > 0 && salaries.length > 0) {
-			equalSalary = parseFloat((totalSalary / salaries.length).toFixed(4));
-			applyEqualSalary();
 		}
 	}
 
@@ -71,7 +80,11 @@
 		childBountyId = nextAvailableChildBountyId;
 	})();
 
-	$: isFormValid = description && payouts.length > 0;
+	$: isFormValid =
+		description &&
+		payouts.length > 0 &&
+		salaries.every(({ salary }) => isValidInput(salary)) &&
+		isValidInput(equalSalary);
 
 	$: transaction = maybeTransaction(
 		() =>
@@ -101,6 +114,16 @@
 				]
 			})
 	);
+
+	function isValidInput(salary: string): boolean {
+		if (salary === '') return true;
+		try {
+			convertFormattedDotToPlanck(salary);
+			return true;
+		} catch {
+			return false;
+		}
+	}
 
 	async function submit(event: SubmitEvent) {
 		event.preventDefault();
@@ -147,8 +170,7 @@
 			<p class="text-xs">Enter an individual salary or the total payout</p>
 			<div class="flex items-center gap-2">
 				<input
-					class={[Input.polkadot, 'grow shrink']}
-					type="number"
+					class={[Input.polkadot, 'grow shrink', isValidInput(equalSalary) ? '' : 'invalidInput']}
 					step="any"
 					min="0"
 					bind:value={equalSalary}
@@ -159,14 +181,14 @@
 
 				<!--	eslint-disable svelte/no-reactive-reassign	-->
 				<input
-					class={[Input.polkadot, 'grow shrink']}
-					type="number"
+					class={[Input.polkadot, 'grow shrink', 'disabledInput']}
+					type="string"
 					step="any"
+					disabled={true}
 					min="0"
 					required
 					bind:value={totalSalary}
 					placeholder="Total"
-					on:input={calculateEqualSalariesFromTotal}
 				/>
 				<!--	eslint-enable svelte/no-reactive-reassign	-->
 				<p>total</p>
@@ -174,17 +196,16 @@
 		</div>
 
 		<ul class="space-y-1.5">
-			{#each salaries as { address, salary } (address)}
-				<li class="flex gap-4">
+			{#each salaries as salary (salary.address)}
+				<li class="flex items-center gap-4">
 					<input
-						class={[Input.polkadot, 'max-w-36']}
-						bind:value={salary}
-						type="number"
+						class={[Input.polkadot, 'max-w-36', isValidInput(salary.salary) ? '' : 'invalidInput']}
+						bind:value={salary.salary}
+						type="text"
 						step="any"
-						min="0"
 						placeholder="Enter salary"
 					/>
-					<CopyableAddress {address} />
+					<CopyableAddress address={salary.address} />
 				</li>
 			{/each}
 		</ul>
@@ -217,3 +238,13 @@
 		</button>
 	</form>
 </Dialog>
+
+<style>
+	.invalidInput {
+		background-color: #ff9e9e;
+	}
+
+	.disabledInput {
+		border-color: lightGray;
+	}
+</style>
