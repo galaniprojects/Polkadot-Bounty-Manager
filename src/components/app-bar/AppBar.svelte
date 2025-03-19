@@ -47,54 +47,59 @@
 	}
 </script>
 
-<header class="header">
-	<div class="logoChainMenuContainer">
-		<a href="/curator-actions">
-			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
-		</a>
-		<ChainMenu />
-	</div>
+<div class="headerWrapper">
+	<header class="header">
+		<div class="logoChainMenuContainer">
+			<a href="/curator-actions">
+				<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
+			</a>
+			<ChainMenu />
+		</div>
 
-	{#if page.url.pathname === '/curator-actions'}
-		<AllBountiesToggle />
-	{/if}
-
-	<div>
-		{#if !$activeAccount}
-			{#if !page.url.pathname.startsWith('/docs/')}
-				<button on:click={showLoginModal}>Connect Wallet</button>
-			{/if}
-			<w3m-button></w3m-button>
-		{:else}
-			<div class="accountContainer">
-				<button
-					type="button"
-					class="account"
-					on:click={async () => {
-						await navigator.clipboard.writeText($activeAccount.address);
-					}}
-				>
-					<span class="identicon">
-						<PolkadotIcon address={$activeAccount.address} />
-					</span>
-					<PeopleChainName address={$activeAccount.address}>
-						{$activeAccount.name || 'Account'}
-					</PeopleChainName>
-				</button>
-				<BurgerMenu />
-			</div>
+		{#if page.url.pathname === '/curator-actions'}
+			<AllBountiesToggle />
 		{/if}
-	</div>
-</header>
 
+		<div>
+			{#if !$activeAccount}
+				{#if !page.url.pathname.startsWith('/docs/')}
+					<button on:click={showLoginModal}>Connect Wallet</button>
+				{/if}
+				<w3m-button></w3m-button>
+			{:else}
+				<div class="accountContainer">
+					<button
+						type="button"
+						class="account"
+						on:click={async () => {
+							await navigator.clipboard.writeText($activeAccount.address);
+						}}
+					>
+						<span class="identicon">
+							<PolkadotIcon address={$activeAccount.address} />
+						</span>
+						<PeopleChainName address={$activeAccount.address}>
+							{$activeAccount.name || 'Account'}
+						</PeopleChainName>
+					</button>
+					<BurgerMenu />
+				</div>
+			{/if}
+		</div>
+	</header>
+</div>
 <LoadingModal />
 <LoginModal />
 
 <style>
+	.headerWrapper {
+		display: flex;
+		justify-content: center;
+	}
+
 	.header {
 		position: relative;
 		display: flex;
-		justify-self: center;
 		justify-content: space-between;
 		align-items: end;
 		min-height: 80px;
