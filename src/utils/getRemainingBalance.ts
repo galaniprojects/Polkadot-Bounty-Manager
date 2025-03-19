@@ -3,8 +3,12 @@ import { currentBlockchain } from '../components/app-bar/blockchains';
 import { dotApi } from '../stores';
 
 export async function getRemainingBalance(bountyId: number): Promise<bigint | undefined> {
+	const subSquareUrl = get(currentBlockchain).baseUrls.subSquare;
+	if (!subSquareUrl) {
+		return;
+	}
 	try {
-		const url = `${get(currentBlockchain).baseUrls.subSquare}/api/treasury/bounties/${bountyId}`;
+		const url = `${subSquareUrl}/api/treasury/bounties/${bountyId}`;
 		const response = await fetch(url);
 		if (!response.ok) throw new Error('Failed to fetch bounty details.');
 

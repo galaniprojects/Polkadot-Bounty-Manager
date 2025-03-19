@@ -51,7 +51,7 @@ export const blockchains = [
 					invertedLogo: coinInverted,
 					endpoints: ['wss://rilt.kilt.io'],
 					baseUrls: {
-						stateScanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql',
+						stateScanGraphqlApi: 'https://statescan.rilt.kilt.io/graphql'
 					}
 				} as const,
 				{

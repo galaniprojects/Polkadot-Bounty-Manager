@@ -92,7 +92,11 @@ export async function submitTransaction(
 			});
 		});
 		if (!result.dispatchError) {
-			showSuccessModal('Transaction', 'Transaction was included in block.', callData);
+			if (tryUseMultisig) {
+				showSuccessModal('Success', 'Transaction was included in block.', callData);
+			} else {
+				showSuccessModal('Success', 'Transaction was included in block.');
+			}
 
 			(async () => {
 				// trigger update in the background but return immediately
