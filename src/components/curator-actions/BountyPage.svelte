@@ -2,7 +2,7 @@
 	import { type Bounty } from '../../types/bounty';
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import ChildBountiesSection from './child-bounties/ChildBountiesSection.svelte';
-	import { showAllCuratorOptions } from '../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../stores';
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { isCurator } from '../../utils/isCurator';
@@ -37,7 +37,7 @@
 	<div
 		class="flex flex-col space-y-1 px-3 pt-0 lg:pt-3 lg:justify-end lg:mr-12 lg:space-y-3 2xl:pr-36 pb-3"
 	>
-		{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty))}
+		{#if $showAllCuratorOptions || (bounty.status === 'Active' && bounty.childBounties.filter(({ status }) => !['Claimed', 'Canceled'].includes(status)).length === 0 && isCurator(bounty, $activeAccount))}
 			<div class="flex flex-col">
 				<p class="text-xs">Award bounty</p>
 				<button

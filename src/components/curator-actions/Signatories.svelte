@@ -6,6 +6,7 @@
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
 	import CreateSalaryPayouts from './operations/CreateSalaryPayouts.svelte';
+	import { activeAccount } from '../../stores';
 
 	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
@@ -40,7 +41,7 @@
 							<li><CopyableAddress {address} /></li>
 						{/each}
 					</ul>
-					{#if isCurator(bounty)}
+					{#if isCurator(bounty, $activeAccount)}
 						<button
 							on:click={() => {
 								dialog.close();

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Bounty } from '../../../types/bounty';
 	import { type ChildBounty, statusLabels } from '../../../types/child-bounty';
-	import { showAllCuratorOptions } from '../../../stores';
+	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import { isCurator } from '../../../utils/isCurator';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
 	import AcceptSubCuratorRole from './operations/AcceptSubCuratorRole.svelte';
@@ -82,7 +82,7 @@
 	</div>
 
 	<div class="actionsContainer">
-		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty))}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Active' && isCurator(childBounty, $activeAccount))}
 			<button
 				on:click={() => {
 					awardChildBountyDialog.showModal();
@@ -93,7 +93,7 @@
 			</button>
 		{/if}
 
-		{#if $showAllCuratorOptions || childBounty.status === 'PendingPayout'}
+		{#if $showAllCuratorOptions || (childBounty.status === 'PendingPayout' && $activeAccount !== undefined)}
 			<button
 				on:click={() => {
 					claimChildBountyDialog.showModal();
@@ -104,7 +104,7 @@
 			</button>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty))}
+		{#if $showAllCuratorOptions || (childBounty.status === 'Added' && isCurator(parentBounty, $activeAccount))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
 				<button
@@ -130,7 +130,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty))}
+		{#if $showAllCuratorOptions || (childBounty.status === 'CuratorProposed' && isCurator(childBounty, $activeAccount))}
 			<div class="action">
 				<p class="text">Sub-curator role</p>
 				<button
@@ -144,7 +144,7 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty))}
+		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty, $activeAccount))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
 				<button
@@ -159,7 +159,7 @@
 		{/if}
 	</div>
 
-	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && isCurator(parentBounty))}
+	{#if $showAllCuratorOptions || (['Active', 'CuratorProposed', 'Added'].includes(childBounty.status) && isCurator(parentBounty, $activeAccount))}
 		<details class="closeChildBounty">
 			<summary>
 				<span>close child bounty</span>
