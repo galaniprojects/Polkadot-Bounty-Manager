@@ -6,8 +6,8 @@
 	export let title = '';
 </script>
 
-<dialog bind:this={dialog} on:click={clickAway} class="dialog">
-	<div class={styles.dialog}>
+<dialog bind:this={dialog} onclick={clickAway} class={styles.dialog}>
+	<div class={styles.innerWrapper}>
 		<CloseModalButton />
 
 		<h2 class={styles.title}>

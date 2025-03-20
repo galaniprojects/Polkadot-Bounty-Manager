@@ -141,14 +141,14 @@
 </script>
 
 <!-- Base Modal Layout -->
-<dialog bind:this={$ref} on:click={clickAway} class="dialog">
-	<div class={modalStyles.dialog}>
+<dialog bind:this={$ref} onclick={clickAway} class={modalStyles.dialog}>
+	<div class={modalStyles.innerWrapper}>
 		<!-- Header -->
 		<div class="flex flex-row-reverse justify-between items-center sm:mb-0">
 			<CloseModalButton />
 
 			{#if currentPhase !== 'walletSelection'}
-				<button on:click={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
+				<button onclick={backToWalletSelection} class="material-symbols-outlined text-2xl mb-1">
 					arrow_back_ios
 				</button>
 			{/if}
@@ -168,7 +168,7 @@
 				<div class="cursor-pointer w-full space-y-3 pb-3">
 					{#each wallets as wallet (wallet.name)}
 						{#if wallet.available}
-							<button class="w-full" on:click={() => selectWallet(wallet)}>
+							<button class="w-full" onclick={() => selectWallet(wallet)}>
 								<WalletItem {wallet} />
 							</button>
 						{:else if wallet.url}
@@ -211,7 +211,7 @@
 					{#each accounts as account (account.address)}
 						<button
 							class="w-full"
-							on:click={async () => {
+							onclick={async () => {
 								await selectAccount(account);
 							}}
 						>
@@ -235,7 +235,7 @@
 					<button class="flex items-center px-4">
 						{selectedWallet?.name} &nbsp |
 					</button>
-					<button on:click={backToWalletSelection} class="flex items-center"> Switch </button>
+					<button onclick={backToWalletSelection} class="flex items-center"> Switch </button>
 				</div>
 			</div>
 		{/if}
