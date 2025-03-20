@@ -4,13 +4,15 @@
 </script>
 
 <dialog bind:this={$ref} class={modalStyles.dialog}>
-	<h2 class={modalStyles.title}>
-		{$title}
-	</h2>
+	<div class={modalStyles.innerWrapper}>
+		<h2 class={modalStyles.title}>
+			{$title}
+		</h2>
 
-	<div class="text-center">
-		<p class={modalStyles.output}>{$message}</p>
-		<span class="loader mt-3"></span>
+		<div class="text-center">
+			<p class={modalStyles.output}>{$message}</p>
+			<span class="loader mt-3"></span>
+		</div>
 	</div>
 </dialog>
 

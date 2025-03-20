@@ -6,12 +6,14 @@
 	export let title = '';
 </script>
 
-<dialog bind:this={dialog} on:click={clickAway} class={styles.dialog}>
-	<CloseModalButton />
+<dialog bind:this={dialog} onclick={clickAway} class={styles.dialog}>
+	<div class={styles.innerWrapper}>
+		<CloseModalButton />
 
-	<h2 class={styles.title}>
-		{title}
-	</h2>
+		<h2 class={styles.title}>
+			{title}
+		</h2>
 
-	<slot />
+		<slot />
+	</div>
 </dialog>
