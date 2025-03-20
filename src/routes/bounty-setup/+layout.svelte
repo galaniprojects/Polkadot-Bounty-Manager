@@ -11,7 +11,8 @@
 	afterNavigate(() => {
 		disableScrollHandling(); // when switching tabs
 
-		if ($bountyInfo?.id) {
+		const bountyId = page.url.searchParams.get('bounty-id');
+		if (!bountyId && $bountyInfo?.id) {
 			const fullUrl = new URL(page.url);
 			fullUrl.searchParams.set('bounty-id', String($bountyInfo.id));
 			replaceState(fullUrl, {});

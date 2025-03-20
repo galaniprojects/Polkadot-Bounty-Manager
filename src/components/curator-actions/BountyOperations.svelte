@@ -13,23 +13,23 @@
 	let claimBountyDialog: HTMLDialogElement;
 </script>
 
-<!-- {#if $showAllCuratorOptions || bounty.status === 'Funded'}
+{#if $showAllCuratorOptions || ($activeAccount && bounty.status === 'Funded')}
 	<a
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2 text-center pt-2"
 		href={`/bounty-setup/curator-proposal?bounty-id=${bounty.id}`}
 	>
 		PROPOSE CURATOR
 	</a>
-{/if} -->
+{/if}
 
-<!-- {#if $showAllCuratorOptions || bounty.status === 'Proposed'}
+{#if $showAllCuratorOptions || ($activeAccount && bounty.status === 'Proposed')}
 	<a
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2 text-center pt-2"
 		href={`/bounty-setup/approval?bounty-id=${bounty.id}`}
 	>
 		APPROVE BOUNTY
 	</a>
-{/if} -->
+{/if}
 
 {#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty, $activeAccount))}
 	<button
