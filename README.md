@@ -10,7 +10,7 @@ Bounty Manager is a front-end dApp, built to simplify interaction with bounties 
 
 ## Developing and Building
 
-1. Make a copy of `.env.example` and rename it to `.env`. Edit the file to set the public Polkadot API Endpoint.
+1. Make a copy of `.env.example` and rename it to `.env`.
 1. Install the dependencies.
 
    ```bash
