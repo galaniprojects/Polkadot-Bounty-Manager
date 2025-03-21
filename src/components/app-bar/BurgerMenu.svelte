@@ -99,12 +99,16 @@
 				<span class="mt-1">User manual</span>
 			</a>
 
-			<hr class="border-cloudGray mb-3 w-full" />
+			{#if $activeAccount}
+				<hr class="border-cloudGray mb-3 w-full" />
 
-			<button on:click={logOut} class="rounded-md flex space-x-2 items-center mb-2">
-				<span class="material-symbols-rounded bg-accent rounded-full p-2 text-white"> logout </span>
-				<span class="mt-1">Log out</span>
-			</button>
+				<button on:click={logOut} class="rounded-md flex space-x-2 items-center mb-2">
+					<span class="material-symbols-rounded bg-accent rounded-full p-2 text-white">
+						logout
+					</span>
+					<span class="mt-1">Log out</span>
+				</button>
+			{/if}
 		</div>
 	{/if}
 </div>
