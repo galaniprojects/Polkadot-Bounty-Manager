@@ -1,8 +1,11 @@
 import { get } from 'svelte/store';
 import { currentBlockchain } from '../components/app-bar/blockchains';
 import { dotApi } from '../stores';
+import { parse } from 'marked';
 
-export async function getRemainingBalance(bountyId: number): Promise<bigint | undefined> {
+export async function getRemainingBalanceAndDescription(
+	bountyId: number
+): Promise<{ remainingBalance: bigint; description: string | undefined } | undefined> {
 	const subSquareUrl = get(currentBlockchain).baseUrls.subSquare;
 	if (!subSquareUrl) {
 		return;
@@ -10,17 +13,16 @@ export async function getRemainingBalance(bountyId: number): Promise<bigint | un
 	try {
 		const url = `${subSquareUrl}/api/treasury/bounties/${bountyId}`;
 		const response = await fetch(url);
+
 		if (!response.ok) throw new Error('Failed to fetch bounty details.');
 
-		const data = (await response.json()) as { onchainData: { address: string } };
+		const data = (await response.json()) as { onchainData: { address: string }; content: string };
 
-		// TODO: don't parse description for now.
-		// import { parse } from 'marked';
-		// 	description = await parse(data.content);
 		try {
+			const description = await parse(data.content);
 			const fundsAddress = data.onchainData.address;
 			const account = await get(dotApi).query.System.Account.getValue(fundsAddress);
-			return account.data.free;
+			return { remainingBalance: account.data.free, description };
 		} catch {
 			console.error('Error fetching remaining balance.');
 		}

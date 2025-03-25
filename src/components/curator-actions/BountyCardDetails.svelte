@@ -8,6 +8,8 @@
 	import Currency from '../Currency.svelte';
 	import Signatories from './Signatories.svelte';
 	import BountyOperations from './BountyOperations.svelte';
+	import { isCurator } from '../../utils/isCurator';
+	import { activeAccount } from '../../stores';
 
 	export let bounty: Bounty;
 	export let description: string | undefined;
@@ -60,7 +62,7 @@
 			</div>
 			<ExternalLinks dimension={10} bountyId={bounty.id} />
 		</div>
-		<div class="flex">
+		<div>
 			{#if bounty.beneficiary}
 				<div class="mt-4 lg:mt-0">
 					<p class="text-xs">Beneficiary</p>
@@ -68,15 +70,15 @@
 				</div>
 			{/if}
 			{#if bounty.expiryDate}
-				<section class="flex-col text-start">
+				<section class="my-4 text-start">
 					<p class="text-xs">Expiration date</p>
 					<p>{formatDate(bounty.expiryDate)}</p>
 				</section>
 			{/if}
-			{#if description}
-				<div class="text-xs lg:w-[250px] xl:w-[490px]">
+			{#if description && !isCurator(bounty, $activeAccount)}
+				<section class="text-sm">
 					<BountyDescription description={DOMPurify.sanitize(description)} />
-				</div>
+				</section>
 			{/if}
 		</div>
 	</div>

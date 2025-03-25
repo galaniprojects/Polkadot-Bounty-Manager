@@ -3,7 +3,7 @@
 	import BountyCardHeader from './BountyCardHeader.svelte';
 	import Currency from '../Currency.svelte';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
-	import { getRemainingBalance } from '../../utils/getRemainingBalance';
+	import { getRemainingBalanceAndDescription } from '../../utils/getRemainingBalance';
 	import { onMount } from 'svelte';
 
 	export let bounty: Bounty;
@@ -11,7 +11,7 @@
 	let remainingBalance: bigint | undefined;
 
 	onMount(async () => {
-		remainingBalance = await getRemainingBalance(bounty.id);
+		remainingBalance = (await getRemainingBalanceAndDescription(bounty.id))?.remainingBalance;
 	});
 </script>
 
