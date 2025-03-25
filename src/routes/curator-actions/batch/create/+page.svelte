@@ -154,17 +154,16 @@
 				<p><Fee {transaction} /></p>
 			</div>
 
-			<p>
-				<button
-					type="submit"
-					class={[
-						'w-full md:w-fit h-12 button-active',
-						!isFormValid && 'cursor-not-allowed opacity-50'
-					]}
-				>
-					SIGN
-				</button>
-			</p>
+			<button
+				type="submit"
+				class={[
+					'w-full md:w-fit h-12 button-active',
+					childBounties.length === 0 ? 'cursor-not-allowed opacity-50' : ''
+				]}
+				disabled={childBounties.length === 0}
+			>
+				SIGN
+			</button>
 		</form>
 	{/if}
 </div>
