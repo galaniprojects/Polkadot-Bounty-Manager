@@ -47,79 +47,76 @@
 	}
 </script>
 
-<div class="headerWrapper">
-	<header class="header">
-		<div class="logoChainMenuContainer">
-			<a href="/curator-actions">
-				<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
-			</a>
-			<ChainMenu />
-		</div>
+<header class="header">
+	<div class="logoAccountContainer">
+		<a href="/curator-actions">
+			<img width="46" height="30" src={LogoBountyManagerHeader} alt="Logo Bounty Manager" />
+		</a>
 
+		{#if !$activeAccount}
+			{#if !page.url.pathname.startsWith('/docs/')}
+				<button class="walletConnectButton" on:click={showLoginModal}>CONNECT WALLET</button>
+			{/if}
+		{:else}
+			<button
+				type="button"
+				class="account"
+				on:click={async () => {
+					await navigator.clipboard.writeText($activeAccount.address);
+				}}
+			>
+				<span class="identicon">
+					<PolkadotIcon address={$activeAccount.address} />
+				</span>
+				<PeopleChainName address={$activeAccount.address}>
+					{$activeAccount.name || 'Account'}
+				</PeopleChainName>
+			</button>
+		{/if}
+	</div>
+
+	<div class="actionsContainer">
+		<ChainMenu />
 		{#if page.url.pathname === '/curator-actions'}
 			<AllBountiesToggle />
 		{/if}
+		<BurgerMenu />
+	</div>
+</header>
 
-		<div>
-			{#if !$activeAccount}
-				{#if !page.url.pathname.startsWith('/docs/')}
-					<button on:click={showLoginModal}>Connect Wallet</button>
-				{/if}
-				<w3m-button></w3m-button>
-			{:else}
-				<div class="accountContainer">
-					<button
-						type="button"
-						class="account"
-						on:click={async () => {
-							await navigator.clipboard.writeText($activeAccount.address);
-						}}
-					>
-						<span class="identicon">
-							<PolkadotIcon address={$activeAccount.address} />
-						</span>
-						<PeopleChainName address={$activeAccount.address}>
-							{$activeAccount.name || 'Account'}
-						</PeopleChainName>
-					</button>
-					<BurgerMenu />
-				</div>
-			{/if}
-		</div>
-	</header>
-</div>
 <LoadingModal />
 <LoginModal />
 
 <style>
-	.headerWrapper {
-		display: flex;
-		justify-content: center;
-	}
-
 	.header {
 		position: relative;
+		margin: auto;
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
-		align-items: end;
 		min-height: 80px;
 		padding: 8px;
 		width: 100%;
 		margin-top: 10px;
+		gap: 11px;
+
+		@media (width >= 768px) {
+			width: 754px;
+			padding: 0px;
+		}
 	}
 
-	.logoChainMenuContainer {
+	.logoAccountContainer {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 12px;
+		justify-content: space-between;
 	}
 
-	.accountContainer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 20px;
+	.walletConnectButton {
+		color: #e6007a;
+		font-weight: 600;
+		border-radius: 10px;
+		border: 1px solid #e6007a;
+		padding: 0.2rem 0.3rem 0.1rem;
 	}
 
 	.account {
@@ -133,10 +130,8 @@
 		height: 20px;
 	}
 
-	@media (min-width: 768px) {
-		.header {
-			width: 754px;
-			padding: 0px;
-		}
+	.actionsContainer {
+		display: flex;
+		justify-content: space-between;
 	}
 </style>
