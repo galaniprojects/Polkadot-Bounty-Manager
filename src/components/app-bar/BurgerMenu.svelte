@@ -18,17 +18,16 @@
 		}
 		open = false;
 	}
-
-	function clickAway({ target, currentTarget }: MouseEvent) {
-		if (target === currentTarget && target instanceof HTMLDivElement) {
-			open = false;
-		}
-	}
 </script>
 
 <div bind:this={container} class="relative">
 	<!-- Burger Menu Icon -->
-	<button class="h-[42px]" onclick={() => (open = !open)}>
+	<button
+		class="h-[42px]"
+		onclick={() => {
+			open = !open;
+		}}
+	>
 		<span
 			class="material-symbols-rounded items-center rounded-[10px] bg-backgroundButtonLight px-[23px] py-[13px] text-textPrimary"
 		>
@@ -38,7 +37,13 @@
 
 	<!-- Menu Overlay -->
 	{#if open}
-		<div class={modalStyles.backdrop} onclick={clickAway} role="presentation"></div>
+		<div
+			class={modalStyles.backdrop}
+			onclick={() => {
+				open = false;
+			}}
+			role="presentation"
+		></div>
 		<div
 			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-[10px] w-[210px]"
 		>
