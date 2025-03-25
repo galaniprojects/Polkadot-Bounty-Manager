@@ -112,17 +112,19 @@
 								/>
 							</label>
 
-							<p class="text-right">
-								<button
-									type="button"
-									class="underline text-sm"
-									onclick={() => {
-										childBounties = childBounties.toSpliced(index, 1);
-									}}
-								>
-									Remove
-								</button>
-							</p>
+							{#if childBounties.length > 1}
+								<p class="text-right">
+									<button
+										type="button"
+										class="underline text-sm"
+										onclick={() => {
+											childBounties = childBounties.toSpliced(index, 1);
+										}}
+									>
+										Remove
+									</button>
+								</p>
+							{/if}
 						</div>
 					</fieldset>
 				{/each}
@@ -158,9 +160,8 @@
 				type="submit"
 				class={[
 					'w-full md:w-fit h-12 button-active',
-					childBounties.length === 0 ? 'cursor-not-allowed opacity-50' : ''
+					!isFormValid && 'cursor-not-allowed opacity-50'
 				]}
-				disabled={childBounties.length === 0}
 			>
 				SIGN
 			</button>
