@@ -112,17 +112,19 @@
 								/>
 							</label>
 
-							<p class="text-right">
-								<button
-									type="button"
-									class="underline text-sm"
-									onclick={() => {
-										childBounties = childBounties.toSpliced(index, 1);
-									}}
-								>
-									Remove
-								</button>
-							</p>
+							{#if childBounties.length > 1}
+								<p class="text-right">
+									<button
+										type="button"
+										class="underline text-sm"
+										onclick={() => {
+											childBounties = childBounties.toSpliced(index, 1);
+										}}
+									>
+										Remove
+									</button>
+								</p>
+							{/if}
 						</div>
 					</fieldset>
 				{/each}
@@ -154,17 +156,15 @@
 				<p><Fee {transaction} /></p>
 			</div>
 
-			<p>
-				<button
-					type="submit"
-					class={[
-						'w-full md:w-fit h-12 button-active',
-						!isFormValid && 'cursor-not-allowed opacity-50'
-					]}
-				>
-					SIGN
-				</button>
-			</p>
+			<button
+				type="submit"
+				class={[
+					'w-full md:w-fit h-12 button-active',
+					!isFormValid && 'cursor-not-allowed opacity-50'
+				]}
+			>
+				SIGN
+			</button>
 		</form>
 	{/if}
 </div>
