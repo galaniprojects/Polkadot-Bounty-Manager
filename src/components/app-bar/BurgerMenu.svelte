@@ -45,7 +45,7 @@
 			role="presentation"
 		></div>
 		<div
-			class="absolute top-0 right-0 -mt-[11px] flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-[10px] w-[210px]"
+			class="absolute top-0 right-0 flex flex-col items-start z-20 bg-lightGray border shadow-lg p-[5px] rounded-[10px] w-[210px]"
 		>
 			<button
 				onclick={() => {
