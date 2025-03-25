@@ -15,7 +15,7 @@
 </script>
 
 {#if !hideTestBar}
-	<!-- <TestBar /> -->
+	<TestBar />
 {/if}
 <div class="bg-backgroundBounty text-xs md:text-lg flex justify-center items-center">
 	<p class="m-2">This is a beta version, some features may still be incomplete.</p>
