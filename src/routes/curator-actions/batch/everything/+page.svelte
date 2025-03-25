@@ -14,7 +14,7 @@
 	import Fee from '../../../../components/Fee.svelte';
 	import Currency from '../../../../components/Currency.svelte';
 	import { onMount } from 'svelte';
-	import { getRemainingBalance } from '../../../../utils/getRemainingBalance';
+	import { getRemainingBalanceAndDescription } from '../../../../utils/getRemainingBalance';
 
 	const bountyId = parseInt(page.url.searchParams.get('bounty-id') ?? '');
 	$: bounty = $bounties.find(({ id }) => id === bountyId);
@@ -25,7 +25,7 @@
 	let remainingBalance: bigint | undefined;
 
 	onMount(async () => {
-		remainingBalance = await getRemainingBalance(bountyId);
+		remainingBalance = (await getRemainingBalanceAndDescription(bountyId))?.remainingBalance;
 	});
 
 	(async () => {

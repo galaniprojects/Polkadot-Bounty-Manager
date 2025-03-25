@@ -6,8 +6,9 @@
 	import BountyCardDetails from './BountyCardDetails.svelte';
 	import AwardBounty from './operations/AwardBounty.svelte';
 	import { isCurator } from '../../utils/isCurator';
-	import { getRemainingBalance } from '../../utils/getRemainingBalance';
+	import { getRemainingBalanceAndDescription } from '../../utils/getRemainingBalance';
 	import { onMount } from 'svelte';
+	import { hideLoadingModal, showLoadingModal } from '../modals';
 
 	export let bounty: Bounty;
 
@@ -16,7 +17,13 @@
 	let awardBountyDialog: HTMLDialogElement;
 
 	onMount(async () => {
-		remainingBalance = await getRemainingBalance(bounty.id);
+		showLoadingModal('Loading...', 'Loading bounty details...');
+		const remainingBalanceAndDesc = await getRemainingBalanceAndDescription(bounty.id);
+		if (remainingBalanceAndDesc) {
+			remainingBalance = remainingBalanceAndDesc.remainingBalance;
+			description = remainingBalanceAndDesc.description;
+		}
+		hideLoadingModal();
 	});
 </script>
 

@@ -19,7 +19,7 @@
 	onMount(checkOverflow);
 </script>
 
-<p>Description</p>
+<p class="text-xs">Description</p>
 <div bind:this={container} class="content-container {isExpanded ? 'expanded' : ''}">
 	<!-- eslint-disable svelte/no-at-html-tags -->
 	{@html description}
