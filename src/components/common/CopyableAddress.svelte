@@ -3,11 +3,11 @@
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import PolkadotIcon from './PolkadotIcon.svelte';
 
-	let showTooltip = false;
-	export let name = '';
 	export let address: string | undefined;
-	export let showCopyIcon: boolean = true;
+	export let name = '';
+	export let showCopyIcon = true;
 
+	let showTooltip = false;
 	let tooltipX = 0;
 	let tooltipY = 0;
 
