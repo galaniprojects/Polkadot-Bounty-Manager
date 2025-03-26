@@ -29,10 +29,9 @@ export default {
 			backgroundButtonLight: '#B2B2B2',
 			borderDropdown: '#9A9A9A',
 			backgroundCloseChildBountyButton: '#B23434',
-			statusActive: '#009C5D',
-			statusApprovedRejected: '#00746A',
-			statusProposedFunded: '#B4A900',
-			statusPendingPayout: '#836FAC',
+			statusLightGreen: '#00854F',
+			statusDarkGreen: '#00746A',
+			statusDarkYellow: '#A09600',
 			textPrimary: '#131313'
 		},
 		extend: {

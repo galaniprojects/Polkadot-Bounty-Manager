@@ -346,21 +346,20 @@
 	}
 
 	[data-status='Active'],
-	[data-status='Added'] {
-		background-color: theme('colors.statusActive');
-	}
-
+	[data-status='Added'],
 	[data-status='PendingPayout'] {
-		background-color: theme('colors.statusPendingPayout');
+		background-color: theme('colors.statusLightGreen');
+		color: white;
 	}
 
 	[data-status='CuratorProposed'] {
-		background-color: theme('colors.statusProposedFunded');
+		background-color: theme('colors.statusDarkYellow');
+		color: white;
 	}
 
 	[data-status='Claimed'],
 	[data-status='Canceled'] {
-		background-color: theme('colors.statusApprovedRejected');
+		background-color: theme('colors.statusDarkGreen');
 		color: white;
 	}
 </style>
