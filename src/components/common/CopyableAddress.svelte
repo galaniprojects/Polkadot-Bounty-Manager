@@ -4,7 +4,7 @@
 	import PolkadotIcon from './PolkadotIcon.svelte';
 
 	let showTooltip = false;
-	export let name: string | undefined;
+	export let name = '';
 	export let address: string | undefined;
 	export let showCopyIcon: boolean = true;
 
@@ -46,7 +46,7 @@
 
 		<span>
 			{#if name}
-				<PeopleChainName {address}>{name || 'Account'}</PeopleChainName>
+				{name}
 			{:else}
 				<PeopleChainName {address}>{truncateString(address, 8)}</PeopleChainName>
 			{/if}
