@@ -3,10 +3,15 @@
 	import PeopleChainName from '../PeopleChainName.svelte';
 	import PolkadotIcon from './PolkadotIcon.svelte';
 
-	let showTooltip = false;
 	export let address: string | undefined;
+	export let name = '';
+	export let showCopyIcon = true;
 
-	async function copyToClipboard(text: string | undefined) {
+	let showTooltip = false;
+	let tooltipX = 0;
+	let tooltipY = 0;
+
+	async function copyToClipboard(text: string | undefined, event: MouseEvent) {
 		if (!text) {
 			console.error('No text to copy');
 			return;
@@ -14,6 +19,9 @@
 
 		try {
 			await navigator.clipboard.writeText(text);
+			tooltipX = event.clientX;
+			tooltipY = event.clientY;
+
 			showTooltip = true;
 			setTimeout(() => {
 				showTooltip = false;
@@ -26,39 +34,69 @@
 
 {#if address}
 	<button
-		class="flex space-x-1 justify-center"
+		class="account"
 		type="button"
-		on:click={async () => {
-			await copyToClipboard(address);
+		onclick={async (event) => {
+			await copyToClipboard(address, event);
 		}}
 	>
-		<span class="h-4 w-4">
+		<span class="identicon">
 			<PolkadotIcon {address} />
 		</span>
-		<span class="flex text-nowrap space-x-1">
-			<PeopleChainName {address}>{truncateString(address, 8)}</PeopleChainName>
-		</span>
-		<span class="material-symbols-outlined place-self-center mb-1 text-sm"> content_copy </span>
-	</button>
 
-	<div class="flex z-50">
+		<span>
+			{#if name}
+				{name}
+			{:else}
+				<PeopleChainName {address}>{truncateString(address, 8)}</PeopleChainName>
+			{/if}
+		</span>
+
+		{#if showCopyIcon}
+			<span class="material-symbols-outlined"> content_copy </span>
+		{/if}
+
 		{#if showTooltip}
-			<div
-				class="tooltip show absolute bg-backgroundButtonDark text-white rounded text-sm py-1 px-2 z-50"
-			>
+			<div class="tooltip show" style="top: {tooltipY + 10}px; left: {tooltipX}px;">
 				Copied to clipboard
 			</div>
 		{/if}
-	</div>
+	</button>
 {:else}
 	<p>-</p>
 {/if}
 
 <style>
+	.account {
+		position: relative;
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.identicon {
+		height: 1rem;
+		width: 1rem;
+	}
+
+	.material-symbols-outlined {
+		place-self: center;
+		margin-bottom: 0.25rem;
+		font-size: 14px;
+	}
+
 	.tooltip {
+		position: fixed;
+		z-index: 10;
+		padding: 4px 8px;
+		background-color: theme('colors.backgroundButtonDark');
+		border-radius: 0.25rem;
+		color: white;
+		font-size: 14px;
 		opacity: 0;
 		transition: opacity 0.2s ease-in-out;
+		pointer-events: none;
 	}
+
 	.tooltip.show {
 		opacity: 1;
 	}
