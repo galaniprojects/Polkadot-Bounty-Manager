@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { activeAccount, dotApi, polkadotSigner } from '../../stores';
-	import PolkadotIcon from '../common/PolkadotIcon.svelte';
 	import LogoBountyManagerHeader from './LogoBountyManagerHeader.svg';
 	import LoginModal from './LoginModal.svelte';
 	import { showLoginModal } from './loginModalStores';
 	import { updateAccountMultisigsOnBlockchain } from '../curator-actions/updateAccountMultisigsOnBlockchain';
-	import PeopleChainName from '../PeopleChainName.svelte';
 	import { getAccounts } from './getAccounts';
 	import { type AccountInfo } from '../../types/account';
 	import BurgerMenu from './BurgerMenu.svelte';
@@ -17,6 +15,7 @@
 	import ChainMenu from './ChainMenu.svelte';
 	import LoadingModal from '../LoadingModal/LoadingModal.svelte';
 	import AllBountiesToggle from './AllBountiesToggle.svelte';
+	import CopyableAddress from '../common/CopyableAddress.svelte';
 
 	onMount(async () => {
 		if (typeof $dotApi === 'undefined') {
@@ -55,23 +54,14 @@
 
 		{#if !$activeAccount}
 			{#if !page.url.pathname.startsWith('/docs/')}
-				<button class="walletConnectButton" on:click={showLoginModal}>CONNECT WALLET</button>
+				<button class="walletConnectButton" onclick={showLoginModal}>CONNECT WALLET</button>
 			{/if}
 		{:else}
-			<button
-				type="button"
-				class="account"
-				on:click={async () => {
-					await navigator.clipboard.writeText($activeAccount.address);
-				}}
-			>
-				<span class="identicon">
-					<PolkadotIcon address={$activeAccount.address} />
-				</span>
-				<PeopleChainName address={$activeAccount.address}>
-					{$activeAccount.name || 'Account'}
-				</PeopleChainName>
-			</button>
+			<CopyableAddress
+				address={$activeAccount.address}
+				name={$activeAccount.name}
+				showCopyIcon={false}
+			/>
 		{/if}
 	</div>
 
@@ -117,17 +107,6 @@
 		border-radius: 10px;
 		border: 1px solid #e6007a;
 		padding: 0.2rem 0.3rem 0.1rem;
-	}
-
-	.account {
-		display: flex;
-		gap: 8px;
-		align-items: center;
-	}
-
-	.identicon {
-		width: 20px;
-		height: 20px;
 	}
 
 	.actionsContainer {
