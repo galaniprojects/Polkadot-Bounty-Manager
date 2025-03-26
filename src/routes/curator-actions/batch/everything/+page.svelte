@@ -223,15 +223,17 @@
 										<input type="checkbox" bind:checked={child.includeClaim} class={Input.switch} />
 									</label>
 
-									<button
-										type="button"
-										class="deleteButton material-symbols-outlined"
-										onclick={() => {
-											childBounties = childBounties.toSpliced(index, 1);
-										}}
-									>
-										delete
-									</button>
+									{#if childBounties.length > 1}
+										<button
+											type="button"
+											class="deleteButton material-symbols-outlined"
+											onclick={() => {
+												childBounties = childBounties.toSpliced(index, 1);
+											}}
+										>
+											delete
+										</button>
+									{/if}
 								</div>
 							</div>
 
