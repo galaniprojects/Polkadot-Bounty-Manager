@@ -18,7 +18,7 @@
 		"test:unit": "echo todo: vitest when dependendies are resolved"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.51.0",
+		"@playwright/test": "^1.51.1",
 		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.19.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
