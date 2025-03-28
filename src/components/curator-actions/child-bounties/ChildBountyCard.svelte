@@ -4,6 +4,7 @@
 	import { activeAccount, showAllCuratorOptions } from '../../../stores';
 	import { isCurator } from '../../../utils/isCurator';
 	import AssignSubCurator from './operations/AssignSubCurator.svelte';
+	import ReassignSubCurator from './operations/ReassignSubCurator.svelte';
 	import AcceptSubCuratorRole from './operations/AcceptSubCuratorRole.svelte';
 	import AwardChildBounty from './operations/AwardChildBounty.svelte';
 	import BatchChildBountyCalls from './operations/BatchChildBountyCalls.svelte';
@@ -18,6 +19,7 @@
 	export let parentBounty: Bounty;
 
 	let assignSubCuratorDialog: HTMLDialogElement;
+	let reassignSubCuratorDialog: HTMLDialogElement;
 	let unassignSubCuratorDialog: HTMLDialogElement;
 	let acceptSubCuratorRuleDialog: HTMLDialogElement;
 	let closeDownChildBountyDialog: HTMLDialogElement;
@@ -144,16 +146,16 @@
 			</div>
 		{/if}
 
-		{#if $showAllCuratorOptions || (['Active', 'SubCuratorProposed'].includes(childBounty.status) && isCurator(parentBounty, $activeAccount))}
+		{#if $showAllCuratorOptions || (['Active', 'CuratorProposed'].includes(childBounty.status) && isCurator(parentBounty, $activeAccount))}
 			<div class="action">
 				<p class="text">Sub-curator</p>
 				<button
 					on:click={() => {
-						unassignSubCuratorDialog.showModal();
+						reassignSubCuratorDialog.showModal();
 					}}
 					class="buttons"
 				>
-					UNASSIGN
+					REASSIGN
 				</button>
 			</div>
 		{/if}
@@ -178,6 +180,7 @@
 </div>
 
 <AssignSubCurator bind:dialog={assignSubCuratorDialog} {childBounty} {parentBounty} />
+<ReassignSubCurator bind:dialog={reassignSubCuratorDialog} {childBounty} {parentBounty} />
 
 <AcceptSubCuratorRole
 	bind:dialog={acceptSubCuratorRuleDialog}
