@@ -1,22 +1,41 @@
 <script lang="ts">
-	import type { Bounty } from '../../types/bounty';
+	import { bountyStatuses, statusLabels, type Bounty } from '../../types/bounty';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import Pagination from './Pagination.svelte';
 	import { goto } from '$app/navigation';
 	import BountyCard from './BountyCard.svelte';
+	import DropdownMenu from '../common/DropdownMenu.svelte';
 
 	let currentPage = 1;
 	let itemsPerPage = 10;
+
+	type Filter = Bounty['status'] | 'all';
+
+	let filteredBounties: Bounty[] = [];
+
 	let totalPages = 1;
 	let paginatedBounties: Bounty[] = [];
+
+	const filters: Array<{ value: Filter; label: string }> = [
+		{ value: 'all', label: 'all statuses' },
+		...bountyStatuses.map((value) => ({ value, label: statusLabels[value] }))
+	];
+	let selectedFilter = filters[0];
 
 	$: activeBounties = $showAllBounties ? $bounties : $activeAccountBounties;
 
 	$: {
+		filteredBounties =
+			selectedFilter.value === 'all'
+				? $bounties
+				: $bounties.filter(({ status }) => status === selectedFilter.value);
+
+		totalPages = Math.max(Math.ceil(filteredBounties.length / itemsPerPage), 1);
+		currentPage = Math.min(currentPage, totalPages);
+
 		const startIndex = (currentPage - 1) * itemsPerPage;
-		const endIndex = currentPage * itemsPerPage;
-		paginatedBounties = activeBounties.slice(startIndex, endIndex);
-		totalPages = Math.ceil(activeBounties.length / itemsPerPage);
+		const endIndex = startIndex + itemsPerPage;
+		paginatedBounties = filteredBounties.slice(startIndex, endIndex);
 	}
 
 	function handlePageChange(page: number) {
@@ -96,6 +115,20 @@
 				</div>
 			</div>
 		{:else}
+			<div class="dropdown">
+				<DropdownMenu
+					bind:selectedItem={selectedFilter}
+					items={filters}
+					widthContainer="w-[250px] sm:w-[350px]"
+					widthDropdown="w-[250p] sm:w-[350px]"
+					textAlign="text-center"
+					truncate={false}
+					bgColor="grey"
+					backgroundColorContainer="border border-backgroundButtonDark bg-backgroundApp"
+					height="h-10"
+					positionOverlay="-mt-[40px]"
+				/>
+			</div>
 			<div class="cards">
 				{#each paginatedBounties as bounty (bounty.id)}
 					<button
@@ -109,6 +142,10 @@
 				{/each}
 			</div>
 
+			{#if filteredBounties.length === 0}
+				<p class="noBountiesHint">There are no bounties for the selected filter.</p>
+			{/if}
+
 			{#if activeBounties.length !== 0}
 				<Pagination
 					{currentPage}
@@ -118,6 +155,7 @@
 					itemsPerPageChange={handleItemsPerPageChange}
 				/>
 			{/if}
+
 			{#if $activeAccount && $activeAccountBounties.length === 0}
 				<div class="lg:mt-40 mt-10 flex justify-center">
 					Connected Address does not have any bounties or child bounties
@@ -128,6 +166,10 @@
 </div>
 
 <style>
+	.dropdown {
+		padding: 20px 0px 0px 0px;
+	}
+
 	.cards {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
@@ -135,11 +177,15 @@
 		margin: 25px 0px;
 		align-items: start;
 		cursor: pointer;
-	}
 
-	@media (width <= 756px) {
-		.cards {
+		@media (width <= 756px) {
 			grid-template-columns: repeat(1, 1fr);
 		}
+	}
+
+	.noBountiesHint {
+		padding: 0px 0px 40px;
+		font-size: 20px;
+		font-weight: 700;
 	}
 </style>
