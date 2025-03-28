@@ -5,6 +5,18 @@ export type BountyRaw = Awaited<
 	ReturnType<ApiType['query']['Bounties']['Bounties']['getEntries']>
 >[number]['value'];
 
+export const bountyStatuses = [
+	'Proposed',
+	'Approved',
+	'Funded',
+	'CuratorProposed',
+	'Active',
+	'PendingPayout',
+	'Claimed',
+	'Canceled',
+	'Rejected'
+] as const;
+
 export interface Bounty {
 	id: number;
 	description?: string;
@@ -12,19 +24,22 @@ export interface Bounty {
 	proposer?: string;
 	value: bigint;
 	fee?: bigint;
-	status:
-		| 'Proposed'
-		| 'Approved'
-		| 'Funded'
-		| 'CuratorProposed'
-		| 'Active'
-		| 'PendingPayout'
-		| 'Claimed'
-		| 'Canceled'
-		| 'Rejected';
+	status: (typeof bountyStatuses)[number];
 	childBounties: ChildBounty[];
 	curator: string | undefined;
 	curatorMultisigAccount?: string;
 	updateDue?: number;
 	expiryDate?: Date | undefined;
 }
+
+export const statusLabels = {
+	Proposed: 'proposed',
+	Approved: 'approved',
+	Funded: 'funded',
+	CuratorProposed: 'curatorProposed',
+	Active: 'active',
+	PendingPayout: 'pendingPayout',
+	Claimed: 'claimed',
+	Canceled: 'canceled',
+	Rejected: 'rejected'
+};
