@@ -47,7 +47,7 @@
 		"@polkadot-api/meta-signers": "^0.1.4",
 		"@polkadot/ui-shared": "^3.12.2",
 		"@reactive-dot/wallet-walletconnect": "^0.17.8",
-		"dompurify": "^3.2.4",
+		"dompurify": "^3.2.5",
 		"marked": "^15.0.7",
 		"polkadot-api": "^1.9.7"
 	},
