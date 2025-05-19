@@ -44,7 +44,7 @@
 		"@bramus/pagination-sequence": "^1.2.1",
 		"@mimirdev/apps-inject": "^3.1.1",
 		"@polkadot-api/descriptors": "file:.papi/descriptors",
-		"@polkadot-api/meta-signers": "^0.1.4",
+		"@polkadot-api/meta-signers": "^0.1.6",
 		"@polkadot/ui-shared": "^3.12.2",
 		"@reactive-dot/wallet-walletconnect": "^0.17.14",
 		"dompurify": "^3.2.5",
