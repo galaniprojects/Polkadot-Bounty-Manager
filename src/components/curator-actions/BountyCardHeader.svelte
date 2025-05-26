@@ -12,7 +12,8 @@
 		PendingPayout: 'pending payout',
 		Claimed: 'claimed',
 		Canceled: 'canceled',
-		Rejected: 'rejected'
+		Rejected: 'rejected',
+		ApprovedWithCurator: 'approved with curator'
 	};
 </script>
 
