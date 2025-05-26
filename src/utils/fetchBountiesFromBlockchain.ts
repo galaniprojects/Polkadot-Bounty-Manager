@@ -88,7 +88,7 @@ export async function fetchBountiesFromBlockchain() {
 
 	const childBountiesMap = keyBy(childBounties, 'id');
 	const childDescriptions =
-		await api.query.ChildBounties.ChildBountyDescriptions.getEntries(inBlock);
+		await api.query.ChildBounties.ChildBountyDescriptionsV1.getEntries(inBlock);
 	childDescriptions.forEach(({ value, keyArgs: [id] }) => {
 		if (id in childBountiesMap) {
 			childBountiesMap[id].description = value.asText();

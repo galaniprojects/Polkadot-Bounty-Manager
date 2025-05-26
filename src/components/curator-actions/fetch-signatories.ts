@@ -39,9 +39,9 @@ interface MultisigAccountResponse {
 
 export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
-	if (!graphqlEndpoint) {
-		return [];
-	}
+	// // if (!graphqlEndpoint) {
+	// // 	return [];
+	// }
 
 	try {
 		const proxyAddress = get(proxies).get(curatorAddress);
@@ -86,9 +86,6 @@ export async function fetchMultisigSignatories(curatorAddress: string): Promise<
  */
 export async function fetchMultisigInfo(signatory: string): Promise<MultisigInfo[]> {
 	const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
-	if (!graphqlEndpoint) {
-		return [];
-	}
 
 	try {
 		const query = `

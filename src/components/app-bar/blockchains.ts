@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
 import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
-import logoPaseo from './LogoPaseo.svg';
-import paseoInverted from './LogoPaseoInverted.svg';
+// import logoPaseo from './LogoPaseo.svg';
+// import paseoInverted from './LogoPaseoInverted.svg';
 import { hideTestBar } from '../../utils/hideTestBar';
 
 export const blockchains = [
@@ -29,18 +29,18 @@ export const blockchains = [
 			polkAssembly: 'https://polkadot.polkassembly.io'
 		}
 	} as const,
-	{
-		id: 'polkadot:77afd6190f1554ad45fd0d31aee62aac',
-		label: 'Paseo',
-		logo: logoPaseo,
-		invertedLogo: paseoInverted,
-		endpoints: ['wss://paseo-rpc.dwellir.com'],
-		baseUrls: {
-			subScan: 'https://paseo.subscan.io',
-			subSquare: 'https://paseo.subsquare.io',
-			polkAssembly: 'https://paseo.polkassembly.io'
-		}
-	} as const,
+	// {
+	// 	id: 'polkadot:77afd6190f1554ad45fd0d31aee62aac',
+	// 	label: 'Paseo',
+	// 	logo: logoPaseo,
+	// 	invertedLogo: paseoInverted,
+	// 	endpoints: ['wss://paseo-rpc.dwellir.com'],
+	// 	baseUrls: {
+	// 		subScan: 'https://paseo.subscan.io',
+	// 		subSquare: 'https://paseo.subsquare.io',
+	// 		polkAssembly: 'https://paseo.polkassembly.io'
+	// 	}
+	// } as const,
 	...(hideTestBar
 		? []
 		: [

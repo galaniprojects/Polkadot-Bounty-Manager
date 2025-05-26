@@ -21,7 +21,8 @@ export interface Bounty {
 		| 'PendingPayout'
 		| 'Claimed'
 		| 'Canceled'
-		| 'Rejected';
+		| 'Rejected'
+		| 'ApprovedWithCurator';
 	childBounties: ChildBounty[];
 	curator: string | undefined;
 	curatorMultisigAccount?: string;
