@@ -14,19 +14,20 @@ export async function getRemainingBalanceAndDescription(
 		const url = `${subSquareApi}/treasury/bounties/${bountyId}`;
 		const response = await fetch(url);
 
-		if (!response.ok) throw new Error('Failed to fetch bounty details.');
+		if (!response.ok) throw new Error('Failed to fetch bounty details');
 
 		const data = (await response.json()) as { onchainData: { address: string }; content: string };
 
 		try {
 			const description = await parse(data.content);
 			const fundsAddress = data.onchainData.address;
+			if (!fundsAddress) return undefined;
 			const account = await get(dotApi).query.System.Account.getValue(fundsAddress);
 			return { remainingBalance: account.data.free, description };
-		} catch {
-			console.error('Error fetching remaining balance.');
+		} catch (exception) {
+			console.error('Error fetching remaining balance', exception);
 		}
-	} catch {
-		console.error('Error fetching remaining balance.');
+	} catch (exception) {
+		console.error('Error fetching remaining balance', exception);
 	}
 }
