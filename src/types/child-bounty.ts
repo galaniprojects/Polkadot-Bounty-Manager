@@ -15,6 +15,7 @@ export const childBountyStatuses = [
 
 export interface ChildBounty {
 	id: number;
+	uniqueId: string;
 	parentBounty: number;
 	value: bigint;
 	fee: bigint;

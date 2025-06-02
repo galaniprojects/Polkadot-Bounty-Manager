@@ -36,8 +36,10 @@ interface DoTreasuryBounty {
 }
 
 function parseChildBounty(input: DoTreasuryChildBounty) {
+	const uniqueId = `${input.parentBountyId}-${input.index}`;
 	return <ChildBounty>{
 		id: input.index,
+		uniqueId,
 		parentBounty: input.parentBountyId,
 		value: BigInt(input.value),
 		description: input.description,

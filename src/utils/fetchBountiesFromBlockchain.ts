@@ -38,6 +38,7 @@ export function parseBounty(raw: BountyRaw, id: number) {
 export function parseChildBounty(raw: ChildBountyRaw, id: number) {
 	const { fee, value, parent_bounty: parentBounty, curator_deposit: curatorDeposit } = raw;
 	const { type } = raw.status;
+	const uniqueId = `${parentBounty}-${id}`;
 
 	const curator = ['CuratorProposed', 'Active', 'PendingPayout'].includes(type)
 		? raw.status.value?.curator
@@ -45,6 +46,7 @@ export function parseChildBounty(raw: ChildBountyRaw, id: number) {
 
 	const result: ChildBounty = {
 		id,
+		uniqueId,
 		value,
 		fee,
 		parentBounty,
@@ -86,12 +88,13 @@ export async function fetchBountiesFromBlockchain() {
 		parseChildBounty(value, id)
 	);
 
-	const childBountiesMap = keyBy(childBounties, 'id');
+	const childBountiesMap = keyBy(childBounties, 'uniqueId');
 	const childDescriptions =
 		await api.query.ChildBounties.ChildBountyDescriptionsV1.getEntries(inBlock);
-	childDescriptions.forEach(({ value, keyArgs: [id] }) => {
-		if (id in childBountiesMap) {
-			childBountiesMap[id].description = value.asText();
+	childDescriptions.forEach(({ value, keyArgs: [parentBounty, id] }) => {
+		const uniqueId = `${parentBounty}-${id}`;
+		if (uniqueId in childBountiesMap) {
+			childBountiesMap[uniqueId].description = value.asText();
 		}
 	});
 
