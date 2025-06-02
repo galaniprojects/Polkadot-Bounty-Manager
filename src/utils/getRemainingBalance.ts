@@ -6,12 +6,12 @@ import { parse } from 'marked';
 export async function getRemainingBalanceAndDescription(
 	bountyId: number
 ): Promise<{ remainingBalance: bigint; description: string | undefined } | undefined> {
-	const subSquareUrl = get(currentBlockchain).baseUrls.subSquare;
-	if (!subSquareUrl) {
+	const { subSquareApi } = get(currentBlockchain).baseUrls;
+	if (!subSquareApi) {
 		return;
 	}
 	try {
-		const url = `${subSquareUrl}/api/treasury/bounties/${bountyId}`;
+		const url = `${subSquareApi}/treasury/bounties/${bountyId}`;
 		const response = await fetch(url);
 
 		if (!response.ok) throw new Error('Failed to fetch bounty details.');

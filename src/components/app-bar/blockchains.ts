@@ -26,6 +26,7 @@ export const blockchains = [
 			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
+			subSquareApi: 'https://polkadot-api.subsquare.io',
 			polkAssembly: 'https://polkadot.polkassembly.io'
 		}
 	} as const,
@@ -66,6 +67,7 @@ export const blockchains = [
 						stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 						subScan: 'https://polkadot.subscan.io',
 						subSquare: 'https://polkadot.subsquare.io',
+						subSquareApi: 'https://polkadot-api.subsquare.io',
 						polkAssembly: 'https://polkadot.polkassembly.io'
 					}
 				} as const
