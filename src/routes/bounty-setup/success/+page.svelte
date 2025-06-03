@@ -20,12 +20,15 @@
 		</p>
 
 		<div class="flex-col space-y-2 sm:flex-row mt-10 sm:mt-40">
-			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2"
-				>RETURN HOME</a
+			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2">
+				RETURN HOME
+			</a>
+			<a
+				href="/bounty-setup/approve-with-curator"
+				class="button-active h-12 inline-flex items-center"
 			>
-			<a href="/bounty-setup/approval" class="button-active h-12 inline-flex items-center"
-				>PROCEED</a
-			>
+				PROCEED
+			</a>
 		</div>
 	</div>
 {/if}
