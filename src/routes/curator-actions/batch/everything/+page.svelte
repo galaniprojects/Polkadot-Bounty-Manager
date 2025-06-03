@@ -29,9 +29,11 @@
 
 	(async () => {
 		if (!bountyId) return;
-		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bountyId).forEach((value) => {
-			childBountyId = value;
-		});
+		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bountyId).forEach(
+			(value) => {
+				childBountyId = value;
+			}
+		);
 		childBountyId = await $dotApi.query.ChildBounties.ParentTotalChildBounties.getValue(bountyId);
 	})();
 
