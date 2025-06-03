@@ -75,9 +75,11 @@
 	let childBountyId: number;
 
 	(async () => {
-		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bounty.id).forEach((value) => {
-			childBountyId = value;
-		});
+		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bounty.id).forEach(
+			(value) => {
+				childBountyId = value;
+			}
+		);
 		childBountyId = await $dotApi.query.ChildBounties.ParentTotalChildBounties.getValue(bounty.id);
 	})();
 
