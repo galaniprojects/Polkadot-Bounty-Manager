@@ -8,7 +8,9 @@ export function parseBounty(raw: BountyRaw, id: number) {
 	const { fee, proposer, value } = raw;
 	const { type } = raw.status;
 
-	const curator = ['CuratorProposed', 'Active', 'PendingPayout'].includes(type)
+	const curator = ['CuratorProposed', 'ApprovedWithCurator', 'Active', 'PendingPayout'].includes(
+		type
+	)
 		? raw.status.value?.curator
 		: undefined;
 

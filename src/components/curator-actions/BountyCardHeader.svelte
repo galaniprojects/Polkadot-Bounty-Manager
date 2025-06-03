@@ -82,6 +82,7 @@
 
 	[data-status='Proposed'],
 	[data-status='CuratorProposed'],
+	[data-status='ApprovedWithCurator'],
 	[data-status='Funded'] {
 		background-color: theme('colors.statusDarkYellow');
 		color: white;

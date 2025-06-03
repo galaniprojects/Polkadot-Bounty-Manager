@@ -31,7 +31,7 @@
 	</a>
 {/if}
 
-{#if $showAllCuratorOptions || (bounty.status === 'CuratorProposed' && isCurator(bounty, $activeAccount))}
+{#if $showAllCuratorOptions || (['CuratorProposed', 'ApprovedWithCurator'].includes(bounty.status) && isCurator(bounty, $activeAccount))}
 	<button
 		class="bg-backgroundButtonDark text-white rounded-[10px] h-[40px] w-full md:w-1/2"
 		on:click={() => {
