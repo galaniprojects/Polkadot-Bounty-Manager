@@ -72,16 +72,13 @@
 
 	let description = `${currentMonth} Salary`;
 	let extend = false;
-	let nextAvailableChildBountyId: number;
 	let childBountyId: number;
 
 	(async () => {
-		void $dotApi.query.ChildBounties.ChildBountyCount.watchValue().forEach((value) => {
-			nextAvailableChildBountyId = value;
-			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
+		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bounty.id).forEach((value) => {
+			childBountyId = value;
 		});
-		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
-		childBountyId = nextAvailableChildBountyId;
+		childBountyId = await $dotApi.query.ChildBounties.ParentTotalChildBounties.getValue(bounty.id);
 	})();
 
 	$: isFormValid =
@@ -225,11 +222,6 @@
 			<p class="text-xs">Estimated basic fee</p>
 			<p><Fee {transaction} /></p>
 		</section>
-
-		<p class="text-xs">
-			For the highest likelihood of success, ensure that the signatories confirm the transaction as
-			soon as possible
-		</p>
 
 		<button
 			type="submit"

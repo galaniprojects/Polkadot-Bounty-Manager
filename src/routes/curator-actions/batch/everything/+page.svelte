@@ -21,7 +21,6 @@
 	$: error = getBountyCuratorError(bountyId, $bounties, bounty);
 
 	let childBountyId: number;
-	let nextAvailableChildBountyId: number;
 	let remainingBalance: bigint | undefined;
 
 	onMount(async () => {
@@ -29,12 +28,11 @@
 	});
 
 	(async () => {
-		void $dotApi.query.ChildBounties.ChildBountyCount.watchValue().forEach((value) => {
-			nextAvailableChildBountyId = value;
-			childBountyId = Math.max(childBountyId, nextAvailableChildBountyId);
+		if (!bountyId) return;
+		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bountyId).forEach((value) => {
+			childBountyId = value;
 		});
-		nextAvailableChildBountyId = await $dotApi.query.ChildBounties.ChildBountyCount.getValue();
-		childBountyId = nextAvailableChildBountyId;
+		childBountyId = await $dotApi.query.ChildBounties.ParentTotalChildBounties.getValue(bountyId);
 	})();
 
 	let childBounties = [
@@ -264,35 +262,10 @@
 						<input type="checkbox" bind:checked={extend} class={Input.switch} />
 					</label>
 
-					<div class="indexContainer">
-						<p class="text note">
-							Currently, the child bounty’s index is estimated by incrementing the highest available
-							on the blockchain. To create multiple bounties in one batch transaction, Bounty
-							Manager increments this index by 1 for each additional bounty. <br /> Please note: if another
-							bounty creates a child between this transaction’s creation and confirmation, this transaction
-							will fail.
-						</p>
-						<label class="index">
-							<span class="text">Starting Child Bounty Index</span>
-							<input
-								type="number"
-								min={nextAvailableChildBountyId}
-								bind:value={childBountyId}
-								class="indexField"
-								required
-							/>
-						</label>
-					</div>
-
 					<div>
 						<p class="text">Estimated basic fee:</p>
 						<p><Fee {transaction} /></p>
 					</div>
-
-					<p class="text">
-						For the highest likelihood of success, ensure that the signatories confirm the
-						transaction as soon as possible.
-					</p>
 
 					<p>
 						<button type="submit" class="signButton"> SIGN </button>
@@ -449,31 +422,9 @@
 		align-items: center;
 	}
 
-	.indexContainer {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.note {
-		border: 1px solid red;
-		border-radius: 3px;
-		color: red;
-		padding: 8px;
-	}
-
 	.index {
 		display: flex;
 		flex-direction: column;
-	}
-
-	.indexField {
-		border: 1px solid theme('colors.textPrimary');
-		border-radius: 3px;
-		background-color: white;
-		padding: 4px 0px 0px 4px;
-		height: 40px;
-		font-size: 18px;
 	}
 
 	.signButton {

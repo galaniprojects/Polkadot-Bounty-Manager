@@ -194,20 +194,6 @@
 			Once the transaction is complete, the child bounties will be created, claimed, and displayed as
 			"claimed" in the UI. <br />
 		</p>
-		<p class="note">
-			Please note: Currently, the child bounty’s index is estimated by using the highest available
-			on the blockchain, which you can see in the first field. <br />
-			The index will update automatically any time a new child bounty is created but we still give users
-			the option to manually increment it if they expect a long waiting time between creation of transaction
-			and execution. <br />
-			If another bounty creates a child bounty between this transaction’s creation and execution after
-			the signatories sign it, this transaction will fail and the child bounty will not be created. For
-			the highest likelihood of success, ensure that the signatories confirm the transaction as soon
-			as possible after its creation. <br />
-			<br />
-			An upcoming Polkadot runtime upgrade will link child bounty indexing to their parent bounties,
-			simplifying the process and thus reducing the risk of failure.
-		</p>
 
 		<h4 class="sectionTitle">Adding Child Bounties</h4>
 		<p>
@@ -503,10 +489,6 @@
 
 	.link {
 		text-decoration-line: underline;
-	}
-
-	.note {
-		font-style: italic;
 	}
 
 	.toTop {
