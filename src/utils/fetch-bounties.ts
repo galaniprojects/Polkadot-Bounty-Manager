@@ -32,7 +32,13 @@ export async function fetchBountiesAndChildBounties(showProgress = true) {
 
 		bounties.sort((a, b) => (a.id > b.id ? -1 : 1));
 		bounties.forEach(({ childBounties }) => {
-			childBounties.sort((a, b) => (a.id > b.id ? -1 : 1));
+			childBounties.sort((a, b) => {
+				if (!(a.blockTime && b.blockTime)) {
+					return a.id > b.id ? -1 : 1;
+				}
+				// add ID to sort by ID if blockTime is the same
+				return a.blockTime + a.id > b.blockTime + b.id ? -1 : 1;
+			});
 		});
 
 		const api = get(dotApi);

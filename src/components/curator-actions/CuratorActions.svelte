@@ -2,7 +2,6 @@
 	import type { Bounty } from '../../types/bounty';
 	import { activeAccount, activeAccountBounties, bounties, showAllBounties } from '../../stores';
 	import Pagination from './Pagination.svelte';
-	import { goto } from '$app/navigation';
 	import BountyCard from './BountyCard.svelte';
 
 	let currentPage = 1;
@@ -98,14 +97,9 @@
 		{:else}
 			<div class="cards">
 				{#each paginatedBounties as bounty (bounty.id)}
-					<button
-						type="button"
-						onclick={async () => {
-							await goto(`/bounty?id=${bounty.id}`);
-						}}
-					>
+					<a href="/bounty?id={bounty.id}">
 						<BountyCard {bounty} />
-					</button>
+					</a>
 				{/each}
 			</div>
 

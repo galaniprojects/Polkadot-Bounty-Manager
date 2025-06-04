@@ -20,6 +20,9 @@ interface DoTreasuryChildBounty {
 	curator: string;
 	beneficiary: string;
 	unlockAt: number;
+	indexer: {
+		blockTime: number;
+	};
 }
 
 interface DoTreasuryBounty {
@@ -49,6 +52,7 @@ function parseChildBounty(input: DoTreasuryChildBounty) {
 			input.dValue.$numberDecimal !== 'NaN' ? BigInt(input.dValue.$numberDecimal) : 0n,
 		curator: input.curator,
 		beneficiary: input.beneficiary,
+		blockTime: input.indexer.blockTime,
 		...(input.state.state === 'PendingPayout' && {
 			unlockAt: input.unlockAt
 		})
@@ -97,4 +101,13 @@ export async function addBountiesFromDoTreasury(bounties: Bounty[]) {
 
 		childBounties.push(...missingChildBounties);
 	});
+
+	// add blockTime to child bounties from blockchain
+	const doTreasuryChildBountiesMap = keyBy(doTreasuryChildBounties, 'uniqueId');
+	bounties
+		.flatMap(({ childBounties }) => childBounties)
+		.forEach((childBounty) => {
+			if (!(childBounty.uniqueId in doTreasuryChildBountiesMap)) return;
+			childBounty.blockTime = doTreasuryChildBountiesMap[childBounty.uniqueId].blockTime;
+		});
 }

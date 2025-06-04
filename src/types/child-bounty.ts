@@ -27,6 +27,7 @@ export interface ChildBounty {
 	beneficiary?: string;
 	unlockAt?: number;
 	dateOfPayout?: string;
+	blockTime?: number;
 }
 
 export const statusLabels = {
