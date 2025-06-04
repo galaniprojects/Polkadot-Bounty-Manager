@@ -36,9 +36,7 @@
 
 	<div class="p-[5px]">
 		<!-- Child Bounties -->
-		{#if bounty.status === 'Active'}
-			<ChildBountiesSection {bounty} />
-		{/if}
+		<ChildBountiesSection {bounty} />
 	</div>
 
 	<div
