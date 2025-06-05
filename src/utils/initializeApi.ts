@@ -3,11 +3,17 @@ import { currentBlockchain } from '../components/app-bar/blockchains';
 import { hideLoadingModal, showLoadingModal } from '../components/LoadingModal/loadingModalStores';
 import { blockChainMeta, dotApi } from '../stores';
 
+async function dotDescriptorsGetter() {
+	return (await import('@polkadot-api/descriptors')).dot;
+}
+
 export async function initializeApi(endpoints: readonly string[]) {
-	showLoadingModal(`Connecting to ${get(currentBlockchain).label}…`, 'This might take a moment.');
+	const { label, descriptorsGetter = dotDescriptorsGetter } = get(currentBlockchain);
+	showLoadingModal(`Connecting to ${label}…`, 'This might take a moment.');
 
 	const { createTypedApi } = await import('./createTypedApi');
-	const { client, api } = createTypedApi(endpoints as string[]);
+	const descriptors = await descriptorsGetter();
+	const { client, api } = createTypedApi(endpoints as string[], descriptors);
 
 	const compatibilityToken = await api.compatibilityToken;
 	const ss58Format = api.constants.System.SS58Prefix(compatibilityToken);

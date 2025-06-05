@@ -1,6 +1,8 @@
 import { writable } from 'svelte/store';
 import coin from '../Input/coin.svg';
 import coinInverted from './LogoPolkadot.svg';
+import kusama from './LogoKusama.svg';
+import kusamaInverted from './LogoKusamaInverted.svg';
 // import logoPaseo from './LogoPaseo.svg';
 // import paseoInverted from './LogoPaseoInverted.svg';
 import { hideTestBar } from '../../utils/hideTestBar';
@@ -30,12 +32,30 @@ export const blockchains = [
 			polkAssembly: 'https://polkadot.polkassembly.io'
 		}
 	} as const,
+	{
+		id: 'polkadot:b0a8d493285c2df73290dfb7e61f870f',
+		label: 'Kusama',
+		logo: kusama,
+		invertedLogo: kusamaInverted,
+		endpoints: ['wss://kusama-rpc.dwellir.com'],
+		descriptorsGetter: async () => (await import('@polkadot-api/descriptors')).kusama,
+		baseUrls: {
+			doTreasury: 'https://kusama.dotreasury.com',
+			doTreasuryApi: 'https://kusama-api.dotreasury.com',
+			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
+			subScan: 'https://kusama.subscan.io',
+			subSquare: 'https://kusama.subsquare.io',
+			subSquareApi: 'https://kusama-api.subsquare.io',
+			polkAssembly: 'https://kusama.polkassembly.io'
+		}
+	} as const,
 	// {
 	// 	id: 'polkadot:77afd6190f1554ad45fd0d31aee62aac',
 	// 	label: 'Paseo',
 	// 	logo: logoPaseo,
 	// 	invertedLogo: paseoInverted,
 	// 	endpoints: ['wss://paseo-rpc.dwellir.com'],
+	//  descriptorsGetter: async () => (await import('@polkadot-api/descriptors')).paseo,
 	// 	baseUrls: {
 	// 		subScan: 'https://paseo.subscan.io',
 	// 		subSquare: 'https://paseo.subsquare.io',
