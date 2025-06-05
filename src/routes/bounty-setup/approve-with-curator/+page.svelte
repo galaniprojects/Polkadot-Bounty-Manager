@@ -3,12 +3,12 @@
 </script>
 
 <p class="w-full md:w-2/3 text-sm sm:text-base">
-	It is strongly recommended to create the Curator Proposal referendum, after the Bounty has been
-	funded and the Curator list has been informally accepted by the community in discussions on the
-	platforms.
+	Submitting this referendum will approve the bounty, fund the proposed amount from the treasury and
+	assign the given address as curator at the same time. It is recommended to use a pure proxy
+	address for curator assignment.
 	<br /><br />
-	However if you want to proceed and already have a list of curators to propose, it is possible to do
-	so.
+	If you prefer to approve the bounty now and propose the curator address at a later time, select the
+	“Approval” tab above instead.
 </p>
 
 <div class="flex-col space-y-2 sm:flex-row my-5 sm:mt-20">

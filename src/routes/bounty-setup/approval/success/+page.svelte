@@ -26,13 +26,13 @@
 			{$bountyInfo.description} <br />
 			has been created successfully!
 			<br /><br />
-			Please update the description on one of the social platforms such as Subsquare. The decision deposit
-			must be placed within 7 days, for the referendum to be valid. (This deposit can be placed by any
-			account). This can be submitted either on one of the social platforms or via the polkadot.js explorer.
+			Please update the description of the referendum on Subsquare or Polkassembly and submit the decision
+			deposit (200 DOT) within 7 days to ensure the referendum is valid. After successful execution of
+			the referendum, the curators will need to accept the role to activate the bounty.
 			<br /> <br />
-			You can now return to the home screen or proceed to the Curator Approval Referendum creation. It
-			is strongly recommended to create the Curator Approval Referendum, after the Bounty has been funded
-			and the Curator list has been informally accepted by the community in discussions on the platforms.
+			You can now return to the home screen or proceed to submit the curator approval referendum. It
+			is recommended to submit the curator approval referendum after the presently submitted referendum
+			has been executed.
 		</p>
 		<div class="mt-5 flex-col space-y-2 sm:flex-row max-w-fit">
 			<a href="/curator-actions" class="button-cancel h-12 inline-flex items-center mr-2"

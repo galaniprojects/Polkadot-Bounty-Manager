@@ -10,10 +10,9 @@
 		has been created successfully!
 		<br /><br />
 
-		Please update the description if necessary on a social platform such as Subsquare. To ensure the
-		referendum is valid, place the decision deposit within 7 days. The deposit, which can be
-		submitted by any account, may be made on a social platform such as Subsquare or through the
-		polkadot.js explorer.
+		Please update the description of the referendum on Subsquare or Polkassembly and submit the
+		decision deposit (200 DOT) within 7 days to ensure the referendum is valid. After successful
+		execution of the referendum, the curators will need to accept the role to activate the bounty.
 	</p>
 
 	<div class="mt-7 sm:mt-24 mb-2 flex">

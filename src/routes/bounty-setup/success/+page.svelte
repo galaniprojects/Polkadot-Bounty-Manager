@@ -13,9 +13,9 @@
 			{$bountyInfo.description}
 			has been created successfully!
 			<br /><br />
-			You can either proceed to the Referendum <br />
-			for Bounty Approval or return to the main page <br />
-			or go back to the list of all bounties.
+			To submit the combined bounty and curator approval referendum, click “Proceed”. You can also choose
+			to submit only the bounty approval referendum by selecting the approval tab above, or return to
+			the main page instead.
 			<br />
 		</p>
 
