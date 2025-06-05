@@ -45,6 +45,9 @@
 				return;
 			}
 
+			// TODO: handle properly for Paseo
+			if (!('approve_bounty_with_curator' in $dotApi.tx.Bounties)) return;
+
 			const approve = $dotApi.tx.Bounties.approve_bounty_with_curator({
 				bounty_id: $bountyInfo.id,
 				curator: MultiAddress.Id(curatorAddress),
@@ -81,7 +84,7 @@
 
 		const result = await submitTransaction(transaction);
 		if (result) {
-			$bountyInfo.track = selectedTreasuryTrack;
+			$bountyInfo.track = selectedTreasuryTrack
 			await goto('/bounty-setup/approve-with-curator/success');
 		}
 	}
