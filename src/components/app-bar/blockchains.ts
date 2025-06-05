@@ -97,6 +97,31 @@ export const blockchains = [
 						subSquareApi: 'https://polkadot-api.subsquare.io',
 						polkAssembly: 'https://polkadot.polkassembly.io'
 					}
+				} as const,
+				{
+					id: 'polkadot:b0a8d493285c2df73290dfb7e61f870f',
+					label: 'Local Kusama',
+					logo: kusama,
+					invertedLogo: kusamaInverted,
+					endpoints: ['ws://localhost:8000'],
+					descriptorsGetter: async () => (await import('@polkadot-api/descriptors')).kusama,
+					peopleEndpoints: [
+						'wss://kusama-people-rpc.polkadot.io',
+						'wss://sys.ibp.network/people-kusama',
+						'wss://rpc-people-kusama.luckyfriday.io',
+						'wss://people.kusama.api.onfinality.io/public-ws'
+					],
+					peopleDescriptorsGetter: async () =>
+						(await import('@polkadot-api/descriptors')).kusamaPeople,
+					baseUrls: {
+						doTreasury: 'https://kusama.dotreasury.com',
+						doTreasuryApi: 'https://kusama-api.dotreasury.com',
+						stateScanGraphqlApi: 'https://ksm-gh-api.statescan.io/graphql',
+						subScan: 'https://kusama.subscan.io',
+						subSquare: 'https://kusama.subsquare.io',
+						subSquareApi: 'https://kusama-api.subsquare.io',
+						polkAssembly: 'https://kusama.polkassembly.io'
+					}
 				} as const
 			])
 ];
