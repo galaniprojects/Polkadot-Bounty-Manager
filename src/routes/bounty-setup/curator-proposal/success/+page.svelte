@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { bountyInfo } from '../../_bountyInfo';
+	import Deposit from '../../../../components/Deposit.svelte';
 </script>
 
 {#if $bountyInfo}
@@ -11,8 +12,10 @@
 		<br /><br />
 
 		Please update the description of the referendum on Subsquare or Polkassembly and submit the
-		decision deposit (200 DOT) within 7 days to ensure the referendum is valid. After successful
-		execution of the referendum, the curators will need to accept the role to activate the bounty.
+		decision deposit
+		{#if $bountyInfo.track}(<Deposit getter={$bountyInfo.track.depositGetter} />){/if}
+		within 7 days to ensure the referendum is valid. After successful execution of the referendum, the
+		curators will need to accept the role to activate the bounty.
 	</p>
 
 	<div class="mt-7 sm:mt-24 mb-2 flex">

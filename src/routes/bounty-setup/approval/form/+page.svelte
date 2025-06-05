@@ -52,13 +52,14 @@
 				showErrorModal('Wallet is not connected');
 				return;
 			}
-			if (!transaction) {
+			if (!transaction || !$bountyInfo) {
 				showErrorModal('Unexpected error, bounty id is not set.');
 				return;
 			}
 
 			const result = await submitTransaction(transaction);
 			if (result) {
+				$bountyInfo.track = selectedTreasuryTrack
 				await goto('/bounty-setup/approval/success');
 			}
 		} catch (e) {

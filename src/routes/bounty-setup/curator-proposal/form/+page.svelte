@@ -60,13 +60,14 @@
 			return;
 		}
 
-		if (!transaction) {
+		if (!transaction || !$bountyInfo) {
 			showErrorModal('An internal error has happened');
 			return;
 		}
 
 		const result = await submitTransaction(transaction);
 		if (result) {
+			$bountyInfo.track = selectedTreasuryTrack
 			await goto('/bounty-setup/curator-proposal/success');
 		}
 	}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { bountyInfo } from '../../_bountyInfo';
+	import Deposit from '../../../../components/Deposit.svelte';
 </script>
 
 {#if $bountyInfo}
@@ -10,8 +11,10 @@
 		has been created successfully!
 		<br /><br />
 		Please update the description of the referendum on Subsquare or Polkassembly and submit the decision
-		deposit (200 DOT) within 7 days to ensure the referendum is valid. After successful execution of
-		the referendum, the curators will need to accept the role to activate the bounty.
+		deposit
+		{#if $bountyInfo.track}(<Deposit getter={$bountyInfo.track.depositGetter} />){/if}
+		within 7 days to ensure the referendum is valid. After successful execution of the referendum, the
+		curators will need to accept the role to activate the bounty.
 		<br /> <br />
 		You can now return to the home screen or proceed to submit the curator approval referendum. It is
 		recommended to submit the curator approval referendum after the presently submitted referendum has
