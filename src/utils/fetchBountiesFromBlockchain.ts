@@ -93,7 +93,7 @@ export async function fetchBountiesFromBlockchain() {
 	const childBountiesMap = keyBy(childBounties, 'uniqueId');
 
 	// TODO: handle properly for Paseo
-	if (!('ChildBountyDescriptionsV1' in api.query.ChildBounties)) return []
+	if (!('ChildBountyDescriptionsV1' in api.query.ChildBounties)) return [];
 
 	const childDescriptions =
 		await api.query.ChildBounties.ChildBountyDescriptionsV1.getEntries(inBlock);
