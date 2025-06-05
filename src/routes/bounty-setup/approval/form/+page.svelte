@@ -59,7 +59,7 @@
 
 			const result = await submitTransaction(transaction);
 			if (result) {
-				$bountyInfo.track = selectedTreasuryTrack
+				$bountyInfo.track = selectedTreasuryTrack;
 				await goto('/bounty-setup/approval/success');
 			}
 		} catch (e) {
