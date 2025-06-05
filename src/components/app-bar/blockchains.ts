@@ -25,7 +25,7 @@ export const blockchains = [
 		baseUrls: {
 			doTreasury: 'https://polkadot.dotreasury.com',
 			doTreasuryApi: 'https://polkadot-api.dotreasury.com',
-			stateScanGraphqlApi: 'https://ksm-gh-api.statescan.io/graphql',
+			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
 			subScan: 'https://polkadot.subscan.io',
 			subSquare: 'https://polkadot.subsquare.io',
 			subSquareApi: 'https://polkadot-api.subsquare.io',
@@ -42,7 +42,7 @@ export const blockchains = [
 		baseUrls: {
 			doTreasury: 'https://kusama.dotreasury.com',
 			doTreasuryApi: 'https://kusama-api.dotreasury.com',
-			stateScanGraphqlApi: 'https://dot-gh-api.statescan.io/graphql',
+			stateScanGraphqlApi: 'https://ksm-gh-api.statescan.io/graphql',
 			subScan: 'https://kusama.subscan.io',
 			subSquare: 'https://kusama.subsquare.io',
 			subSquareApi: 'https://kusama-api.subsquare.io',
