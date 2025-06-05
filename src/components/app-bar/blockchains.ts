@@ -39,6 +39,13 @@ export const blockchains = [
 		invertedLogo: kusamaInverted,
 		endpoints: ['wss://kusama-rpc.dwellir.com'],
 		descriptorsGetter: async () => (await import('@polkadot-api/descriptors')).kusama,
+		peopleEndpoints: [
+			'wss://kusama-people-rpc.polkadot.io',
+			'wss://sys.ibp.network/people-kusama',
+			'wss://rpc-people-kusama.luckyfriday.io',
+			'wss://people.kusama.api.onfinality.io/public-ws'
+		],
+		peopleDescriptorsGetter: async () => (await import('@polkadot-api/descriptors')).kusamaPeople,
 		baseUrls: {
 			doTreasury: 'https://kusama.dotreasury.com',
 			doTreasuryApi: 'https://kusama-api.dotreasury.com',

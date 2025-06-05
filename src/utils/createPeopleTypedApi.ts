@@ -1,9 +1,9 @@
 import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
 import { getWsProvider, WsEvent } from 'polkadot-api/ws-provider/web';
-import { people } from '@polkadot-api/descriptors';
+import { type people, type kusamaPeople } from '@polkadot-api/descriptors';
 import { createClient } from 'polkadot-api';
 
-const endpoints = [
+const dotEndpoints = [
 	'wss://polkadot-people-rpc.polkadot.io',
 	'wss://sys.ibp.network/people-polkadot',
 	'wss://people-polkadot.dotters.network',
@@ -11,7 +11,14 @@ const endpoints = [
 	'wss://people-polkadot.public.curie.radiumblock.co'
 ];
 
-export function createPeopleTypedApi() {
+async function dotDescriptorsGetter() {
+	return (await import('@polkadot-api/descriptors')).people as typeof people | typeof kusamaPeople;
+}
+
+export async function createPeopleTypedApi(
+	endpoints = dotEndpoints,
+	descriptorsGetter = dotDescriptorsGetter
+) {
 	const sdkProvider = withPolkadotSdkCompat(
 		getWsProvider({
 			endpoints,
@@ -23,5 +30,6 @@ export function createPeopleTypedApi() {
 		})
 	);
 	const sdkClient = createClient(sdkProvider);
-	return sdkClient.getTypedApi(people);
+	const descriptors = await descriptorsGetter();
+	return sdkClient.getTypedApi(descriptors);
 }

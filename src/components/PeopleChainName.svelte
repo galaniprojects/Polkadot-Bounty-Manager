@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Binary } from 'polkadot-api';
 	import { names, peopleApi } from '../utils/people';
+	import { currentBlockchain } from './app-bar/blockchains';
 	import Checkmark from './common/Checkmark.svg';
 
 	export let address: string;
@@ -12,10 +13,7 @@
 		label = undefined;
 		const input = address;
 
-		if (!$peopleApi) {
-			const { createPeopleTypedApi } = await import('../utils/createPeopleTypedApi');
-			$peopleApi = createPeopleTypedApi();
-		}
+		const $peopleApi = await getPeopleApi();
 
 		if ($names[address]) {
 			label = $names[address];
@@ -25,12 +23,27 @@
 		const result = await $peopleApi.query.Identity.IdentityOf.getValue(address);
 		if (!result || address !== input) return;
 
-		const value = result[0].info.display.value as Binary | undefined;
+		const { info } = ('0' in result ? result[0] : result);
+		const value = info.display.value as Binary | undefined;
 		const text = value?.asText();
 		if (!text) return;
 
 		label = text.substring(0, 20);
 		$names[address] = label;
+	}
+
+	async function getPeopleApi() {
+		const { id, peopleEndpoints, peopleDescriptorsGetter } = $currentBlockchain;
+		const $peopleApi = peopleApi.get(id);
+		if ($peopleApi) {
+			return $peopleApi;
+		}
+
+		$names = {}
+		const { createPeopleTypedApi } = await import('../utils/createPeopleTypedApi');
+		const $newPeopleApi = await createPeopleTypedApi(peopleEndpoints as string[] | undefined, peopleDescriptorsGetter);
+		peopleApi.set(id, $newPeopleApi);
+		return $newPeopleApi;
 	}
 </script>
 

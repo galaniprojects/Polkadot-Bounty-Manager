@@ -3,7 +3,7 @@ import { dotApi } from '../../stores';
 import type { MultisigInfo } from '../../types/account';
 import { currentBlockchain } from '../app-bar/blockchains';
 
-const proxies = writable<Map<string, string>>(new Map());
+export const proxies = writable<Map<string, string>>(new Map());
 
 export async function fetchAllProxies() {
 	const api = get(dotApi);
@@ -37,18 +37,12 @@ interface MultisigAccountResponse {
 	};
 }
 
-export async function fetchMultisigSignatories(curatorAddress: string): Promise<string[]> {
-	const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
-	// // if (!graphqlEndpoint) {
-	// // 	return [];
-	// }
-
+export async function fetchMultisigSignatories(proxyAddress: string) {
 	try {
-		const proxyAddress = get(proxies).get(curatorAddress);
-
-		if (!proxyAddress) {
-			return [];
-		}
+		const graphqlEndpoint = get(currentBlockchain).baseUrls.stateScanGraphqlApi;
+		// if (!graphqlEndpoint) {
+		// 	return [];
+		// }
 
 		const query = `
 				query {

@@ -84,4 +84,4 @@
 	</div>
 </div>
 
-<Signatories bind:dialog={curatorsDialog} {bounty} curatorAddress={bounty.curator} />
+<Signatories bind:dialog={curatorsDialog} {bounty} />

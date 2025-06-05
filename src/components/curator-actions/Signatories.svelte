@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Bounty } from '../../types/bounty';
-	import { fetchMultisigSignatories } from './fetch-signatories';
+	import { fetchMultisigSignatories, proxies } from './fetch-signatories';
 	import { isCurator } from '../../utils/isCurator';
 	import CopyableAddress from '../common/CopyableAddress.svelte';
 	import Dialog from '../common/Dialog.svelte';
@@ -10,14 +10,15 @@
 
 	export let dialog: HTMLDialogElement;
 	export let bounty: Bounty;
-	export let curatorAddress = '';
 
+	let proxyAddress: string | undefined;
 	let signatories: string[] | undefined;
 	let salariesDialog: HTMLDialogElement;
 
 	onMount(async () => {
-		if (curatorAddress) {
-			signatories = await fetchMultisigSignatories(curatorAddress);
+		if (bounty.curator) {
+			proxyAddress = $proxies.get(bounty.curator);
+			signatories = await fetchMultisigSignatories(proxyAddress || bounty.curator);
 		} else {
 			signatories = [];
 		}
@@ -28,9 +29,17 @@
 	<div class="modal mt-5">
 		<div class="space-y-5">
 			<div class="space-y-1">
-				<p class="font-bold">Curator Proxy:</p>
+				<p class="font-bold">Curator Address:</p>
 				<p><CopyableAddress address={bounty.curator} /></p>
 			</div>
+
+			{#if proxyAddress}
+				<div class="space-y-1">
+					<p class="font-bold">Proxy Address:</p>
+					<p><CopyableAddress address={proxyAddress} /></p>
+				</div>
+			{/if}
+
 			<section class="space-y-1">
 				<p class="font-bold">Signatories:</p>
 				{#if signatories === undefined}
