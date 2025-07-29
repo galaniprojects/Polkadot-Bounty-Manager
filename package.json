@@ -27,7 +27,7 @@
 		"@types/eslint": "^9.6.1",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.28.0",
-		"eslint-config-prettier": "^10.1.1",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.5.1",
 		"globals": "^16.0.0",
 		"postcss": "^8.5.3",
