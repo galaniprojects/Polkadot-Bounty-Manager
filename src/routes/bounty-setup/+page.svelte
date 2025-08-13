@@ -102,7 +102,7 @@
 		class="{Input.input} title"
 		placeholder="Give your Bounty a title"
 		aria-label="Bounty Title"
-		aria-required=true
+		aria-required="true"
 	/>
 	{#if false}
 		<p class="text text-sm mt-1.5 text-white">
@@ -118,14 +118,19 @@
 	<div>
 		<section class="space-y-1 sm:space-y-3">
 			<p class="text-xs">Bounty value</p>
-			<input id="bounty-value" bind:value={bountyValue} class="{Input.polkadot} value" placeholder="1000.00" />
+			<input
+				id="bounty-value"
+				bind:value={bountyValue}
+				class="{Input.polkadot} value"
+				placeholder="1000.00"
+			/>
 		</section>
 		<hr class="border-backgroundButtonLight my-5 sm:my-10 w-full md:w-1/2" />
 
 		<div class="my-5 sm:my-10 h-24 space-y-2 sm:space-y-5">
-			<section class="space-y-1 sm:space-y-3">
+			<section aria-labelledby="bounty-bond-label" class="space-y-1 sm:space-y-3">
 				<p id="bounty-bond-label" class="label text-xs">Bounty bond</p>
-				<p aria-labelledby="bounty-bond-label" class="value">
+				<p class="value" aria-label="Bounty Bond Value" role="status">
 					{#if typeof bondValue === 'string'}
 						{bondValue}
 					{:else}
@@ -133,9 +138,9 @@
 					{/if}
 				</p>
 			</section>
-			<section class="space-y-1 sm:space-y-3">
-				<p class="label text-xs">Estimated basic fee</p>
-				<p class="value"><Fee {transaction} /></p>
+			<section aria-labelledby="est-fee-label" class="space-y-1 sm:space-y-3">
+				<p id="est-fee-label" class="label text-xs">Estimated basic fee</p>
+				<p class="value" aria-label="Estimated Fee Value" role="status"><Fee {transaction} /></p>
 			</section>
 		</div>
 	</div>
