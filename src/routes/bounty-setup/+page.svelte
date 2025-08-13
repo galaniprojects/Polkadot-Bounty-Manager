@@ -97,9 +97,12 @@
 
 <div class="px-3 py-5 sm:pt-7 sm:pb-10 md:p-6 bg-backgroundButtonLight">
 	<input
+		id="bounty-title"
 		bind:value={bountyTitle}
 		class="{Input.input} title"
 		placeholder="Give your Bounty a title"
+		aria-label="Bounty Title"
+		aria-required=true
 	/>
 	{#if false}
 		<p class="text text-sm mt-1.5 text-white">
@@ -115,14 +118,14 @@
 	<div>
 		<section class="space-y-1 sm:space-y-3">
 			<p class="text-xs">Bounty value</p>
-			<input bind:value={bountyValue} class="{Input.polkadot} value" placeholder="1000.00" />
+			<input id="bounty-value" bind:value={bountyValue} class="{Input.polkadot} value" placeholder="1000.00" />
 		</section>
 		<hr class="border-backgroundButtonLight my-5 sm:my-10 w-full md:w-1/2" />
 
 		<div class="my-5 sm:my-10 h-24 space-y-2 sm:space-y-5">
 			<section class="space-y-1 sm:space-y-3">
-				<p class="label text-xs">Bounty bond</p>
-				<p class="value">
+				<p id="bounty-bond-label" class="label text-xs">Bounty bond</p>
+				<p aria-labelledby="bounty-bond-label" class="value">
 					{#if typeof bondValue === 'string'}
 						{bondValue}
 					{:else}
