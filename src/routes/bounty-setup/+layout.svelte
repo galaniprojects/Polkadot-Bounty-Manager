@@ -51,13 +51,18 @@
 		<h2 class="font-bold text-lg sm:text-2xl text-start">Bounty Setup</h2>
 		<div class="overflow-clip">
 			<div class="flex h-16 sm:h-20 px-2 md:px-8 bg-backgroundButtonDark rounded-t-md">
-				<div class="w-1/3 md:w-1/6">
+				<div class="w-1/4 md:w-1/6">
 					<BountySetupTab href="/bounty-setup">Creation</BountySetupTab>
 				</div>
-				<div class="w-1/3 md:w-1/6">
+				<div class="w-1/4 md:w-1/3">
+					<BountySetupTab href="/bounty-setup/approve-with-curator"
+						>Approval with Curator</BountySetupTab
+					>
+				</div>
+				<div class="w-1/4 md:w-1/6">
 					<BountySetupTab href="/bounty-setup/approval">Approval</BountySetupTab>
 				</div>
-				<div class="w-1/3 md:w-1/4">
+				<div class="w-1/4 md:w-1/4">
 					<BountySetupTab href="/bounty-setup/curator-proposal">Curator Proposal</BountySetupTab>
 				</div>
 			</div>

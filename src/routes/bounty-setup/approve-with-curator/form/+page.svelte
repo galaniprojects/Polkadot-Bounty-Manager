@@ -1,17 +1,18 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { activeAccount, dotApi } from '../../../../stores';
-	import { treasuryTracks } from '../../../../components/bounty-setup/treasuryTracks';
-	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
-	import { isPositiveNumber } from '../../../../utils/common';
-	import Deposit from '../../../../components/Deposit.svelte';
-	import { showErrorModal } from '../../../../components/modals';
 	import {
 		MultiAddress,
 		PolkadotRuntimeOriginCaller,
 		PreimagesBounded,
 		TraitsScheduleDispatchTime
 	} from '@polkadot-api/descriptors';
+	import { activeAccount, dotApi } from '../../../../stores';
+	import { treasuryTracks } from '../../../../components/bounty-setup/treasuryTracks';
+	import { convertFormattedDotToPlanck, isValidAddress } from '../../../../utils/polkadot';
+	import { isPositiveNumber } from '../../../../utils/common';
+	import Deposit from '../../../../components/Deposit.svelte';
+	import { showErrorModal } from '../../../../components/modals';
 	import { type AnyTransaction, submitTransaction } from '../../../../utils/transaction';
 	import Fee from '../../../../components/Fee.svelte';
 	import DropdownMenu from '../../../../components/common/DropdownMenu.svelte';
@@ -22,6 +23,19 @@
 	let curatorAddress = '';
 	let selectedTreasuryTrack = treasuryTracks[0];
 
+	onMount(() => {
+		if (!$bountyInfo || !$bountyInfo.value) {
+			return;
+		}
+		if ($bountyInfo.value <= 10000n) {
+			selectedTreasuryTrack = treasuryTracks[0];
+		} else if ($bountyInfo.value <= 100000n) {
+			selectedTreasuryTrack = treasuryTracks[1];
+		} else {
+			selectedTreasuryTrack = treasuryTracks[2];
+		}
+	});
+
 	let transaction: AnyTransaction | undefined;
 	$: {
 		(async () => {
@@ -31,14 +45,17 @@
 				return;
 			}
 
-			const propose = $dotApi.tx.Bounties.propose_curator({
+			// TODO: handle properly for Paseo
+			if (!('approve_bounty_with_curator' in $dotApi.tx.Bounties)) return;
+
+			const approve = $dotApi.tx.Bounties.approve_bounty_with_curator({
 				bounty_id: $bountyInfo.id,
 				curator: MultiAddress.Id(curatorAddress),
 				fee: convertFormattedDotToPlanck(curatorFee)
 			});
 			transaction = $dotApi.tx.Referenda.submit({
 				proposal_origin: PolkadotRuntimeOriginCaller.Origins(selectedTreasuryTrack.origin),
-				proposal: PreimagesBounded.Inline(await propose.getEncodedData()),
+				proposal: PreimagesBounded.Inline(await approve.getEncodedData()),
 				enactment_moment: TraitsScheduleDispatchTime.After(1)
 			});
 		})();
@@ -68,7 +85,7 @@
 		const result = await submitTransaction(transaction);
 		if (result) {
 			$bountyInfo.track = selectedTreasuryTrack;
-			await goto('/bounty-setup/curator-proposal/success');
+			await goto('/bounty-setup/approve-with-curator/success');
 		}
 	}
 </script>
@@ -102,10 +119,7 @@
 				height="h-10"
 				positionOverlay="-mt-[40px]"
 			/>
-			<p class="text-xs mt-1">
-				(please select the same or higher treasury track that was used in the Bounty Approval
-				referendum)
-			</p>
+			<p class="text-xs mt-1">(preselected based on Bounty value)</p>
 		</div>
 
 		<hr class="border-backgroundButtonLight w-full sm:w-1/2 my-5 sm:my-10" />

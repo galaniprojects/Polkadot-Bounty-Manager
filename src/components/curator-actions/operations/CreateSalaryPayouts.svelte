@@ -75,6 +75,9 @@
 	let childBountyId: number;
 
 	(async () => {
+		// TODO: handle properly for Paseo
+		if (!('ParentTotalChildBounties' in $dotApi.query.ChildBounties)) return;
+
 		void $dotApi.query.ChildBounties.ParentTotalChildBounties.watchValue(bounty.id).forEach(
 			(value) => {
 				childBountyId = value;
