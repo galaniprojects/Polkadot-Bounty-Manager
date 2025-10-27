@@ -46,7 +46,7 @@
 		"@polkadot-api/descriptors": "file:.papi/descriptors",
 		"@polkadot-api/meta-signers": "^0.1.8",
 		"@polkadot/ui-shared": "^3.14.1",
-		"@reactive-dot/wallet-walletconnect": "^0.17.14",
+		"@reactive-dot/wallet-walletconnect": "^0.17.40",
 		"dompurify": "^3.2.6",
 		"marked": "^15.0.12",
 		"polkadot-api": "^1.13.0"
